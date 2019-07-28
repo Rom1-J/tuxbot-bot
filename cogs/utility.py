@@ -212,6 +212,10 @@ class Utility(commands.Cog):
         if(iptype=="ipv6" or iptype=="v6"):
             try:
                 ipaddress = socket.getaddrinfo(ipaddress, None, socket.AF_INET6)[1][4][0]
+
+                if (ipaddress == "2602:fe53:b:1::87") and not ("gnous" in realipaddress):
+                    await ctx.send("Erreur, cette adresse n'est pas disponible en IPv6.")
+                    return
             except Exception as e:
                 await ctx.send("Erreur, cette adresse n'est pas disponible en IPv6.")
                 print(e)
