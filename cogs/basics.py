@@ -60,10 +60,11 @@ class Basics(commands.Cog):
     @commands.command()
     async def help(self, ctx):
         """Affiches l'aide du bot"""
-        text = open('texts/help.md').read()
-        em = discord.Embed(title='Commandes de TuxBot', description=text,
+        text = open('texts/help.md').read().split("[split]")
+        for txt in text:
+            em = discord.Embed(title='Commandes de TuxBot', description=txt,
                            colour=0x89C4F9)
-        await ctx.send(embed=em)
+            await ctx.send(embed=em)
 
 
 def setup(bot):

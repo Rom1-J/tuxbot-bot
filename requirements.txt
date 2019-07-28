@@ -1,5 +1,4 @@
 pymysql
-gtts
 beautifulsoup4
 lxml==4.2.4
 bs4
