@@ -6,3 +6,4 @@ pytz
 requests
 wikipedia
 pillow
+gtts
