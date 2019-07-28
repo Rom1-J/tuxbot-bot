@@ -332,7 +332,7 @@ class Utility(commands.Cog):
                     test_chan = await self.bot.fetch_channel(channel.id)
                     try:
                         return await test_chan.fetch_message(message_id)
-                    except discord.NotFound:
+                    except (discord.NotFound, discord.Forbidden):
                         pass
             return None
 
