@@ -249,7 +249,6 @@ class Utility(commands.Cog):
     @commands.command(name='getheaders', pass_context=True)
     async def _getheaders(self, ctx, *, adresse):
         """Recuperer les HEADERS :d"""
-        print("Loaded")
         if adresse.startswith("http://") != True and adresse.startswith("https://") != True:
              adresse = "http://" + adresse
         if len(adresse) > 200:
@@ -282,6 +281,12 @@ class Utility(commands.Cog):
                 print('''An error occurred: {} The response code was {}'''.format(e, e.getcode()))
             except urllib.error.URLError as e:
                 print("ERROR @ getheaders @ urlerror : {} - adress {}".format(e, adresse))
+                if "No address associated" in str(e):
+                    await ctx.send("Erreur, aucune adresse n'est associé à ce nom d'hôte.")
+                    return
+                if "timed out" in str(e):
+                    await ctx.send("Erreur, l'adresse en question dépasse le délais d'attente :(")
+                    return
                 await ctx.send('[CONTACTER ADMIN] URLError: {}'.format(e.reason))
             except Exception as e:
                 print("ERROR @ getheaders @ Exception : {} - adress {}".format(e, adresse))

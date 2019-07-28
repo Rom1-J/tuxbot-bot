@@ -37,6 +37,7 @@ l_extensions = (
     'cogs.sondage',
     'cogs.utility',
     'cogs.vocal',
+    'cogs.private',
 )
 
 help_attrs = dict(hidden=True, in_help=True, name="DONOTUSE")
