@@ -1,3 +1,6 @@
+# Help paginator by Rapptz
+# Edited by F4stZ4p
+
 import asyncio
 import discord
 
@@ -7,12 +10,9 @@ class CannotPaginate(Exception):
 class Pages:
     """Implements a paginator that queries the user for the
     pagination interface.
-
     Pages are 1-index based, not 0-index based.
-
     If the user does not reply within 2 minutes then the pagination
     interface exits automatically.
-
     Parameters
     ------------
     ctx: Context
@@ -23,7 +23,6 @@ class Pages:
         How many entries show up per page.
     show_entry_count: bool
         Whether to show an entry count in the footer.
-
     Attributes
     -----------
     embed: discord.Embed
@@ -44,7 +43,7 @@ class Pages:
         if left_over:
             pages += 1
         self.maximum_pages = pages
-        self.embed = discord.Embed(colour=discord.Colour.blurple())
+        self.embed = discord.Embed(colour=discord.Color.green())
         self.paginating = len(entries) > per_page
         self.show_entry_count = show_entry_count
         self.reaction_emojis = [
@@ -340,7 +339,7 @@ class HelpPaginator(Pages):
         cog_name = cog.__class__.__name__
 
         # get the commands
-        entries = sorted(ctx.bot.get_cog_commands(cog_name), key=lambda c: c.name)
+        entries = sorted(ctx.bot.get_cog(cog_name).get_commands(), key=lambda c: c.name)
 
         # remove the ones we can't run
         entries = [cmd for cmd in entries if (await _can_run(cmd, ctx)) and not cmd.hidden]
@@ -349,9 +348,6 @@ class HelpPaginator(Pages):
         self.title = f'{cog_name} Commands'
         self.description = inspect.getdoc(cog)
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
-
-        # no longer need the database
-        #await ctx.release()
 
         return self
 
@@ -373,7 +369,6 @@ class HelpPaginator(Pages):
             self.description = command.help or 'No help given.'
 
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
-        #await ctx.release()
         return self
 
     @classmethod
@@ -404,7 +399,6 @@ class HelpPaginator(Pages):
 
         self = cls(ctx, nested_pages, per_page=1) # this forces the pagination session
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
-        #await ctx.release()
 
         # swap the get_page implementation with one that supports our style of pagination
         self.get_page = self.get_bot_page
@@ -429,8 +423,8 @@ class HelpPaginator(Pages):
         self.embed.title = self.title
 
         if hasattr(self, '_is_bot'):
-            value ='For more help, join the official bot support server: https://discord.gg/pYuKF2Z'
-            self.embed.add_field(name='Support', value=value, inline=False)
+            value ='Check the bot source: **[GitHub Link](https://github.com/F4stZ4p/DJ5n4k3/)**'
+            self.embed.add_field(name='**GitHub**', value=value, inline=False)
 
         self.embed.set_footer(text=f'Use "{self.prefix}help command" for more info on a command.')
 
