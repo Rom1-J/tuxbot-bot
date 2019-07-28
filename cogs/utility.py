@@ -7,7 +7,7 @@ import urllib
 import discord
 import requests
 from discord.ext import commands
-
+import socket
 
 class Utility(commands.Cog):
     """Commandes utilitaires."""
@@ -197,7 +197,8 @@ class Utility(commands.Cog):
     """---------------------------------------------------------------------"""
 
     @commands.command(name='iplocalise', pass_context=True)
-    async def _iplocalise(self, ctx, ipaddress):
+    async def _iplocalise(self, ctx, ipaddress, iptype=""):
+        realipaddress = ipaddress
         """Recup headers."""
         if ipaddress.startswith("http://"):
             if ipaddress[-1:] == '/':
@@ -207,45 +208,41 @@ class Utility(commands.Cog):
             if ipaddress[-1:] == '/':
                 ipaddress = ipaddress[:-1]
             ipaddress = ipaddress.split("https://")[1]
+        
+        if(iptype=="ipv6" or iptype=="v6"):
+            try:
+                ipaddress = socket.getaddrinfo(ipaddress, None, socket.AF_INET6)[1][4][0]
+            except Exception as e:
+                await ctx.send("Erreur, cette adresse n'est pas disponible en IPv6.")
+                print(e)
+                return
 
         iploading = await ctx.send("_réfléchis..._")
         ipapi = urllib.request.urlopen("http://ip-api.com/json/" + ipaddress)
         ipinfo = json.loads(ipapi.read().decode())
 
         if ipinfo["status"] != "fail":
-            if ipinfo['org']:
-                org = ipinfo['org']
-            else:
-                org = 'n/a'
-
             if ipinfo['query']:
-                ip = ipinfo['query']
-            else:
-                ip = 'n/a'
+                embed = discord.Embed(title=f"Informations pour ``{realipaddress}`` *`({ipinfo['query']})`*", color=0x5858d7)
+
+            if ipinfo['org']:
+                embed.add_field(name="Appartient à :", value=ipinfo['org'], inline = False)
 
             if ipinfo['city']:
-                city = ipinfo['city']
-            else:
-                city = 'n/a'
+                embed.add_field(name="Se situe à :", value=ipinfo['city'], inline = True)
 
-            if ipinfo['regionName']:
-                regionName = ipinfo['regionName']
-            else:
-                regionName = 'n/a'
 
             if ipinfo['country']:
-                country = ipinfo['country']
-            else:
-                country = 'n/a'
+                if ipinfo['regionName']:
+                    regionName = ipinfo['regionName']
+                else:
+                    regionName = "N/A"
+                embed.add_field(name="Region :", value=f"{regionName} ({ipinfo['country']})", inline = True)
 
-            embed = discord.Embed(title=f"Informations pour {ipaddress} *`({ip})`*", color=0x5858d7)
-            embed.add_field(name="Appartient à :", value=org, inline = False)
-            embed.add_field(name="Se situe à :", value=city, inline = True)
-            embed.add_field(name="Region :", value=f"{regionName} ({country})", inline = True)
             embed.set_thumbnail(url=f"https://www.countryflags.io/{ipinfo['countryCode']}/flat/64.png")
             await ctx.send(embed=embed)
         else:
-            await ctx.send(content=f"Erreur, impossible d'avoir des informations sur l'adresse IP {ipinfo['query']}")
+            await ctx.send(content=f"Erreur, impossible d'avoir des informations sur l'adresse IP ``{ipinfo['query']}``")
         await iploading.delete()
 
     """---------------------------------------------------------------------"""
@@ -257,6 +254,7 @@ class Utility(commands.Cog):
              adresse = "http://" + adresse
         if len(adresse) > 200:
             await ctx.send("{0} Essaye d'entrer une adresse de moins de 200 caractères plutôt.".format(ctx.author.mention))
+        
         elif adresse.startswith("http://") or adresse.startswith("https://") or adresse.startswith("ftp://"):
             try:
                 get = urllib.request.urlopen(adresse, timeout = 1)
