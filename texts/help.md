@@ -6,7 +6,6 @@
 -> .search _site_ _contenu_ : Fait une recherche sur un site (.search pour plus d'infos)
 -> .avatar _@pseudo_ : Récupère l'avatar de _@pseudo_
 -> .poke _@pseudo_ : Poke _@pseudo_
--> .hastebin _code_ : Poste du code sur hastebin
 -> .sondage _question_ | _reponse_ | _reponse_ | _option_ : Créer un sondage avec des réactions
 -> .sondage : Affiche l'aide pour la commande sondage
 -> .role _nomdurole_ : Ajoute/Retire le rôle en question

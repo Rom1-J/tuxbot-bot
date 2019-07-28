@@ -196,20 +196,6 @@ class Utility(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='hastebin', pass_context=True)
-    async def _hastebin(self, ctx, *, data):
-        """Poster sur Hastebin."""
-        await ctx.message.delete()
-
-        post = requests.post("https://hastebin.com/documents", data=data)
-
-        try:
-            await ctx.send(f"{ctx.author.mention} message posté avec succès sur :\nhttps://hastebin.com/{post.json()['key']}.txt")
-        except json.JSONDecodeError:
-            await ctx.send("Impossible de poster ce message. L'API doit être HS.")
-
-    """---------------------------------------------------------------------"""
-
     @commands.command(name='iplocalise', pass_context=True)
     async def _iplocalise(self, ctx, ipaddress):
         """Recup headers."""
