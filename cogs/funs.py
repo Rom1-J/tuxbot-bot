@@ -22,11 +22,10 @@ class Funs(commands.Cog):
         if user is None:
             user = ctx.message.author
 
-        embed = discord.Embed(title="Avatar de : " + user.name,
-                              url=user.avatar_url_as(format="png"),
-                              description=f"[Voir en plus grand]"
+        embed = discord.Embed(title="Avatar de " + user.name,
+                              description=f"[Ouvrir dans mon navigateur]"
                               f"({user.avatar_url_as(format='png')})")
-        embed.set_thumbnail(url=user.user.avatar_url_as(format="png"))
+        embed.set_image(url=user.avatar_url_as(format='png'))
         await ctx.send(embed=embed)
 
     """---------------------------------------------------------------------"""
