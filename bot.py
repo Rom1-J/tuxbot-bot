@@ -4,6 +4,7 @@
 __author__ = "Maël / Outout | Romain"
 __licence__ = "WTFPL Licence 2.0"
 
+
 import copy
 import datetime
 import os
@@ -17,6 +18,10 @@ from discord.ext import commands
 import cogs.utils.cli_colors as colors
 import config
 from cogs.utils import checks
+
+if sys.version_info[1] < 7 or sys.version_info[0] < 3:
+    print(f"{colors.text_colors.RED}[ERROR] Python 3.7 or + is required.{colors.ENDC}")
+    exit()
 
 l_extensions = (
     'cogs.admin',
