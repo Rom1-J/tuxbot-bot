@@ -174,7 +174,7 @@ class Admin(commands.Cog):
             except Exception:
                 print(f"Impossible de supprimer le message "
                       f"\"{str(ctx.message.content)}\"")
-            toedit = await ctx.channel.get_message(message_id)
+            toedit = await ctx.channel.fetch_message(message_id)
         except discord.errors.NotFound:
             await ctx.send(f"Impossible de trouver le message avec l'id "
                            f"`{message_id}` sur ce salon")
@@ -196,7 +196,7 @@ class Admin(commands.Cog):
             except Exception:
                 print(f"Impossible de supprimer le message "
                       f"\"{str(ctx.message.content)}\"")
-            toadd = await ctx.channel.get_message(message_id)
+            toadd = await ctx.channel.fetch_message(message_id)
         except discord.errors.NotFound:
             await ctx.send(f"Impossible de trouver le message avec l'id "
                            f"`{message_id}` sur ce salon")
@@ -218,7 +218,7 @@ class Admin(commands.Cog):
             except Exception:
                 print(f"Impossible de supprimer le message "
                       f"\"{str(ctx.message.content)}\"")
-            todelete = await ctx.channel.get_message(message_id)
+            todelete = await ctx.channel.fetch_message(message_id)
         except discord.errors.NotFound:
             await ctx.send(f"Impossible de trouver le message avec l'id "
                            f"`{message_id}` sur ce salon")
@@ -241,7 +241,7 @@ class Admin(commands.Cog):
             except Exception:
                 print(f"Impossible de supprimer le message "
                       f"\"{str(ctx.message.content)}\"")
-            todelete = await chan.get_message(message_id)
+            todelete = await chan.fetch_message(message_id)
         except discord.errors.NotFound:
             await ctx.send(f"Impossible de trouver le message avec l'id "
                            f"`{id}` sur le salon")
