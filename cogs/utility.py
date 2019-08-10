@@ -284,13 +284,23 @@ class Utility(commands.Cog):
                 await ctx.send(embed=embed)
                 print('''An error occurred: {} The response code was {}'''.format(e, e.getcode()))
             except urllib.error.URLError as e:
-                print("ERROR @ getheaders @ urlerror : {} - adress {}".format(e, adresse))
                 if "No address associated" in str(e):
                     await ctx.send("Erreur, aucune adresse n'est associé à ce nom d'hôte.")
                     return
                 if "timed out" in str(e):
                     await ctx.send("Erreur, l'adresse en question dépasse le délais d'attente :(")
                     return
+                if "SSL" in str(e):
+                    await ctx.send("Erreur avec le certificat SSL, essayez sans ``https://`` !")
+                    return
+                    return
+                if "no host":
+                    await ctx.send("Erreur, aucun nom d'hôte n'a été donné.")
+                    return
+                if "not known":
+                    await ctx.send("Erreur, nom de l'hôte inconnu.")
+                    return
+                print("ERROR @ getheaders @ urlerror : {} - adress {}".format(e, adresse))
                 await ctx.send('[CONTACTER ADMIN] URLError: {}'.format(e.reason))
             except Exception as e:
                 print("ERROR @ getheaders @ Exception : {} - adress {}".format(e, adresse))
