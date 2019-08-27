@@ -16,5 +16,5 @@
  
 ## New commands :
 
- - [ ] .sondage --anonyme <...> (create à sondage with the possibility of answering anonymously)
- - [ ] .sondage --edit <id> (edit a sondage if we are the author or an admin)
+ - [ ] `.sondage --anonyme <...>` (create à sondage with the possibility of answering anonymously)
+ - [ ] `.sondage --edit <id>` (edit a sondage if we are the author or an admin)
