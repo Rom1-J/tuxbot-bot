@@ -12,9 +12,13 @@
 
  - [ ] Can install the bot
  - [ ] Can launch the bot
- - [ ] can propose updates 
+ - [ ] Can propose updates 
  
 ## New commands :
 
  - [ ] `.sondage --anonyme <...>` (create à sondage with the possibility of answering anonymously)
  - [ ] `.sondage --edit <id>` (edit a sondage if we are the author or an admin)
+ 
+## Ultimate :
+
+ - [ ] Create skynet
