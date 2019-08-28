@@ -21,4 +21,5 @@
  
 ## Ultimate :
 
+ - [ ] Send email or Telegram's message when something work wrong on the bot
  - [ ] Create skynet
