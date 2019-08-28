@@ -21,5 +21,5 @@
  
 ## Ultimate :
 
- - [ ] Send email or Telegram's message when something work wrong on the bot
- - [ ] Create skynet
+ - [ ] Send email or Telegram's message when something is wrong on the bot
+ - [ ] Create skynet (group of multiple commands about sky (planes, meteo,...))
