@@ -8,3 +8,6 @@ private.py
 
 #jetbrains
 .idea/
+
+#other
+.logs/*
