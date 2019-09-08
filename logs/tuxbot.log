@@ -1,0 +1,12 @@
+[2019-09-08 22:58:46] [INFO   ] discord.client: logging in using static token
+[2019-09-08 22:58:47] [INFO   ] discord.gateway: Shard ID 0 has sent the IDENTIFY payload.
+[2019-09-08 22:58:47] [INFO   ] discord.gateway: Shard ID 0 has connected to Gateway: ["gateway-prd-main-xfx5",{"micros":31802,"calls":["discord-sessions-prd-1-18",{"micros":26858,"calls":["start_session",{"micros":12548,"calls":["api-prd-main-6rfw",{"micros":8098,"calls":["get_user",{"micros":1942},"add_authorized_ip",{"micros":5},"get_guilds",{"micros":3036},"coros_wait",{"micros":3}]}]},"guilds_connect",{"micros":139,"calls":[]},"presence_connect",{"micros":1,"calls":[]}]}]}] (Session ID: 03fcb2e35ce477c42ae58e20259b5d68).
+[2019-09-08 22:58:53] [INFO   ] discord.state: Processed a chunk for 463 members in guild ID 280805240977227776.
+[2019-09-08 22:58:54] [INFO   ] discord.state: Processed a chunk for 807 members in guild ID 331981755177238530.
+[2019-09-08 22:58:55] [INFO   ] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[2019-09-08 22:58:55] [INFO   ] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[2019-09-08 22:58:55] [INFO   ] discord.state: Processed a chunk for 662 members in guild ID 296698073177128962.
+[2019-09-08 23:03:12] [INFO   ] discord.client: Cleaning up tasks.
+[2019-09-08 23:03:12] [INFO   ] discord.client: Cleaning up after 5 tasks.
+[2019-09-08 23:03:12] [INFO   ] discord.client: All tasks finished cancelling.
+[2019-09-08 23:03:12] [INFO   ] discord.client: Closing the event loop.

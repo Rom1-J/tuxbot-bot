@@ -1,0 +1,45 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-09-08 19:04+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: launcher.py:56 launcher.py:57
+msgid "Could not set up PostgreSQL..."
+msgstr ""
+
+#: launcher.py:68
+msgid "Launch without loading the <TEXT> module"
+msgstr ""
+
+#: bot.py:52
+msgid "Failed to load extension : "
+msgstr ""
+
+#: bot.py:59
+msgid "This command cannot be used in private messages."
+msgstr ""
+
+#: bot.py:63
+msgid "Sorry. This command is disabled and cannot be used."
+msgstr ""
+
+#: bot.py:66
+msgid "In "
+msgstr ""
+
+#: bot.py:77
+msgid "Ready:"
+msgstr ""
+

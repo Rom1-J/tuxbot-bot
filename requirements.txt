@@ -1,4 +1,4 @@
-discord.py
+discord.py[voice]
 lxml
 click
 asyncpg>=0.12.0

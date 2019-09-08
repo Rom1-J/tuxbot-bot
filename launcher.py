@@ -1,9 +1,17 @@
-import logging
+import asyncio
 import contextlib
+import logging
+import socket
+import sys
 
+import click
+
+from bot import TuxBot
+from cogs.utils.db import Table
 
 try:
     import config
+    from cogs.utils.lang import _
 except ModuleNotFoundError:
     import first_run
 
@@ -34,10 +42,34 @@ def setup_logging():
             log.removeHandler(hdlr)
 
 
-def run_bot():
-    pass  # Todo: initialize bot, postgresql,...
+def run_bot(unload):
+    loop = asyncio.get_event_loop()
+    log = logging.getLogger()
+
+    try:
+        pool = loop.run_until_complete(
+            Table.create_pool(config.postgresql, command_timeout=60)
+        )
+    except socket.gaierror as e:
+        click.echo(_('Could not set up PostgreSQL...'), file=sys.stderr)
+        log.exception(_('Could not set up PostgreSQL...'))
+        return
+
+    bot = TuxBot(unload)
+    bot.pool = pool
+    bot.run()
+
+
+@click.group(invoke_without_command=True, options_metavar='[options]')
+@click.option('-u', '--unload',
+              multiple=True, type=str,
+              help=_('Launch without loading the <TEXT> module'))
+@click.pass_context
+def main(ctx, unload):
+    if ctx.invoked_subcommand is None:
+        with setup_logging():
+            run_bot(unload)
 
 
 if __name__ == '__main__':
-    with setup_logging():
-        run_bot()
+    main()

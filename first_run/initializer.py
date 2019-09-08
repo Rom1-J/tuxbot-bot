@@ -1,3 +1,6 @@
+from pip._internal import main as pip
+import shutil
+
 from .langs import locales, texts
 
 
@@ -9,6 +12,9 @@ class Config:
             'authorized_id': '[admin ids here (in int)]',
             'unkickable_id': '[unkickable ids here (in int)]'
         }
+
+        with open('requirements.txt', 'r') as f:
+            self.packages = f.read().split('\n')
 
     def input(self, key, **kwargs):
         lang = self.config.get('lang', 'multiple')
@@ -32,12 +38,29 @@ class Config:
 
         self.config[key] = response
 
-    def ask(self):
+    def install(self):
         self.input('lang', valid=locales)
+        print('\n\n\033[4;36m'
+              + texts.get(self.config.get('lang')).get('install')
+              + '\033[0m\n')
+
+        for package in self.packages:
+            pip(['install', package])
+
+    def ask(self):
+        print('\n\n\033[4;36m' + texts.get(self.config.get('lang')).get('conf')
+              + '\033[0m\n')
+
         self.input('token', empty=False)
         self.input('postgresql_username', empty=False)
         self.input('postgresql_password', empty=False)
         self.input('postgresql_dbname', empty=False)
+
+        print('\n\n\033[4;36m' + texts.get(self.config.get('lang')).get('logs')
+              + '\033[0m\n')
+
+        self.input('wh_id', empty=True)
+        self.input('wh_token', empty=True)
 
         print('\n\n\033[4;36m' + texts.get(self.config.get('lang')).get('misc')
               + '\033[0m\n')
@@ -49,13 +72,24 @@ class Config:
         with open('config.py', 'w') as file:
             postgresql = f"postgresql://" \
                          f"{self.config.get('postgresql_username')}:" \
-                         f"{self.config.get('postgresql_password')}@host/" \
-                         f"{self.config.get('postgresql_dbname')}"
+                         f"{self.config.get('postgresql_password')}" \
+                         f"@localhost/{self.config.get('postgresql_dbname')}"
             file.write(f"postgresql = '{postgresql}'\n")
 
+            logs_webhook = dict(id=int(self.config.get('wh_id')),
+                                token=self.config.get('wh_token'))
+            file.write(f"logs_webhook = '{logs_webhook}'\n")
+
             for key, value in self.config.items():
-                if not key.startswith('postgresql_'):
+                if not key.startswith('postgresql_') \
+                        and not key.startswith('wh_'):
                     value = f"'{value}'" if type(value) is str else value
                     file.write(f"{key} = {value}\n")
         print('\n\n\033[4;36m' + texts.get(self.config.get('lang')).get('end')
               + '\033[0m\n')
+
+    def clean(self):
+        print('\n\n\033[4;36m'
+              + texts.get(self.config.get('lang')).get('clean')
+              + '\033[0m\n')
+        shutil.rmtree('first_run')
