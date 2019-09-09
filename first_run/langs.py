@@ -20,7 +20,6 @@ texts = {
         'misc': 'Autre',
 
         'activity': "Joue à ...",
-        'prefix': "Prefixe (par defaut : @tuxbot)",
 
         'end': "Configuration terminée, vous pouvez à tout moment la rectifier en modifiant le fichier config.py",
 
@@ -47,7 +46,6 @@ texts = {
         'misc': 'Misc',
 
         'activity': "Playing ...",
-        'prefix': "Prefix (default is @tuxbot)",
 
         'end': "Configuration completed, you can fix it at any time by modifying the config.py file",
 

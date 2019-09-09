@@ -11,7 +11,7 @@ from cogs.utils.db import Table
 
 try:
     import config
-    from cogs.utils.lang import _
+    from cogs.utils.lang import gettext
 except ModuleNotFoundError:
     import first_run
 
@@ -51,8 +51,8 @@ def run_bot(unload):
             Table.create_pool(config.postgresql, command_timeout=60)
         )
     except socket.gaierror as e:
-        click.echo(_('Could not set up PostgreSQL...'), file=sys.stderr)
-        log.exception(_('Could not set up PostgreSQL...'))
+        click.echo(gettext('Could not set up PostgreSQL...'), file=sys.stderr)
+        log.exception(gettext('Could not set up PostgreSQL...'))
         return
 
     bot = TuxBot(unload)
@@ -63,7 +63,7 @@ def run_bot(unload):
 @click.group(invoke_without_command=True, options_metavar='[options]')
 @click.option('-u', '--unload',
               multiple=True, type=str,
-              help=_('Launch without loading the <TEXT> module'))
+              help=gettext('Launch without loading the <TEXT> module'))
 @click.pass_context
 def main(ctx, unload):
     if ctx.invoked_subcommand is None:

@@ -66,7 +66,6 @@ class Config:
               + '\033[0m\n')
 
         self.input('activity', empty=True)
-        self.input('prefix', empty=True)
 
     def save(self):
         with open('config.py', 'w') as file:
