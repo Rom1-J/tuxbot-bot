@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 
 l_extensions = (
     'cogs.admin',
-    'cogs.basics',
+    'cogs.bascics',
     'jishaku',
 )
 
@@ -37,9 +37,7 @@ class TuxBot(commands.AutoShardedBot):
     __slots__ = ('uptime', 'config', 'session')
 
     def __init__(self, unload: list):
-        super().__init__(command_prefix=_prefix_callable,
-                         description=description, pm_help=None,
-                         help_command=None, help_attrs=dict(hidden=True))
+        super().__init__(command_prefix=_prefix_callable, description=description, pm_help=None, help_command=None, help_attrs=dict(hidden=True))
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
@@ -54,10 +52,8 @@ class TuxBot(commands.AutoShardedBot):
                 try:
                     self.load_extension(extension)
                 except Exception as e:
-                    print(gettext("Failed to load extension : ") + extension,
-                          file=sys.stderr)
-                    log.error(gettext("Failed to load extension : ")
-                              + extension, exc_info=e)
+                    print(gettext("Failed to load extension : ") + extension, file=sys.stderr)
+                    log.error(gettext("Failed to load extension : ") + extension, exc_info=e)
 
     async def is_owner(self, user: discord.User) -> bool:
         return user.id in config.authorized_id
@@ -67,19 +63,16 @@ class TuxBot(commands.AutoShardedBot):
 
     async def on_command_error(self, ctx: discord.ext.commands.Context, error):
         if isinstance(error, commands.NoPrivateMessage):
-            await ctx.author.send(
-                gettext('This command cannot be used in private messages.')
-            )
+            await ctx.author.send(gettext('This command cannot be used in private messages.'))
+
         elif isinstance(error, commands.DisabledCommand):
-            await ctx.author.send(
-                gettext('Sorry. This command is disabled and cannot be used.')
-            )
+            await ctx.author.send(gettext('Sorry. This command is disabled and cannot be used.'))
+
         elif isinstance(error, commands.CommandInvokeError):
-            print(gettext('In ') + f'{ctx.command.qualified_name}:',
-                  file=sys.stderr)
+            print(gettext('In ') + f'{ctx.command.qualified_name}:', file=sys.stderr)
             traceback.print_tb(error.original.__traceback__)
-            print(f'{error.original.__class__.__name__}: {error.original}',
-                  file=sys.stderr)
+            print(f'{error.original.__class__.__name__}: {error.original}', file=sys.stderr)
+
         elif isinstance(error, commands.ArgumentParsingError):
             await ctx.send(error.__str__())
 
@@ -92,9 +85,7 @@ class TuxBot(commands.AutoShardedBot):
         await self.invoke(ctx)
 
     async def on_message(self, message: discord.message):
-        if message.author.bot \
-                or message.author.id in self.blacklist \
-                or message.guild.id in self.blacklist:
+        if message.author.bot or message.author.id in self.blacklist or message.guild.id in self.blacklist:
             return
 
         await self.process_commands(message)
@@ -118,11 +109,8 @@ class TuxBot(commands.AutoShardedBot):
     @property
     def logs_webhook(self) -> discord.Webhook:
         logs_webhook = self.config.logs_webhook
-        webhook = discord.Webhook.partial(id=logs_webhook.get('id'),
-                                          token=logs_webhook.get('token'),
-                                          adapter=discord.AsyncWebhookAdapter(
-                                              self.session)
-                                          )
+        webhook = discord.Webhook.partial(id=logs_webhook.get('id'), token=logs_webhook.get('token'), adapter=discord.AsyncWebhookAdapter(self.session))
+
         return webhook
 
     async def close(self):
