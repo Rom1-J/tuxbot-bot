@@ -82,7 +82,7 @@ def _update():
     local = git.Repo(search_parent_directories=True)
     current = local.head.object.hexsha
 
-    origin = requests.get('https://git.gnous.eu/api/v1/repos/gnouseu/tuxbot-bot/branches/master')
+    origin = requests.get('https://git.gnous.eu/api/v1/repos/gnouseu/tuxbot-bot/branches/rewrite')
     last = origin.json().get('commit').get('id')
 
     if current != last:

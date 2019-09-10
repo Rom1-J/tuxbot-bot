@@ -6,13 +6,13 @@
  - [ ] Alias system for commands (e.g. `.alias .ci show .cs`)
  - [ ] Migrate MySQL to postgresql
  - [ ] Prepare bot for python 3.8 and discord.py 1.3.0
- - [ ] Create launcher
+ - [x] Create launcher
 
 ## Launcher requirements :
 
  - [x] Can install the bot
  - [x] Can launch the bot
- - [ ] Can propose updates 
+ - [x] Can propose updates 
  
 ## New commands :
 

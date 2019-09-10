@@ -49,7 +49,7 @@ class TuxBot(commands.AutoShardedBot):
         self.prefixes = Config('prefixes.json')
         self.blacklist = Config('blacklist.json')
 
-        self.version = Version(10, 0, 0, pre_release='a18', build=git.Repo(search_parent_directories=True).head.object.hexsha)
+        self.version = Version(10, 0, 0, pre_release='a20', build=git.Repo(search_parent_directories=True).head.object.hexsha)
 
         for extension in l_extensions:
             if extension not in unload:
