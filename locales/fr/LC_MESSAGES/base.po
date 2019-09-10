@@ -23,6 +23,10 @@ msgstr "Impossible de lancer PostgreSQL..."
 msgid "Launch without loading the <TEXT> module"
 msgstr "Lancer sans charger le module <TEXT>"
 
+#: launcher.py:73
+msgid "Search for update"
+msgstr "Rechercher les mises à jour"
+
 #: bot.py:52
 msgid "Failed to load extension : "
 msgstr "Impossible de charger l'extension : "

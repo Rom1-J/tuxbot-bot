@@ -23,6 +23,10 @@ msgstr ""
 msgid "Launch without loading the <TEXT> module"
 msgstr ""
 
+#: launcher.py:73
+msgid "Search for update"
+msgstr ""
+
 #: bot.py:52
 msgid "Failed to load extension : "
 msgstr ""

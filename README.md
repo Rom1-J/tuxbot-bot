@@ -10,8 +10,8 @@
 
 ## Launcher requirements :
 
- - [ ] Can install the bot
- - [ ] Can launch the bot
+ - [x] Can install the bot
+ - [x] Can launch the bot
  - [ ] Can propose updates 
  
 ## New commands :

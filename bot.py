@@ -6,11 +6,13 @@ from collections import deque
 
 import aiohttp
 import discord
+import git
 from discord.ext import commands
 
 import config
 from cogs.utils.config import Config
 from cogs.utils.lang import gettext
+from cogs.utils.version import Version
 
 description = """
 Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
@@ -46,6 +48,8 @@ class TuxBot(commands.AutoShardedBot):
 
         self.prefixes = Config('prefixes.json')
         self.blacklist = Config('blacklist.json')
+
+        self.version = Version(10, 0, 0, pre_release='a18', build=git.Repo(search_parent_directories=True).head.object.hexsha)
 
         for extension in l_extensions:
             if extension not in unload:
@@ -95,6 +99,7 @@ class TuxBot(commands.AutoShardedBot):
             self.uptime = datetime.datetime.utcnow()
 
         print(gettext('Ready:') + f' {self.user} (ID: {self.user.id})')
+        print(self.version)
 
         presence: dict = dict(status=discord.Status.dnd)
         if self.config.activity is not None:

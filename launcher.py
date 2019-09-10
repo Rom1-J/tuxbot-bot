@@ -3,6 +3,8 @@ import contextlib
 import logging
 import socket
 import sys
+import git
+import requests
 
 import click
 
@@ -42,7 +44,7 @@ def setup_logging():
             log.removeHandler(hdlr)
 
 
-def run_bot(unload):
+def run_bot(unload: list = []):
     loop = asyncio.get_event_loop()
     log = logging.getLogger()
 
@@ -60,15 +62,46 @@ def run_bot(unload):
     bot.run()
 
 
-@click.group(invoke_without_command=True, options_metavar='[options]')
-@click.option('-u', '--unload',
-              multiple=True, type=str,
-              help=gettext('Launch without loading the <TEXT> module'))
-@click.pass_context
-def main(ctx, unload):
-    if ctx.invoked_subcommand is None:
+@click.command()
+@click.option('-d', '--unload', multiple=True, type=str, help=gettext('Launch without loading the <TEXT> module'))
+@click.option('-u', '--update', help=gettext('Search for update'), is_flag=True)
+def main(**kwargs):
+    if kwargs.get('update'):
+        _update()
+
+    with setup_logging():
+        run_bot(kwargs.get('unload'))
+
+
+@click.option('-d', '--update', help=gettext('Search for update'), is_flag=True)
+def _update():
+    print(gettext('Checking for update...'))
+
+    local = git.Repo(search_parent_directories=True)
+    current = local.head.object.hexsha
+
+    origin = requests.get('https://git.gnous.eu/api/v1/repos/gnouseu/tuxbot-bot/branches/master')
+    last = origin.json().get('commit').get('id')
+
+    if current != last:
+        print(gettext('A new version is available !'))
+        check = input(gettext('Update ? [Y/n]')).lower().strip()
+
+        while check not in ['', 'y', 'n']:
+            check = input(gettext('Update ? [Y/n]'))
+
+            if check == 'y':
+                local.remotes.origin.pull()
+                with setup_logging():
+                    run_bot()
+            else:
+                with setup_logging():
+                    run_bot()
+    else:
+        print(gettext('Tuxbot is up to date') + '\n')
+
         with setup_logging():
-            run_bot(unload)
+            run_bot()
 
 
 if __name__ == '__main__':
