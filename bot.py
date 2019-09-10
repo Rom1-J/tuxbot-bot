@@ -3,7 +3,6 @@ import logging
 import sys
 import traceback
 from collections import deque
-from typing import List
 
 import aiohttp
 import discord
@@ -26,7 +25,7 @@ l_extensions = (
 )
 
 
-async def _prefix_callable(bot, message: discord.message) -> List:
+async def _prefix_callable(bot, message: discord.message) -> list:
     extras = []
     if message.guild is not None:
         extras = bot.prefixes.get(str(message.guild.id), [])
@@ -37,12 +36,12 @@ async def _prefix_callable(bot, message: discord.message) -> List:
 class TuxBot(commands.AutoShardedBot):
     __slots__ = ('uptime', 'config', 'session')
 
-    def __init__(self, unload):
+    def __init__(self, unload: list):
         super().__init__(command_prefix=_prefix_callable,
                          description=description, pm_help=None,
                          help_command=None, help_attrs=dict(hidden=True))
 
-        self.uptime = datetime.datetime.utcnow()
+        self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
         self._prev_events = deque(maxlen=10)
         self.session = aiohttp.ClientSession(loop=self.loop)
@@ -60,10 +59,13 @@ class TuxBot(commands.AutoShardedBot):
                     log.error(gettext("Failed to load extension : ")
                               + extension, exc_info=e)
 
+    async def is_owner(self, user: discord.User) -> bool:
+        return user.id in config.authorized_id
+
     async def on_socket_response(self, msg):
         self._prev_events.append(msg)
 
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx: discord.ext.commands.Context, error):
         if isinstance(error, commands.NoPrivateMessage):
             await ctx.author.send(
                 gettext('This command cannot be used in private messages.')
@@ -79,9 +81,9 @@ class TuxBot(commands.AutoShardedBot):
             print(f'{error.original.__class__.__name__}: {error.original}',
                   file=sys.stderr)
         elif isinstance(error, commands.ArgumentParsingError):
-            await ctx.send(error)
+            await ctx.send(error.__str__())
 
-    async def process_commands(self, message):
+    async def process_commands(self, message: discord.message):
         ctx = await self.get_context(message)
 
         if ctx.command is None:
@@ -89,7 +91,7 @@ class TuxBot(commands.AutoShardedBot):
 
         await self.invoke(ctx)
 
-    async def on_message(self, message):
+    async def on_message(self, message: discord.message):
         if message.author.bot \
                 or message.author.id in self.blacklist \
                 or message.guild.id in self.blacklist:
@@ -103,17 +105,18 @@ class TuxBot(commands.AutoShardedBot):
 
         print(gettext('Ready:') + f' {self.user} (ID: {self.user.id})')
 
-        await self.change_presence(status=discord.Status.dnd,
-                                   activity=discord.Game(
-                                       name=self.config.activity
-                                   ))
+        presence: dict = dict(status=discord.Status.dnd)
+        if self.config.activity is not None:
+            presence.update(activity=discord.Game(name=self.config.activity))
+
+        await self.change_presence(**presence)
 
     @staticmethod
     async def on_resumed():
         print('resumed...')
 
     @property
-    def logs_webhook(self):
+    def logs_webhook(self) -> discord.Webhook:
         logs_webhook = self.config.logs_webhook
         webhook = discord.Webhook.partial(id=logs_webhook.get('id'),
                                           token=logs_webhook.get('token'),
