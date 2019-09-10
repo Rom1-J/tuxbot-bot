@@ -48,6 +48,8 @@ def run_bot(unload: list = []):
     loop = asyncio.get_event_loop()
     log = logging.getLogger()
 
+    print(gettext('Stating...'))
+
     try:
         pool = loop.run_until_complete(
             Table.create_pool(config.postgresql, command_timeout=60)
@@ -85,13 +87,18 @@ def _update():
 
     if current != last:
         print(gettext('A new version is available !'))
-        check = input(gettext('Update ? [Y/n]')).lower().strip()
+        check = None
 
-        while check not in ['', 'y', 'n']:
-            check = input(gettext('Update ? [Y/n]'))
+        while check not in ['', 'y', 'n', 'o']:
+            check = input(gettext('Update ? [Y/n] ')).lower().strip()
+            print(check)
 
-            if check == 'y':
-                local.remotes.origin.pull()
+            if check in ['y', '', 'o']:
+                print(gettext('Downloading...'))
+
+                origin = git.Repo(search_parent_directories=True).remotes['origin']
+                origin.pull()
+
                 with setup_logging():
                     run_bot()
             else:

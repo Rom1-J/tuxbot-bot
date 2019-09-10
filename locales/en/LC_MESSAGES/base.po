@@ -15,6 +15,10 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
+#: launcher.py:51
+msgid "Stating..."
+msgstr ""
+
 #: launcher.py:56 launcher.py:57
 msgid "Could not set up PostgreSQL..."
 msgstr ""
@@ -25,6 +29,26 @@ msgstr ""
 
 #: launcher.py:73
 msgid "Search for update"
+msgstr ""
+
+#: launcher.py:73
+msgid "Checking for update..."
+msgstr ""
+
+#: launcher.py:89
+msgid "A new version is available !"
+msgstr ""
+
+#: launcher.py:93
+msgid "Update ? [Y/n] "
+msgstr ""
+
+#: launcher.py:97
+msgid "Downloading..."
+msgstr ""
+
+#: launcher.py:108
+msgid "Tuxbot is up to date"
 msgstr ""
 
 #: bot.py:52
