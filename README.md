@@ -20,6 +20,10 @@
  - [ ] `.sondage --anonyme <...>` (create à sondage with the possibility of answering anonymously)
  - [ ] `.sondage --edit <id>` (edit a sondage if we are the author or an admin)
  
+## Documentation:
+ - [ ] How to use ?
+ - [ ] How to add more commands ?
+ 
 ## Ultimate :
 
  - [ ] Send email or Telegram's message when something is wrong on the bot
