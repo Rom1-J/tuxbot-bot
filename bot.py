@@ -22,7 +22,6 @@ log = logging.getLogger(__name__)
 
 l_extensions = (
     'cogs.admin',
-    'cogs.bascics',
     'jishaku',
 )
 
