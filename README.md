@@ -7,6 +7,7 @@
  - [ ] Migrate MySQL to postgresql
  - [x] Prepare bot for python 3.8 and discord.py 1.3.0
  - [x] Create launcher
+ - [ ] Create documentation
 
 ## Launcher requirements :
 
