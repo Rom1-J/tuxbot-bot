@@ -13,7 +13,8 @@ class Admin(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx: commands.Context):
-        permissions = ctx.channel.permissions_for(ctx.author)
+        permissions: discord.Permissions = ctx.channel.permissions_for(
+            ctx.author)
 
         has_permission = permissions.administrator
         is_owner = await self.bot.is_owner(ctx.author)
@@ -21,7 +22,8 @@ class Admin(commands.Cog):
         return has_permission or is_owner
 
     @staticmethod
-    async def kick_ban_message(ctx: commands.Context, **kwargs) -> discord.Embed:
+    async def kick_ban_message(ctx: commands.Context,
+                               **kwargs) -> discord.Embed:
         member: discord.Member = kwargs.get('member')
         reason = kwargs.get(
             'reason',
@@ -63,7 +65,7 @@ class Admin(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name="ban")
+    @commands.command(name='ban')
     async def _ban(self, ctx: commands.Context, user: discord.User, *,
                    reason=""):
         member: discord.Member = await ctx.guild.fetch_member(user.id)
@@ -86,7 +88,7 @@ class Admin(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name="kick")
+    @commands.command(name='kick')
     async def _kick(self, ctx: commands.Context, user: discord.User, *,
                     reason=""):
         member: discord.Member = await ctx.guild.fetch_member(user.id)
@@ -106,6 +108,37 @@ class Admin(commands.Cog):
                 await ctx.send(Texts('admin').get("Unable to ban this user"))
         else:
             await ctx.send(Texts('admin').get("Unable to find the user..."))
+
+    """---------------------------------------------------------------------"""
+
+    @commands.command(name='clear')
+    async def _clear(self, ctx: commands.Context, count: int):
+        try:
+            await ctx.message.delete()
+            await ctx.channel.purge(limit=count)
+        except discord.errors.Forbidden:
+            pass
+
+    """---------------------------------------------------------------------"""
+
+    @commands.group(name='react')
+    async def _react(self, ctx: commands.Context):
+        if ctx.invoked_subcommand is None:
+            return
+
+    @_react.command(name='add')
+    async def _react_add(self, ctx: commands.Context, message_id: int, *,
+                         emojis: str):
+        emojis: list = emojis.split(' ')
+        message: discord.Message = await ctx.channel.fetch_message(message_id)
+
+        for emoji in emojis:
+            await message.add_reaction(emoji)
+
+    @_react.command(name='clear')
+    async def _react_remove(self, ctx: commands.Context, message_id: int):
+        message: discord.Message = await ctx.channel.fetch_message(message_id)
+        await message.clear_reactions()
 
     """---------------------------------------------------------------------"""
 
