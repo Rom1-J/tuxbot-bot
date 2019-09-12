@@ -3,17 +3,17 @@ import contextlib
 import logging
 import socket
 import sys
-import git
-import requests
 
 import click
+import git
+import requests
 
 from bot import TuxBot
 from cogs.utils.db import Table
 
 try:
     import config
-    from cogs.utils.lang import gettext
+    from cogs.utils.lang import Texts
 except ModuleNotFoundError:
     import first_run
 
@@ -48,15 +48,16 @@ def run_bot(unload: list = []):
     loop = asyncio.get_event_loop()
     log = logging.getLogger()
 
-    print(gettext('Stating...'))
+    print(Texts().get('Stating...'))
 
     try:
         pool = loop.run_until_complete(
             Table.create_pool(config.postgresql, command_timeout=60)
         )
     except socket.gaierror as e:
-        click.echo(gettext('Could not set up PostgreSQL...'), file=sys.stderr)
-        log.exception(gettext('Could not set up PostgreSQL...'))
+        click.echo(Texts().get("Could not set up PostgreSQL..."),
+                   file=sys.stderr)
+        log.exception(Texts().get("Could not set up PostgreSQL..."))
         return
 
     bot = TuxBot(unload)
@@ -65,8 +66,10 @@ def run_bot(unload: list = []):
 
 
 @click.command()
-@click.option('-d', '--unload', multiple=True, type=str, help=gettext('Launch without loading the <TEXT> module'))
-@click.option('-u', '--update', help=gettext('Search for update'), is_flag=True)
+@click.option('-d', '--unload', multiple=True, type=str,
+              help=Texts().get("Launch without loading the <TEXT> module"))
+@click.option('-u', '--update', help=Texts().get("Search for update"),
+              is_flag=True)
 def main(**kwargs):
     if kwargs.get('update'):
         _update()
@@ -75,28 +78,31 @@ def main(**kwargs):
         run_bot(kwargs.get('unload'))
 
 
-@click.option('-d', '--update', help=gettext('Search for update'), is_flag=True)
+@click.option('-d', '--update', help=Texts().get("Search for update"),
+              is_flag=True)
 def _update():
-    print(gettext('Checking for update...'))
+    print(Texts().get("Checking for update..."))
 
     local = git.Repo(search_parent_directories=True)
     current = local.head.object.hexsha
 
-    origin = requests.get('https://git.gnous.eu/api/v1/repos/gnouseu/tuxbot-bot/branches/rewrite')
+    gitea = 'https://git.gnous.eu/api/v1/'
+    origin = requests.get(gitea + 'repos/gnouseu/tuxbot-bot/branches/rewrite')
     last = origin.json().get('commit').get('id')
 
     if current != last:
-        print(gettext('A new version is available !'))
+        print(Texts().get("A new version is available !"))
         check = None
 
         while check not in ['', 'y', 'n', 'o']:
-            check = input(gettext('Update ? [Y/n] ')).lower().strip()
+            check = input(Texts().get("Update ? [Y/n] ")).lower().strip()
             print(check)
 
             if check in ['y', '', 'o']:
-                print(gettext('Downloading...'))
+                print(Texts().get("Downloading..."))
 
-                origin = git.Repo(search_parent_directories=True).remotes['origin']
+                origin = git.Repo(search_parent_directories=True) \
+                    .remotes['origin']
                 origin.pull()
 
                 with setup_logging():
@@ -105,7 +111,7 @@ def _update():
                 with setup_logging():
                     run_bot()
     else:
-        print(gettext('Tuxbot is up to date') + '\n')
+        print(Texts().get("Tuxbot is up to date") + '\n')
 
         with setup_logging():
             run_bot()

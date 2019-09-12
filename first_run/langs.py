@@ -53,7 +53,7 @@ texts = {
     },
 
     'multiple': {
-        'lang': "Veuillez choisir une langue | Please choose a language "
+        'locale': "Veuillez choisir une langue | Please choose a language "
                   "[fr/en]",
         'not_empty': "Cette valeur ne doit pas être vide |"
                      " This value must not be empty"
