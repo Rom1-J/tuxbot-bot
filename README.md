@@ -28,3 +28,21 @@
 
  - [ ] Send email or Telegram's message when something is wrong on the bot
  - [ ] Create skynet (group of multiple commands about sky (planes, meteo,...))
+ 
+ ---
+ 
+ # Cogs.admin commands
+ 
+ - [ ] upload
+ - [x] ban
+ - [x] kick
+ - [x] clear
+ - [x] say
+ - [x] sayto `removed`, now : `say to`
+ - [x] sayto_dm `removed`, now : `say to`
+ - [x] editsay `removed`, now : `say edit`
+ - [x] addreaction `renamed`
+ - [ ] delete
+ - [ ] deletefrom
+ - [ ] embed
+ 

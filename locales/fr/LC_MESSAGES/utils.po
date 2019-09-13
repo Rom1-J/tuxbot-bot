@@ -15,11 +15,8 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-msgid "Please enter a reason"
-msgstr ""
+msgid "Unable to find the user..."
+msgstr "Impossibe de trouver l'utilisateur..."
 
-msgid "Unable to ban this user"
-msgstr ""
-
-msgid "Unable to kick this user"
-msgstr ""
+msgid "Unable to find the message"
+msgstr "Impossible de trouver le message"

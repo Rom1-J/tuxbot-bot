@@ -1,4 +1,5 @@
 import datetime
+from typing import Union
 
 import discord
 from discord.ext import commands
@@ -55,22 +56,49 @@ class Admin(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='say')
-    async def _say(self, ctx: commands.Context, *, to_say: str):
+    @commands.group(name='say', invoke_without_command=True)
+    async def _say(self, ctx: commands.Context, *, content: str):
         try:
             await ctx.message.delete()
-            await ctx.send(to_say)
         except discord.errors.Forbidden:
-            await ctx.send(to_say)
+            pass
+
+        await ctx.send(content)
+
+    @_say.command(name='edit')
+    async def _say_edit(self, ctx: commands.Context, message_id: int, *,
+                        content: str):
+        try:
+            await ctx.message.delete()
+        except discord.errors.Forbidden:
+            pass
+
+        try:
+            message: discord.Message = await ctx.channel.fetch_message(
+                message_id)
+            await message.edit(content=content)
+        except (discord.errors.NotFound, discord.errors.Forbidden):
+            await ctx.send(Texts('utils').get("Unable to find the message"))
+
+    @_say.command(name='to')
+    async def _say_to(self, ctx: commands.Context,
+                      channel: Union[discord.TextChannel, discord.User], *,
+                      content):
+        try:
+            await ctx.message.delete()
+        except discord.errors.Forbidden:
+            pass
+
+        await channel.send(content)
 
     """---------------------------------------------------------------------"""
 
     @commands.command(name='ban')
     async def _ban(self, ctx: commands.Context, user: discord.User, *,
                    reason=""):
-        member: discord.Member = await ctx.guild.fetch_member(user.id)
+        try:
+            member: discord.Member = await ctx.guild.fetch_member(user.id)
 
-        if member:
             try:
                 await member.ban(reason=reason)
                 e: discord.Embed = await self.kick_ban_message(
@@ -83,17 +111,17 @@ class Admin(commands.Cog):
                 await ctx.send(embed=e)
             except discord.Forbidden:
                 await ctx.send(Texts('admin').get("Unable to ban this user"))
-        else:
-            await ctx.send(Texts('admin').get("Unable to find the user..."))
+        except discord.errors.NotFound:
+            await ctx.send(Texts('utils').get("Unable to find the user..."))
 
     """---------------------------------------------------------------------"""
 
     @commands.command(name='kick')
     async def _kick(self, ctx: commands.Context, user: discord.User, *,
                     reason=""):
-        member: discord.Member = await ctx.guild.fetch_member(user.id)
+        try:
+            member: discord.Member = await ctx.guild.fetch_member(user.id)
 
-        if member:
             try:
                 await member.kick(reason=reason)
                 e: discord.Embed = await self.kick_ban_message(
@@ -105,9 +133,9 @@ class Admin(commands.Cog):
 
                 await ctx.send(embed=e)
             except discord.Forbidden:
-                await ctx.send(Texts('admin').get("Unable to ban this user"))
-        else:
-            await ctx.send(Texts('admin').get("Unable to find the user..."))
+                await ctx.send(Texts('admin').get("Unable to kick this user"))
+        except discord.errors.NotFound:
+            await ctx.send(Texts('utils').get("Unable to find the user..."))
 
     """---------------------------------------------------------------------"""
 
@@ -130,15 +158,24 @@ class Admin(commands.Cog):
     async def _react_add(self, ctx: commands.Context, message_id: int, *,
                          emojis: str):
         emojis: list = emojis.split(' ')
-        message: discord.Message = await ctx.channel.fetch_message(message_id)
 
-        for emoji in emojis:
-            await message.add_reaction(emoji)
+        try:
+            message: discord.Message = await ctx.channel.fetch_message(
+                message_id)
+
+            for emoji in emojis:
+                await message.add_reaction(emoji)
+        except discord.errors.NotFound:
+            await ctx.send(Texts('utils').get("Unable to find the message"))
 
     @_react.command(name='clear')
     async def _react_remove(self, ctx: commands.Context, message_id: int):
-        message: discord.Message = await ctx.channel.fetch_message(message_id)
-        await message.clear_reactions()
+        try:
+            message: discord.Message = await ctx.channel.fetch_message(
+                message_id)
+            await message.clear_reactions()
+        except discord.errors.NotFound:
+            await ctx.send(Texts('utils').get("Unable to find the message"))
 
     """---------------------------------------------------------------------"""
 

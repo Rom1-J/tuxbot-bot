@@ -21,5 +21,5 @@ msgstr "Merci d'entrer une raison"
 msgid "Unable to ban this user"
 msgstr "Impossible de bannir cet utilisateur"
 
-msgid "Unable to find the user..."
-msgstr "Impossibe de trouver l'utilisateur..."
+msgid "Unable to kick this user"
+msgstr "Impossible d'expulser cet utilisateur"
