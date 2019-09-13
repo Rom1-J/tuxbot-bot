@@ -78,7 +78,8 @@ class Admin(commands.Cog):
                 message_id)
             await message.edit(content=content)
         except (discord.errors.NotFound, discord.errors.Forbidden):
-            await ctx.send(Texts('utils').get("Unable to find the message"))
+            await ctx.send(Texts('utils').get("Unable to find the message"),
+                           delete_after=5)
 
     @_say.command(name='to')
     async def _say_to(self, ctx: commands.Context,
@@ -110,9 +111,11 @@ class Admin(commands.Cog):
 
                 await ctx.send(embed=e)
             except discord.Forbidden:
-                await ctx.send(Texts('admin').get("Unable to ban this user"))
+                await ctx.send(Texts('admin').get("Unable to ban this user"),
+                               delete_after=5)
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the user..."))
+            await ctx.send(Texts('utils').get("Unable to find the user..."),
+                           delete_after=5)
 
     """---------------------------------------------------------------------"""
 
@@ -133,9 +136,11 @@ class Admin(commands.Cog):
 
                 await ctx.send(embed=e)
             except discord.Forbidden:
-                await ctx.send(Texts('admin').get("Unable to kick this user"))
+                await ctx.send(Texts('admin').get("Unable to kick this user"),
+                               delete_after=5)
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the user..."))
+            await ctx.send(Texts('utils').get("Unable to find the user..."),
+                           delete_after=5)
 
     """---------------------------------------------------------------------"""
 
@@ -166,7 +171,8 @@ class Admin(commands.Cog):
             for emoji in emojis:
                 await message.add_reaction(emoji)
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the message"))
+            await ctx.send(Texts('utils').get("Unable to find the message"),
+                           delete_after=5)
 
     @_react.command(name='clear')
     async def _react_remove(self, ctx: commands.Context, message_id: int):
@@ -175,9 +181,41 @@ class Admin(commands.Cog):
                 message_id)
             await message.clear_reactions()
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the message"))
+            await ctx.send(Texts('utils').get("Unable to find the message"),
+                           delete_after=5)
 
     """---------------------------------------------------------------------"""
+
+    @commands.group(name='delete', invoke_without_command=True)
+    async def _delete(self, ctx: commands.Context, message_id: int):
+        try:
+            await ctx.message.delete()
+        except discord.errors.Forbidden:
+            pass
+
+        try:
+            message: discord.Message = await ctx.channel.fetch_message(
+                message_id)
+            await message.delete()
+        except (discord.errors.NotFound, discord.errors.Forbidden):
+            await ctx.send(Texts('utils').get("Unable to find the message"),
+                           delete_after=5)
+
+    @_delete.command(name='from', aliases=['to', 'in'])
+    async def _delete_from(self, ctx: commands.Context,
+                           channel: discord.TextChannel, message_id: int):
+        try:
+            await ctx.message.delete()
+        except discord.errors.Forbidden:
+            pass
+
+        try:
+            message: discord.Message = await channel.fetch_message(
+                message_id)
+            await message.delete()
+        except (discord.errors.NotFound, discord.errors.Forbidden):
+            await ctx.send(Texts('utils').get("Unable to find the message"),
+                           delete_after=5)
 
 
 def setup(bot: TuxBot):

@@ -41,8 +41,8 @@
  - [x] sayto `removed`, now : `say to`
  - [x] sayto_dm `removed`, now : `say to`
  - [x] editsay `removed`, now : `say edit`
- - [x] addreaction `renamed`
- - [ ] delete
- - [ ] deletefrom
+ - [x] addreaction `renamed`, now `react add`
+ - [x] delete
+ - [x] deletefrom `removed`, now `delete (from|to|in)`
  - [ ] embed
  
