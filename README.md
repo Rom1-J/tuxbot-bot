@@ -33,7 +33,7 @@
  
  # Cogs.admin commands
  
- - [ ] upload
+ - [x] upload `removed`, cause : `never used`
  - [x] ban
  - [x] kick
  - [x] clear
@@ -44,5 +44,5 @@
  - [x] addreaction `renamed`, now `react add`
  - [x] delete
  - [x] deletefrom `removed`, now `delete (from|to|in)`
- - [ ] embed
+ - [x] embed `removed`, cause : `never used`
  
