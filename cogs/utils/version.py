@@ -9,4 +9,4 @@ class Version:
 
     def __str__(self) -> str:
         build = self.build[:10]
-        return f'v{self.major}.{self.minor}.{self.patch}{self.pre_release}-{build}'
+        return f'v{self.major}.{self.minor}.{self.patch}{self.pre_release}+{build}'

@@ -1,6 +1,9 @@
+humanize
 discord.py[voice]
 jishaku
 lxml
 click
 asyncpg>=0.12.0
 gitpython
+requests
+psutil

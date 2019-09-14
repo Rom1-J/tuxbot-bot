@@ -5,7 +5,6 @@ import socket
 import sys
 
 import click
-import git
 import requests
 
 from bot import TuxBot

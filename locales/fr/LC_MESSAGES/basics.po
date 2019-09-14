@@ -1,0 +1,37 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-09-08 19:04+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+msgid "Information about TuxBot"
+msgstr "Informations sur TuxBot"
+
+msgid "Development"
+msgstr "Développement"
+
+msgid "physical memory"
+msgstr "mémoire physique"
+
+msgid "virtual memory"
+msgstr "mémoire virtuelle"
+
+msgid "Servers count"
+msgstr "Nombre de serveurs"
+
+msgid "Channels count"
+msgstr "Nombre de channel"
+
+msgid "Members count"
+msgstr "Nombre de membres"
