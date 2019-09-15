@@ -18,6 +18,9 @@ msgstr ""
 msgid "Information about TuxBot"
 msgstr ""
 
+msgid "Latest changes"
+msgstr ""
+
 msgid "Development"
 msgstr ""
 
@@ -34,4 +37,10 @@ msgid "Channels count"
 msgstr ""
 
 msgid "Members count"
+msgstr ""
+
+msgid "Links"
+msgstr ""
+
+msgid "Invite"
 msgstr ""

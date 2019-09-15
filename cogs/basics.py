@@ -1,3 +1,4 @@
+import os
 import platform
 import time
 
@@ -14,6 +15,12 @@ class Basics(commands.Cog):
 
     def __init__(self, bot: TuxBot):
         self.bot = bot
+
+    @staticmethod
+    def _latest_commits():
+        cmd = 'git log -n 3 -s --format="[\`%h\`](https://git.gnous.eu/gnouseu/tuxbot-bot/commits/%H) %s (%cr)"'
+
+        return os.popen(cmd).read().strip()
 
     """---------------------------------------------------------------------"""
 
@@ -33,7 +40,7 @@ class Basics(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='info')
+    @commands.command(name='info', aliases=['about'])
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
         with proc.oneshot():
@@ -41,6 +48,12 @@ class Basics(commands.Cog):
             e = discord.Embed(
                 title=f"{Texts('basics').get('Information about TuxBot')}",
                 color=0x89C4F9)
+
+            e.add_field(
+                name=f"__{Texts('basics').get('Latest changes')}__",
+                value=self._latest_commits(),
+                inline=False)
+
             e.add_field(
                 name=f"__:busts_in_silhouette: "
                      f"{Texts('basics').get('Development')}__",
@@ -79,9 +92,28 @@ class Basics(commands.Cog):
                 inline=True
             )
 
+            e.add_field(
+                name=f"__{Texts('basics').get('Links')}__",
+                value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
+                      "| [gnous.eu](https://gnous.eu/) "
+                      f"| [{Texts('basics').get('Invite')}](https://discordapp.com/oauth2/authorize?client_id=301062143942590465&scope=bot&permissions=268749888)",
+                inline=False
+            )
+
             e.set_footer(text=f'version: {self.bot.version}')
 
         await ctx.send(embed=e)
+
+    """---------------------------------------------------------------------"""
+
+    @commands.command(name='credits')
+    async def _credits(self, ctx: commands.Context):
+        e = discord.Embed(
+            title=Texts('basics').get('Contributors'),
+            description=f"- **Romain#5117** https://git.gnous.eu/Romain\n"
+                        f"- **Outout#4039** https://git.gnous.eu/mael",
+            color=0x89C4F9
+        )
 
 
 def setup(bot: TuxBot):

@@ -43,7 +43,7 @@ class TuxBot(commands.AutoShardedBot):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
-                         activity=discord.Game(name=Texts().get('Stating...')))
+                         activity=discord.Game(name=Texts().get('Starting...')))
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
