@@ -37,7 +37,7 @@ msgstr "Recherche de mise à jour..."
 
 #: launcher.py:89
 msgid "A new version is available !"
-msgstr "Une nouvelle version est disponnible !"
+msgstr "Une nouvelle version est disponible !"
 
 #: launcher.py:93
 msgid "Update ? [Y/n] "
@@ -61,7 +61,7 @@ msgstr "Cette commande ne peut pas être utilisée en message privé."
 
 #: bot.py:63
 msgid "Sorry. This command is disabled and cannot be used."
-msgstr "Désoler mais cette commande est désactivé."
+msgstr "Désolé mais cette commande est désactivée."
 
 #: bot.py:66
 msgid "In "
@@ -69,5 +69,5 @@ msgstr "Dans "
 
 #: bot.py:77
 msgid "Ready:"
-msgstr "Prêt:"
+msgstr "Prêt :"
 

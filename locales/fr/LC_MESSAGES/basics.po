@@ -31,7 +31,7 @@ msgid "Servers count"
 msgstr "Nombre de serveurs"
 
 msgid "Channels count"
-msgstr "Nombre de channel"
+msgstr "Nombre de salons"
 
 msgid "Members count"
 msgstr "Nombre de membres"
