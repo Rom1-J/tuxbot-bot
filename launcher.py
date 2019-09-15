@@ -47,7 +47,7 @@ def run_bot(unload: list = []):
     loop = asyncio.get_event_loop()
     log = logging.getLogger()
 
-    print(Texts().get('Stating...'))
+    print(Texts().get('Starting...'))
 
     try:
         pool = loop.run_until_complete(

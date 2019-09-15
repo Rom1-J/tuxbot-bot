@@ -16,7 +16,7 @@ msgstr ""
 
 
 #: launcher.py:51
-msgid "Stating..."
+msgid "Starting..."
 msgstr ""
 
 #: launcher.py:56 launcher.py:57
