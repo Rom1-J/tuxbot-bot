@@ -44,3 +44,6 @@ msgstr ""
 
 msgid "Invite"
 msgstr ""
+
+msgid "Contributors"
+msgstr ""

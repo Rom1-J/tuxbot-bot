@@ -106,14 +106,28 @@ class Basics(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='credits')
+    @commands.command(name='credits', aliases=['contributors'])
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('basics').get('Contributors'),
-            description=f"- **Romain#5117** https://git.gnous.eu/Romain\n"
-                        f"- **Outout#4039** https://git.gnous.eu/mael",
-            color=0x89C4F9
+            color=0x36393f
         )
+
+        e.add_field(
+            name="**Outout#4039** ",
+            value="• https://git.gnous.eu/mael        ⠀\n"
+                  "• mael@gnous.eu\n"
+                  "• [@outoutxyz](https://twitter.com/outouxyz)",
+            inline=True
+        )
+        e.add_field(
+            name="**Romain#5117** ",
+            value="• https://git.gnous.eu/Romain\n"
+                  "• romain@gnous.eu",
+            inline=True
+        )
+
+        await ctx.send(embed=e)
 
 
 def setup(bot: TuxBot):

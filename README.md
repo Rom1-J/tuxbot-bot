@@ -52,5 +52,5 @@
  - [x] ping
  - [x] info
  - [ ] help
- - [ ] credits `new command`
+ - [x] credits `new command`
  

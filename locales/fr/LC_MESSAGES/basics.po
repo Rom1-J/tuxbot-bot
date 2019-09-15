@@ -44,3 +44,6 @@ msgstr "Liens"
 
 msgid "Invite"
 msgstr "Invitation"
+
+msgid "Contributors"
+msgstr "Contributeurs"
