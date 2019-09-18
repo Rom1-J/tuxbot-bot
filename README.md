@@ -29,7 +29,7 @@
  - [ ] Send email or Telegram's message when something is wrong on the bot
  - [ ] Create skynet (group of multiple commands about sky (planes, meteo,...))
 
- -------
+ ---
  
  # Cogs.admin commands
  
@@ -45,6 +45,7 @@
  - [x] delete
  - [x] deletefrom `removed`, now `delete (from|to|in)`
  - [x] embed `removed`, cause : `never used`
+ - [ ] warn `new command`
  
   ---
  

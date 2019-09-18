@@ -90,4 +90,3 @@ class Config:
         print('\n\n\033[4;36m'
               + texts.get(self.config.get('locale')).get('clean')
               + '\033[0m\n')
-        shutil.rmtree('first_run')
