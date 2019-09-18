@@ -5,6 +5,7 @@ import traceback
 from collections import deque
 
 import aiohttp
+import asyncpg
 import discord
 import git
 from discord.ext import commands
@@ -37,9 +38,9 @@ async def _prefix_callable(bot, message: discord.message) -> list:
 
 
 class TuxBot(commands.AutoShardedBot):
-    __slots__ = ('uptime', 'config', 'session')
+    __slots__ = ('uptime', 'config', 'db', 'session')
 
-    def __init__(self, unload: list):
+    def __init__(self, unload: list, db: asyncpg.pool.Pool):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -47,6 +48,7 @@ class TuxBot(commands.AutoShardedBot):
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
+        self.db = db
         self._prev_events = deque(maxlen=10)
         self.session = aiohttp.ClientSession(loop=self.loop)
 

@@ -23,3 +23,6 @@ msgstr "Impossible de bannir cet utilisateur"
 
 msgid "Unable to kick this user"
 msgstr "Impossible d'expulser cet utilisateur"
+
+msgid "last warns"
+msgstr "derniers avertissements"

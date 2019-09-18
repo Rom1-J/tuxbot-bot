@@ -55,3 +55,16 @@
  - [ ] help
  - [x] credits `new command`
  
+ ---
+ 
+ # Cogs.ci commands
+ - [ ] ci (help?)
+ - [ ] ci show
+ - [ ] ci register
+ - [ ] ci delete
+ - [ ] ci update
+ - [ ] ci setconfig
+ - [ ] ci setos
+ - [ ] ci setcountry
+ - [ ] ci online_edit `renamed`, cause : `website down`
+ - [ ] ci list

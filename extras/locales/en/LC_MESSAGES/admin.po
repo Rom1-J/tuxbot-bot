@@ -23,3 +23,6 @@ msgstr ""
 
 msgid "Unable to kick this user"
 msgstr ""
+
+msgid "last warns"
+msgstr ""

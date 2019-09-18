@@ -3,6 +3,7 @@ from typing import Union
 
 import discord
 from discord.ext import commands
+import humanize
 
 from bot import TuxBot
 from .utils.lang import Texts
@@ -12,8 +13,9 @@ class Admin(commands.Cog):
 
     def __init__(self, bot: TuxBot):
         self.bot = bot
+        self.db = bot.db
 
-    async def cog_check(self, ctx: commands.Context):
+    async def cog_check(self, ctx: commands.Context) -> bool:
         permissions: discord.Permissions = ctx.channel.permissions_for(
             ctx.author)
 
@@ -216,6 +218,49 @@ class Admin(commands.Cog):
         except (discord.errors.NotFound, discord.errors.Forbidden):
             await ctx.send(Texts('utils').get("Unable to find the message"),
                            delete_after=5)
+
+    """---------------------------------------------------------------------"""
+
+    @commands.group(name='warn', aliases=['warns'])
+    async def _warn(self, ctx: commands.Context):
+        if ctx.invoked_subcommand is None:
+            query = """
+            SELECT user_id, reason, created_at FROM warns 
+            WHERE created_at >= $1 AND server_id = $2
+            ORDER BY created_at 
+            DESC LIMIT 10
+            """
+            week_ago = datetime.datetime.now() - datetime.timedelta(weeks=6)
+
+            async with self.bot.db.acquire() as con:
+                warns = await con.fetch(query, week_ago, ctx.guild.id)
+                warns_list = ''
+
+                for warn in warns:
+                    user_id = warn.get('user_id')
+                    user = await self.bot.fetch_user(user_id)
+                    reason = warn.get('reason')
+                    ago = humanize.naturaldelta(
+                        datetime.datetime.now() - warn.get('created_at')
+                    )
+
+                    warns_list += f"**{user}**: `{reason}` *({ago} ago)*\n"
+
+                e = discord.Embed(
+                    title=f"{len(warns)} {Texts('admin').get('last warns')}: ",
+                    description=warns_list
+                )
+
+                await ctx.send(embed=e)
+
+    @_warn.command(name='add', aliases=['new'])
+    async def _warn_new(self, ctx: commands.Context, member: discord.Member,
+                        *, reason):
+        """
+        todo: push in database
+        if warn > 2 for member:
+            todo: ask for confirmation to kick or ban
+        """
 
 
 def setup(bot: TuxBot):

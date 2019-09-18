@@ -4,7 +4,9 @@ import logging
 import socket
 import sys
 
+import asyncpg
 import click
+import git
 import requests
 
 from bot import TuxBot
@@ -50,17 +52,16 @@ def run_bot(unload: list = []):
     print(Texts().get('Starting...'))
 
     try:
-        pool = loop.run_until_complete(
+        db = loop.run_until_complete(
             Table.create_pool(config.postgresql, command_timeout=60)
         )
-    except socket.gaierror as e:
+    except socket.gaierror:
         click.echo(Texts().get("Could not set up PostgreSQL..."),
                    file=sys.stderr)
         log.exception(Texts().get("Could not set up PostgreSQL..."))
         return
 
-    bot = TuxBot(unload)
-    bot.pool = pool
+    bot = TuxBot(unload, db)
     bot.run()
 
 
