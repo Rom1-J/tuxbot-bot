@@ -5,7 +5,7 @@ import config
 class Texts:
     def __init__(self, base: str = 'base'):
         self.locale = config.locale
-        self.texts = gettext.translation(base, localedir='locales',
+        self.texts = gettext.translation(base, localedir='extras/locales',
                                          languages=[self.locale])
         self.texts.install()
 

@@ -14,7 +14,7 @@ try:
     import config
     from cogs.utils.lang import Texts
 except ModuleNotFoundError:
-    import first_run
+    import extras.first_run
 
 
 @contextlib.contextmanager
