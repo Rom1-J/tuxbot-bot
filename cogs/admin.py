@@ -2,8 +2,8 @@ import datetime
 from typing import Union
 
 import discord
-from discord.ext import commands
 import humanize
+from discord.ext import commands
 
 from bot import TuxBot
 from .utils.lang import Texts
@@ -233,6 +233,7 @@ class Admin(commands.Cog):
             week_ago = datetime.datetime.now() - datetime.timedelta(weeks=6)
 
             async with self.bot.db.acquire() as con:
+                await ctx.trigger_typing()
                 warns = await con.fetch(query, week_ago, ctx.guild.id)
                 warns_list = ''
 

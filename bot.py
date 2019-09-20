@@ -1,7 +1,6 @@
 import datetime
 import logging
 import sys
-import traceback
 from collections import deque
 
 import aiohttp
@@ -25,6 +24,7 @@ log = logging.getLogger(__name__)
 l_extensions = (
     'cogs.admin',
     'cogs.basics',
+    'cogs.logs',
     'jishaku',
 )
 
@@ -38,13 +38,14 @@ async def _prefix_callable(bot, message: discord.message) -> list:
 
 
 class TuxBot(commands.AutoShardedBot):
-    __slots__ = ('uptime', 'config', 'db', 'session')
 
     def __init__(self, unload: list, db: asyncpg.pool.Pool):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
-                         activity=discord.Game(name=Texts().get('Starting...')))
+                         activity=discord.Game(
+                             name=Texts().get('Starting...'))
+                         )
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
@@ -81,18 +82,10 @@ class TuxBot(commands.AutoShardedBot):
 
         elif isinstance(error, commands.DisabledCommand):
             await ctx.author.send(
-                Texts().get("Sorry. This command is disabled and cannot be used.")
+                Texts().get(
+                    "Sorry. This command is disabled and cannot be used."
+                )
             )
-
-        elif isinstance(error, commands.CommandInvokeError):
-            print(Texts().get("In ") + f'{ctx.command.qualified_name}:',
-                  file=sys.stderr)
-            traceback.print_tb(error.original.__traceback__)
-            print(f'{error.original.__class__.__name__}: {error.original}',
-                  file=sys.stderr)
-
-        elif isinstance(error, commands.ArgumentParsingError):
-            await ctx.send(error.__str__())
 
     async def process_commands(self, message: discord.message):
         ctx = await self.get_context(message)
@@ -140,6 +133,7 @@ class TuxBot(commands.AutoShardedBot):
 
     async def close(self):
         await super().close()
+        await self.db.close()
         await self.session.close()
 
     def run(self):

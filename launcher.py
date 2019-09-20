@@ -4,7 +4,6 @@ import logging
 import socket
 import sys
 
-import asyncpg
 import click
 import git
 import requests
@@ -30,7 +29,7 @@ def setup_logging():
 
         handler = logging.FileHandler(filename='logs/tuxbot.log',
                                       encoding='utf-8', mode='w')
-        fmt = logging.Formatter('[{asctime}] [{levelname:<7}]'
+        fmt = logging.Formatter('[{levelname:<7}] [{asctime}]'
                                 ' {name}: {message}',
                                 '%Y-%m-%d %H:%M:%S', style='{')
 
