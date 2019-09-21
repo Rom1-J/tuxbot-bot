@@ -1,7 +1,7 @@
 import datetime
 import logging
 import sys
-from collections import deque
+from collections import deque, Counter
 
 import aiohttp
 import asyncpg
@@ -46,6 +46,9 @@ class TuxBot(commands.AutoShardedBot):
                          activity=discord.Game(
                              name=Texts().get('Starting...'))
                          )
+
+        self.socket_stats = Counter()
+        self.command_stats = Counter()
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config

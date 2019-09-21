@@ -1,12 +1,20 @@
+"""
+
+Based on https://github.com/Rapptz/RoboDanny/blob/3d94e89ef27f702a5f57f432a9131bdfb60bb3ec/cogs/stats.py
+Rewrite by Romain J.
+
+"""
+
 import asyncio
 import datetime
 import json
 import logging
 import textwrap
 import traceback
-from collections import defaultdict, Counter
+from collections import defaultdict
 
 import discord
+import humanize
 import psutil
 from discord.ext import commands, tasks
 
@@ -67,6 +75,7 @@ class Logs(commands.Cog):
             return
 
         command = ctx.command.qualified_name
+        self.bot.command_stats[command] += 1
         message = ctx.message
         if ctx.guild is None:
             destination = 'Private Message'
@@ -215,8 +224,38 @@ class Logs(commands.Cog):
         msg = f'{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`'
         await self.webhook.send(msg)
 
+    @commands.command(name='commandstats', hidden=True)
+    @commands.is_owner()
+    async def _commandstats(self, ctx, limit=20):
+        counter = self.bot.command_stats
+        width = len(max(counter, key=len))
 
-async def on_error(self, event, *args, **kwargs):
+        if limit > 0:
+            common = counter.most_common(limit)
+        else:
+            common = counter.most_common()[limit:]
+
+        output = '\n'.join(f'{k:<{width}}: {c}' for k, c in common)
+
+        await ctx.send(f'```\n{output}\n```')
+
+    @commands.command(name='socketstats', hidden=True)
+    @commands.is_owner()
+    async def _socketstats(self, ctx):
+        delta = datetime.datetime.utcnow() - self.bot.uptime
+        minutes = delta.total_seconds() / 60
+        total = sum(self.bot.socket_stats.values())
+        cpm = total / minutes
+        await ctx.send(f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
+
+    @commands.command(name='uptime')
+    async def _uptime(self, ctx):
+        """Tells you how long the bot has been up for."""
+        uptime = humanize.naturaltime(datetime.datetime.utcnow() - self.bot.uptime)
+        await ctx.send(f'Uptime: **{uptime}**')
+
+
+async def on_error(self, event, *args):
     e = discord.Embed(title='Event Error', colour=0xa32952)
     e.add_field(name='Event', value=event)
     e.description = f'```py\n{traceback.format_exc()}\n```'
@@ -237,11 +276,9 @@ async def on_error(self, event, *args, **kwargs):
 
 
 def setup(bot: TuxBot):
-    if not hasattr(bot, 'socket_stats'):
-        bot.socket_stats = Counter()
-
     cog = Logs(bot)
     bot.add_cog(cog)
+
     handler = GatewayHandler(cog)
     logging.getLogger().addHandler(handler)
     commands.AutoShardedBot.on_error = on_error
