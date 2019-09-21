@@ -68,3 +68,14 @@
  - [ ] ci setcountry
  - [ ] ci online_edit `renamed`, cause : `website down`
  - [ ] ci list
+ 
+  ---
+ 
+ # Cogs.utility commands
+ - [ ] clock
+ - [ ] clock *
+ - [ ] ytdiscover
+ - [x] iplocalise
+ - [ ] getheaders
+ - [ ] git
+ - [ ] quote

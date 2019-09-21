@@ -1,4 +1,5 @@
 import os
+import pathlib
 import platform
 import time
 
@@ -40,9 +41,30 @@ class Basics(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
+    @staticmethod
+    def fetch_info():
+        total = 0
+        file_amount = 0
+        ENV = "env"
+
+        for path, _, files in os.walk("."):
+            for name in files:
+                file_dir = str(pathlib.PurePath(path, name))
+                if not name.endswith(".py") or ENV in file_dir:
+                    continue
+                file_amount += 1
+                with open(file_dir, "r", encoding="utf-8") as file:
+                    for line in file:
+                        if not line.strip().startswith("#") or not line.strip():
+                            total += 1
+
+        return total, file_amount
+
     @commands.command(name='info', aliases=['about'])
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
+        lines, files = self.fetch_info()
+
         with proc.oneshot():
             mem = proc.memory_full_info()
             e = discord.Embed(
@@ -93,7 +115,18 @@ class Basics(commands.Cog):
             )
 
             e.add_field(
-                name=f"__{Texts('basics').get('Links')}__",
+                name=f"__:file_folder: {Texts('basics').get('Files')}__",
+                value=str(files),
+                inline=True
+            )
+            e.add_field(
+                name=f"__¶ {Texts('basics').get('Lines')}__",
+                value=str(lines),
+                inline=True
+            )
+
+            e.add_field(
+                name=f"__:link: {Texts('basics').get('Links')}__",
                 value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                       "| [gnous.eu](https://gnous.eu/) "
                       f"| [{Texts('basics').get('Invite')}](https://discordapp.com/oauth2/authorize?client_id=301062143942590465&scope=bot&permissions=268749888)",

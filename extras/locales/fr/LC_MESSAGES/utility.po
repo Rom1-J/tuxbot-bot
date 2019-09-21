@@ -15,41 +15,17 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-msgid "Information about TuxBot"
-msgstr ""
+msgid "ipv6 not available"
+msgstr "Erreur, cette adresse n'est pas disponible en IPv6."
 
-msgid "Latest changes"
-msgstr ""
+msgid "Information for"
+msgstr "Informations pour"
 
-msgid "Development"
-msgstr ""
+msgid "Belongs to :"
+msgstr "Appartient à :"
 
-msgid "physical memory"
-msgstr ""
+msgid "Is located at :"
+msgstr "Se situe à :"
 
-msgid "virtual memory"
-msgstr ""
-
-msgid "Servers count"
-msgstr ""
-
-msgid "Channels count"
-msgstr ""
-
-msgid "Members count"
-msgstr ""
-
-msgid "Links"
-msgstr ""
-
-msgid "Files"
-msgstr ""
-
-msgid "Lines"
-msgstr ""
-
-msgid "Invite"
-msgstr ""
-
-msgid "Contributors"
-msgstr ""
+msgid "info not available"
+msgstr "Erreur, impossible d'obtenir des informations sur cette adresse IP"

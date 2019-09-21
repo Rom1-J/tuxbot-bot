@@ -42,6 +42,12 @@ msgstr "Nombre de membres"
 msgid "Links"
 msgstr "Liens"
 
+msgid "Files"
+msgstr "Fichiers"
+
+msgid "Lines"
+msgstr "Lignes"
+
 msgid "Invite"
 msgstr "Invitation"
 
