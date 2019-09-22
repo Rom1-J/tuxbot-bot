@@ -15,7 +15,22 @@ class Utility(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    async def fetch_api(self, ctx: commands.Context, ip, addr):
+    @commands.command(name='iplocalise')
+    async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
+        addr = re.sub(r'http(s?)://', '', addr)
+        addr = addr[:-1] if addr.endswith('/') else addr
+
+        await ctx.trigger_typing()
+
+        if ip_type in ('v6', 'ipv6'):
+            try:
+                ip = socket.getaddrinfo(addr, None, socket.AF_INET6)[1][4][0]
+            except socket.gaierror:
+                return await ctx.send(
+                    Texts('utility').get('ipv6 not available'))
+        else:
+            ip = socket.gethostbyname(addr)
+
         async with self.bot.session.get(f"http://ip-api.com/json/{ip}") as s:
             response: dict = await s.json()
 
@@ -54,24 +69,6 @@ class Utility(commands.Cog):
                 await ctx.send(
                     content=f"{Texts('utility').get('info not available')}"
                             f"``{response.get('query')}``")
-
-    @commands.command(name='iplocalise')
-    async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
-        addr = re.sub(r'http(s?)://', '', addr)
-        addr = addr[:-1] if addr.endswith('/') else addr
-
-        await ctx.trigger_typing()
-
-        if ip_type in ('v6', 'ipv6'):
-            try:
-                ip = socket.getaddrinfo(addr, None, socket.AF_INET6)[1][4][0]
-            except socket.gaierror:
-                return await ctx.send(
-                    Texts('utility').get('ipv6 not available'))
-        else:
-            ip = socket.gethostbyname(addr)
-
-        await self.fetch_api(ctx, ip, addr)
 
 
 def setup(bot: TuxBot):

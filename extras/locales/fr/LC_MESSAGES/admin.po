@@ -26,3 +26,30 @@ msgstr "Impossible d'expulser cet utilisateur"
 
 msgid "last warns"
 msgstr "derniers avertissements"
+
+msgid "More than 2 warns"
+msgstr "Plus de 2 avertissements"
+
+msgid "has more than 2 warns"
+msgstr "a plus de 2 avertissements, que voulez-vous faire?"
+
+msgid "ignore"
+msgstr "ignorer"
+
+msgid "Took too long. Aborting."
+msgstr "Temps expiré. Abandons."
+
+msgid "got a warn"
+msgstr "a recu un avertissement"
+
+msgid "Reason"
+msgstr "Raison"
+
+msgid "Warn with id"
+msgstr "L'avertissement avec l'id"
+
+msgid "successfully removed"
+msgstr "a été enlevé avec succes"
+
+msgid "successfully edited"
+msgstr "a été édité avec succes"

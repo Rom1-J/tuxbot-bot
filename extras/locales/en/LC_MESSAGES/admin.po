@@ -26,3 +26,30 @@ msgstr ""
 
 msgid "last warns"
 msgstr ""
+
+msgid "More than 2 warns"
+msgstr ""
+
+msgid "has more than 2 warns"
+msgstr "has more than 2 warns, what do you want to do ?"
+
+msgid "ignore"
+msgstr ""
+
+msgid "Took too long. Aborting."
+msgstr ""
+
+msgid "got a warn"
+msgstr ""
+
+msgid "Reason"
+msgstr ""
+
+msgid "Warn with id"
+msgstr ""
+
+msgid "successfully removed"
+msgstr ""
+
+msgid "successfully edited"
+msgstr ""
