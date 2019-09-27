@@ -114,6 +114,28 @@ class Utility(commands.Cog):
         )
         await ctx.send(embed=e)
 
+    """---------------------------------------------------------------------"""
+
+    @commands.command(name='quote')
+    async def _quote(self, ctx, message_id: discord.Message):
+        e = discord.Embed(
+            colour=message_id.author.colour,
+            description=message_id.clean_content,
+            timestamp=message_id.created_at
+        )
+        e.set_author(
+            name=message_id.author.display_name,
+            icon_url=message_id.author.avatar_url_as(format="jpg")
+        )
+        if len(message_id.attachments) >= 1:
+            e.set_image(url=message_id.attachments[0].url)
+
+        e.add_field(name="**Original**",
+                    value=f"[Go!]({message_id.jump_url})")
+        e.set_footer(text="#" + message_id.channel.name)
+
+        await ctx.send(embed=e)
+
 
 def setup(bot: TuxBot):
     bot.add_cog(Utility(bot))
