@@ -79,3 +79,8 @@
  - [x] getheaders
  - [x] git
  - [x] quote
+ 
+   ---
+ 
+ # Cogs.sondage commands `(renamed as cogs.poll)`
+ - [ ] sondage (help?)

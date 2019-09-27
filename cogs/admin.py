@@ -295,11 +295,11 @@ class Admin(commands.Cog):
         """
         week_ago = datetime.datetime.now() - datetime.timedelta(weeks=6)
 
-        def check(payload: discord.RawReactionActionEvent):
-            if payload.message_id != choice.id \
-                    or payload.user_id != ctx.author.id:
+        def check(pld: discord.RawReactionActionEvent):
+            if pld.message_id != choice.id \
+                    or pld.user_id != ctx.author.id:
                 return False
-            return payload.emoji.name in ('1⃣', '2⃣', '3⃣')
+            return pld.emoji.name in ('1⃣', '2⃣', '3⃣')
 
         async with self.bot.db.acquire() as con:
             await ctx.trigger_typing()
@@ -362,7 +362,8 @@ class Admin(commands.Cog):
 
             await self.add_warn(ctx, member, reason)
             await ctx.send(
-                content=f"{member.mention} **{Texts('admin').get('got a warn')}**"
+                content=f"{member.mention} "
+                        f"**{Texts('admin').get('got a warn')}**"
                 f"\n**{Texts('admin').get('Reason')}:** `{reason}`"
                 if reason != 'N/A' else ''
             )
@@ -392,8 +393,7 @@ class Admin(commands.Cog):
         await ctx.send(embed=e)
 
     @_warn.command(name='edit', aliases=['change'])
-    async def _warn_edit(self, ctx: commands.Context, warn_id: int, *,
-                           reason):
+    async def _warn_edit(self, ctx: commands.Context, warn_id: int, *, reason):
         query = """
             UPDATE warns 
             SET reason = $2 
@@ -414,6 +414,7 @@ class Admin(commands.Cog):
         """
         todo: set lang for guild
         """
+
 
 def setup(bot: TuxBot):
     bot.add_cog(Admin(bot))
