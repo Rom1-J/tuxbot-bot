@@ -29,3 +29,9 @@ msgstr ""
 
 msgid "info not available"
 msgstr ""
+
+msgid "Headers of"
+msgstr ""
+
+msgid "Cannot connect to host"
+msgstr ""

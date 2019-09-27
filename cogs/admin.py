@@ -407,6 +407,13 @@ class Admin(commands.Cog):
         await ctx.send(f"{Texts('admin').get('Warn with id')} `{warn_id}`"
                        f" {Texts('admin').get('successfully edited')}")
 
+    """---------------------------------------------------------------------"""
+
+    @commands.command(name='set-language', aliases=['set-lang'])
+    async def _set_language(self, ctx: commands.Context, lang):
+        """
+        todo: set lang for guild
+        """
 
 def setup(bot: TuxBot):
     bot.add_cog(Admin(bot))

@@ -1,5 +1,6 @@
 import re
 
+import aiohttp
 import discord
 from discord.ext import commands
 from bot import TuxBot
@@ -69,6 +70,34 @@ class Utility(commands.Cog):
                 await ctx.send(
                     content=f"{Texts('utility').get('info not available')}"
                             f"``{response.get('query')}``")
+
+    """---------------------------------------------------------------------"""
+
+    @commands.command(name='getheaders')
+    async def _getheaders(self, ctx: commands.Context, addr: str):
+        if (addr.startswith('http') or addr.startswith('ftp')) is not True:
+            addr = f"http://{addr}"
+
+        try:
+            async with self.bot.session.get(addr) as s:
+                await ctx.trigger_typing()
+                e = discord.Embed(
+                    title=f"{Texts('utility').get('Headers of')} {addr}",
+                    color=0xd75858
+                )
+                e.add_field(name="Status", value=s.status, inline=True)
+                e.set_thumbnail(url=f"https://http.cat/{s.status}")
+
+                headers = dict(s.headers.items())
+                headers.pop('Set-Cookie', headers)
+
+                for key, value in headers.items():
+                    e.add_field(name=key, value=value, inline=True)
+                await ctx.send(embed=e)
+
+        except aiohttp.client_exceptions.ClientConnectorError:
+            await ctx.send(f"{Texts('utility').get('Cannot connect to host')} "
+                           f"{addr}")
 
 
 def setup(bot: TuxBot):

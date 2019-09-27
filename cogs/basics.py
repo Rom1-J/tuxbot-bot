@@ -139,7 +139,7 @@ class Basics(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='credits', aliases=['contributors'])
+    @commands.command(name='credits', aliases=['contributors', 'authors'])
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('basics').get('Contributors'),

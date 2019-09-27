@@ -29,3 +29,9 @@ msgstr "Se situe à :"
 
 msgid "info not available"
 msgstr "Erreur, impossible d'obtenir des informations sur cette adresse IP"
+
+msgid "Headers of"
+msgstr "Entêtes de"
+
+msgid "Cannot connect to host"
+msgstr "Impossible de se connecter à l'hôte"
