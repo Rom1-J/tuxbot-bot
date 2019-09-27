@@ -77,5 +77,5 @@
  - [ ] ytdiscover
  - [x] iplocalise
  - [x] getheaders
- - [ ] git
+ - [x] git
  - [ ] quote

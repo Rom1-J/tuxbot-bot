@@ -99,6 +99,21 @@ class Utility(commands.Cog):
             await ctx.send(f"{Texts('utility').get('Cannot connect to host')} "
                            f"{addr}")
 
+    """---------------------------------------------------------------------"""
+
+    @commands.command(name='git', aliases=['sources', 'source', 'github'])
+    async def _git(self, ctx):
+        e = discord.Embed(
+            title=Texts('utility').get('git repo'),
+            description=Texts('utility').get('git text'),
+            colour=0xE9D460
+        )
+        e.set_author(
+            name='Gnous',
+            icon_url="https://cdn.gnous.eu/logo1.png"
+        )
+        await ctx.send(embed=e)
+
 
 def setup(bot: TuxBot):
     bot.add_cog(Utility(bot))

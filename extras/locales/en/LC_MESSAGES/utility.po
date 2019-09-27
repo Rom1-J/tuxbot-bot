@@ -35,3 +35,10 @@ msgstr ""
 
 msgid "Cannot connect to host"
 msgstr ""
+
+msgid "git repo"
+msgstr "TuxBot-Bot's repository"
+
+msgid "git text"
+msgstr "Whoa, do you want to see my Gitea repository to dissect me? No problem ! I am a Bot, I do not feel the pain! \n https://git.gnous.eu/gnouseu/tuxbot-bot"
+

@@ -35,3 +35,9 @@ msgstr "Entêtes de"
 
 msgid "Cannot connect to host"
 msgstr "Impossible de se connecter à l'hôte"
+
+msgid "git repo"
+msgstr "Repos TuxBot-Bot"
+
+msgid "git text"
+msgstr "Whoa tu veux voir mon repos Gitea pour me disséquer ? Pas de soucis ! Je suis un Bot, je ne ressens pas la douleur! \n https://git.gnous.eu/gnouseu/tuxbot-bot"
