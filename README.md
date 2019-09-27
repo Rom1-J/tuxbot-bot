@@ -45,7 +45,7 @@
  - [x] delete
  - [x] deletefrom `removed`, now `delete (from|to|in)`
  - [x] embed `removed`, cause : `never used`
- - [ ] warn `new command`
+ - [x] warn `new command`
  
   ---
  
@@ -72,10 +72,10 @@
   ---
  
  # Cogs.utility commands
- - [ ] clock
- - [ ] clock *
- - [ ] ytdiscover
+ - [ ] clock `removed` ?
+ - [ ] clock * `removed` ?
+ - [ ] ytdiscover `removed` ?
  - [x] iplocalise
  - [x] getheaders
  - [x] git
- - [ ] quote
+ - [x] quote
