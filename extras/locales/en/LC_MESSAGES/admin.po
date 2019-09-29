@@ -53,3 +53,9 @@ msgstr ""
 
 msgid "successfully edited"
 msgstr ""
+
+msgid "Unable to find this language"
+msgstr ""
+
+msgid "Language changed successfully"
+msgstr ""

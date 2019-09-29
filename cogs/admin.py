@@ -9,6 +9,7 @@ import humanize
 from discord.ext import commands
 
 from bot import TuxBot
+from .utils.models.lang import Lang
 from .utils.lang import Texts
 from .utils.models.warn import Warn
 
@@ -35,7 +36,7 @@ class Admin(commands.Cog):
         member: discord.Member = kwargs.get('member')
         reason = kwargs.get(
             'reason',
-            Texts('admin').get("Please enter a reason")
+            Texts('admin', ctx).get("Please enter a reason")
         )
 
         if kwargs.get('type') == 'ban':
@@ -86,7 +87,7 @@ class Admin(commands.Cog):
                 message_id)
             await message.edit(content=content)
         except (discord.errors.NotFound, discord.errors.Forbidden):
-            await ctx.send(Texts('utils').get("Unable to find the message"),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the message"),
                            delete_after=5)
 
     @_say.command(name='to')
@@ -119,10 +120,10 @@ class Admin(commands.Cog):
 
                 await ctx.send(embed=e)
             except discord.Forbidden:
-                await ctx.send(Texts('admin').get("Unable to ban this user"),
+                await ctx.send(Texts('admin', ctx).get("Unable to ban this user"),
                                delete_after=5)
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the user..."),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the user..."),
                            delete_after=5)
 
     """---------------------------------------------------------------------"""
@@ -144,10 +145,10 @@ class Admin(commands.Cog):
 
                 await ctx.send(embed=e)
             except discord.Forbidden:
-                await ctx.send(Texts('admin').get("Unable to kick this user"),
+                await ctx.send(Texts('admin', ctx).get("Unable to kick this user"),
                                delete_after=5)
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the user..."),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the user..."),
                            delete_after=5)
 
     """---------------------------------------------------------------------"""
@@ -179,7 +180,7 @@ class Admin(commands.Cog):
             for emoji in emojis:
                 await message.add_reaction(emoji)
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the message"),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the message"),
                            delete_after=5)
 
     @_react.command(name='clear')
@@ -189,7 +190,7 @@ class Admin(commands.Cog):
                 message_id)
             await message.clear_reactions()
         except discord.errors.NotFound:
-            await ctx.send(Texts('utils').get("Unable to find the message"),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the message"),
                            delete_after=5)
 
     """---------------------------------------------------------------------"""
@@ -206,7 +207,7 @@ class Admin(commands.Cog):
                 message_id)
             await message.delete()
         except (discord.errors.NotFound, discord.errors.Forbidden):
-            await ctx.send(Texts('utils').get("Unable to find the message"),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the message"),
                            delete_after=5)
 
     @_delete.command(name='from', aliases=['to', 'in'])
@@ -222,7 +223,7 @@ class Admin(commands.Cog):
                 message_id)
             await message.delete()
         except (discord.errors.NotFound, discord.errors.Forbidden):
-            await ctx.send(Texts('utils').get("Unable to find the message"),
+            await ctx.send(Texts('utils', ctx).get("Unable to find the message"),
                            delete_after=5)
 
     """---------------------------------------------------------------------"""
@@ -276,7 +277,7 @@ class Admin(commands.Cog):
         if ctx.invoked_subcommand is None:
             warns_list, warns = await self.get_warn(ctx)
             e = discord.Embed(
-                title=f"{warns.count()} {Texts('admin').get('last warns')}: ",
+                title=f"{warns.count()} {Texts('admin', ctx).get('last warns')}: ",
                 description=warns_list
             )
 
@@ -288,7 +289,7 @@ class Admin(commands.Cog):
         member = await ctx.guild.fetch_member(member.id)
         if not member:
             return await ctx.send(
-                Texts('utils').get("Unable to find the user...")
+                Texts('utils', ctx).get("Unable to find the user...")
             )
 
         def check(pld: discord.RawReactionActionEvent):
@@ -301,15 +302,15 @@ class Admin(commands.Cog):
 
         if warns.count() >= 3:
             e = discord.Embed(
-                title=Texts('admin').get('More than 2 warns'),
+                title=Texts('admin', ctx).get('More than 2 warns'),
                 description=f"{member.mention} "
-                            + Texts('admin').get('has more than 2 warns')
+                            + Texts('admin', ctx).get('has more than 2 warns')
             )
             e.add_field(
                 name='__Actions__',
                 value=':one: kick\n'
                       ':two: ban\n'
-                      ':three: ' + Texts('admin').get('ignore')
+                      ':three: ' + Texts('admin', ctx).get('ignore')
             )
 
             choice = await ctx.send(embed=e)
@@ -325,7 +326,7 @@ class Admin(commands.Cog):
                 )
             except asyncio.TimeoutError:
                 return await ctx.send(
-                    Texts('admin').get('Took too long. Aborting.')
+                    Texts('admin', ctx).get('Took too long. Aborting.')
                 )
             finally:
                 await choice.delete()
@@ -338,7 +339,7 @@ class Admin(commands.Cog):
                     content=f"{ctx.prefix}"
                             f"kick "
                             f"{member} "
-                            f"{Texts('admin').get('More than 2 warns')}"
+                            f"{Texts('admin', ctx).get('More than 2 warns')}"
                 )
                 return await alt_ctx.command.invoke(alt_ctx)
 
@@ -350,15 +351,15 @@ class Admin(commands.Cog):
                     content=f"{ctx.prefix}"
                             f"ban "
                             f"{member} "
-                            f"{Texts('admin').get('More than 2 warns')}"
+                            f"{Texts('admin', ctx).get('More than 2 warns')}"
                 )
                 return await alt_ctx.command.invoke(alt_ctx)
 
         await self.add_warn(ctx, member, reason)
         await ctx.send(
             content=f"{member.mention} "
-                    f"**{Texts('admin').get('got a warn')}**"
-                    f"\n**{Texts('admin').get('Reason')}:** `{reason}`"
+                    f"**{Texts('admin', ctx).get('got a warn')}**"
+                    f"\n**{Texts('admin', ctx).get('Reason')}:** `{reason}`"
         )
 
     @_warn.command(name='remove', aliases=['revoke'])
@@ -366,15 +367,15 @@ class Admin(commands.Cog):
         warn = self.bot.engine.query(Warn).filter(Warn.id == warn_id).one()
         self.bot.engine.delete(warn)
 
-        await ctx.send(f"{Texts('admin').get('Warn with id')} `{warn_id}`"
-                       f" {Texts('admin').get('successfully removed')}")
+        await ctx.send(f"{Texts('admin', ctx).get('Warn with id')} `{warn_id}`"
+                       f" {Texts('admin', ctx).get('successfully removed')}")
 
     @_warn.command(name='show', aliases=['list'])
     async def _warn_show(self, ctx: commands.Context, member: discord.Member):
         warns_list, warns = await self.get_warn(ctx, member)
 
         e = discord.Embed(
-            title=f"{warns.count()} {Texts('admin').get('last warns')}: ",
+            title=f"{warns.count()} {Texts('admin', ctx).get('last warns')}: ",
             description=warns_list
         )
 
@@ -386,35 +387,36 @@ class Admin(commands.Cog):
         warn.reason = reason
         self.bot.engine.commit()
 
-        await ctx.send(f"{Texts('admin').get('Warn with id')} `{warn_id}`"
-                       f" {Texts('admin').get('successfully edited')}")
+        await ctx.send(f"{Texts('admin', ctx).get('Warn with id')} `{warn_id}`"
+                       f" {Texts('admin', ctx).get('successfully edited')}")
 
     """---------------------------------------------------------------------"""
 
     @commands.command(name='language', aliases=['lang', 'langue', 'langage'])
-    async def _language(self, ctx: commands.Context, locale):
-        query = """
-        SELECT locale  
-        FROM lang
-        WHERE key = 'available'
-        """
+    async def _language(self, ctx: commands.Context, locale: str):
+        available = self.bot.engine\
+            .query(Lang.value)\
+            .filter(Lang.key == 'available')\
+            .one()[0]\
+            .split(', ')
 
-        async with self.bot.engine.begin() as con:
-            await ctx.trigger_typing()
-            available = list(await con.fetchrow(query))
+        if locale.lower() not in available:
+            await ctx.send(Texts('admin', ctx).get('Unable to find this language'))
+        else:
+            current = self.bot.engine\
+                .query(Lang)\
+                .filter(Lang.key == str(ctx.guild.id))
 
-            if str(locale) in available:
-                query = """
-                IF EXISTS(SELECT * FROM lang WHERE key = $1 )
-                then
-                  UPDATE lang
-                  SET locale = $2 
-                  WHERE key = $1
-                ELSE 
-                  INSERT INTO lang (key, locale)
-                  VALUES ($1, $2)
-                """
-                await con.fetch(query, str(ctx.guild.id), str(locale))
+            if current.count() > 0:
+                current = current.one()
+                current.value = locale.lower()
+                self.bot.engine.commit()
+            else:
+                new_row = Lang(key=str(ctx.guild.id), value=locale.lower())
+                self.bot.engine.add(new_row)
+                self.bot.engine.commit()
+
+            await ctx.send(Texts('admin', ctx).get('Language changed successfully'))
 
 
 def setup(bot: TuxBot):

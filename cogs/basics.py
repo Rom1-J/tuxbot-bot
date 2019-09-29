@@ -68,17 +68,17 @@ class Basics(commands.Cog):
         with proc.oneshot():
             mem = proc.memory_full_info()
             e = discord.Embed(
-                title=f"{Texts('basics').get('Information about TuxBot')}",
+                title=f"{Texts('basics', ctx).get('Information about TuxBot')}",
                 color=0x89C4F9)
 
             e.add_field(
-                name=f"__{Texts('basics').get('Latest changes')}__",
+                name=f"__{Texts('basics', ctx).get('Latest changes')}__",
                 value=self._latest_commits(),
                 inline=False)
 
             e.add_field(
                 name=f"__:busts_in_silhouette: "
-                     f"{Texts('basics').get('Development')}__",
+                     f"{Texts('basics', ctx).get('Development')}__",
                 value=f"**Romain#5117:** [git](https://git.gnous.eu/Romain)\n"
                       f"**Outout#4039:** [git](https://git.gnous.eu/mael)\n",
                 inline=True
@@ -92,41 +92,41 @@ class Basics(commands.Cog):
             e.add_field(
                 name="__:gear: Usage__",
                 value=f"**{humanize.naturalsize(mem.rss)}** "
-                      f"{Texts('basics').get('physical memory')}\n"
+                      f"{Texts('basics', ctx).get('physical memory')}\n"
                       f"**{humanize.naturalsize(mem.vms)}** "
-                      f"{Texts('basics').get('virtual memory')}\n",
+                      f"{Texts('basics', ctx).get('virtual memory')}\n",
                 inline=True
             )
 
             e.add_field(
-                name=f"__{Texts('basics').get('Servers count')}__",
+                name=f"__{Texts('basics', ctx).get('Servers count')}__",
                 value=str(len(self.bot.guilds)),
                 inline=True
             )
             e.add_field(
-                name=f"__{Texts('basics').get('Channels count')}__",
+                name=f"__{Texts('basics', ctx).get('Channels count')}__",
                 value=str(len([_ for _ in self.bot.get_all_channels()])),
                 inline=True
             )
             e.add_field(
-                name=f"__{Texts('basics').get('Members count')}__",
+                name=f"__{Texts('basics', ctx).get('Members count')}__",
                 value=str(len([_ for _ in self.bot.get_all_members()])),
                 inline=True
             )
 
             e.add_field(
-                name=f"__:file_folder: {Texts('basics').get('Files')}__",
+                name=f"__:file_folder: {Texts('basics', ctx).get('Files')}__",
                 value=str(files),
                 inline=True
             )
             e.add_field(
-                name=f"__¶ {Texts('basics').get('Lines')}__",
+                name=f"__¶ {Texts('basics', ctx).get('Lines')}__",
                 value=str(lines),
                 inline=True
             )
 
             e.add_field(
-                name=f"__:link: {Texts('basics').get('Links')}__",
+                name=f"__:link: {Texts('basics', ctx).get('Links')}__",
                 value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                       "| [gnous.eu](https://gnous.eu/) "
                       f"| [{Texts('basics').get('Invite')}](https://discordapp.com/oauth2/authorize?client_id=301062143942590465&scope=bot&permissions=268749888)",
@@ -142,7 +142,7 @@ class Basics(commands.Cog):
     @commands.command(name='credits', aliases=['contributors', 'authors'])
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
-            title=Texts('basics').get('Contributors'),
+            title=Texts('basics', ctx).get('Contributors'),
             color=0x36393f
         )
 

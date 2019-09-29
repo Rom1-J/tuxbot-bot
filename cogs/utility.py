@@ -28,7 +28,7 @@ class Utility(commands.Cog):
                 ip = socket.getaddrinfo(addr, None, socket.AF_INET6)[1][4][0]
             except socket.gaierror:
                 return await ctx.send(
-                    Texts('utility').get('ipv6 not available'))
+                    Texts('utility', ctx).get('ipv6 not available'))
         else:
             ip = socket.gethostbyname(addr)
 
@@ -37,19 +37,19 @@ class Utility(commands.Cog):
 
             if response.get('status') == 'success':
                 e = discord.Embed(
-                    title=f"{Texts('utility').get('Information for')} "
+                    title=f"{Texts('utility', ctx).get('Information for')} "
                           f"``{addr}`` *`({response.get('query')})`*",
                     color=0x5858d7
                 )
 
                 e.add_field(
-                    name=Texts('utility').get('Belongs to :'),
+                    name=Texts('utility', ctx).get('Belongs to :'),
                     value=response.get('org', 'N/A'),
                     inline=False
                 )
 
                 e.add_field(
-                    name=Texts('utility').get('Is located at :'),
+                    name=Texts('utility', ctx).get('Is located at :'),
                     value=response.get('city', 'N/A'),
                     inline=True
                 )
@@ -68,7 +68,7 @@ class Utility(commands.Cog):
                 await ctx.send(embed=e)
             else:
                 await ctx.send(
-                    content=f"{Texts('utility').get('info not available')}"
+                    content=f"{Texts('utility', ctx).get('info not available')}"
                             f"``{response.get('query')}``")
 
     """---------------------------------------------------------------------"""
@@ -82,7 +82,7 @@ class Utility(commands.Cog):
             async with self.bot.session.get(addr) as s:
                 await ctx.trigger_typing()
                 e = discord.Embed(
-                    title=f"{Texts('utility').get('Headers of')} {addr}",
+                    title=f"{Texts('utility', ctx).get('Headers of')} {addr}",
                     color=0xd75858
                 )
                 e.add_field(name="Status", value=s.status, inline=True)
@@ -96,7 +96,7 @@ class Utility(commands.Cog):
                 await ctx.send(embed=e)
 
         except aiohttp.client_exceptions.ClientConnectorError:
-            await ctx.send(f"{Texts('utility').get('Cannot connect to host')} "
+            await ctx.send(f"{Texts('utility', ctx).get('Cannot connect to host')} "
                            f"{addr}")
 
     """---------------------------------------------------------------------"""
@@ -104,8 +104,8 @@ class Utility(commands.Cog):
     @commands.command(name='git', aliases=['sources', 'source', 'github'])
     async def _git(self, ctx):
         e = discord.Embed(
-            title=Texts('utility').get('git repo'),
-            description=Texts('utility').get('git text'),
+            title=Texts('utility', ctx).get('git repo'),
+            description=Texts('utility', ctx).get('git text'),
             colour=0xE9D460
         )
         e.set_author(

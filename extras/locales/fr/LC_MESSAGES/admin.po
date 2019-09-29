@@ -53,3 +53,9 @@ msgstr "a été enlevé avec succes"
 
 msgid "successfully edited"
 msgstr "a été édité avec succes"
+
+msgid "Unable to find this language"
+msgstr "Impossible de trouver cette langue"
+
+msgid "Language changed successfully"
+msgstr "Langue changée avec succès"
