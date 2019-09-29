@@ -1,4 +1,9 @@
-import asyncio
+try:
+    import config
+    from cogs.utils.lang import Texts
+except ModuleNotFoundError:
+    import extras.first_run
+
 import contextlib
 import logging
 import socket
@@ -9,13 +14,8 @@ import git
 import requests
 
 from bot import TuxBot
-from cogs.utils.db import Table
-
-try:
-    import config
-    from cogs.utils.lang import Texts
-except ModuleNotFoundError:
-    import extras.first_run
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 
 @contextlib.contextmanager
@@ -39,36 +39,36 @@ def setup_logging():
         yield
     finally:
         handlers = log.handlers[:]
-        for hdlr in handlers:
-            hdlr.close()
-            log.removeHandler(hdlr)
+        for handler in handlers:
+            handler.close()
+            log.removeHandler(handler)
 
 
 def run_bot(unload: list = []):
-    loop = asyncio.get_event_loop()
     log = logging.getLogger()
 
     print(Texts().get('Starting...'))
 
     try:
-        db = loop.run_until_complete(
-            Table.create_pool(config.postgresql, command_timeout=60)
-        )
+        engine = create_engine(config.postgresql)
+
+        Session = sessionmaker()
+        Session.configure(bind=engine)
     except socket.gaierror:
         click.echo(Texts().get("Could not set up PostgreSQL..."),
                    file=sys.stderr)
         log.exception(Texts().get("Could not set up PostgreSQL..."))
         return
 
-    bot = TuxBot(unload, db)
+    bot = TuxBot(unload, Session())
     bot.run()
 
 
 @click.command()
 @click.option('-d', '--unload', multiple=True, type=str,
               help=Texts().get("Launch without loading the <TEXT> module"))
-@click.option('-u', '--update', help=Texts().get("Search for update"),
-              is_flag=True)
+@click.option('-u', '--update', is_flag=True,
+              help=Texts().get("Search for update"))
 def main(**kwargs):
     if kwargs.get('update'):
         _update()
@@ -77,8 +77,8 @@ def main(**kwargs):
         run_bot(kwargs.get('unload'))
 
 
-@click.option('-d', '--update', help=Texts().get("Search for update"),
-              is_flag=True)
+@click.option('-d', '--update', is_flag=True,
+              help=Texts().get("Search for update"))
 def _update():
     print(Texts().get("Checking for update..."))
 

@@ -4,7 +4,7 @@ import sys
 from collections import deque, Counter
 
 import aiohttp
-import asyncpg
+import sqlalchemy
 import discord
 import git
 from discord.ext import commands
@@ -40,7 +40,7 @@ async def _prefix_callable(bot, message: discord.message) -> list:
 
 class TuxBot(commands.AutoShardedBot):
 
-    def __init__(self, unload: list, db: asyncpg.pool.Pool):
+    def __init__(self, unload: list, engine: sqlalchemy.engine.Engine):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -53,7 +53,7 @@ class TuxBot(commands.AutoShardedBot):
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
-        self.db = db
+        self.engine = engine
         self._prev_events = deque(maxlen=10)
         self.session = aiohttp.ClientSession(loop=self.loop)
 
@@ -137,8 +137,6 @@ class TuxBot(commands.AutoShardedBot):
 
     async def close(self):
         await super().close()
-        await self.db.close()
-        await self.session.close()
 
     def run(self):
         super().run(config.token, reconnect=True)
