@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 .env
 config.py
-!cogs/utils/*
 .DS_Store
 private.py
 
@@ -11,4 +10,4 @@ private.py
 .idea/
 
 #other
-logs/*
+*.log

@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 from bot import TuxBot
 import socket
+from socket import AF_INET6
 
 from .utils.lang import Texts
 
@@ -23,53 +24,60 @@ class Utility(commands.Cog):
 
         await ctx.trigger_typing()
 
-        if ip_type in ('v6', 'ipv6'):
-            try:
-                ip = socket.getaddrinfo(addr, None, socket.AF_INET6)[1][4][0]
-            except socket.gaierror:
-                return await ctx.send(
-                    Texts('utility', ctx).get('ipv6 not available'))
-        else:
-            ip = socket.gethostbyname(addr)
-
-        async with self.bot.session.get(f"http://ip-api.com/json/{ip}") as s:
-            response: dict = await s.json()
-
-            if response.get('status') == 'success':
-                e = discord.Embed(
-                    title=f"{Texts('utility', ctx).get('Information for')} "
-                          f"``{addr}`` *`({response.get('query')})`*",
-                    color=0x5858d7
-                )
-
-                e.add_field(
-                    name=Texts('utility', ctx).get('Belongs to :'),
-                    value=response.get('org', 'N/A'),
-                    inline=False
-                )
-
-                e.add_field(
-                    name=Texts('utility', ctx).get('Is located at :'),
-                    value=response.get('city', 'N/A'),
-                    inline=True
-                )
-
-                e.add_field(
-                    name="Region :",
-                    value=f"{response.get('regionName', 'N/A')} "
-                          f"({response.get('country', 'N/A')})",
-                    inline=True
-                )
-
-                e.set_thumbnail(
-                    url=f"https://www.countryflags.io/"
-                        f"{response.get('countryCode')}/flat/64.png")
-
-                await ctx.send(embed=e)
+        try:
+            if ip_type in ('v6', 'ipv6'):
+                try:
+                    ip = socket.getaddrinfo(addr, None, AF_INET6)[1][4][0]
+                except socket.gaierror:
+                    return await ctx.send(
+                        Texts('utility', ctx).get('ipv6 not available'))
             else:
-                await ctx.send(
-                    content=f"{Texts('utility', ctx).get('info not available')}"
-                            f"``{response.get('query')}``")
+                ip = socket.gethostbyname(addr)
+
+            async with self.bot.session.get(f"http://ip-api.com/json/{ip}") \
+                    as s:
+                response: dict = await s.json()
+
+                if response.get('status') == 'success':
+                    e = discord.Embed(
+                        title=f"{Texts('utility', ctx).get('Information for')}"
+                              f" ``{addr}`` *`({response.get('query')})`*",
+                        color=0x5858d7
+                    )
+
+                    e.add_field(
+                        name=Texts('utility', ctx).get('Belongs to :'),
+                        value=response.get('org', 'N/A'),
+                        inline=False
+                    )
+
+                    e.add_field(
+                        name=Texts('utility', ctx).get('Is located at :'),
+                        value=response.get('city', 'N/A'),
+                        inline=True
+                    )
+
+                    e.add_field(
+                        name="Region :",
+                        value=f"{response.get('regionName', 'N/A')} "
+                              f"({response.get('country', 'N/A')})",
+                        inline=True
+                    )
+
+                    e.set_thumbnail(
+                        url=f"https://www.countryflags.io/"
+                            f"{response.get('countryCode')}/flat/64.png")
+
+                    await ctx.send(embed=e)
+                else:
+                    await ctx.send(
+                        content=f"{Texts('utility', ctx).get('info not available')}"
+                                f"``{response.get('query')}``")
+
+        except Exception:
+            await ctx.send(
+                f"{Texts('utility', ctx).get('Cannot connect to host')} {addr}"
+            )
 
     """---------------------------------------------------------------------"""
 
@@ -78,9 +86,10 @@ class Utility(commands.Cog):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
             addr = f"http://{addr}"
 
+        await ctx.trigger_typing()
+
         try:
             async with self.bot.session.get(addr) as s:
-                await ctx.trigger_typing()
                 e = discord.Embed(
                     title=f"{Texts('utility', ctx).get('Headers of')} {addr}",
                     color=0xd75858
@@ -95,9 +104,10 @@ class Utility(commands.Cog):
                     e.add_field(name=key, value=value, inline=True)
                 await ctx.send(embed=e)
 
-        except aiohttp.client_exceptions.ClientConnectorError:
-            await ctx.send(f"{Texts('utility', ctx).get('Cannot connect to host')} "
-                           f"{addr}")
+        except aiohttp.client_exceptions.ClientError:
+            await ctx.send(
+                f"{Texts('utility', ctx).get('Cannot connect to host')} {addr}"
+            )
 
     """---------------------------------------------------------------------"""
 

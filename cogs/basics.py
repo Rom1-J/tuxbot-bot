@@ -55,7 +55,8 @@ class Basics(commands.Cog):
                 file_amount += 1
                 with open(file_dir, "r", encoding="utf-8") as file:
                     for line in file:
-                        if not line.strip().startswith("#") or not line.strip():
+                        if not line.strip().startswith("#") \
+                                or not line.strip():
                             total += 1
 
         return total, file_amount
@@ -68,7 +69,7 @@ class Basics(commands.Cog):
         with proc.oneshot():
             mem = proc.memory_full_info()
             e = discord.Embed(
-                title=f"{Texts('basics', ctx).get('Information about TuxBot')}",
+                title=Texts('basics', ctx).get('Information about TuxBot'),
                 color=0x89C4F9)
 
             e.add_field(
@@ -129,7 +130,7 @@ class Basics(commands.Cog):
                 name=f"__:link: {Texts('basics', ctx).get('Links')}__",
                 value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                       "| [gnous.eu](https://gnous.eu/) "
-                      f"| [{Texts('basics').get('Invite')}](https://discordapp.com/oauth2/authorize?client_id=301062143942590465&scope=bot&permissions=268749888)",
+                      f"| [{Texts('basics', ctx).get('Invite')}](https://discordapp.com/oauth2/authorize?client_id=301062143942590465&scope=bot&permissions=268749888)",
                 inline=False
             )
 

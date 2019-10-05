@@ -8,3 +8,4 @@ sqlalchemy
 gitpython
 requests
 psutil
+bcrypt

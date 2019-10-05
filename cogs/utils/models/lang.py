@@ -4,7 +4,7 @@ Base = declarative_base()
 
 
 class Lang(Base):
-    __tablename__ = 'lang'
+    __tablename__ = 'langs'
 
     key = Column(String, primary_key=True)
     value = Column(String)

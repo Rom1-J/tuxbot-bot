@@ -2,6 +2,7 @@ import datetime
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, BIGINT, TIMESTAMP
+
 Base = declarative_base()
 
 
@@ -16,5 +17,5 @@ class Warn(Base):
 
     def __repr__(self):
         return "<Warn(server_id='%s', user_id='%s', reason='%s', " \
-               "created_at='%s')>"\
+               "created_at='%s')>" \
                % (self.server_id, self.user_id, self.reason, self.created_at)

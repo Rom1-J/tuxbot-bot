@@ -6,12 +6,12 @@
  - [ ] Alias system for commands (e.g. `.alias .ci show .cs`)
  - [ ] Migrate MySQL to postgresql
  - [x] Prepare bot for python 3.8 and discord.py 1.3.0
- - [x] Create launcher
+ - [ ] Create launcher
  - [ ] Create documentation
 
 ## Launcher requirements :
 
- - [x] Can install the bot
+ - [ ] Can install the bot
  - [x] Can launch the bot
  - [x] Can propose updates 
  
@@ -82,5 +82,5 @@
  
    ---
  
- # Cogs.sondage commands `(renamed as cogs.poll)`
+ # Cogs.sondage commands `(renamed as cogs.poll)` `canceled until the frontend development`
  - [ ] sondage (help?)

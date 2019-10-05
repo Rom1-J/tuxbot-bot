@@ -26,6 +26,7 @@ l_extensions = (
     'cogs.basics',
     'cogs.utility',
     'cogs.logs',
+    'cogs.poll',
     'jishaku',
 )
 
@@ -127,11 +128,13 @@ class TuxBot(commands.AutoShardedBot):
     @property
     def logs_webhook(self) -> discord.Webhook:
         logs_webhook = self.config.logs_webhook
-        webhook = discord.Webhook.partial(id=logs_webhook.get('id'),
-                                          token=logs_webhook.get('token'),
-                                          adapter=discord.AsyncWebhookAdapter(
-                                              self.session)
-                                          )
+        webhook = discord.Webhook.partial(
+            id=logs_webhook.get('id'),
+            token=logs_webhook.get('token'),
+            adapter=discord.AsyncWebhookAdapter(
+                self.session
+            )
+        )
 
         return webhook
 
