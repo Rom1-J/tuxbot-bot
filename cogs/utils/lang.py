@@ -1,9 +1,8 @@
 import gettext
 import config
+from cogs.utils.database import Database
 
 from .models.lang import Lang
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from discord.ext import commands
 
 
@@ -23,21 +22,16 @@ class Texts:
 
     @staticmethod
     def get_locale(ctx):
-        engine = create_engine(config.postgresql)
-
-        Session = sessionmaker()
-        Session.configure(bind=engine)
-
-        session = Session()
+        database = Database(config)
 
         if ctx is not None:
-            current = session\
+            current = database.session\
                 .query(Lang.value)\
                 .filter(Lang.key == str(ctx.guild.id))
             if current.count() > 0:
                 return current.one()[0]
 
-        default = session\
+        default = database.session\
             .query(Lang.value)\
             .filter(Lang.key == 'default')\
             .one()[0]

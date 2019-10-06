@@ -8,13 +8,14 @@ class Poll(Base):
     __tablename__ = 'polls'
 
     id = Column(Integer, primary_key=True)
+    channel_id = Column(BigInteger)
     message_id = Column(BigInteger)
-    poll = Column(JSON)
+    content = Column(JSON)
     is_anonymous = Column(Boolean)
     responses = Column(JSON, nullable=True)
 
     def __repr__(self):
-        return "<Poll(id='%s', message_id='%s', poll='%s', " \
+        return "<Poll(id='%s', channel_id='%s', message_id='%s', poll='%s', " \
                "is_anonymous='%s', responses='%s')>" % \
-               (self.id, self.message_id, self.poll,
+               (self.id, self.channel_id, self.message_id, self.content,
                 self.is_anonymous, self.responses)

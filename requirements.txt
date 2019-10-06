@@ -9,3 +9,4 @@ gitpython
 requests
 psutil
 bcrypt
+tcp_latency

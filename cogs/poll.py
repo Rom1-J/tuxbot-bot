@@ -1,3 +1,4 @@
+import json
 from typing import Union
 
 import discord
@@ -17,12 +18,12 @@ class Polls(commands.Cog):
 
     def get_poll(self, pld) -> Union[bool, Poll]:
         if pld.user_id != self.bot.user.id:
-            poll = self.bot.engine \
+            poll = self.bot.database.session \
                 .query(Poll) \
-                .filter(Poll.message_id == pld.message_id) \
-                .one_or_none()
+                .filter(Poll.message_id == pld.message_id)
 
-            if poll is not None:
+            if poll.count() != 0:
+                poll = poll.one()
                 emotes = utils_emotes.get(len(poll.responses))
 
                 if pld.emoji.name in emotes:
@@ -31,15 +32,51 @@ class Polls(commands.Cog):
         return False
 
     async def remove_reaction(self, pld):
-        channel: discord.TextChannel = self.bot.get_channel(
-            pld.channel_id
-        )
-        message: discord.Message = await channel.fetch_message(
-            pld.message_id
-        )
+        channel: discord.TextChannel = self.bot.get_channel(pld.channel_id)
+        message: discord.Message = await channel.fetch_message(pld.message_id)
         user: discord.User = await self.bot.fetch_user(pld.user_id)
 
         await message.remove_reaction(pld.emoji.name, user)
+
+    async def update_poll(self, poll_id: int):
+        poll = self.bot.database.session \
+            .query(Poll) \
+            .filter(Poll.id == poll_id) \
+            .one()
+        channel: discord.TextChannel = self.bot.get_channel(poll.channel_id)
+        message: discord.Message = await channel.fetch_message(poll.message_id)
+
+        content = json.loads(poll.content) \
+            if isinstance(poll.content, str) \
+            else poll.content
+        responses = json.loads(poll.responses) \
+            if isinstance(poll.responses, str) \
+            else poll.responses
+
+        for i, field in enumerate(content.get('fields')):
+            responders = len(responses.get(str(i + 1)))
+            if responders <= 1:
+                field['value'] = f"**{responders}** vote"
+            else:
+                field['value'] = f"**{responders}** votes"
+
+        e = discord.Embed(description=content.get('description'))
+        e.set_author(
+            name=content.get('author').get('name'),
+            icon_url=content.get('author').get('icon_url')
+        )
+        for field in content.get('fields'):
+            e.add_field(
+                name=field.get('name'),
+                value=field.get('value'),
+                inline=True
+            )
+        e.set_footer(text=content.get('footer').get('text'))
+
+        await message.edit(embed=e)
+
+        poll.content = json.dumps(content)
+        self.bot.database.session.commit()
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, pld: discord.RawReactionActionEvent):
@@ -50,33 +87,39 @@ class Polls(commands.Cog):
                 await self.remove_reaction(pld)
 
             user_id = str(pld.user_id).encode()
-            responses = poll.responses
 
             choice = utils_emotes.get_index(pld.emoji.name) + 1
-            responders = responses.get(str(choice))
+            responses = json.loads(poll.responses) \
+                if isinstance(poll.responses, str) \
+                else poll.responses
 
-            if not responders:
-                print(responders, 'before0')
+            if not responses.get(str(choice)):
+                print(97)
                 user_id_hash = bcrypt.hashpw(user_id, bcrypt.gensalt())
-                responders.append(user_id_hash)
-                print(responders, 'after0')
+                responses \
+                    .get(str(choice)) \
+                    .append(user_id_hash.decode())
             else:
-                for i, responder in enumerate(responders):
+                print(responses.get(str(choice)))
+                print(103)
+                for i, responder in enumerate(responses.get(str(choice))):
+                    print(105)
                     if bcrypt.checkpw(user_id, responder.encode()):
-                        print(responders, 'before1')
-                        responders.pop(i)
-                        print(responders, 'after1')
+                        print(107)
+                        responses \
+                            .get(str(choice)) \
+                            .pop(i)
                     else:
-                        print(responders, 'before2')
+                        print(112)
                         user_id_hash = bcrypt.hashpw(user_id, bcrypt.gensalt())
-                        responders.append(user_id_hash)
-                        print(responders, 'after2')
+                        responses \
+                            .get(str(choice)) \
+                            .append(user_id_hash.decode())
+                        print(117)
 
-            poll.responses = responses
-            print(poll.responses)
-            self.bot.engine.commit()
-
-            return 1
+            poll.responses = json.dumps(responses)
+            self.bot.database.session.commit()
+            await self.update_poll(poll.id)
 
     """---------------------------------------------------------------------"""
 
@@ -89,16 +132,16 @@ class Polls(commands.Cog):
         stmt = await ctx.send(Texts('poll', ctx).get('**Preparation...**'))
 
         poll_row = Poll()
-        self.bot.engine.add(poll_row)
-        self.bot.engine.flush()
+        self.bot.database.session.add(poll_row)
+        self.bot.database.session.flush()
 
         e = discord.Embed(description=f"**{question}**")
         e.set_author(
             name=ctx.author,
-            icon_url='https://cdn.pixabay.com/photo/2017/05/15/23/48/survey-2316468_960_720.png'
+            icon_url="https://cdn.gnous.eu/tuxbot/survey1.png"
         )
         for i, response in enumerate(responses):
-            responses_row[str(i+1)] = []
+            responses_row[str(i + 1)] = []
             e.add_field(
                 name=f"{emotes[i]} __{response.capitalize()}__",
                 value="**0** vote"
@@ -106,11 +149,12 @@ class Polls(commands.Cog):
         e.set_footer(text=f"ID: {poll_row.id}")
 
         poll_row.message_id = stmt.id
-        poll_row.poll = e.to_dict()
+        poll_row.channel_id = stmt.channel.id
+        poll_row.content = e.to_dict()
         poll_row.is_anonymous = anonymous
         poll_row.responses = responses_row
 
-        self.bot.engine.commit()
+        self.bot.database.session.commit()
 
         await stmt.edit(content='', embed=e)
         for emote in range(len(responses)):

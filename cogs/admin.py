@@ -243,13 +243,13 @@ class Admin(commands.Cog):
         week_ago = datetime.datetime.now() - datetime.timedelta(weeks=6)
 
         if member:
-            warns = self.bot.engine \
+            warns = self.bot.database.session \
                 .query(Warn) \
                 .filter(Warn.user_id == member.id, Warn.created_at > week_ago,
                         Warn.server_id == ctx.guild.id) \
                 .order_by(Warn.created_at.desc())
         else:
-            warns = self.bot.engine \
+            warns = self.bot.database.session \
                 .query(Warn) \
                 .filter(Warn.created_at > week_ago,
                         Warn.server_id == ctx.guild.id) \
@@ -276,8 +276,8 @@ class Admin(commands.Cog):
         warn = Warn(server_id=ctx.guild.id, user_id=member.id, reason=reason,
                     created_at=now)
 
-        self.bot.engine.add(warn)
-        self.bot.engine.commit()
+        self.bot.database.session.add(warn)
+        self.bot.database.session.commit()
 
     @commands.group(name='warn', aliases=['warns'])
     async def _warn(self, ctx: commands.Context):
@@ -372,8 +372,12 @@ class Admin(commands.Cog):
 
     @_warn.command(name='remove', aliases=['revoke'])
     async def _warn_remove(self, ctx: commands.Context, warn_id: int):
-        warn = self.bot.engine.query(Warn).filter(Warn.id == warn_id).one()
-        self.bot.engine.delete(warn)
+        warn = self.bot.database.session\
+            .query(Warn)\
+            .filter(Warn.id == warn_id)\
+            .one()
+
+        self.bot.database.session.delete(warn)
 
         await ctx.send(f"{Texts('admin', ctx).get('Warn with id')} `{warn_id}`"
                        f" {Texts('admin', ctx).get('successfully removed')}")
@@ -391,9 +395,13 @@ class Admin(commands.Cog):
 
     @_warn.command(name='edit', aliases=['change'])
     async def _warn_edit(self, ctx: commands.Context, warn_id: int, *, reason):
-        warn = self.bot.engine.query(Warn).filter(Warn.id == warn_id).one()
+        warn = self.bot.database.session\
+            .query(Warn)\
+            .filter(Warn.id == warn_id)\
+            .one()
         warn.reason = reason
-        self.bot.engine.commit()
+
+        self.bot.database.session.commit()
 
         await ctx.send(f"{Texts('admin', ctx).get('Warn with id')} `{warn_id}`"
                        f" {Texts('admin', ctx).get('successfully edited')}")
@@ -402,7 +410,7 @@ class Admin(commands.Cog):
 
     @commands.command(name='language', aliases=['lang', 'langue', 'langage'])
     async def _language(self, ctx: commands.Context, locale: str):
-        available = self.bot.engine \
+        available = self.bot.database.session \
             .query(Lang.value) \
             .filter(Lang.key == 'available') \
             .one()[0] \
@@ -412,18 +420,18 @@ class Admin(commands.Cog):
             await ctx.send(
                 Texts('admin', ctx).get('Unable to find this language'))
         else:
-            current = self.bot.engine \
+            current = self.bot.database.session \
                 .query(Lang) \
                 .filter(Lang.key == str(ctx.guild.id))
 
             if current.count() > 0:
                 current = current.one()
                 current.value = locale.lower()
-                self.bot.engine.commit()
+                self.bot.database.session.commit()
             else:
                 new_row = Lang(key=str(ctx.guild.id), value=locale.lower())
-                self.bot.engine.add(new_row)
-                self.bot.engine.commit()
+                self.bot.database.session.add(new_row)
+                self.bot.database.session.commit()
 
             await ctx.send(
                 Texts('admin', ctx).get('Language changed successfully'))

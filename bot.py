@@ -4,7 +4,6 @@ import sys
 from collections import deque, Counter
 
 import aiohttp
-import sqlalchemy
 import discord
 import git
 from discord.ext import commands
@@ -41,7 +40,7 @@ async def _prefix_callable(bot, message: discord.message) -> list:
 
 class TuxBot(commands.AutoShardedBot):
 
-    def __init__(self, unload: list, engine: sqlalchemy.engine.Engine):
+    def __init__(self, unload: list, database):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -54,14 +53,14 @@ class TuxBot(commands.AutoShardedBot):
 
         self.uptime: datetime = datetime.datetime.utcnow()
         self.config = config
-        self.engine = engine
+        self.database = database
         self._prev_events = deque(maxlen=10)
         self.session = aiohttp.ClientSession(loop=self.loop)
 
         self.prefixes = Config('prefixes.json')
         self.blacklist = Config('blacklist.json')
 
-        self.version = Version(10, 0, 0, pre_release='a20', build=build)
+        self.version = Version(10, 0, 0, pre_release='a21', build=build)
 
         for extension in l_extensions:
             if extension not in unload:

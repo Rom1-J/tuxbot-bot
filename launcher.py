@@ -14,8 +14,7 @@ import git
 import requests
 
 from bot import TuxBot
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from cogs.utils.database import Database
 
 
 @contextlib.contextmanager
@@ -50,17 +49,14 @@ def run_bot(unload: list = []):
     print(Texts().get('Starting...'))
 
     try:
-        engine = create_engine(config.postgresql)
-
-        Session = sessionmaker()
-        Session.configure(bind=engine)
+        database = Database(config)
     except socket.gaierror:
         click.echo(Texts().get("Could not set up PostgreSQL..."),
                    file=sys.stderr)
         log.exception(Texts().get("Could not set up PostgreSQL..."))
         return
 
-    bot = TuxBot(unload, Session())
+    bot = TuxBot(unload, database)
     bot.run()
 
 

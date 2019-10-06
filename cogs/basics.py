@@ -10,6 +10,7 @@ from discord.ext import commands
 
 from bot import TuxBot
 from .utils.lang import Texts
+from tcp_latency import measure_latency
 
 
 class Basics(commands.Cog):
@@ -33,10 +34,12 @@ class Basics(commands.Cog):
 
         latency = round(self.bot.latency * 1000, 2)
         typing = round((end - start) * 1000, 2)
+        discordapp = measure_latency(host='google.com', wait=0)[0]
 
         e = discord.Embed(title='Ping', color=discord.Color.teal())
         e.add_field(name='Websocket', value=f'{latency}ms')
         e.add_field(name='Typing', value=f'{typing}ms')
+        e.add_field(name='discordapp.com', value=f'{discordapp}ms')
         await ctx.send(embed=e)
 
     """---------------------------------------------------------------------"""
