@@ -84,7 +84,10 @@ class Polls(commands.Cog):
 
         if poll:
             if poll.is_anonymous:
-                await self.remove_reaction(pld)
+                try:
+                    await self.remove_reaction(pld)
+                except discord.errors.Forbidden:
+                    pass
 
             user_id = str(pld.user_id).encode()
 
@@ -94,28 +97,23 @@ class Polls(commands.Cog):
                 else poll.responses
 
             if not responses.get(str(choice)):
-                print(97)
                 user_id_hash = bcrypt.hashpw(user_id, bcrypt.gensalt())
                 responses \
                     .get(str(choice)) \
                     .append(user_id_hash.decode())
             else:
-                print(responses.get(str(choice)))
-                print(103)
                 for i, responder in enumerate(responses.get(str(choice))):
-                    print(105)
                     if bcrypt.checkpw(user_id, responder.encode()):
-                        print(107)
                         responses \
                             .get(str(choice)) \
                             .pop(i)
+                        break
                     else:
-                        print(112)
                         user_id_hash = bcrypt.hashpw(user_id, bcrypt.gensalt())
                         responses \
                             .get(str(choice)) \
                             .append(user_id_hash.decode())
-                        print(117)
+                        break
 
             poll.responses = json.dumps(responses)
             self.bot.database.session.commit()
@@ -137,7 +135,7 @@ class Polls(commands.Cog):
 
         e = discord.Embed(description=f"**{question}**")
         e.set_author(
-            name=ctx.author,
+            name=self.bot.user if anonymous else ctx.author,
             icon_url="https://cdn.gnous.eu/tuxbot/survey1.png"
         )
         for i, response in enumerate(responses):
