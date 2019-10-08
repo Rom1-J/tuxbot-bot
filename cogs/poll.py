@@ -88,7 +88,7 @@ class Polls(commands.Cog):
             icon_url=content.get('author').get('icon_url')
         )
         chart_url = URL(chart_base_url + json.dumps(chart_options))
-        e.set_thumbnail(url=chart_url)
+        e.set_thumbnail(url=str(chart_url))
         for field in content.get('fields'):
             e.add_field(
                 name=field.get('name'),

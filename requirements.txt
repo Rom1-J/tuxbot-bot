@@ -10,3 +10,4 @@ requests
 psutil
 bcrypt
 tcp_latency
+yarl
