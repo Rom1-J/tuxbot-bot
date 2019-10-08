@@ -4,6 +4,7 @@ from typing import Union
 import discord
 import bcrypt
 from discord.ext import commands
+from yarl import URL
 
 from bot import TuxBot
 from .utils.lang import Texts
@@ -46,6 +47,19 @@ class Polls(commands.Cog):
         channel: discord.TextChannel = self.bot.get_channel(poll.channel_id)
         message: discord.Message = await channel.fetch_message(poll.message_id)
 
+        chart_base_url = "https://quickchart.io/chart?backgroundColor=white&c="
+        chart_options = {
+            'type': 'pie',
+            'data': {
+                'labels': [],
+                'datasets': [
+                    {
+                        'data': []
+                    }
+                ]
+            }
+        }
+
         content = json.loads(poll.content) \
             if isinstance(poll.content, str) \
             else poll.content
@@ -55,6 +69,14 @@ class Polls(commands.Cog):
 
         for i, field in enumerate(content.get('fields')):
             responders = len(responses.get(str(i + 1)))
+            chart_options.get('data') \
+                .get('labels') \
+                .append(field.get('name')[5:].replace('__', ''))
+            chart_options.get('data') \
+                .get('datasets')[0] \
+                .get('data') \
+                .append(responders)
+
             if responders <= 1:
                 field['value'] = f"**{responders}** vote"
             else:
@@ -65,6 +87,8 @@ class Polls(commands.Cog):
             name=content.get('author').get('name'),
             icon_url=content.get('author').get('icon_url')
         )
+        chart_url = URL(chart_base_url + json.dumps(chart_options))
+        e.set_thumbnail(url=chart_url)
         for field in content.get('fields'):
             e.add_field(
                 name=field.get('name'),
