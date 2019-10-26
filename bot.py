@@ -102,7 +102,8 @@ class TuxBot(commands.AutoShardedBot):
     async def on_message(self, message: discord.message):
         if message.author.bot \
                 or message.author.id in self.blacklist \
-                or message.guild.id in self.blacklist:
+                or (message.guild is not None
+                    and message.guild.id in self.blacklist):
             return
 
         await self.process_commands(message)
