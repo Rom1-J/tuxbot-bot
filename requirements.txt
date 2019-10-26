@@ -3,11 +3,11 @@ discord.py[voice]
 jishaku
 lxml
 click
-asyncpg>=0.12.0
+asyncpg
 sqlalchemy
 gitpython
 requests
 psutil
-bcrypt
+werkzeug
 tcp_latency
 yarl

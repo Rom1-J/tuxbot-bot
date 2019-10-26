@@ -137,7 +137,8 @@ class Basics(commands.Cog):
                 inline=False
             )
 
-            e.set_footer(text=f'version: {self.bot.version}')
+            e.set_footer(text=f'version: {self.bot.version} '
+                              f'• prefix: {ctx.prefix}')
 
         await ctx.send(embed=e)
 

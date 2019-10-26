@@ -31,7 +31,7 @@ l_extensions = (
 
 
 async def _prefix_callable(bot, message: discord.message) -> list:
-    extras = []
+    extras = ['.']
     if message.guild is not None:
         extras = bot.prefixes.get(str(message.guild.id), [])
 
