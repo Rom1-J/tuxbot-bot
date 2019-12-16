@@ -3,6 +3,7 @@ import logging
 import sys
 from collections import deque, Counter
 from typing import List
+import contextlib
 
 import aiohttp
 import discord
@@ -157,6 +158,32 @@ class TuxBot(commands.AutoShardedBot):
         super().run(self.config.get("bot", "Token"), reconnect=True)
 
 
+@contextlib.contextmanager
+def setup_logging():
+    try:
+        logging.getLogger('discord').setLevel(logging.INFO)
+        logging.getLogger('discord.http').setLevel(logging.WARNING)
+
+        log = logging.getLogger()
+        log.setLevel(logging.INFO)
+
+        handler = logging.FileHandler(filename='logs/tuxbot.log',
+                                      encoding='utf-8', mode='w')
+        fmt = logging.Formatter('[{levelname:<7}] [{asctime}]'
+                                ' {name}: {message}',
+                                '%Y-%m-%d %H:%M:%S', style='{')
+
+        handler.setFormatter(fmt)
+        log.addHandler(handler)
+
+        yield
+    finally:
+        handlers = log.handlers[:]
+        for handler in handlers:
+            handler.close()
+            log.removeHandler(handler)
+
+
 if __name__ == "__main__":
     log = logging.getLogger()
 
@@ -164,6 +191,7 @@ if __name__ == "__main__":
 
     bot = TuxBot()
     try:
-        bot.run()
+        with setup_logging():
+            bot.run()
     except KeyboardInterrupt:
         bot.close()
