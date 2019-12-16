@@ -372,9 +372,9 @@ class Admin(commands.Cog):
 
     @_warn.command(name='remove', aliases=['revoke'])
     async def _warn_remove(self, ctx: commands.Context, warn_id: int):
-        warn = self.bot.database.session\
-            .query(Warn)\
-            .filter(Warn.id == warn_id)\
+        warn = self.bot.database.session \
+            .query(Warn) \
+            .filter(Warn.id == warn_id) \
             .one()
 
         self.bot.database.session.delete(warn)
@@ -395,9 +395,9 @@ class Admin(commands.Cog):
 
     @_warn.command(name='edit', aliases=['change'])
     async def _warn_edit(self, ctx: commands.Context, warn_id: int, *, reason):
-        warn = self.bot.database.session\
-            .query(Warn)\
-            .filter(Warn.id == warn_id)\
+        warn = self.bot.database.session \
+            .query(Warn) \
+            .filter(Warn.id == warn_id) \
             .one()
         warn.reason = reason
 
@@ -413,8 +413,8 @@ class Admin(commands.Cog):
         available = self.bot.database.session \
             .query(Lang.value) \
             .filter(Lang.key == 'available') \
-            .one()[0] \
-            .split(', ')
+            .first()[0] \
+            .split(',')
 
         if locale.lower() not in available:
             await ctx.send(

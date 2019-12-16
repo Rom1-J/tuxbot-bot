@@ -10,6 +10,7 @@ import discord
 import git
 from discord.ext import commands
 
+from cogs.utils.database import Database
 from cogs.utils.config import Config
 from cogs.utils.lang import Texts
 from cogs.utils.version import Version
@@ -22,10 +23,10 @@ build = git.Repo(search_parent_directories=True).head.object.hexsha
 log = logging.getLogger(__name__)
 
 l_extensions: List[str] = [
-    'cogs.admin',
+    # 'cogs.admin',
     'cogs.basics',
-    'cogs.utility',
-    'cogs.logs',
+    # 'cogs.utility',
+    # 'cogs.logs',
     # 'cogs.poll',
     'jishaku',
 ]
@@ -46,7 +47,7 @@ async def _prefix_callable(bot, message: discord.message) -> list:
 
 class TuxBot(commands.AutoShardedBot):
 
-    def __init__(self):
+    def __init__(self, database):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -60,6 +61,7 @@ class TuxBot(commands.AutoShardedBot):
         self.uptime: datetime = datetime.datetime.utcnow()
         self._prev_events = deque(maxlen=10)
         self.session = aiohttp.ClientSession(loop=self.loop)
+        self.database = database
 
         self.config = Config('./configs/config.cfg')
         self.prefixes = Config('./configs/prefixes.cfg')
@@ -189,7 +191,7 @@ if __name__ == "__main__":
 
     print(Texts().get('Starting...'))
 
-    bot = TuxBot()
+    bot = TuxBot(Database(Config("./configs/config.cfg")))
     try:
         with setup_logging():
             bot.run()

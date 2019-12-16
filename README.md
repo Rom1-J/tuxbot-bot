@@ -12,8 +12,8 @@
 ## Launcher requirements :
 
  - [ ] Can install the bot
- - [x] Can launch the bot
- - [x] Can propose updates 
+ - [ ] Can launch the bot
+ - [ ] Can propose updates 
  
 ## New commands :
 
@@ -27,7 +27,7 @@
 ## Ultimate :
 
  - [ ] Send email or Telegram's message when something is wrong on the bot
- - [ ] Create skynet (group of multiple commands about sky (planes, meteo,...))
+ - [ ] Create skynet (group of multiple commands about sky (planes, meteo, AI,...))
 
  ---
  
@@ -57,7 +57,7 @@
  
  ---
  
- # Cogs.ci commands
+ # Cogs.ci commands `canceled until the frontend development`
  - [ ] ci (help?)
  - [ ] ci show
  - [ ] ci register

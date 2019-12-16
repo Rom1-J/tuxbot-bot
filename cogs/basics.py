@@ -10,6 +10,7 @@ from discord.ext import commands
 
 from bot import TuxBot
 from .utils.lang import Texts
+from .utils.extra import commandExtra, groupExtra
 from tcp_latency import measure_latency
 
 
@@ -26,7 +27,9 @@ class Basics(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='ping')
+    @commandExtra(name='ping',
+                  category='basics',
+                  description=Texts('commands').get('basics.ping'))
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
         await ctx.trigger_typing()
@@ -64,7 +67,9 @@ class Basics(commands.Cog):
 
         return total, file_amount
 
-    @commands.command(name='info', aliases=['about'])
+    @commands.command(name='info', aliases=['about'],
+                      category='basics',
+                      description=Texts('commands').get('basics.info'))
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
         lines, files = self.fetch_info()
@@ -133,6 +138,7 @@ class Basics(commands.Cog):
                 name=f"__:link: {Texts('basics', ctx).get('Links')}__",
                 value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                       "| [gnous.eu](https://gnous.eu/) "
+                      "| [git](https://git.gnous.eu/gnouseu/tuxbot-bot) "
                       f"| [{Texts('basics', ctx).get('Invite')}](https://discordapp.com/oauth2/authorize?client_id=301062143942590465&scope=bot&permissions=268749888)",
                 inline=False
             )
@@ -144,7 +150,9 @@ class Basics(commands.Cog):
 
     """---------------------------------------------------------------------"""
 
-    @commands.command(name='credits', aliases=['contributors', 'authors'])
+    @commands.command(name='credits', aliases=['contributors', 'authors'],
+                      category='basics',
+                      description=Texts('commands').get('basics.credits'))
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('basics', ctx).get('Contributors'),
