@@ -23,11 +23,11 @@ build = git.Repo(search_parent_directories=True).head.object.hexsha
 log = logging.getLogger(__name__)
 
 l_extensions: List[str] = [
-    # 'cogs.admin',
+    'cogs.admin',
     'cogs.basics',
-    # 'cogs.utility',
-    # 'cogs.logs',
-    # 'cogs.poll',
+    'cogs.utility',
+    'cogs.logs',
+    'cogs.poll',
     'jishaku',
 ]
 

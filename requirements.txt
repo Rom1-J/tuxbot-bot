@@ -7,3 +7,4 @@ configparser
 psutil
 tcp_latency
 i18n
+werkzeug

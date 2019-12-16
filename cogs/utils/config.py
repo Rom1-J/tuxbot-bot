@@ -14,7 +14,7 @@ class Config:
         return item in self._db
 
     def __getitem__(self, item):
-        return self._db[str(item)]
+        return self._db[item]
 
     def all(self) -> list:
         return self._db.sections()
