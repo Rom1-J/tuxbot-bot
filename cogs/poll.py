@@ -8,6 +8,7 @@ from yarl import URL
 from bot import TuxBot
 from .utils.lang import Texts
 from .utils.models import Poll, Responses
+from .utils.extra import groupExtra
 from .utils import emotes as utils_emotes
 
 
@@ -49,30 +50,27 @@ class Polls(commands.Cog):
                     pass
             choice = utils_emotes.get_index(pld.emoji.name)
 
-            print(choice)
-
-            response = self.bot.database.session.query(Poll) \
+            responses = self.bot.database.session.query(Responses) \
                 .filter(
                 Responses.poll_id == poll.id,
                 Responses.user == pld.user_id,
                 Responses.choice == choice
             )
 
-            if response.count() != 0:
-                print("--pre delete--")
-                response = response.one()
+            if responses.count() != 0:
+                response = responses.first()
                 self.bot.database.session.delete(response)
-                print("--post delete--")
+                self.bot.database.session.commit()
             else:
-                print("--pre add--")
                 response = Responses(
                     user=pld.user_id,
                     poll_id=poll.id,
                     choice=choice
                 )
                 self.bot.database.session.add(response)
-                print("--post add--")
-            self.bot.database.session.commit()
+                self.bot.database.session.commit()
+
+            await self.update_poll(poll.id)
 
     """---------------------------------------------------------------------"""
 
@@ -89,7 +87,7 @@ class Polls(commands.Cog):
 
         e = discord.Embed(description=f"**{question}**")
         e.set_author(
-            name=self.bot.user if anonymous else ctx.author,
+            name=ctx.author,
             icon_url="https://cdn.gnous.eu/tuxbot/survey1.png"
         )
         for i, response in enumerate(responses):
@@ -97,7 +95,7 @@ class Polls(commands.Cog):
                 name=f"{emotes[i]} __{response.capitalize()}__",
                 value="**0** vote"
             )
-        e.set_footer(text=f"ID: {poll_row.id}")
+        e.set_footer(text=f"ID: #{poll_row.id}")
 
         poll_row.channel_id = stmt.channel.id
         poll_row.message_id = stmt.id
@@ -135,12 +133,19 @@ class Polls(commands.Cog):
         content = json.loads(poll.content) \
             if isinstance(poll.content, str) \
             else poll.content
-        responses = json.loads(poll.responses) \
-            if isinstance(poll.responses, str) \
-            else poll.responses
+        raw_responses = self.bot.database.session\
+            .query(Responses)\
+            .filter(Responses.poll_id == poll_id)
+        responses = {}
+
+        for response in raw_responses.all():
+            if responses.get(response.choice):
+                responses[response.choice] += 1
+            else:
+                responses[response.choice] = 1
 
         for i, field in enumerate(content.get('fields')):
-            responders = len(responses.get(str(i + 1)))
+            responders = responses.get(i, 0)
             chart_options.get('data') \
                 .get('labels') \
                 .append(field.get('name')[5:].replace('__', ''))
@@ -174,12 +179,16 @@ class Polls(commands.Cog):
         poll.content = json.dumps(content)
         self.bot.database.session.commit()
 
-    @commands.group(name='sondage', aliases=['poll'])
+    @groupExtra(name='sondage', aliases=['poll'],
+                category='poll',
+                description=Texts('commands').get('poll._poll'))
     async def _poll(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
-            ...
+            pass
 
-    @_poll.group(name='create', aliases=['new', 'nouveau'])
+    @_poll.group(name='create', aliases=['new', 'nouveau'],
+                 category='poll',
+                 description=Texts('commands').get('poll._poll_create'))
     async def _poll_create(self, ctx: commands.Context, *, poll: str):
         is_anonymous = '--anonyme' in poll
         poll = poll.replace('--anonyme', '')

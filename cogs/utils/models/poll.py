@@ -1,7 +1,6 @@
 from . import Base
 from sqlalchemy import Column, Integer, BigInteger, JSON, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Poll(Base):
