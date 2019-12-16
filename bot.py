@@ -2,13 +2,13 @@ import datetime
 import logging
 import sys
 from collections import deque, Counter
+from typing import List
 
 import aiohttp
 import discord
 import git
 from discord.ext import commands
 
-import config
 from cogs.utils.config import Config
 from cogs.utils.lang import Texts
 from cogs.utils.version import Version
@@ -20,27 +20,32 @@ build = git.Repo(search_parent_directories=True).head.object.hexsha
 
 log = logging.getLogger(__name__)
 
-l_extensions = (
+l_extensions: List[str] = [
     'cogs.admin',
     'cogs.basics',
     'cogs.utility',
     'cogs.logs',
-    'cogs.poll',
+    # 'cogs.poll',
     'jishaku',
-)
+]
 
 
 async def _prefix_callable(bot, message: discord.message) -> list:
     extras = ['.']
     if message.guild is not None:
-        extras = bot.prefixes.get(str(message.guild.id), [])
+        extras = []
+        if str(message.guild.id) in bot.prefixes:
+            extras.extend(
+                bot.prefixes.get(str(message.guild.id), "prefixes")
+                    .split('-sep-')
+            )
 
     return commands.when_mentioned_or(*extras)(bot, message)
 
 
 class TuxBot(commands.AutoShardedBot):
 
-    def __init__(self, unload: list, database):
+    def __init__(self):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -52,28 +57,30 @@ class TuxBot(commands.AutoShardedBot):
         self.command_stats = Counter()
 
         self.uptime: datetime = datetime.datetime.utcnow()
-        self.config = config
-        self.database = database
         self._prev_events = deque(maxlen=10)
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-        self.prefixes = Config('prefixes.json')
-        self.blacklist = Config('blacklist.json')
+        self.config = Config('./configs/config.cfg')
+        self.prefixes = Config('./configs/prefixes.cfg')
+        self.blacklist = Config('./configs/blacklist.cfg')
 
-        self.version = Version(10, 0, 0, pre_release='a21', build=build)
+        self.version = Version(10, 1, 0, pre_release='a0', build=build)
 
         for extension in l_extensions:
-            if extension not in unload:
-                try:
-                    self.load_extension(extension)
-                except Exception as e:
-                    print(Texts().get("Failed to load extension : ")
-                          + extension, file=sys.stderr)
-                    log.error(Texts().get("Failed to load extension : ")
-                              + extension, exc_info=e)
+            try:
+                print(Texts().get("Extension loaded successfully : ")
+                      + extension)
+                log.info(Texts().get("Extension loaded successfully : ")
+                         + extension)
+                self.load_extension(extension)
+            except Exception as e:
+                print(Texts().get("Failed to load extension : ")
+                      + extension, file=sys.stderr)
+                log.error(Texts().get("Failed to load extension : ")
+                          + extension, exc_info=e)
 
     async def is_owner(self, user: discord.User) -> bool:
-        return user.id in config.authorized_id
+        return str(user.id) in self.config.get("permissions", "owners").split(',')
 
     async def on_socket_response(self, msg):
         self._prev_events.append(msg)
@@ -116,8 +123,12 @@ class TuxBot(commands.AutoShardedBot):
         print(self.version)
 
         presence: dict = dict(status=discord.Status.dnd)
-        if self.config.activity is not None:
-            presence.update(activity=discord.Game(name=self.config.activity))
+        if self.config.get("bot", "Activity", fallback=None) is not None:
+            presence.update(
+                activity=discord.Game(
+                    name=self.config.get("bot", "Activity")
+                )
+            )
 
         await self.change_presence(**presence)
 
@@ -127,10 +138,10 @@ class TuxBot(commands.AutoShardedBot):
 
     @property
     def logs_webhook(self) -> discord.Webhook:
-        logs_webhook = self.config.logs_webhook
+        logs_webhook = self.config["webhook"]
         webhook = discord.Webhook.partial(
-            id=logs_webhook.get('id'),
-            token=logs_webhook.get('token'),
+            id=logs_webhook.get('ID'),
+            token=logs_webhook.get('Url'),
             adapter=discord.AsyncWebhookAdapter(
                 self.session
             )
@@ -140,6 +151,19 @@ class TuxBot(commands.AutoShardedBot):
 
     async def close(self):
         await super().close()
+        await self.session.close()
 
     def run(self):
-        super().run(config.token, reconnect=True)
+        super().run(self.config.get("bot", "Token"), reconnect=True)
+
+
+if __name__ == "__main__":
+    log = logging.getLogger()
+
+    print(Texts().get('Starting...'))
+
+    bot = TuxBot()
+    try:
+        bot.run()
+    except KeyboardInterrupt:
+        bot.close()

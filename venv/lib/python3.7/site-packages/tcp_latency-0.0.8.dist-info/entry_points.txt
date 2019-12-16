@@ -1,0 +1,3 @@
+[console_scripts]
+tcp-latency = tcp_latency.tcp_latency:_main
+

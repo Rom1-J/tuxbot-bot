@@ -22,12 +22,9 @@ class Polls(commands.Cog):
                 .query(Poll) \
                 .filter(Poll.message_id == pld.message_id)
 
-            print("-------------------------25---------------------------")
-            if poll.count() != 0:
-                print("-------------------------27---------------------------")
+            if poll.count() > 0:
                 poll = poll.one()
                 emotes = utils_emotes.get(poll.available_choices)
-
                 if pld.emoji.name in emotes:
                     return poll
 
@@ -52,6 +49,8 @@ class Polls(commands.Cog):
                     pass
             choice = utils_emotes.get_index(pld.emoji.name)
 
+            print(choice)
+
             response = self.bot.database.session.query(Poll) \
                 .filter(
                 Responses.poll_id == poll.id,
@@ -59,18 +58,20 @@ class Polls(commands.Cog):
                 Responses.choice == choice
             )
 
-            print(pld.user_id, poll.id, choice)
-
             if response.count() != 0:
+                print("--pre delete--")
                 response = response.one()
                 self.bot.database.session.delete(response)
+                print("--post delete--")
             else:
+                print("--pre add--")
                 response = Responses(
                     user=pld.user_id,
                     poll_id=poll.id,
                     choice=choice
                 )
                 self.bot.database.session.add(response)
+                print("--post add--")
             self.bot.database.session.commit()
 
     """---------------------------------------------------------------------"""

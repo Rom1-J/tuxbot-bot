@@ -1,4 +1,4 @@
-import json
+import configparser
 
 
 class Config:
@@ -7,11 +7,8 @@ class Config:
     def __init__(self, name):
         self.name = name
 
-        try:
-            with open(self.name, 'r') as f:
-                self._db = json.load(f)
-        except FileNotFoundError:
-            self._db = {}
+        self._db: configparser.ConfigParser = configparser.ConfigParser()
+        self._db.read(self.name)
 
     def __contains__(self, item):
         return item in self._db
@@ -19,9 +16,8 @@ class Config:
     def __getitem__(self, item):
         return self._db[str(item)]
 
-    def get(self, key, *args):
-        """Retrieves a config entry."""
-        return self._db.get(str(key), *args)
+    def all(self) -> list:
+        return self._db.sections()
 
-    def all(self) -> dict:
-        return self._db
+    def get(self, *args, **kwargs) -> str:
+        return self._db.get(*args, **kwargs)

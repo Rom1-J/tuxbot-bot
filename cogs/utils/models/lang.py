@@ -1,6 +1,5 @@
-from sqlalchemy.ext.declarative import declarative_base
+from . import Base
 from sqlalchemy import Column, String
-Base = declarative_base()
 
 
 class Lang(Base):

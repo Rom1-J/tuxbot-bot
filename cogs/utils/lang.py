@@ -1,5 +1,5 @@
 import gettext
-import config
+from .config import Config
 from cogs.utils.database import Database
 
 from .models.lang import Lang
@@ -22,7 +22,7 @@ class Texts:
 
     @staticmethod
     def get_locale(ctx):
-        database = Database(config)
+        database = Database(Config("./configs/config.cfg"))
 
         if ctx is not None:
             current = database.session\

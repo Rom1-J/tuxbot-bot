@@ -1,13 +1,9 @@
-humanize
 discord.py[voice]
 jishaku
-lxml
-click
-asyncpg
-sqlalchemy
 gitpython
-requests
+sqlalchemy
+psycopg2
+configparser
 psutil
-werkzeug
 tcp_latency
-yarl
+i18n

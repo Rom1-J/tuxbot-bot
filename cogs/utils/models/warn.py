@@ -1,9 +1,7 @@
 import datetime
 
-from sqlalchemy.ext.declarative import declarative_base
+from . import Base
 from sqlalchemy import Column, Integer, String, BIGINT, TIMESTAMP
-
-Base = declarative_base()
 
 
 class Warn(Base):

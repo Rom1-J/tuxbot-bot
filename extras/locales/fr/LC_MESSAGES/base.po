@@ -15,59 +15,48 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: launcher.py:51
 msgid "Starting..."
 msgstr "Démarrage..."
 
-#: launcher.py:56 launcher.py:57
 msgid "Could not set up PostgreSQL..."
 msgstr "Impossible de lancer PostgreSQL..."
 
-#: launcher.py:68
 msgid "Launch without loading the <TEXT> module"
 msgstr "Lancer sans charger le module <TEXT>"
 
-#: launcher.py:73
 msgid "Search for update"
 msgstr "Rechercher les mises à jour"
 
-#: launcher.py:73
 msgid "Checking for update..."
 msgstr "Recherche de mise à jour..."
 
-#: launcher.py:89
 msgid "A new version is available !"
 msgstr "Une nouvelle version est disponible !"
 
-#: launcher.py:93
 msgid "Update ? [Y/n] "
 msgstr "Mettre à jour ? [O/n]"
 
-#: launcher.py:97
 msgid "Downloading..."
 msgstr "Téléchargement..."
 
-#: launcher.py:108
 msgid "Tuxbot is up to date"
 msgstr "Tuxbot est à jour"
 
-#: bot.py:52
 msgid "Failed to load extension : "
 msgstr "Impossible de charger l'extension : "
 
-#: bot.py:59
+msgid "Extension loaded successfully : "
+msgstr "Extension chargée avec succes : "
+
 msgid "This command cannot be used in private messages."
 msgstr "Cette commande ne peut pas être utilisée en message privé."
 
-#: bot.py:63
 msgid "Sorry. This command is disabled and cannot be used."
 msgstr "Désolé mais cette commande est désactivée."
 
-#: bot.py:66
 msgid "In "
 msgstr "Dans "
 
-#: bot.py:77
 msgid "Ready:"
 msgstr "Prêt :"
 

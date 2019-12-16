@@ -153,14 +153,28 @@ class Logs(commands.Cog):
         await self.webhook.send(embed=e)
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild):
+    async def on_guild_join(self, guild: discord.guild):
         e = discord.Embed(colour=0x53dda4, title='New Guild')  # green colour
         await self.send_guild_stats(e, guild)
 
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
+    async def on_guild_remove(self, guild: discord.guild):
         e = discord.Embed(colour=0xdd5f53, title='Left Guild')  # red colour
         await self.send_guild_stats(e, guild)
+
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.message):
+        if message.guild is None:
+            e = discord.Embed(colour=0x0a97f5, title='New DM')  # blue colour
+            e.set_author(
+                name=message.author,
+                icon_url=message.author.avatar_url_as(format='png')
+            )
+            e.description = message.content
+            if len(message.attachments) > 0:
+                e.set_image(url=message.attachments[0].url)
+            e.set_footer(text=f"User ID: {message.author.id}")
+            await self.webhook.send(embed=e)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -246,12 +260,14 @@ class Logs(commands.Cog):
         minutes = delta.total_seconds() / 60
         total = sum(self.bot.socket_stats.values())
         cpm = total / minutes
-        await ctx.send(f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
+        await ctx.send(
+            f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
 
     @commands.command(name='uptime')
     async def _uptime(self, ctx):
         """Tells you how long the bot has been up for."""
-        uptime = humanize.naturaltime(datetime.datetime.utcnow() - self.bot.uptime)
+        uptime = humanize.naturaltime(
+            datetime.datetime.utcnow() - self.bot.uptime)
         await ctx.send(f'Uptime: **{uptime}**')
 
 
