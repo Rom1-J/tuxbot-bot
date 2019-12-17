@@ -25,10 +25,9 @@ class Basics(commands.Cog):
 
         return os.popen(cmd).read().strip()
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
-    @commandExtra(name='ping',
-                  category='basics',
+    @commandExtra(name='ping', category='basics',
                   description=Texts('commands').get('basics._ping'))
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
@@ -45,7 +44,7 @@ class Basics(commands.Cog):
         e.add_field(name='discordapp.com', value=f'{discordapp}ms')
         await ctx.send(embed=e)
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
     @staticmethod
     def fetch_info():
@@ -67,8 +66,7 @@ class Basics(commands.Cog):
 
         return total, file_amount
 
-    @commandExtra(name='info', aliases=['about'],
-                  category='basics',
+    @commandExtra(name='info', aliases=['about'], category='basics',
                   description=Texts('commands').get('basics._info'))
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
@@ -148,7 +146,7 @@ class Basics(commands.Cog):
 
         await ctx.send(embed=e)
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
     @commandExtra(name='credits', aliases=['contributors', 'authors'],
                   category='basics',

@@ -28,6 +28,7 @@ l_extensions: List[str] = [
     'cogs.utility',
     'cogs.logs',
     'cogs.poll',
+    'cogs.help',
     'jishaku',
 ]
 
@@ -38,8 +39,9 @@ async def _prefix_callable(bot, message: discord.message) -> list:
         extras = []
         if str(message.guild.id) in bot.prefixes:
             extras.extend(
-                bot.prefixes.get(str(message.guild.id), "prefixes")
-                    .split('-sep-')
+                bot.prefixes.get(str(message.guild.id), "prefixes").split(
+                    bot.config.get("misc", "separator")
+                )
             )
 
     return commands.when_mentioned_or(*extras)(bot, message)
@@ -67,7 +69,7 @@ class TuxBot(commands.AutoShardedBot):
         self.prefixes = Config('./configs/prefixes.cfg')
         self.blacklist = Config('./configs/blacklist.cfg')
 
-        self.version = Version(10, 1, 0, pre_release='a0', build=build)
+        self.version = Version(10, 1, 0, pre_release='a5', build=build)
 
         for extension in l_extensions:
             try:
@@ -83,7 +85,8 @@ class TuxBot(commands.AutoShardedBot):
                           + extension, exc_info=e)
 
     async def is_owner(self, user: discord.User) -> bool:
-        return str(user.id) in self.config.get("permissions", "owners").split(',')
+        return str(user.id) in self.config.get("permissions", "owners").split(
+            ',')
 
     async def on_socket_response(self, msg):
         self._prev_events.append(msg)

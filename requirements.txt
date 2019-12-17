@@ -1,3 +1,4 @@
+humanize
 discord.py[voice]
 jishaku
 gitpython
@@ -6,3 +7,4 @@ psycopg2
 configparser
 psutil
 tcp_latency
+yarl

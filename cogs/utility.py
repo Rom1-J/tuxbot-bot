@@ -7,7 +7,10 @@ from bot import TuxBot
 import socket
 from socket import AF_INET6
 
+from .admin import Admin
+
 from .utils.lang import Texts
+from .utils.extra import commandExtra
 
 
 class Utility(commands.Cog):
@@ -15,9 +18,10 @@ class Utility(commands.Cog):
     def __init__(self, bot: TuxBot):
         self.bot = bot
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
-    @commands.command(name='iplocalise')
+    @commandExtra(name='iplocalise', category='utility',
+                  description=Texts('commands').get('utility._iplocalise'))
     async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
         addr = re.sub(r'http(s?)://', '', addr)
         addr = addr[:-1] if addr.endswith('/') else addr
@@ -79,9 +83,10 @@ class Utility(commands.Cog):
                 f"{Texts('utility', ctx).get('Cannot connect to host')} {addr}"
             )
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
-    @commands.command(name='getheaders')
+    @commandExtra(name='getheaders', category='utility',
+                  description=Texts('commands').get('utility._getheaders'))
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
             addr = f"http://{addr}"
@@ -109,9 +114,11 @@ class Utility(commands.Cog):
                 f"{Texts('utility', ctx).get('Cannot connect to host')} {addr}"
             )
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
-    @commands.command(name='git', aliases=['sources', 'source', 'github'])
+    @commandExtra(name='git', aliases=['sources', 'source', 'github'],
+                  category='utility',
+                  description=Texts('commands').get('utility._git'))
     async def _git(self, ctx):
         e = discord.Embed(
             title=Texts('utility', ctx).get('git repo'),
@@ -124,9 +131,10 @@ class Utility(commands.Cog):
         )
         await ctx.send(embed=e)
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
-    @commands.command(name='quote')
+    @commandExtra(name='quote', category='utility',
+                  description=Texts('commands').get('utility._quote'))
     async def _quote(self, ctx, message_id: discord.Message):
         e = discord.Embed(
             colour=message_id.author.colour,

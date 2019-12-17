@@ -72,7 +72,7 @@ class Polls(commands.Cog):
 
             await self.update_poll(poll.id)
 
-    """---------------------------------------------------------------------"""
+    ###########################################################################
 
     async def create_poll(self, ctx: commands.Context, poll: str, anonymous):
         question = (poll.split('|')[0]).strip()
@@ -92,7 +92,7 @@ class Polls(commands.Cog):
         )
         for i, response in enumerate(responses):
             e.add_field(
-                name=f"{emotes[i]} __{response.capitalize()}__",
+                name=f"__```{emotes[i]} - {response.capitalize()}```__",
                 value="**0** vote"
             )
         e.set_footer(text=f"ID: #{poll_row.id}")
@@ -184,10 +184,9 @@ class Polls(commands.Cog):
                 description=Texts('commands').get('poll._poll'))
     async def _poll(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
-            pass
+            await ctx.send_help('sondage')
 
     @_poll.group(name='create', aliases=['new', 'nouveau'],
-                 category='poll',
                  description=Texts('commands').get('poll._poll_create'))
     async def _poll_create(self, ctx: commands.Context, *, poll: str):
         is_anonymous = '--anonyme' in poll
