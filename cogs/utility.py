@@ -1,3 +1,4 @@
+import logging
 import re
 
 import aiohttp
@@ -7,10 +8,10 @@ from bot import TuxBot
 import socket
 from socket import AF_INET6
 
-from .admin import Admin
-
 from .utils.lang import Texts
 from .utils.extra import commandExtra
+
+log = logging.getLogger(__name__)
 
 
 class Utility(commands.Cog):

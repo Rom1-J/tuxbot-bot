@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, BigInteger, JSON, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 
-class Poll(Base):
+class PollModel(Base):
     __tablename__ = 'polls'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -14,10 +14,10 @@ class Poll(Base):
     is_anonymous = Column(Boolean)
 
     available_choices = Column(Integer)
-    choice = relationship("Responses")
+    choice = relationship("ResponsesModel")
 
 
-class Responses(Base):
+class ResponsesModel(Base):
     __tablename__ = 'responses'
 
     id = Column(Integer, primary_key=True, autoincrement=True)

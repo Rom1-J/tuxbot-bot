@@ -2,7 +2,7 @@ import gettext
 from .config import Config
 from cogs.utils.database import Database
 
-from .models.lang import Lang
+from .models.lang import LangModel
 from discord.ext import commands
 
 
@@ -26,13 +26,13 @@ class Texts:
 
         if ctx is not None:
             current = database.session\
-                .query(Lang.value)\
-                .filter(Lang.key == str(ctx.guild.id))
+                .query(LangModel.value)\
+                .filter(LangModel.key == str(ctx.guild.id))
             if current.count() > 0:
                 return current.one()[0]
 
         default = database.session\
-            .query(Lang.value)\
-            .filter(Lang.key == 'default')\
+            .query(LangModel.value)\
+            .filter(LangModel.key == 'default')\
             .one()[0]
         return default

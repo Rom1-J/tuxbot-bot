@@ -45,7 +45,7 @@ msgstr "a recu un avertissement"
 msgid "Reason"
 msgstr "Raison"
 
-msgid "Warn with id"
+msgid "WarnModel with id"
 msgstr "L'avertissement avec l'id"
 
 msgid "successfully removed"

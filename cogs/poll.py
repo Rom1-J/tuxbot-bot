@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Union
 
 import discord
@@ -7,9 +8,11 @@ from yarl import URL
 
 from bot import TuxBot
 from .utils.lang import Texts
-from .utils.models import Poll, Responses
+from .utils.models import PollModel, ResponsesModel
 from .utils.extra import groupExtra
 from .utils import emotes as utils_emotes
+
+log = logging.getLogger(__name__)
 
 
 class Polls(commands.Cog):
@@ -17,11 +20,11 @@ class Polls(commands.Cog):
     def __init__(self, bot: TuxBot):
         self.bot = bot
 
-    def get_poll(self, pld) -> Union[bool, Poll]:
+    def get_poll(self, pld) -> Union[bool, PollModel]:
         if pld.user_id != self.bot.user.id:
             poll = self.bot.database.session \
-                .query(Poll) \
-                .filter(Poll.message_id == pld.message_id)
+                .query(PollModel) \
+                .filter(PollModel.message_id == pld.message_id)
 
             if poll.count() > 0:
                 poll = poll.one()
@@ -50,11 +53,11 @@ class Polls(commands.Cog):
                     pass
             choice = utils_emotes.get_index(pld.emoji.name)
 
-            responses = self.bot.database.session.query(Responses) \
+            responses = self.bot.database.session.query(ResponsesModel) \
                 .filter(
-                Responses.poll_id == poll.id,
-                Responses.user == pld.user_id,
-                Responses.choice == choice
+                ResponsesModel.poll_id == poll.id,
+                ResponsesModel.user == pld.user_id,
+                ResponsesModel.choice == choice
             )
 
             if responses.count() != 0:
@@ -62,7 +65,7 @@ class Polls(commands.Cog):
                 self.bot.database.session.delete(response)
                 self.bot.database.session.commit()
             else:
-                response = Responses(
+                response = ResponsesModel(
                     user=pld.user_id,
                     poll_id=poll.id,
                     choice=choice
@@ -79,11 +82,11 @@ class Polls(commands.Cog):
         if poll:
             choice = utils_emotes.get_index(pld.emoji.name)
 
-            responses = self.bot.database.session.query(Responses) \
+            responses = self.bot.database.session.query(ResponsesModel) \
                 .filter(
-                Responses.poll_id == poll.id,
-                Responses.user == pld.user_id,
-                Responses.choice == choice
+                ResponsesModel.poll_id == poll.id,
+                ResponsesModel.user == pld.user_id,
+                ResponsesModel.choice == choice
             )
 
             if responses.count() != 0:
@@ -101,7 +104,7 @@ class Polls(commands.Cog):
 
         stmt = await ctx.send(Texts('poll', ctx).get('**Preparation...**'))
 
-        poll_row = Poll()
+        poll_row = PollModel()
         self.bot.database.session.add(poll_row)
         self.bot.database.session.flush()
 
@@ -131,8 +134,8 @@ class Polls(commands.Cog):
 
     async def update_poll(self, poll_id: int):
         poll = self.bot.database.session \
-            .query(Poll) \
-            .filter(Poll.id == poll_id) \
+            .query(PollModel) \
+            .filter(PollModel.id == poll_id) \
             .one()
         channel: discord.TextChannel = self.bot.get_channel(poll.channel_id)
         message: discord.Message = await channel.fetch_message(poll.message_id)
@@ -154,8 +157,8 @@ class Polls(commands.Cog):
             if isinstance(poll.content, str) \
             else poll.content
         raw_responses = self.bot.database.session\
-            .query(Responses)\
-            .filter(Responses.poll_id == poll_id)
+            .query(ResponsesModel)\
+            .filter(ResponsesModel.poll_id == poll_id)
         responses = {}
 
         for response in raw_responses.all():

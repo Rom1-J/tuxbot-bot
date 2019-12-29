@@ -1,10 +1,10 @@
 # News
 
  - [ ] i18n for messages
- - [ ] Custom prefixes
+ - [x] Custom prefixes
  - [ ] Better help command
  - [ ] Alias system for commands (e.g. `.alias .ci show .cs`)
- - [ ] Migrate MySQL to postgresql
+ - [x] Migrate MySQL to postgresql
  - [x] Prepare bot for python 3.8 and discord.py 1.3.0
  - [ ] Create launcher
  - [ ] Create documentation
@@ -17,7 +17,7 @@
  
 ## New commands :
 
- - [ ] `.sondage --anonyme <...>` (create à sondage with the possibility of answering anonymously)
+ - [x] `.sondage --anonyme <...>` (create à sondage with the possibility of answering anonymously)
  - [ ] `.sondage --edit <id>` (edit a sondage if we are the author or an admin)
  
 ## Documentation:

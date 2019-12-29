@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 import platform
@@ -12,6 +13,8 @@ from bot import TuxBot
 from .utils.lang import Texts
 from .utils.extra import commandExtra
 from tcp_latency import measure_latency
+
+log = logging.getLogger(__name__)
 
 
 class Basics(commands.Cog):

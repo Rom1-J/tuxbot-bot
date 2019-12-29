@@ -11,7 +11,7 @@ from discord.ext import commands
 from bot import TuxBot
 from .utils.lang import Texts
 from .utils.extra import commandExtra, groupExtra
-from .utils.models import Warn, Lang
+from .utils.models import WarnModel, LangModel
 
 log = logging.getLogger(__name__)
 
@@ -257,16 +257,16 @@ class Admin(commands.Cog):
 
         if member:
             warns = self.bot.database.session \
-                .query(Warn) \
-                .filter(Warn.user_id == member.id, Warn.created_at > week_ago,
-                        Warn.server_id == ctx.guild.id) \
-                .order_by(Warn.created_at.desc())
+                .query(WarnModel) \
+                .filter(WarnModel.user_id == member.id, WarnModel.created_at > week_ago,
+                        WarnModel.server_id == ctx.guild.id) \
+                .order_by(WarnModel.created_at.desc())
         else:
             warns = self.bot.database.session \
-                .query(Warn) \
-                .filter(Warn.created_at > week_ago,
-                        Warn.server_id == ctx.guild.id) \
-                .order_by(Warn.created_at.desc())
+                .query(WarnModel) \
+                .filter(WarnModel.created_at > week_ago,
+                        WarnModel.server_id == ctx.guild.id) \
+                .order_by(WarnModel.created_at.desc())
         warns_list = ''
 
         for warn in warns:
@@ -286,8 +286,8 @@ class Admin(commands.Cog):
                        reason):
 
         now = datetime.datetime.now()
-        warn = Warn(server_id=ctx.guild.id, user_id=member.id, reason=reason,
-                    created_at=now)
+        warn = WarnModel(server_id=ctx.guild.id, user_id=member.id, reason=reason,
+                         created_at=now)
 
         self.bot.database.session.add(warn)
         self.bot.database.session.commit()
@@ -389,8 +389,8 @@ class Admin(commands.Cog):
                    description=Texts('commands').get('admin._warn_remove'))
     async def _warn_remove(self, ctx: commands.Context, warn_id: int):
         warn = self.bot.database.session \
-            .query(Warn) \
-            .filter(Warn.id == warn_id) \
+            .query(WarnModel) \
+            .filter(WarnModel.id == warn_id) \
             .one()
 
         self.bot.database.session.delete(warn)
@@ -414,8 +414,8 @@ class Admin(commands.Cog):
                    description=Texts('commands').get('admin._warn_edit'))
     async def _warn_edit(self, ctx: commands.Context, warn_id: int, *, reason):
         warn = self.bot.database.session \
-            .query(Warn) \
-            .filter(Warn.id == warn_id) \
+            .query(WarnModel) \
+            .filter(WarnModel.id == warn_id) \
             .one()
         warn.reason = reason
 
@@ -431,8 +431,8 @@ class Admin(commands.Cog):
                   description=Texts('commands').get('admin._language'))
     async def _language(self, ctx: commands.Context, locale: str):
         available = self.bot.database.session \
-            .query(Lang.value) \
-            .filter(Lang.key == 'available') \
+            .query(LangModel.value) \
+            .filter(LangModel.key == 'available') \
             .first()[0] \
             .split(',')
 
@@ -441,15 +441,15 @@ class Admin(commands.Cog):
                 Texts('admin', ctx).get('Unable to find this language'))
         else:
             current = self.bot.database.session \
-                .query(Lang) \
-                .filter(Lang.key == str(ctx.guild.id))
+                .query(LangModel) \
+                .filter(LangModel.key == str(ctx.guild.id))
 
             if current.count() > 0:
                 current = current.one()
                 current.value = locale.lower()
                 self.bot.database.session.commit()
             else:
-                new_row = Lang(key=str(ctx.guild.id), value=locale.lower())
+                new_row = LangModel(key=str(ctx.guild.id), value=locale.lower())
                 self.bot.database.session.add(new_row)
                 self.bot.database.session.commit()
 

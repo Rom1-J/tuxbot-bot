@@ -1,17 +1,17 @@
+import contextlib
 import datetime
 import logging
 import sys
 from collections import deque, Counter
 from typing import List
-import contextlib
 
 import aiohttp
 import discord
 import git
 from discord.ext import commands
 
-from cogs.utils.database import Database
 from cogs.utils.config import Config
+from cogs.utils.database import Database
 from cogs.utils.lang import Texts
 from cogs.utils.version import Version
 
@@ -25,11 +25,12 @@ log = logging.getLogger(__name__)
 l_extensions: List[str] = [
     'cogs.admin',
     'cogs.basics',
-    'cogs.utility',
     'cogs.logs',
+    'cogs.monitoring',
+    'cogs.user',
+    'cogs.utility',
     'cogs.poll',
     'jishaku',
-    'cogs.monitoring'
 ]
 
 
@@ -114,10 +115,13 @@ class TuxBot(commands.AutoShardedBot):
         await self.invoke(ctx)
 
     async def on_message(self, message: discord.message):
-        if message.author.id in self.blacklist or (message.guild is not None and message.guild.id in self.blacklist):
+        if message.author.id in self.blacklist \
+                or (message.guild is not None
+                    and message.guild.id in self.blacklist):
             return
 
-        if message.author.bot and message.author.id != int(self.config.get('bot', 'Tester')):
+        if message.author.bot and message.author.id != int(
+                self.config.get('bot', 'Tester')):
             return
 
         await self.process_commands(message)

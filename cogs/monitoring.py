@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import threading
 
 from aiohttp import web
@@ -6,6 +7,8 @@ from aiohttp.web_request import Request
 
 from discord.ext import commands
 from bot import TuxBot
+
+log = logging.getLogger(__name__)
 
 
 class Monitoring(commands.Cog):
