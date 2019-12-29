@@ -38,6 +38,7 @@ l_extensions = (
     'cogs.utility',
     'cogs.vocal',
     'cogs.private',
+    'jishaku'
 )
 
 help_attrs = dict(hidden=True, in_help=True, name="DONOTUSE")
@@ -67,6 +68,9 @@ class TuxBot(commands.Bot):
                 print(f"{colors.text_colors.RED}"
                       f"Impossible de charger l'extension {extension}\n"
                       f"{type(e).__name__}: {e}{colors.ENDC}", file=sys.stderr)
+
+    async def is_owner(self, user: discord.User):
+        return str(user.id) in config.authorized_id
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.NoPrivateMessage):
