@@ -38,6 +38,7 @@ l_extensions = (
     'cogs.utility',
     'cogs.vocal',
     'cogs.private',
+    'cogs.monitoring',
     'jishaku'
 )
 
