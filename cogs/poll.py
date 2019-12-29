@@ -72,6 +72,26 @@ class Polls(commands.Cog):
 
             await self.update_poll(poll.id)
 
+    @commands.Cog.listener()
+    async def on_raw_reaction_remove(self, pld: discord.RawReactionActionEvent):
+        poll = self.get_poll(pld)
+
+        if poll:
+            choice = utils_emotes.get_index(pld.emoji.name)
+
+            responses = self.bot.database.session.query(Responses) \
+                .filter(
+                Responses.poll_id == poll.id,
+                Responses.user == pld.user_id,
+                Responses.choice == choice
+            )
+
+            if responses.count() != 0:
+                response = responses.first()
+                self.bot.database.session.delete(response)
+                self.bot.database.session.commit()
+            await self.update_poll(poll.id)
+
     ###########################################################################
 
     async def create_poll(self, ctx: commands.Context, poll: str, anonymous):
@@ -92,7 +112,7 @@ class Polls(commands.Cog):
         )
         for i, response in enumerate(responses):
             e.add_field(
-                name=f"__```{emotes[i]} - {response.capitalize()}```__",
+                name=f"__{emotes[i]}` - {response.capitalize()}`__",
                 value="**0** vote"
             )
         e.set_footer(text=f"ID: #{poll_row.id}")

@@ -30,6 +30,7 @@ l_extensions: List[str] = [
     'cogs.poll',
     'cogs.help',
     'jishaku',
+    'cogs.monitoring'
 ]
 
 
@@ -73,20 +74,21 @@ class TuxBot(commands.AutoShardedBot):
 
         for extension in l_extensions:
             try:
+                self.load_extension(extension)
                 print(Texts().get("Extension loaded successfully : ")
                       + extension)
                 log.info(Texts().get("Extension loaded successfully : ")
                          + extension)
-                self.load_extension(extension)
             except Exception as e:
                 print(Texts().get("Failed to load extension : ")
                       + extension, file=sys.stderr)
+                print(e)
                 log.error(Texts().get("Failed to load extension : ")
                           + extension, exc_info=e)
 
     async def is_owner(self, user: discord.User) -> bool:
         return str(user.id) in self.config.get("permissions", "owners").split(
-            ',')
+            ', ')
 
     async def on_socket_response(self, msg):
         self._prev_events.append(msg)
@@ -113,10 +115,10 @@ class TuxBot(commands.AutoShardedBot):
         await self.invoke(ctx)
 
     async def on_message(self, message: discord.message):
-        if message.author.bot \
-                or message.author.id in self.blacklist \
-                or (message.guild is not None
-                    and message.guild.id in self.blacklist):
+        if message.author.id in self.blacklist or (message.guild is not None and message.guild.id in self.blacklist):
+            return
+
+        if message.author.bot and message.author.id != int(self.config.get('bot', 'Tester')):
             return
 
         await self.process_commands(message)
@@ -147,7 +149,7 @@ class TuxBot(commands.AutoShardedBot):
         logs_webhook = self.config["webhook"]
         webhook = discord.Webhook.partial(
             id=logs_webhook.get('ID'),
-            token=logs_webhook.get('Url'),
+            token=logs_webhook.get('Token'),
             adapter=discord.AsyncWebhookAdapter(
                 self.session
             )
@@ -195,6 +197,7 @@ if __name__ == "__main__":
     print(Texts().get('Starting...'))
 
     bot = TuxBot(Database(Config("./configs/config.cfg")))
+
     try:
         with setup_logging():
             bot.run()
