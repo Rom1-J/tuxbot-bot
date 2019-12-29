@@ -1,6 +1,8 @@
 import asyncio
 import threading
+
 from aiohttp import web
+from aiohttp.web_request import Request
 
 from discord.ext import commands
 from bot import TuxBot
@@ -18,7 +20,7 @@ class Monitoring(commands.Cog):
         t.start()
 
     def aiohttp_server(self):
-        async def hi(request):
+        async def hi(request: Request):
             return web.Response(text="I'm alive !")
 
         self.app.add_routes([web.get('/', hi)])
@@ -31,7 +33,7 @@ class Monitoring(commands.Cog):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(runner.setup())
-        site = web.TCPSite(runner, '0.0.0.', 3389)
+        site = web.TCPSite(runner, '0.0.0.0', 8080)
         loop.run_until_complete(site.start())
         loop.run_forever()
 

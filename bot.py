@@ -28,7 +28,6 @@ l_extensions: List[str] = [
     'cogs.utility',
     'cogs.logs',
     'cogs.poll',
-    'cogs.help',
     'jishaku',
     'cogs.monitoring'
 ]
@@ -41,7 +40,7 @@ async def _prefix_callable(bot, message: discord.message) -> list:
         if str(message.guild.id) in bot.prefixes:
             extras.extend(
                 bot.prefixes.get(str(message.guild.id), "prefixes").split(
-                    bot.config.get("misc", "separator")
+                    bot.config.get("misc", "Separator")
                 )
             )
 
@@ -87,7 +86,7 @@ class TuxBot(commands.AutoShardedBot):
                           + extension, exc_info=e)
 
     async def is_owner(self, user: discord.User) -> bool:
-        return str(user.id) in self.config.get("permissions", "owners").split(
+        return str(user.id) in self.config.get("permissions", "Owners").split(
             ', ')
 
     async def on_socket_response(self, msg):
