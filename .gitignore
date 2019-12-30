@@ -4,6 +4,7 @@ __pycache__/
 .env
 configs/config.cfg
 configs/prefixes.cfg
+configs/clusters.cfg
 .DS_Store
 private.py
 

@@ -25,11 +25,11 @@ log = logging.getLogger(__name__)
 l_extensions: List[str] = [
     'cogs.admin',
     'cogs.basics',
+    'cogs.cluster_manager',
     'cogs.logs',
-    'cogs.monitoring',
+    'cogs.poll',
     'cogs.user',
     'cogs.utility',
-    'cogs.poll',
     'jishaku',
 ]
 
@@ -69,6 +69,8 @@ class TuxBot(commands.AutoShardedBot):
         self.config = Config('./configs/config.cfg')
         self.prefixes = Config('./configs/prefixes.cfg')
         self.blacklist = Config('./configs/blacklist.cfg')
+        self.clusters = Config('./configs/clusters.cfg')
+        self.cluster = self.clusters.find('True', key='This', first=True)
 
         self.version = Version(10, 1, 0, pre_release='a5', build=build)
 
@@ -130,6 +132,7 @@ class TuxBot(commands.AutoShardedBot):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
 
+        print('-' * 60)
         print(Texts().get("Ready:") + f' {self.user} (ID: {self.user.id})')
         print(self.version)
 
@@ -140,6 +143,9 @@ class TuxBot(commands.AutoShardedBot):
                     name=self.config.get("bot", "Activity")
                 )
             )
+        print(f"Discord.py: {discord.__version__}")
+        print(f"Cluster: {self.cluster.get('Name')}")
+        print('-' * 60)
 
         await self.change_presence(**presence)
 
@@ -149,10 +155,10 @@ class TuxBot(commands.AutoShardedBot):
 
     @property
     def logs_webhook(self) -> discord.Webhook:
-        logs_webhook = self.config["webhook"]
+        webhook_config = self.config["webhook"]
         webhook = discord.Webhook.partial(
-            id=logs_webhook.get('ID'),
-            token=logs_webhook.get('Token'),
+            id=webhook_config.get('ID'),
+            token=webhook_config.get('Token'),
             adapter=discord.AsyncWebhookAdapter(
                 self.session
             )
@@ -161,6 +167,9 @@ class TuxBot(commands.AutoShardedBot):
         return webhook
 
     async def close(self):
+        extensions = self.extensions.copy()
+        for extension in extensions:
+            self.unload_extension(extension)
         await super().close()
         await self.session.close()
 

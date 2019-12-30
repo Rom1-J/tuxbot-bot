@@ -1,0 +1,18 @@
+[fr-srv01]
+Host =
+Name = fr-srv01
+WebPage = 0.0.0.0
+Port =
+
+[rm-dev01]
+This = True
+Host = 127.0.0.1
+Name = rm-dev01
+WebPage = 0.0.0.0
+Port = 3389
+
+[rm-srv01]
+Host = 127.0.0.1
+Name = rm-srv01
+WebPage = 0.0.0.0
+Port = 3390
