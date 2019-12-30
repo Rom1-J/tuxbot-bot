@@ -1,0 +1,20 @@
+[bot]
+Token =
+Tester =
+Activity =
+
+[postgresql]
+Username =
+Password =
+Host =
+DBName =
+
+[permissions]
+Owners =
+
+[webhook]
+ID =
+Token =
+
+[misc]
+Separator =
