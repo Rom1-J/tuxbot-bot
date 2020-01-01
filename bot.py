@@ -18,6 +18,7 @@ from cogs.utils.version import Version
 description = """
 Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
 """
+
 build = git.Repo(search_parent_directories=True).head.object.hexsha
 
 log = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ log = logging.getLogger(__name__)
 l_extensions: List[str] = [
     'cogs.admin',
     'cogs.basics',
-    'cogs.cluster_manager',
+    'cogs.fallback_manager',
     'cogs.logs',
     'cogs.poll',
     'cogs.user',
@@ -144,7 +145,7 @@ class TuxBot(commands.AutoShardedBot):
                 )
             )
         print(f"Discord.py: {discord.__version__}")
-        print(f"Cluster: {self.cluster.get('Name')}")
+        print(f"Server: {self.cluster.get('Name')}")
         print('-' * 60)
 
         await self.change_presence(**presence)

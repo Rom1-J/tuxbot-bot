@@ -12,7 +12,7 @@ private.py
 .idea/
 
 #other
-*.log
+logs/tuxbot.log
 
  
 # Byte-compiled / optimized / DLL files

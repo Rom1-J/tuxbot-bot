@@ -28,7 +28,7 @@ class Monitoring(commands.Cog):
     def cog_unload(self):
         self.ping_clusters.stop()
 
-    @tasks.loop(minutes=2.0)
+    @tasks.loop(seconds=10.0)
     async def ping_clusters(self):
         for cluster in self.bot.clusters:
             if cluster == 'DEFAULT':
@@ -40,17 +40,19 @@ class Monitoring(commands.Cog):
                     port = cluster.get('Port')
 
                     try:
-                        req = urllib.request.urlopen(f"http://{host}:{port}",
-                                                     timeout=2)
+                        req = urllib.request.urlopen(
+                            f"http://{host}:{port}",
+                            timeout=2
+                        )
                     except Exception:
                         global_channel = await self.bot.fetch_channel(
                             661347412463321098
                         )
 
                         e = discord.Embed(
-                            title=f"Cluster `{cluster.get('Name')}`",
+                            title=f"Server `{cluster.get('Name')}`",
                             color=discord.colour.Color.red(),
-                            description=f"Cluster **`{cluster.get('Name')}`** with address **`http://{host}:{port}`** is down ! ",
+                            description=f"Server **`{cluster.get('Name')}`** with address **`http://{host}:{port}`** is down ! ",
                             timestamp=datetime.now()
                         )
                         e.set_thumbnail(
@@ -74,9 +76,9 @@ class Monitoring(commands.Cog):
         )
 
         e = discord.Embed(
-            title=f"Cluster `{cluster.get('Name')}`",
+            title=f"Server `{cluster.get('Name')}`",
             color=discord.colour.Color.green(),
-            description=f"Cluster **`{cluster.get('Name')}`** with address **`http://{host}:{port}`** is started ! ",
+            description=f"Server **`{cluster.get('Name')}`** with address **`http://{host}:{port}`** is started ! ",
             timestamp=datetime.now()
         )
         e.set_thumbnail(
