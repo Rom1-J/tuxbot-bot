@@ -28,7 +28,7 @@ class Monitoring(commands.Cog):
     def cog_unload(self):
         self.ping_clusters.stop()
 
-    @tasks.loop(seconds=20.0)
+    @tasks.loop(minutes=2.0)
     async def ping_clusters(self):
         for cluster in self.bot.clusters:
             if cluster == 'DEFAULT':
