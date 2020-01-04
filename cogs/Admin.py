@@ -1,17 +1,16 @@
+import asyncio
 import datetime
 import logging
 from typing import Union
-
-import asyncio
 
 import discord
 import humanize
 from discord.ext import commands
 
 from bot import TuxBot
-from .utils.lang import Texts
-from .utils.extra import commandExtra, groupExtra
-from .utils.models import WarnModel, LangModel
+from utils import Texts
+from utils import WarnModel, LangModel
+from utils import commandExtra, groupExtra
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +19,8 @@ class Admin(commands.Cog):
 
     def __init__(self, bot: TuxBot):
         self.bot = bot
+        self.icon = ":shield:"
+        self.big_icon = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/233/shield_1f6e1.png"
 
     async def cog_check(self, ctx: commands.Context) -> bool:
         permissions: discord.Permissions = ctx.channel.permissions_for(

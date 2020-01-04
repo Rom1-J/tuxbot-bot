@@ -19,8 +19,8 @@ import psutil
 from discord.ext import commands, tasks
 
 from bot import TuxBot
-from .utils import Texts
-from .utils.extra import commandExtra
+from utils import Texts
+from utils import commandExtra
 
 log = logging.getLogger(__name__)
 

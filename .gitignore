@@ -4,16 +4,15 @@ __pycache__/
 .env
 configs/config.cfg
 configs/prefixes.cfg
-configs/clusters.cfg
+configs/fallbacks.cfg
 .DS_Store
 private.py
 
 #jetbrains
 .idea/
 
-#other
-logs/tuxbot.log
-
+# other
+*.logs
  
 # Byte-compiled / optimized / DLL files
 __pycache__/

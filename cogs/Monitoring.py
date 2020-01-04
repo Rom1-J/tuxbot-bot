@@ -1,6 +1,6 @@
-from datetime import datetime
 import logging
 import urllib.request
+from datetime import datetime
 
 import discord
 from aiohttp import web
@@ -30,11 +30,11 @@ class Monitoring(commands.Cog):
 
     @tasks.loop(seconds=10.0)
     async def ping_clusters(self):
-        for cluster in self.bot.clusters:
+        for cluster in self.bot.fallbacks:
             if cluster == 'DEFAULT':
                 pass
             else:
-                cluster = self.bot.clusters[cluster]
+                cluster = self.bot.fallbacks[cluster]
                 if not cluster.get('This', False):
                     host = cluster.get('Host')
                     port = cluster.get('Port')

@@ -1,6 +1,6 @@
 import gettext
 from .config import Config
-from cogs.utils.database import Database
+from utils import Database
 
 from .models.lang import LangModel
 from discord.ext import commands

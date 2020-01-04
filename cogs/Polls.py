@@ -7,10 +7,9 @@ from discord.ext import commands
 from yarl import URL
 
 from bot import TuxBot
-from .utils.lang import Texts
-from .utils.models import PollModel, ResponsesModel
-from .utils.extra import groupExtra
-from .utils import emotes as utils_emotes
+from utils import PollModel, ResponsesModel
+from utils import Texts, emotes as utils_emotes
+from utils import groupExtra
 
 log = logging.getLogger(__name__)
 
@@ -19,6 +18,8 @@ class Polls(commands.Cog):
 
     def __init__(self, bot: TuxBot):
         self.bot = bot
+        self.icon = ":bar_chart:"
+        self.big_icon = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/233/bar-chart_1f4ca.png:"
 
     def get_poll(self, pld) -> Union[bool, PollModel]:
         if pld.user_id != self.bot.user.id:
@@ -76,7 +77,8 @@ class Polls(commands.Cog):
             await self.update_poll(poll.id)
 
     @commands.Cog.listener()
-    async def on_raw_reaction_remove(self, pld: discord.RawReactionActionEvent):
+    async def on_raw_reaction_remove(self,
+                                     pld: discord.RawReactionActionEvent):
         poll = self.get_poll(pld)
 
         if poll:
@@ -156,8 +158,8 @@ class Polls(commands.Cog):
         content = json.loads(poll.content) \
             if isinstance(poll.content, str) \
             else poll.content
-        raw_responses = self.bot.database.session\
-            .query(ResponsesModel)\
+        raw_responses = self.bot.database.session \
+            .query(ResponsesModel) \
             .filter(ResponsesModel.poll_id == poll_id)
         responses = {}
 

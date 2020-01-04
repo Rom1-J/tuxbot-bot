@@ -10,35 +10,35 @@ import discord
 import git
 from discord.ext import commands
 
-from cogs.utils.config import Config
-from cogs.utils.database import Database
-from cogs.utils.lang import Texts
-from cogs.utils.version import Version
+from utils import Config
+from utils import Database
+from utils import Texts
+from utils import Version
 
 description = """
 Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
 """
 
 build = git.Repo(search_parent_directories=True).head.object.hexsha
+version = (2, 1, 0)
 
 log = logging.getLogger(__name__)
 
 l_extensions: List[str] = [
-    'cogs.admin',
-    'cogs.basics',
-    'cogs.fallback_manager',
-    'cogs.logs',
-    'cogs.poll',
-    'cogs.user',
-    'cogs.utility',
+    'cogs.Admin',
+    'cogs.Help',
+    'cogs.Logs',
+    'cogs.Monitoring',
+    'cogs.Polls',
+    'cogs.Useful',
+    'cogs.User',
     'jishaku',
 ]
 
 
 async def _prefix_callable(bot, message: discord.message) -> list:
-    extras = [bot.cluster.get('Name')]
+    extras = [bot.cluster.get('Name') + '.']
     if message.guild is not None:
-        extras = []
         if str(message.guild.id) in bot.prefixes:
             extras.extend(
                 bot.prefixes.get(str(message.guild.id), "prefixes").split(
@@ -70,10 +70,11 @@ class TuxBot(commands.AutoShardedBot):
         self.config = Config('./configs/config.cfg')
         self.prefixes = Config('./configs/prefixes.cfg')
         self.blacklist = Config('./configs/blacklist.cfg')
-        self.clusters = Config('./configs/clusters.cfg')
-        self.cluster = self.clusters.find('True', key='This', first=True)
+        self.fallbacks = Config('./configs/fallbacks.cfg')
+        self.cluster = self.fallbacks.find('True', key='This', first=True)
 
-        self.version = Version(10, 1, 0, pre_release='a5', build=build)
+        self.version = Version(*version, pre_release='a5', build=build)
+        self.owner = int
 
         for extension in l_extensions:
             try:
@@ -149,6 +150,9 @@ class TuxBot(commands.AutoShardedBot):
         print('-' * 60)
 
         await self.change_presence(**presence)
+        self.owner = await self.fetch_user(
+            int(self.config.get('permissions', 'Owners').split(', ')[0])
+        )
 
     @staticmethod
     async def on_resumed():

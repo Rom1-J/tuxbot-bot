@@ -3,9 +3,9 @@ import logging
 from discord.ext import commands
 
 from bot import TuxBot
-from .utils.extra import groupExtra
-from .utils.lang import Texts
-from .utils.models import AliasesModel
+from utils import AliasesModel
+from utils import Texts
+from utils import groupExtra
 
 log = logging.getLogger(__name__)
 
@@ -14,6 +14,8 @@ class User(commands.Cog):
 
     def __init__(self, bot: TuxBot):
         self.bot = bot
+        self.icon = ":bust_in_silhouette:"
+        self.big_icon = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/233/bust-in-silhouette_1f464.png"
 
     ###########################################################################
 
