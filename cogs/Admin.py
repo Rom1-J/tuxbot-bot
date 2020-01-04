@@ -66,7 +66,7 @@ class Admin(commands.Cog):
     ###########################################################################
 
     @groupExtra(name='say', invoke_without_command=True, category='admin',
-                description=Texts('commands').get('admin._say'))
+                description=Texts('admin_help').get('_say'))
     async def _say(self, ctx: commands.Context, *, content: str):
         if ctx.invoked_subcommand is None:
             try:
@@ -77,7 +77,7 @@ class Admin(commands.Cog):
             await ctx.send(content)
 
     @_say.command(name='edit',
-                  description=Texts('commands').get('admin._say_edit'))
+                  description=Texts('admin_help').get('_say_edit'))
     async def _say_edit(self, ctx: commands.Context, message_id: int, *,
                         content: str):
         try:
@@ -95,7 +95,7 @@ class Admin(commands.Cog):
                 delete_after=5)
 
     @_say.command(name='to',
-                  description=Texts('commands').get('admin._say_to'))
+                  description=Texts('admin_help').get('_say_to'))
     async def _say_to(self, ctx: commands.Context,
                       channel: Union[discord.TextChannel, discord.User], *,
                       content):
@@ -109,7 +109,7 @@ class Admin(commands.Cog):
     ###########################################################################
 
     @commandExtra(name='ban', category='admin',
-                  description=Texts('commands').get('admin._ban'))
+                  description=Texts('admin_help').get('_ban'))
     async def _ban(self, ctx: commands.Context, user: discord.Member, *,
                    reason=""):
         try:
@@ -137,7 +137,7 @@ class Admin(commands.Cog):
     ###########################################################################
 
     @commandExtra(name='kick', category='admin',
-                  description=Texts('commands').get('admin._kick'))
+                  description=Texts('admin_help').get('_kick'))
     async def _kick(self, ctx: commands.Context, user: discord.Member, *,
                     reason=""):
         try:
@@ -165,7 +165,7 @@ class Admin(commands.Cog):
     ###########################################################################
 
     @commandExtra(name='clear', category='admin',
-                  description=Texts('commands').get('admin._clear'))
+                  description=Texts('admin_help').get('_clear'))
     async def _clear(self, ctx: commands.Context, count: int):
         try:
             await ctx.message.delete()
@@ -176,13 +176,13 @@ class Admin(commands.Cog):
     ###########################################################################
 
     @groupExtra(name='react', category='admin',
-                description=Texts('commands').get('admin._react'))
+                description=Texts('admin_help').get('_react'))
     async def _react(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('react')
 
     @_react.command(name='add',
-                    description=Texts('commands').get('admin._react_add'))
+                    description=Texts('admin_help').get('admin._react_add'))
     async def _react_add(self, ctx: commands.Context, message_id: int, *,
                          emojis: str):
         emojis: list = emojis.split(' ')
@@ -199,7 +199,7 @@ class Admin(commands.Cog):
                 delete_after=5)
 
     @_react.command(name='clear',
-                    description=Texts('commands').get('admin._react_remove'))
+                    description=Texts('admin_help').get('_react_remove'))
     async def _react_remove(self, ctx: commands.Context, message_id: int):
         try:
             message: discord.Message = await ctx.channel.fetch_message(
@@ -214,7 +214,7 @@ class Admin(commands.Cog):
 
     @groupExtra(name='delete', invoke_without_command=True,
                 category='admin',
-                description=Texts('commands').get('admin._delete'))
+                description=Texts('admin_help').get('_delete'))
     async def _delete(self, ctx: commands.Context, message_id: int):
         try:
             await ctx.message.delete()
@@ -231,7 +231,7 @@ class Admin(commands.Cog):
                 delete_after=5)
 
     @_delete.command(name='from', aliases=['to', 'in'],
-                     description=Texts('commands').get('admin._delete_from'))
+                     description=Texts('admin_help').get('_delete_from'))
     async def _delete_from(self, ctx: commands.Context,
                            channel: discord.TextChannel, message_id: int):
         try:
@@ -294,7 +294,7 @@ class Admin(commands.Cog):
         self.bot.database.session.commit()
 
     @groupExtra(name='warn', aliases=['warns'], category='admin',
-                description=Texts('commands').get('admin._warn'))
+                description=Texts('admin_help').get('_warn'))
     async def _warn(self, ctx: commands.Context):
         await ctx.trigger_typing()
         if ctx.invoked_subcommand is None:
@@ -307,7 +307,7 @@ class Admin(commands.Cog):
             await ctx.send(embed=e)
 
     @_warn.command(name='add', aliases=['new'],
-                   description=Texts('commands').get('admin._warn_new'))
+                   description=Texts('admin_help').get('_warn_new'))
     async def _warn_new(self, ctx: commands.Context, member: discord.Member,
                         *, reason="N/A"):
         member = await ctx.guild.fetch_member(member.id)
@@ -386,8 +386,8 @@ class Admin(commands.Cog):
                     f"\n**{Texts('admin', ctx).get('Reason')}:** `{reason}`"
         )
 
-    @_warn.command(name='remove', aliases=['revoke'],
-                   description=Texts('commands').get('admin._warn_remove'))
+    @_warn.command(name='remove', aliases=['revoke', 'del', 'delete'],
+                   description=Texts('admin_help').get('_warn_remove'))
     async def _warn_remove(self, ctx: commands.Context, warn_id: int):
         warn = self.bot.database.session \
             .query(WarnModel) \
@@ -399,8 +399,8 @@ class Admin(commands.Cog):
         await ctx.send(f"{Texts('admin', ctx).get('Warn with id')} `{warn_id}`"
                        f" {Texts('admin', ctx).get('successfully removed')}")
 
-    @_warn.command(name='show', aliases=['list'],
-                   description=Texts('commands').get('admin._warn_show'))
+    @_warn.command(name='show', aliases=['list', 'all'],
+                   description=Texts('admin_help').get('_warn_show'))
     async def _warn_show(self, ctx: commands.Context, member: discord.Member):
         warns_list, warns = await self.get_warn(ctx, member)
 
@@ -411,8 +411,8 @@ class Admin(commands.Cog):
 
         await ctx.send(embed=e)
 
-    @_warn.command(name='edit', aliases=['change'],
-                   description=Texts('commands').get('admin._warn_edit'))
+    @_warn.command(name='edit', aliases=['change', 'modify'],
+                   description=Texts('admin_help').get('_warn_edit'))
     async def _warn_edit(self, ctx: commands.Context, warn_id: int, *, reason):
         warn = self.bot.database.session \
             .query(WarnModel) \
@@ -429,7 +429,7 @@ class Admin(commands.Cog):
 
     @commandExtra(name='language', aliases=['lang', 'langue', 'langage'],
                   category='admin',
-                  description=Texts('commands').get('admin._language'))
+                  description=Texts('admin_help').get('_language'))
     async def _language(self, ctx: commands.Context, locale: str):
         available = self.bot.database.session \
             .query(LangModel.value) \
@@ -460,13 +460,13 @@ class Admin(commands.Cog):
     ###########################################################################
 
     @groupExtra(name='prefix', aliases=['prefixes'], category='admin',
-                description=Texts('commands').get('admin._prefix'))
+                description=Texts('admin_help').get('_prefix'))
     async def _prefix(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('prefix')
 
     @_prefix.command(name='add', aliases=['set', 'new'],
-                     description=Texts('commands').get('admin._prefix_add'))
+                     description=Texts('admin_help').get('_prefix_add'))
     async def _prefix_add(self, ctx: commands.Context, prefix: str):
         if str(ctx.guild.id) in self.bot.prefixes:
             prefixes = self.bot.prefixes.get(
@@ -500,7 +500,7 @@ class Admin(commands.Cog):
         )
 
     @_prefix.command(name='remove', aliases=['drop', 'del', 'delete'],
-                     description=Texts('commands').get('admin._prefix_remove'))
+                     description=Texts('admin_help').get('_prefix_remove'))
     async def _prefix_remove(self, ctx: commands.Context, prefix: str):
         if str(ctx.guild.id) in self.bot.prefixes:
             prefixes = self.bot.prefixes.get(
@@ -529,7 +529,7 @@ class Admin(commands.Cog):
         )
 
     @_prefix.command(name='list', aliases=['show', 'all'],
-                     description=Texts('commands').get('admin._prefix_list'))
+                     description=Texts('admin_help').get('_prefix_list'))
     async def _prefix_list(self, ctx: commands.Context):
         extras = ['.']
         if ctx.message.guild is not None:

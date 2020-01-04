@@ -1,0 +1,60 @@
+[INFO   ] [2020-01-04 18:47:27] discord.client: logging in using static token
+[INFO   ] [2020-01-04 18:47:28] discord.gateway: Shard ID 0 has sent the IDENTIFY payload.
+[INFO   ] [2020-01-04 18:47:28] discord.gateway: Shard ID 0 has connected to Gateway: ["gateway-prd-main-1mb3",{"micros":59339,"calls":["discord-sessions-prd-1-26",{"micros":56634,"calls":["start_session",{"micros":36442,"calls":["api-prd-main-wpx2",{"micros":33053,"calls":["get_user",{"micros":2542},"add_authorized_ip",{"micros":1944},"get_guilds",{"micros":2441},"coros_wait",{"micros":1}]}]},"guilds_connect",{"micros":7,"calls":[]},"presence_connect",{"micros":1,"calls":[]}]}]}] (Session ID: 2e6c7d848985fce96ccf1d3a03a9878b).
+[INFO   ] [2020-01-04 18:47:38] discord.state: Processed a chunk for 462 members in guild ID 280805240977227776.
+[INFO   ] [2020-01-04 18:47:38] discord.state: Processed a chunk for 794 members in guild ID 331981755177238530.
+[INFO   ] [2020-01-04 18:47:38] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:39] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:39] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:40] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:40] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:41] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:41] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:42] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:42] discord.state: Processed a chunk for 810 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-04 18:47:45] cogs.Logs: 2020-01-04 17:48:03.502000: Romain#5117 in #general (Gnous): rm-dev01.info
+[INFO   ] [2020-01-04 18:49:07] cogs.Logs: 2020-01-04 17:49:25.331000: loup#8965 in #general (Gnous): rm-dev01.info
+[INFO   ] [2020-01-04 18:50:52] cogs.Logs: 2020-01-04 17:51:11.819000: Romain#5117 in #bot (Gnous): rm-dev01.jsk reloac cogs.Utility
+[INFO   ] [2020-01-04 18:50:58] cogs.Logs: 2020-01-04 17:51:16.650000: loup#8965 in #bot (Gnous): rm-dev01.info
+[INFO   ] [2020-01-04 18:50:58] cogs.Logs: 2020-01-04 17:51:17.057000: Romain#5117 in #bot (Gnous): rm-dev01.jsk reload cogs.Utility
+[INFO   ] [2020-01-04 18:51:09] cogs.Logs: 2020-01-04 17:51:28.317000: Romain#5117 in #bot (Gnous): rm-dev01.jsk reload cogs.Useful
+[INFO   ] [2020-01-04 18:51:18] cogs.Logs: 2020-01-04 17:51:36.366000: Romain#5117 in #bot (Gnous): rm-dev01.info
+[INFO   ] [2020-01-04 18:52:22] cogs.Logs: 2020-01-04 17:52:41.348000: loup#8965 in #bot (Gnous): rm-dev01.jsk
+[INFO   ] [2020-01-04 18:53:20] cogs.Logs: 2020-01-04 17:53:38.893000: Romain#5117 in #bots-spam (Mounak): rm-dev01.info
+[INFO   ] [2020-01-04 18:57:52] cogs.Logs: 2020-01-04 17:58:10.611000: Romain#5117 in #bot (Gnous): rm-dev01.jsk
+[INFO   ] [2020-01-04 18:59:40] cogs.Logs: 2020-01-04 17:59:59.117000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk py
+conf = _bot.config.get("permission", "Owners")
+[INFO   ] [2020-01-04 18:59:49] cogs.Logs: 2020-01-04 18:00:08.291000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk py
+conf = _bot.config.get("permissions", "Owners")
+[INFO   ] [2020-01-04 18:59:59] cogs.Logs: 2020-01-04 18:00:17.851000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk py
+conf = _bot.config.get("permissions", "Owners")
+
+await _ctx.send(conf)
+[INFO   ] [2020-01-04 19:01:46] cogs.Logs: 2020-01-04 18:02:04.343000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk py
+conf = _bot.config.get("permissions", "Owners")
+conf = conf.split(', ')
+conf.append(str(329989396218773504))
+
+conf = ', '.join(conf)
+
+await _ctx.send(conf)
+[INFO   ] [2020-01-04 19:02:06] cogs.Logs: 2020-01-04 18:02:25.221000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk py
+conf = _bot.config.get("permissions", "Owners")
+conf = conf.split(', ')
+conf.append(str(a))
+
+conf = ', '.join(conf)
+
+_bot.config.set("permissions", "Owners", conf)
+[INFO   ] [2020-01-04 19:02:17] cogs.Logs: 2020-01-04 18:02:36.778000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk py
+conf = _bot.config.get("permissions", "Owners")
+conf = conf.split(', ')
+conf.append(str(123456789))
+
+conf = ', '.join(conf)
+
+_bot.config.set("permissions", "Owners", conf)
+[INFO   ] [2020-01-04 19:05:37] discord.client: Cleaning up tasks.
+[INFO   ] [2020-01-04 19:05:37] discord.client: Cleaning up after 6 tasks.
+[INFO   ] [2020-01-04 19:05:37] discord.client: All tasks finished cancelling.
+[INFO   ] [2020-01-04 19:05:37] discord.client: Closing the event loop.

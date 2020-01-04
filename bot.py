@@ -28,7 +28,7 @@ l_extensions: List[str] = [
     'cogs.Admin',
     'cogs.Help',
     'cogs.Logs',
-    'cogs.Monitoring',
+    # 'cogs.Monitoring',
     'cogs.Polls',
     'cogs.Useful',
     'cogs.User',
@@ -74,7 +74,8 @@ class TuxBot(commands.AutoShardedBot):
         self.cluster = self.fallbacks.find('True', key='This', first=True)
 
         self.version = Version(*version, pre_release='a5', build=build)
-        self.owner = int
+        self.owner: discord.User = discord.User
+        self.owners: List[discord.User] = []
 
         for extension in l_extensions:
             try:
@@ -153,6 +154,10 @@ class TuxBot(commands.AutoShardedBot):
         self.owner = await self.fetch_user(
             int(self.config.get('permissions', 'Owners').split(', ')[0])
         )
+        for owner in self.config.get('permissions', 'Owners').split(', '):
+            self.owners.append(
+                await self.fetch_user(int(owner))
+            )
 
     @staticmethod
     async def on_resumed():

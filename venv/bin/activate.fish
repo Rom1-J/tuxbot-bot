@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/opt/tuxbot-bot/venv"
+set -gx VIRTUAL_ENV "/home/romain/gnousEU/rm-dev01/tuxbot-bot/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

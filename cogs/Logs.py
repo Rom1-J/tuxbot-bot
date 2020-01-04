@@ -241,7 +241,7 @@ class Logs(commands.Cog):
         await self.webhook.send(msg)
 
     @commandExtra(name='commandstats', hidden=True, category='logs',
-                  description=Texts('commands').get('logs._commandstats'))
+                  description=Texts('logs_help').get('_commandstats'))
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats
@@ -257,7 +257,7 @@ class Logs(commands.Cog):
         await ctx.send(f'```\n{output}\n```')
 
     @commandExtra(name='socketstats', hidden=True, category='logs',
-                  description=Texts('commands').get('logs._socketstats'))
+                  description=Texts('logs_help').get('_socketstats'))
     @commands.is_owner()
     async def _socketstats(self, ctx):
         delta = datetime.datetime.utcnow() - self.bot.uptime
@@ -268,7 +268,7 @@ class Logs(commands.Cog):
             f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
 
     @commandExtra(name='uptime', category='logs',
-                  description=Texts('commands').get('logs._uptime'))
+                  description=Texts('logs_help').get('_uptime'))
     async def _uptime(self, ctx):
         """Tells you how long the bot has been up for."""
         uptime = humanize.naturaltime(

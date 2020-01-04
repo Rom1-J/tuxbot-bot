@@ -15,41 +15,8 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-msgid "Information about TuxBot"
-msgstr ""
+msgid 'main_page.description'
+msgstr "Créé par {}\nLorsque vous utilisez les commandes, <> correspond à un argument obligatoire et [] à un argument optionnel.\n***(Vous ne devez pas écrire ces symboles)***"
 
-msgid "Latest changes"
-msgstr ""
-
-msgid "Development"
-msgstr ""
-
-msgid "physical memory"
-msgstr ""
-
-msgid "virtual memory"
-msgstr ""
-
-msgid "Servers count"
-msgstr ""
-
-msgid "Channels count"
-msgstr ""
-
-msgid "Members count"
-msgstr ""
-
-msgid "Links"
-msgstr ""
-
-msgid "Files"
-msgstr ""
-
-msgid "Lines"
-msgstr ""
-
-msgid "Invite"
-msgstr ""
-
-msgid "Contributors"
-msgstr ""
+msgid 'main_page.categories'
+msgstr 'Catégories'
