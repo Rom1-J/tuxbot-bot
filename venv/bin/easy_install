@@ -1,4 +1,4 @@
-#!/home/romain/gnousEU/rm-dev01/tuxbot-bot/venv/bin/python
+#!/opt/tuxbot-bot/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
