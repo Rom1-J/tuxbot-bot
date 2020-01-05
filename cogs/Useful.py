@@ -36,10 +36,41 @@ class Useful(commands.Cog):
 
         return os.popen(cmd).read().strip()
 
+    @staticmethod
+    def fetch_info():
+        total_lines = 0
+        total_python_lines = 0
+        file_amount = 0
+        python_file_amount = 0
+        ENV = "env"
+
+        for path, _, files in os.walk("."):
+            for name in files:
+                file_dir = str(pathlib.PurePath(path, name))
+                if (
+                        not name.endswith(".py")
+                        and not name.endswith(".po")
+                        and not name.endswith(".json")
+                ) or ENV in file_dir:
+                    continue
+                file_amount += 1
+                python_file_amount += 1 if name.endswith(".py") else 0
+                with open(file_dir, "r", encoding="utf-8") as file:
+                    for line in file:
+                        if not line.strip().startswith("#") \
+                                or not line.strip():
+                            total_lines += 1
+                            total_python_lines += 1 if name.endswith(".py") \
+                                else 0
+
+        return (file_amount, total_lines), (
+            python_file_amount, total_python_lines)
+
     ###########################################################################
 
-    @commandExtra(name='iplocalise', category='useful',
-                  description=Texts('useful_help').get('_iplocalise'))
+    @commandExtra(name='iplocalise', category='network',
+                  description=Texts('useful_help').get('_iplocalise'),
+                  short_doc=Texts('useful_help').get('_iplocalise__short'))
     async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
         addr = re.sub(r'http(s?)://', '', addr)
         addr = addr[:-1] if addr.endswith('/') else addr
@@ -103,8 +134,9 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='getheaders', category='useful',
-                  description=Texts('useful_help').get('_getheaders'))
+    @commandExtra(name='getheaders', category='network',
+                  description=Texts('useful_help').get('_getheaders'),
+                  short_doc=Texts('useful_help').get('_getheaders__short'))
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
             addr = f"http://{addr}"
@@ -127,7 +159,7 @@ class Useful(commands.Cog):
                     e.add_field(name=key, value=value, inline=True)
                 await ctx.send(embed=e)
 
-        except aiohttp.client_exceptions.ClientError:
+        except aiohttp.ClientError:
             await ctx.send(
                 f"{Texts('useful', ctx).get('Cannot connect to host')} {addr}"
             )
@@ -135,8 +167,9 @@ class Useful(commands.Cog):
     ###########################################################################
 
     @commandExtra(name='git', aliases=['sources', 'source', 'github'],
-                  category='useful',
-                  description=Texts('useful_help').get('_git'))
+                  category='misc',
+                  description=Texts('useful_help').get('_git'),
+                  short_doc=Texts('useful_help').get('_git__short'))
     async def _git(self, ctx):
         e = discord.Embed(
             title=Texts('useful', ctx).get('git repo'),
@@ -151,8 +184,9 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='quote', category='useful',
-                  description=Texts('useful_help').get('_quote'))
+    @commandExtra(name='quote', category='misc',
+                  description=Texts('useful_help').get('_quote'),
+                  short_doc=Texts('useful_help').get('_quote__short'))
     async def _quote(self, ctx, message_id: discord.Message):
         e = discord.Embed(
             colour=message_id.author.colour,
@@ -174,8 +208,9 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='ping', category='useful',
-                  description=Texts('useful_help').get('_ping'))
+    @commandExtra(name='ping', category='network',
+                  description=Texts('useful_help').get('_ping'),
+                  short_doc=Texts('useful_help').get('_ping__short'))
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
         await ctx.trigger_typing()
@@ -193,37 +228,9 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @staticmethod
-    def fetch_info():
-        total_lines = 0
-        total_python_lines = 0
-        file_amount = 0
-        python_file_amount = 0
-        ENV = "env"
-
-        for path, _, files in os.walk("."):
-            for name in files:
-                file_dir = str(pathlib.PurePath(path, name))
-                if (
-                        not name.endswith(".py")
-                        and not name.endswith(".po")
-                        and not name.endswith(".json")
-                ) or ENV in file_dir:
-                    continue
-                file_amount += 1
-                python_file_amount += 1 if name.endswith(".py") else 0
-                with open(file_dir, "r", encoding="utf-8") as file:
-                    for line in file:
-                        if not line.strip().startswith("#") \
-                                or not line.strip():
-                            total_lines += 1
-                            total_python_lines += 1 if name.endswith(".py") \
-                                else 0
-
-        return (file_amount, total_lines), (python_file_amount, total_python_lines)
-
-    @commandExtra(name='info', aliases=['about'], category='useful',
-                  description=Texts('useful_help').get('_info'))
+    @commandExtra(name='info', aliases=['about'], category='misc',
+                  description=Texts('useful_help').get('_info'),
+                  short_doc=Texts('useful_help').get('_info__short'))
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
         total, python = self.fetch_info()
@@ -306,8 +313,9 @@ class Useful(commands.Cog):
     ###########################################################################
 
     @commandExtra(name='credits', aliases=['contributors', 'authors'],
-                  category='useful',
-                  description=Texts('useful_help').get('_credits'))
+                  category='misc',
+                  description=Texts('useful_help').get('_credits'),
+                  short_doc=Texts('useful_help').get('_credits__short'))
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('useful', ctx).get('Contributors'),

@@ -20,3 +20,15 @@ msgstr "Créé par {}\nLorsque vous utilisez les commandes, <> correspond à un 
 
 msgid 'main_page.categories'
 msgstr 'Catégories'
+
+msgid 'main_page.footer'
+msgstr "- Envoyez {}help <Commande> pour avoir plus d'aide sur la commande."
+
+msgid 'main_page.not_found'
+msgstr 'Impossible de trouver la commande {}.'
+
+msgid 'command_help.subcommands'
+msgstr 'Sous-commandes'
+
+msgid 'command_help.no_aliases'
+msgstr 'Aucun alias'

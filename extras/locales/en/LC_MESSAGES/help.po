@@ -20,3 +20,15 @@ msgstr "Made by {}\nWhen using commands, <> means a required argument and [] mea
 
 msgid 'main_page.categories'
 msgstr 'Categories'
+
+msgid 'main_page.footer'
+msgstr '- Send {}help <Command> to see more help about a command.'
+
+msgid 'main_page.not_found'
+msgstr 'No command called "{}" found.'
+
+msgid 'command_help.subcommands'
+msgstr 'Subcommands'
+
+msgid 'command_help.no_aliases'
+msgstr 'No aliases'

@@ -1,7 +1,7 @@
 """
 
 Based on https://github.com/Rapptz/RoboDanny/blob/3d94e89ef27f702a5f57f432a9131bdfb60bb3ec/cogs/stats.py
-Rewrite by Romain J.
+Adapted by Romain J.
 
 """
 
@@ -51,6 +51,9 @@ class Logs(commands.Cog):
 
         self._resumes = []
         self._identifies = defaultdict(list)
+
+        self.icon = ":newspaper:"
+        self.big_icon = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/233/newspaper_1f4f0.png"
 
     def _clear_gateway_data(self):
         one_week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
@@ -240,8 +243,9 @@ class Logs(commands.Cog):
         msg = f'{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`'
         await self.webhook.send(msg)
 
-    @commandExtra(name='commandstats', hidden=True, category='logs',
-                  description=Texts('logs_help').get('_commandstats'))
+    @commandExtra(name='commandstats', hidden=True, category='misc',
+                  description=Texts('logs_help').get('_commandstats'),
+                  short_doc=Texts('logs_help').get('_commandstats__short'))
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats
@@ -256,8 +260,9 @@ class Logs(commands.Cog):
 
         await ctx.send(f'```\n{output}\n```')
 
-    @commandExtra(name='socketstats', hidden=True, category='logs',
-                  description=Texts('logs_help').get('_socketstats'))
+    @commandExtra(name='socketstats', hidden=True, category='misc',
+                  description=Texts('logs_help').get('_socketstats'),
+                  short_doc=Texts('logs_help').get('_socketstats__short'))
     @commands.is_owner()
     async def _socketstats(self, ctx):
         delta = datetime.datetime.utcnow() - self.bot.uptime
@@ -267,8 +272,9 @@ class Logs(commands.Cog):
         await ctx.send(
             f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
 
-    @commandExtra(name='uptime', category='logs',
-                  description=Texts('logs_help').get('_uptime'))
+    @commandExtra(name='uptime', category='misc',
+                  description=Texts('logs_help').get('_uptime'),
+                  short_doc=Texts('logs_help').get('_uptime__short'))
     async def _uptime(self, ctx):
         """Tells you how long the bot has been up for."""
         uptime = humanize.naturaltime(
