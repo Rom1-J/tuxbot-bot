@@ -37,7 +37,7 @@ l_extensions: List[str] = [
 
 
 async def _prefix_callable(bot, message: discord.message) -> list:
-    extras = [bot.cluster.get('Name') + '.']
+    extras = [bot.cluster.get('Name') + '.', '.']
     if message.guild is not None:
         if str(message.guild.id) in bot.prefixes:
             extras.extend(
@@ -73,7 +73,7 @@ class TuxBot(commands.AutoShardedBot):
         self.fallbacks = Config('./configs/fallbacks.cfg')
         self.cluster = self.fallbacks.find('True', key='This', first=True)
 
-        self.version = Version(*version, pre_release='a5', build=build)
+        self.version = Version(*version, pre_release='rc1', build=build)
         self.owner: discord.User = discord.User
         self.owners: List[discord.User] = []
 
