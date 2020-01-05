@@ -20,7 +20,7 @@ class HelpCommand(commands.HelpCommand):
         self.owner_cogs = ["Admin"]
 
     def common_command_formatting(self, emb, command):
-        prefix = self.context.prefix if str(self.context.bot.user.id) in self.context.prefix else f"@{self.context.bot.user.name}"
+        prefix = self.context.prefix if str(self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
 
         emb.title = self.get_command_signature(command)
 
@@ -112,7 +112,7 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_cog_help(self, cog):
         pages = {}
-        prefix = self.context.prefix if str(self.context.bot.user.id) in self.context.prefix else f"@{self.context.bot.user.name}"
+        prefix = self.context.prefix if str(self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
 
         if cog.__class__.__name__ in self.owner_cogs \
                 and self.context.author not in self.context.bot.owners:

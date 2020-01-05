@@ -276,7 +276,6 @@ class Logs(commands.Cog):
                   description=Texts('logs_help').get('_uptime'),
                   short_doc=Texts('logs_help').get('_uptime__short'))
     async def _uptime(self, ctx):
-        """Tells you how long the bot has been up for."""
         uptime = humanize.naturaltime(
             datetime.datetime.utcnow() - self.bot.uptime)
         await ctx.send(f'Uptime: **{uptime}**')

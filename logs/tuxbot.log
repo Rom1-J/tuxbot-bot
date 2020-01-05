@@ -1,25 +1,19 @@
-[INFO   ] [2020-01-05 00:57:22] discord.client: logging in using static token
-[INFO   ] [2020-01-05 00:57:23] discord.gateway: Shard ID 0 has sent the IDENTIFY payload.
-[INFO   ] [2020-01-05 00:57:24] discord.gateway: Shard ID 0 has connected to Gateway: ["gateway-prd-main-gl57",{"micros":945031,"calls":["discord-sessions-prd-1-25",{"micros":942744,"calls":["start_session",{"micros":32305,"calls":["api-prd-main-7v2n",{"micros":29524,"calls":["get_user",{"micros":1434},"add_authorized_ip",{"micros":1485},"get_guilds",{"micros":2100},"coros_wait",{"micros":1}]}]},"guilds_connect",{"micros":7,"calls":[]},"presence_connect",{"micros":877400,"calls":[]}]}]}] (Session ID: 4f9781c6360b7abd8e741bf8ebc2dfc7).
-[INFO   ] [2020-01-05 00:57:33] discord.state: Processed a chunk for 462 members in guild ID 280805240977227776.
-[INFO   ] [2020-01-05 00:57:33] discord.state: Processed a chunk for 794 members in guild ID 331981755177238530.
-[INFO   ] [2020-01-05 00:57:34] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:34] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:35] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:35] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:36] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:36] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:36] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:37] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:37] discord.state: Processed a chunk for 840 members in guild ID 296698073177128962.
-[INFO   ] [2020-01-05 00:57:39] cogs.Logs: 2020-01-04 23:57:58.535000: Romain#5117 in #tuxbot-test (Gnous): <@!301062143942590465> help
-[INFO   ] [2020-01-05 00:58:20] cogs.Logs: 2020-01-04 23:58:38.646000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk reload cogs.Help
-[INFO   ] [2020-01-05 00:58:22] cogs.Logs: 2020-01-04 23:58:41.511000: Romain#5117 in #tuxbot-test (Gnous): <@!301062143942590465> help
-[INFO   ] [2020-01-05 00:58:53] cogs.Logs: 2020-01-04 23:59:12.305000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk reload cogs.Help
-[INFO   ] [2020-01-05 00:58:57] cogs.Logs: 2020-01-04 23:59:16.559000: Romain#5117 in #tuxbot-test (Gnous): <@!301062143942590465> help
-[INFO   ] [2020-01-05 00:59:09] cogs.Logs: 2020-01-04 23:59:28.908000: Romain#5117 in #tuxbot-test (Gnous): rm-dev01.jsk reload cogs.Help
-[INFO   ] [2020-01-05 00:59:17] cogs.Logs: 2020-01-04 23:59:36.767000: Romain#5117 in #bots-spam (Mounak): <@!301062143942590465> help
-[INFO   ] [2020-01-05 01:00:48] discord.client: Cleaning up tasks.
-[INFO   ] [2020-01-05 01:00:48] discord.client: Cleaning up after 6 tasks.
-[INFO   ] [2020-01-05 01:00:49] discord.client: All tasks finished cancelling.
-[INFO   ] [2020-01-05 01:00:49] discord.client: Closing the event loop.
+[INFO   ] [2020-01-05 01:27:19] discord.client: logging in using static token
+[INFO   ] [2020-01-05 01:27:21] discord.gateway: Shard ID 0 has sent the IDENTIFY payload.
+[INFO   ] [2020-01-05 01:27:21] discord.gateway: Shard ID 0 has connected to Gateway: ["gateway-prd-main-9bmr",{"micros":437974,"calls":["discord-sessions-prd-1-19",{"micros":435593,"calls":["start_session",{"micros":38434,"calls":["api-prd-main-m577",{"micros":35095,"calls":["get_user",{"micros":1858},"add_authorized_ip",{"micros":1746},"get_guilds",{"micros":2400},"coros_wait",{"micros":2}]}]},"guilds_connect",{"micros":73,"calls":[]},"presence_connect",{"micros":1,"calls":[]}]}]}] (Session ID: 821ba51666f198bfd1e13b0e1b75fc84).
+[INFO   ] [2020-01-05 01:27:30] discord.state: Processed a chunk for 462 members in guild ID 280805240977227776.
+[INFO   ] [2020-01-05 01:27:30] discord.state: Processed a chunk for 794 members in guild ID 331981755177238530.
+[INFO   ] [2020-01-05 01:27:30] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:31] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:31] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:32] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:32] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:33] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:33] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:34] discord.state: Processed a chunk for 1000 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:34] discord.state: Processed a chunk for 842 members in guild ID 296698073177128962.
+[INFO   ] [2020-01-05 01:27:36] cogs.Logs: 2020-01-05 00:27:55.614000: Romain#5117 in #tuxbot-test (Gnous): <@!301062143942590465> help Logs
+[INFO   ] [2020-01-05 01:30:14] discord.client: Cleaning up tasks.
+[INFO   ] [2020-01-05 01:30:14] discord.client: Cleaning up after 6 tasks.
+[INFO   ] [2020-01-05 01:30:15] discord.client: All tasks finished cancelling.
+[INFO   ] [2020-01-05 01:30:15] discord.client: Closing the event loop.

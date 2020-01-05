@@ -15,3 +15,5 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
+msgid "_uptime__short"
+msgstr "Retourne depuis quand le bot est en ligne."
