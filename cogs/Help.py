@@ -16,28 +16,24 @@ log = logging.getLogger(__name__)
 class HelpCommand(commands.HelpCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ignore_cogs = ["Monitoring", "Help", "Jishaku"]
-        self.owner_cogs = ["Admin"]
+        self.ignore_cogs = ["Monitoring", "Help"]
+        self.owner_cogs = ["Jishaku"]
+        self.admin_cogs = ["Admin"]
 
-    def common_command_formatting(self, emb, command):
+    def common_command_formatting(self, e, command):
         prefix = self.context.prefix if str(self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
 
-        emb.title = self.get_command_signature(command)
+        e.title = self.get_command_signature(command)
+        e.description = command.description
 
-        emb.description = command.description
-        usage = command.description + "todo: usage"
-
-        try:
-            usg = command.description + "todo: usage"
-            emb.add_field(
-                name=usage,
-                value=f"{prefix}{command.qualified_name} " + usg
-            )
-        except KeyError:
-            emb.add_field(
-                name=usage,
-                value=f"{prefix}{command.qualified_name}"
-            )
+        e.add_field(
+            name="TODO: Text.params :",
+            value=command.usage
+        )
+        e.add_field(
+            name="TODO: Text.usage :",
+            value=f"{prefix}{command.qualified_name} " + command.usage
+        )
 
         aliases = "`" + '`, `'.join(command.aliases) + "`"
         if aliases == "``":
@@ -46,7 +42,7 @@ class HelpCommand(commands.HelpCommand):
             ).get(
                 'command_help.no_aliases'
             )
-        emb.add_field(
+        e.add_field(
             name=Texts(
                 'help', self.context
             ).get(
@@ -55,7 +51,7 @@ class HelpCommand(commands.HelpCommand):
             value=aliases
         )
 
-        return emb
+        return e
 
     async def send_bot_help(self, mapping):
         owners = self.context.bot.owners
@@ -129,14 +125,14 @@ class HelpCommand(commands.HelpCommand):
             pages[cmd.category] \
                 += f"{cmd.name}" \
                    + ' ' * int(17 - len(cmd.name)) \
-                   + f":: {cmd.short_doc}\n"
+                   + f":: {cmd.help}\n"
 
             if isinstance(cmd, commands.Group):
                 for group_command in cmd.commands:
                     pages[cmd.category] \
                         += f"━ {group_command.name}" \
                            + ' ' * int(15 - len(group_command.name)) \
-                           + f":: {cmd.short_doc}\n"
+                           + f":: {cmd.help}\n"
         for e in pages:
             pages[e] += "```"
         formatted = []

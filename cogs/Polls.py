@@ -207,14 +207,14 @@ class Polls(commands.Cog):
     @groupExtra(name='poll', aliases=['sondage'],
                 category='poll',
                 description=Texts('poll_help').get('_poll'),
-                short_doc=Texts('poll_help').get('_poll__short'))
+                help=Texts('poll_help').get('_poll__short'))
     async def _poll(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('sondage')
 
     @_poll.group(name='create', aliases=['new', 'nouveau'],
                  description=Texts('poll_help').get('_poll_create'),
-                short_doc=Texts('poll_help').get('_poll_create__short'))
+                 help=Texts('poll_help').get('_poll_create__short'))
     async def _poll_create(self, ctx: commands.Context, *, poll: str):
         is_anonymous = '--anonyme' in poll
         poll = poll.replace('--anonyme', '')

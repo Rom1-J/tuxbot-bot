@@ -245,7 +245,7 @@ class Logs(commands.Cog):
 
     @commandExtra(name='commandstats', hidden=True, category='misc',
                   description=Texts('logs_help').get('_commandstats'),
-                  short_doc=Texts('logs_help').get('_commandstats__short'))
+                  help=Texts('logs_help').get('_commandstats__short'))
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats
@@ -262,7 +262,7 @@ class Logs(commands.Cog):
 
     @commandExtra(name='socketstats', hidden=True, category='misc',
                   description=Texts('logs_help').get('_socketstats'),
-                  short_doc=Texts('logs_help').get('_socketstats__short'))
+                  help=Texts('logs_help').get('_socketstats__short'))
     @commands.is_owner()
     async def _socketstats(self, ctx):
         delta = datetime.datetime.utcnow() - self.bot.uptime
@@ -274,7 +274,7 @@ class Logs(commands.Cog):
 
     @commandExtra(name='uptime', category='misc',
                   description=Texts('logs_help').get('_uptime'),
-                  short_doc=Texts('logs_help').get('_uptime__short'))
+                  help=Texts('logs_help').get('_uptime__short'))
     async def _uptime(self, ctx):
         uptime = humanize.naturaltime(
             datetime.datetime.utcnow() - self.bot.uptime)

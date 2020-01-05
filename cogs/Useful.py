@@ -70,7 +70,7 @@ class Useful(commands.Cog):
 
     @commandExtra(name='iplocalise', category='network',
                   description=Texts('useful_help').get('_iplocalise'),
-                  short_doc=Texts('useful_help').get('_iplocalise__short'))
+                  help=Texts('useful_help').get('_iplocalise__short'))
     async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
         addr = re.sub(r'http(s?)://', '', addr)
         addr = addr[:-1] if addr.endswith('/') else addr
@@ -136,7 +136,7 @@ class Useful(commands.Cog):
 
     @commandExtra(name='getheaders', category='network',
                   description=Texts('useful_help').get('_getheaders'),
-                  short_doc=Texts('useful_help').get('_getheaders__short'))
+                  help=Texts('useful_help').get('_getheaders__short'))
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
             addr = f"http://{addr}"
@@ -169,7 +169,7 @@ class Useful(commands.Cog):
     @commandExtra(name='git', aliases=['sources', 'source', 'github'],
                   category='misc',
                   description=Texts('useful_help').get('_git'),
-                  short_doc=Texts('useful_help').get('_git__short'))
+                  help=Texts('useful_help').get('_git__short'))
     async def _git(self, ctx):
         e = discord.Embed(
             title=Texts('useful', ctx).get('git repo'),
@@ -186,7 +186,7 @@ class Useful(commands.Cog):
 
     @commandExtra(name='quote', category='misc',
                   description=Texts('useful_help').get('_quote'),
-                  short_doc=Texts('useful_help').get('_quote__short'))
+                  help=Texts('useful_help').get('_quote__short'))
     async def _quote(self, ctx, message_id: discord.Message):
         e = discord.Embed(
             colour=message_id.author.colour,
@@ -210,7 +210,7 @@ class Useful(commands.Cog):
 
     @commandExtra(name='ping', category='network',
                   description=Texts('useful_help').get('_ping'),
-                  short_doc=Texts('useful_help').get('_ping__short'))
+                  help=Texts('useful_help').get('_ping__short'))
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
         await ctx.trigger_typing()
@@ -230,7 +230,7 @@ class Useful(commands.Cog):
 
     @commandExtra(name='info', aliases=['about'], category='misc',
                   description=Texts('useful_help').get('_info'),
-                  short_doc=Texts('useful_help').get('_info__short'))
+                  help=Texts('useful_help').get('_info__short'))
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
         total, python = self.fetch_info()
@@ -315,7 +315,7 @@ class Useful(commands.Cog):
     @commandExtra(name='credits', aliases=['contributors', 'authors'],
                   category='misc',
                   description=Texts('useful_help').get('_credits'),
-                  short_doc=Texts('useful_help').get('_credits__short'))
+                  help=Texts('useful_help').get('_credits__short'))
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('useful', ctx).get('Contributors'),

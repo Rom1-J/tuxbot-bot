@@ -14,79 +14,239 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
+###########################################################################
+##########################   SAY   ########################################
+###########################################################################
 
 msgid '_say'
-msgstr ''
+msgstr 'Permet de faire en sorte que le TuxBot envoi votre message'
 
-msgid '_say_edit'
-msgstr ''
+msgid '_say__short'
+msgstr 'Fait parler TuxBot'
 
-msgid '_say_to'
-msgstr ''
+msgid '_say_usage'
+msgstr '[sous-commande] <message>'
 
 ###########################################################################
 
-msgid '_ban'
-msgstr ''
+msgid '_say_edit'
+msgstr "Permet de modifier le contenu d'un message envoyé par TuxBot"
 
+msgid '_say_edit__short'
+msgstr 'Edite un message envoyé par le TuxBot'
+
+msgid '_say_edit__usage'
+msgstr '<ID/Lien du message> <message>'
+
+###########################################################################
+
+msgid '_say_to'
+msgstr "Permet de faire en sorte que le TuxBot envoi votre message dans un autre salon ou en MP à quelqu'un"
+
+msgid '_say_to__short'
+msgstr 'Fait parler TuxBot dans un autre salon'
+
+msgid '_say_to__usage'
+msgstr "<ID/Mention du salon ou ID/Mention d'un membre> <message>"
+
+###########################################################################
+##########################   BAN   ########################################
+###########################################################################
+msgid '_ban'
+msgstr 'Permet de bannir un membre'
+
+msgid '_ban__short'
+msgstr 'Bannir un membre'
+
+msgid '_ban__usage'
+msgstr '<ID/Mention du membre>'
+
+###########################################################################
+##########################   KICK   #######################################
 ###########################################################################
 
 msgid '_kick'
-msgstr ''
+msgstr "Permet d'expulser un membre"
 
+msgid '_kick__short'
+msgstr 'Expulser un membre'
+
+msgid '_kick__usage'
+msgstr '<ID/Mention du membre>'
+
+###########################################################################
+##########################   CLEAR   ######################################
 ###########################################################################
 
 msgid '_clear'
 msgstr ''
 
+msgid '_clear__short'
+msgstr ''
+
+msgid '_clear__usage'
+msgstr ''
+
+###########################################################################
+##########################   REACT   ######################################
 ###########################################################################
 
 msgid '_react'
 msgstr ''
 
+msgid '_react__short'
+msgstr ''
+
+msgid '_react__usage'
+msgstr ''
+
+###########################################################################
+
 msgid '_react_remove'
 msgstr ''
 
+msgid '_react_remove__short'
+msgstr ''
+
+msgid '_react_remove__usage'
+msgstr ''
+
+###########################################################################
+##########################   DELETE   #####################################
 ###########################################################################
 
 msgid '_delete'
 msgstr ''
 
+msgid '_delete__short'
+msgstr ''
+
+msgid '_delete__usage'
+msgstr ''
+
+###########################################################################
+
 msgid '_delete_from'
 msgstr ''
 
+msgid '_delete_from__short'
+msgstr ''
+
+msgid '_delete_from__usage'
+msgstr ''
+
+###########################################################################
+##########################   WARN   #######################################
 ###########################################################################
 
 msgid '_warn'
 msgstr ''
 
+msgid '_warn__short'
+msgstr ''
+
+msgid '_warn__usage'
+msgstr ''
+
+###########################################################################
+
 msgid '_warn_new'
 msgstr ''
+
+msgid '_warn_new__short'
+msgstr ''
+
+msgid '_warn_new__usage'
+msgstr ''
+
+###########################################################################
 
 msgid '_warn_remove'
 msgstr ''
 
+msgid '_warn_remove__short'
+msgstr ''
+
+msgid '_warn_remove__usage'
+msgstr ''
+
+###########################################################################
+
 msgid '_warn_show'
 msgstr ''
+
+msgid '_warn_show__short'
+msgstr ''
+
+msgid '_warn_show__usage'
+msgstr ''
+
+###########################################################################
 
 msgid '_warn_edit'
 msgstr ''
 
+msgid '_warn_edit__short'
+msgstr ''
+
+msgid '_warn_edit__usage'
+msgstr ''
+
+###########################################################################
+##########################   LANGUAGE   ###################################
 ###########################################################################
 
 msgid '_language'
 msgstr ''
 
+msgid '_language__short'
+msgstr ''
+
+msgid '_language__usage'
+msgstr ''
+
+###########################################################################
+##########################   PREFIX   #####################################
 ###########################################################################
 
 msgid '_prefix'
 msgstr ''
 
+msgid '_prefix__short'
+msgstr ''
+
+msgid '_prefix__usage'
+msgstr ''
+
+###########################################################################
+
 msgid '_prefix_add'
 msgstr ''
+
+msgid '_prefix_add__short'
+msgstr ''
+
+msgid '_prefix_add__usage'
+msgstr ''
+
+###########################################################################
 
 msgid '_prefix_remove'
 msgstr ''
 
+msgid '_prefix_remove__short'
+msgstr ''
+
+msgid '_prefix_remove__usage'
+msgstr ''
+
+###########################################################################
+
 msgid '_prefix_list'
+msgstr ''
+
+msgid '_prefix_list__short'
+msgstr ''
+
+msgid '_prefix_list__usage'
 msgstr ''
