@@ -18,8 +18,8 @@ msgstr ""
 msgid 'main_page.description'
 msgstr "Créé par {}\nLorsque vous utilisez les commandes, <> correspond à un argument obligatoire et [] à un argument optionnel.\n***(Vous ne devez pas écrire ces symboles)***"
 
-msgid 'main_page.categories'
-msgstr 'Catégories'
+msgid 'main_page.commands'
+msgstr 'Commandes'
 
 msgid 'main_page.footer'
 msgstr "- Envoyez {}help <Commande> pour avoir plus d'aide sur la commande."
@@ -30,5 +30,14 @@ msgstr 'Impossible de trouver la commande {}.'
 msgid 'command_help.subcommands'
 msgstr 'Sous-commandes'
 
+msgid 'command_help.aliases'
+msgstr 'Alias'
+
 msgid 'command_help.no_aliases'
 msgstr 'Aucun alias'
+
+msgid 'command_help.params'
+msgstr 'Parametres'
+
+msgid 'command_help.usage'
+msgstr 'Utilisation'

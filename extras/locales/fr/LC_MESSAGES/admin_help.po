@@ -22,7 +22,7 @@ msgid '_say'
 msgstr 'Permet de faire en sorte que le TuxBot envoi votre message'
 
 msgid '_say__short'
-msgstr 'Fait parler TuxBot'
+msgstr 'Faire parler TuxBot'
 
 msgid '_say_usage'
 msgstr '[sous-commande] <message>'
@@ -33,7 +33,7 @@ msgid '_say_edit'
 msgstr "Permet de modifier le contenu d'un message envoyé par TuxBot"
 
 msgid '_say_edit__short'
-msgstr 'Edite un message envoyé par le TuxBot'
+msgstr 'Editer un message envoyé'
 
 msgid '_say_edit__usage'
 msgstr '<ID/Lien du message> <message>'
@@ -44,7 +44,7 @@ msgid '_say_to'
 msgstr "Permet de faire en sorte que le TuxBot envoi votre message dans un autre salon ou en MP à quelqu'un"
 
 msgid '_say_to__short'
-msgstr 'Fait parler TuxBot dans un autre salon'
+msgstr 'Faire parler TuxBot dans un autre salon'
 
 msgid '_say_to__usage'
 msgstr "<ID/Mention du salon ou ID/Mention d'un membre> <message>"
@@ -79,174 +79,185 @@ msgstr '<ID/Mention du membre>'
 ###########################################################################
 
 msgid '_clear'
-msgstr ''
+msgstr 'Permet de supprimer un nombre donné de message'
 
 msgid '_clear__short'
-msgstr ''
+msgstr 'Supprime X messages'
 
 msgid '_clear__usage'
-msgstr ''
+msgstr '<quantité>'
 
 ###########################################################################
 ##########################   REACT   ######################################
 ###########################################################################
 
 msgid '_react'
-msgstr ''
+msgstr "Affiche l'aide relative a la commande `react`"
 
 msgid '_react__short'
-msgstr ''
+msgstr "Afficher l'aide pour `react`"
 
 msgid '_react__usage'
-msgstr ''
+msgstr '[sous-commande]'
+
+###########################################################################
+
+msgid '_react_add'
+msgstr "Permet d'ajouter une réaction à un message de la part de TuxBot"
+
+msgid '_react_add__short'
+msgstr 'Ajouter une réaction'
+
+msgid '_react_add__usage'
+msgstr '<ID/Lien du message> <émoji>'
 
 ###########################################################################
 
 msgid '_react_remove'
-msgstr ''
+msgstr "Permet d'enlever toutes les réactions d'un message"
 
 msgid '_react_remove__short'
-msgstr ''
+msgstr "Enlever toutes les réactions d'un message"
 
 msgid '_react_remove__usage'
-msgstr ''
+msgstr '<ID/Lien du message>'
 
 ###########################################################################
 ##########################   DELETE   #####################################
 ###########################################################################
 
 msgid '_delete'
-msgstr ''
+msgstr 'Permet de supprimer un message'
 
 msgid '_delete__short'
-msgstr ''
+msgstr 'Supprimer un message'
 
 msgid '_delete__usage'
-msgstr ''
+msgstr '[sous-commande] <ID/Lien du message>'
 
 ###########################################################################
 
 msgid '_delete_from'
-msgstr ''
+msgstr 'Permet de supprimer un message dans un autre salon'
 
 msgid '_delete_from__short'
-msgstr ''
+msgstr 'Supprimer un message dans un autre salon'
 
 msgid '_delete_from__usage'
-msgstr ''
+msgstr '<ID/Mention du salon> <ID/Lien du message>'
 
 ###########################################################################
 ##########################   WARN   #######################################
 ###########################################################################
 
 msgid '_warn'
-msgstr ''
+msgstr "Permet d'afficher les derniers avertissements donnés sur ce serveur"
 
 msgid '_warn__short'
-msgstr ''
+msgstr 'Lister les derniers avertissements'
 
 msgid '_warn__usage'
-msgstr ''
+msgstr '[sous-commande]'
 
 ###########################################################################
 
 msgid '_warn_new'
-msgstr ''
+msgstr "Permet d'ajouter un avertissement à un membre en donnant une raison"
 
 msgid '_warn_new__short'
-msgstr ''
+msgstr 'Ajouter un avertissement a un membre'
 
 msgid '_warn_new__usage'
-msgstr ''
+msgstr '<ID/Pseudo/Mention du membre> <raison>'
 
 ###########################################################################
 
 msgid '_warn_remove'
-msgstr ''
+msgstr "Permet de supprimer un avertissement qui a été donné à un membre"
 
 msgid '_warn_remove__short'
-msgstr ''
+msgstr "Retirer l'avertissement d'un membre"
 
 msgid '_warn_remove__usage'
-msgstr ''
+msgstr "<ID de l'avertissement>"
 
 ###########################################################################
 
 msgid '_warn_show'
-msgstr ''
+msgstr "Permet d'afficher les derniers avertissements donnés à un membre"
 
 msgid '_warn_show__short'
-msgstr ''
+msgstr "Lister les derniers avertissements d'un membre"
 
 msgid '_warn_show__usage'
-msgstr ''
+msgstr '<ID/Pseudo/Mention du membre>'
 
 ###########################################################################
 
 msgid '_warn_edit'
-msgstr ''
+msgstr "Permet de modifier la raison de l'avertissement donné à un membre"
 
 msgid '_warn_edit__short'
-msgstr ''
+msgstr "Modifier la raison d'un avertissement"
 
 msgid '_warn_edit__usage'
-msgstr ''
+msgstr "<ID de l'avertissement> <raison>"
 
 ###########################################################################
 ##########################   LANGUAGE   ###################################
 ###########################################################################
 
 msgid '_language'
-msgstr ''
+msgstr 'Permet de définir la langue utilisée sur ce serveur'
 
 msgid '_language__short'
-msgstr ''
+msgstr 'Définir la langue de Tuxbot'
 
 msgid '_language__usage'
-msgstr ''
+msgstr '<langue>'
 
 ###########################################################################
 ##########################   PREFIX   #####################################
 ###########################################################################
 
 msgid '_prefix'
-msgstr ''
+msgstr "Affiche l'aide relative a la commande `prefix`"
 
 msgid '_prefix__short'
-msgstr ''
+msgstr "Afficher l'aide pour `prefix`"
 
 msgid '_prefix__usage'
-msgstr ''
+msgstr '[sous-commande]'
 
 ###########################################################################
 
 msgid '_prefix_add'
-msgstr ''
+msgstr "Permet d'ajouter un nouveau préfixe pour ce serveur"
 
 msgid '_prefix_add__short'
-msgstr ''
+msgstr 'Ajouter un préfixe pour ce serveur'
 
 msgid '_prefix_add__usage'
-msgstr ''
+msgstr '<prefixe>'
 
 ###########################################################################
 
 msgid '_prefix_remove'
-msgstr ''
+msgstr "Permet retirer un préfixe pour ce serveur"
 
 msgid '_prefix_remove__short'
-msgstr ''
+msgstr 'Retirer un préfixe pour ce serveur'
 
 msgid '_prefix_remove__usage'
-msgstr ''
+msgstr '<prefixe>'
 
 ###########################################################################
 
 msgid '_prefix_list'
-msgstr ''
+msgstr "Permet d'afficher tous les prefixes définis pour ce serveur"
 
 msgid '_prefix_list__short'
-msgstr ''
+msgstr 'Lister les prefixes pour ce servuer'
 
 msgid '_prefix_list__usage'
-msgstr ''
+msgstr '⠀'

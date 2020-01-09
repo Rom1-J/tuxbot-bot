@@ -4,10 +4,9 @@ import logging
 
 import discord
 from discord.ext import commands
-from discord import utils
 
 from bot import TuxBot
-from utils import Texts
+from utils import Texts, GroupPlus
 from utils.paginator import FieldPages
 
 log = logging.getLogger(__name__)
@@ -16,22 +15,31 @@ log = logging.getLogger(__name__)
 class HelpCommand(commands.HelpCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ignore_cogs = ["Monitoring", "Help"]
-        self.owner_cogs = ["Jishaku"]
+        self.ignore_cogs = ["Monitoring", "Help", "Jishaku"]
+        self.owner_cogs = []
         self.admin_cogs = ["Admin"]
 
     def common_command_formatting(self, e, command):
-        prefix = self.context.prefix if str(self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
+        prefix = self.context.prefix if str(
+            self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
 
         e.title = self.get_command_signature(command)
         e.description = command.description
 
         e.add_field(
-            name="TODO: Text.params :",
+            name=Texts(
+                'help', self.context
+            ).get(
+                'command_help.params'
+            ),
             value=command.usage
         )
         e.add_field(
-            name="TODO: Text.usage :",
+            name=Texts(
+                'help', self.context
+            ).get(
+                'command_help.usage'
+            ),
             value=f"{prefix}{command.qualified_name} " + command.usage
         )
 
@@ -59,7 +67,8 @@ class HelpCommand(commands.HelpCommand):
             f"{owner.name}#{owner.discriminator}"
             for owner in owners
         ]
-        prefix = self.context.prefix if str(self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name} "
+        prefix = self.context.prefix if str(
+            self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name} "
 
         e = discord.Embed(
             color=discord.Color.blue(),
@@ -85,7 +94,6 @@ class HelpCommand(commands.HelpCommand):
             )
         )
 
-        cogs = ""
         for extension in self.context.bot.cogs.values():
             if self.context.author not in owners \
                     and extension.__class__.__name__ in self.owner_cogs:
@@ -93,22 +101,23 @@ class HelpCommand(commands.HelpCommand):
             if extension.__class__.__name__ in self.ignore_cogs:
                 continue
 
-            cogs += f"• {extension.icon} **{extension.qualified_name}**\n"
+            count = len(extension.get_commands())
+            text = Texts('help', self.context).get('main_page.commands')
 
-        e.add_field(
-            name=Texts(
-                'help', self.context
-            ).get(
-                'main_page.categories'
-            ),
-            value=cogs
-        )
+            if count <= 1:
+                text = text[:-1]
+
+            e.add_field(
+                name=f"__{extension.icon} **{extension.qualified_name}**__",
+                value=f"{count} {text}"
+            )
 
         await self.context.send(embed=e)
 
     async def send_cog_help(self, cog):
         pages = {}
-        prefix = self.context.prefix if str(self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
+        prefix = self.context.prefix if str(
+            self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
 
         if cog.__class__.__name__ in self.owner_cogs \
                 and self.context.author not in self.context.bot.owners:
@@ -127,12 +136,12 @@ class HelpCommand(commands.HelpCommand):
                    + ' ' * int(17 - len(cmd.name)) \
                    + f":: {cmd.help}\n"
 
-            if isinstance(cmd, commands.Group):
+            if isinstance(cmd, GroupPlus):
                 for group_command in cmd.commands:
                     pages[cmd.category] \
-                        += f"━ {group_command.name}" \
+                        += f"└> {group_command.name}" \
                            + ' ' * int(15 - len(group_command.name)) \
-                           + f":: {cmd.help}\n"
+                           + f":: {group_command.help}\n"
         for e in pages:
             pages[e] += "```"
         formatted = []

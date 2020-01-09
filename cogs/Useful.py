@@ -242,11 +242,6 @@ class Useful(commands.Cog):
                 color=0x89C4F9)
 
             e.add_field(
-                name=f"__{Texts('useful', ctx).get('Latest changes')}__",
-                value=self._latest_commits(),
-                inline=False)
-
-            e.add_field(
                 name=f"__:busts_in_silhouette: "
                      f"{Texts('useful', ctx).get('Development')}__",
                 value=f"**Romain#5117:** [git](https://git.gnous.eu/Romain)\n"
@@ -293,6 +288,12 @@ class Useful(commands.Cog):
                 name=f"__¶ {Texts('useful', ctx).get('Lines')}__",
                 value=f"{total[1]} *({python[1]} <:python:596577462335307777>)*",
                 inline=True
+            )
+
+            e.add_field(
+                name=f"__{Texts('useful', ctx).get('Latest changes')}__",
+                value=self._latest_commits(),
+                inline=False
             )
 
             e.add_field(

@@ -18,8 +18,8 @@ msgstr ""
 msgid 'main_page.description'
 msgstr "Made by {}\nWhen using commands, <> means a required argument and [] means an optional argument.\n***(These symbols shouldn't be written)***"
 
-msgid 'main_page.categories'
-msgstr 'Categories'
+msgid 'main_page.commands'
+msgstr 'Commands'
 
 msgid 'main_page.footer'
 msgstr '- Send {}help <Command> to see more help about a command.'
@@ -30,5 +30,14 @@ msgstr 'No command called "{}" found.'
 msgid 'command_help.subcommands'
 msgstr 'Subcommands'
 
+msgid 'command_help.aliases'
+msgstr 'Aliases'
+
 msgid 'command_help.no_aliases'
 msgstr 'No aliases'
+
+msgid 'command_help.params'
+msgstr 'Parameters'
+
+msgid 'command_help.usage'
+msgstr 'Usage'
