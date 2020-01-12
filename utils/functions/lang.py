@@ -1,8 +1,8 @@
 import gettext
 from .config import Config
-from utils import Database
+from .database import Database
 
-from .models.lang import LangModel
+from utils.models.lang import LangModel
 from discord.ext import commands
 
 
@@ -12,7 +12,7 @@ class Texts:
         self.base = base
 
     def get(self, text: str) -> str:
-        texts = gettext.translation(self.base, localedir='extras/locales',
+        texts = gettext.translation(self.base, localedir='utils/locales',
                                     languages=[self.locale])
         texts.install()
         return texts.gettext(text)

@@ -8,7 +8,8 @@ from yarl import URL
 
 from bot import TuxBot
 from utils import PollModel, ResponsesModel
-from utils import Texts, emotes as utils_emotes
+from utils import Texts
+from utils.functions import emotes as utils_emotes
 from utils import groupExtra
 
 log = logging.getLogger(__name__)

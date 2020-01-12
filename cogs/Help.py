@@ -7,7 +7,7 @@ from discord.ext import commands
 
 from bot import TuxBot
 from utils import Texts, GroupPlus
-from utils.paginator import FieldPages
+from utils import FieldPages
 
 log = logging.getLogger(__name__)
 

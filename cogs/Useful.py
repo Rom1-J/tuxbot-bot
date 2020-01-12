@@ -1,9 +1,9 @@
 # Created by romain at 04/01/2020
-
 import logging
 import os
 import pathlib
 import platform
+import random
 import re
 import socket
 import time
@@ -18,7 +18,7 @@ from tcp_latency import measure_latency
 
 from bot import TuxBot
 from utils import Texts
-from utils import commandExtra
+from utils import commandExtra, groupExtra
 
 log = logging.getLogger(__name__)
 
@@ -65,6 +65,19 @@ class Useful(commands.Cog):
 
         return (file_amount, total_lines), (
             python_file_amount, total_python_lines)
+
+    @staticmethod
+    def luhn_checker(number: int):
+        digits = [int(x) for x in reversed(str(number))]
+
+        for index, digit in enumerate(digits, start=1):
+            digit = digit * 2 if index % 2 == 0 else digit
+            if digit >= 10:
+                digit = sum(int(x) for x in list(str(digit)))
+
+            digits[index - 1] = digit
+
+        return sum(digits) % 10 == 0
 
     ###########################################################################
 
@@ -338,6 +351,43 @@ class Useful(commands.Cog):
         )
 
         await ctx.send(embed=e)
+
+    ###########################################################################
+    @groupExtra(name='cb', aliases=['cc'],
+                category='misc',
+                description=Texts('useful_help').get('_cb'),
+                help=Texts('useful_help').get('_cb__short'))
+    async def _cb(self, ctx: commands.Context):
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help('cb')
+
+    @_cb.command(name='validate', aliases=['valid', 'correct'],
+                 category='misc',
+                 description=Texts('useful_help').get('_cb_validate'),
+                 help=Texts('useful_help').get('_cb_validate__short'))
+    async def _cb_validate(self, ctx: commands.Context, *, number: int):
+        valid = self.luhn_checker(number)
+
+        await ctx.send(
+            Texts(
+                'useful', ctx
+            ).get(
+                'valid_credit_card'
+                if valid
+                else 'invalid_credit_card'
+            )
+        )
+
+    @_cb.command(name='generate', aliases=['new', 'get'],
+                 category='misc',
+                 description=Texts('useful_help').get('_cb_generate'),
+                 help=Texts('useful_help').get('_cb_generate__short'))
+    async def _cb_generate(self, ctx: commands.Context):
+        number = random.randint(4000_0000_0000_0000, 5999_9999_9999_9999)
+        while not self.luhn_checker(number):
+            number = random.randint(4000_0000_0000_0000, 5999_9999_9999_9999)
+
+        await ctx.send(''.join(str(digit) for digit in str(number)))
 
 
 def setup(bot: TuxBot):

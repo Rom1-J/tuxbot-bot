@@ -1,9 +1,8 @@
-from .database import Database
 from .models import *
 
-from .config import *
-from .lang import *
-from .version import *
+from utils.functions.config import *
+from utils.functions.lang import *
+from utils.functions.version import *
 
-from .extra import *
-from .paginator import *
+from utils.functions.extra import *
+from utils.functions.paginator import *
