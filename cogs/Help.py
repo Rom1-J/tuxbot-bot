@@ -19,12 +19,21 @@ class HelpCommand(commands.HelpCommand):
         self.owner_cogs = []
         self.admin_cogs = ["Admin"]
 
-    def common_command_formatting(self, e, command):
-        prefix = self.context.prefix if str(
-            self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
+    def command_formatting(self, e, command):
+        prefix = self.context.prefix \
+            if str(self.context.bot.user.id) not in self.context.prefix \
+            else f"@{self.context.bot.user.name}"
+        file = Texts(command.cog.qualified_name.lower() + '_help', self.context)
 
-        e.title = self.get_command_signature(command)
-        e.description = command.description
+        if command.parent is not None:
+            description = file.get(f"_{command.parent}_{command.name}")
+            usage = file.get(f"_{command.parent}_{command.name}__usage")
+        else:
+            description = file.get(f"_{command.name}")
+            usage = file.get(f"_{command.name}__usage")
+
+        e.title = self.get_command_signature(command) + usage
+        e.description = description
 
         e.add_field(
             name=Texts(
@@ -32,7 +41,7 @@ class HelpCommand(commands.HelpCommand):
             ).get(
                 'command_help.params'
             ),
-            value=command.usage
+            value=usage
         )
         e.add_field(
             name=Texts(
@@ -40,7 +49,7 @@ class HelpCommand(commands.HelpCommand):
             ).get(
                 'command_help.usage'
             ),
-            value=f"{prefix}{command.qualified_name} " + command.usage
+            value=f"{prefix}{command.qualified_name} " + usage
         )
 
         aliases = "`" + '`, `'.join(command.aliases) + "`"
@@ -63,12 +72,9 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_bot_help(self, mapping):
         owners = self.context.bot.owners
-        owners_name = [
-            f"{owner.name}#{owner.discriminator}"
-            for owner in owners
-        ]
-        prefix = self.context.prefix if str(
-            self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name} "
+        prefix = self.context.prefix \
+            if str(self.context.bot.user.id) not in self.context.prefix \
+            else f"@{self.context.bot.user.name} "
 
         e = discord.Embed(
             color=discord.Color.blue(),
@@ -76,8 +82,6 @@ class HelpCommand(commands.HelpCommand):
                 'help', self.context
             ).get(
                 'main_page.description'
-            ).format(
-                ', '.join(owners_name[:-1]) + ' & ' + owners_name[-1]
             )
         )
         e.set_author(
@@ -116,8 +120,10 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_cog_help(self, cog):
         pages = {}
-        prefix = self.context.prefix if str(
-            self.context.bot.user.id) not in self.context.prefix else f"@{self.context.bot.user.name}"
+        prefix = self.context.prefix \
+            if str(self.context.bot.user.id) not in self.context.prefix \
+            else f"@{self.context.bot.user.name}"
+        file = Texts(cog.qualified_name.lower() + '_help', self.context)
 
         if cog.__class__.__name__ in self.owner_cogs \
                 and self.context.author not in self.context.bot.owners:
@@ -133,15 +139,15 @@ class HelpCommand(commands.HelpCommand):
 
             pages[cmd.category] \
                 += f"{cmd.name}" \
-                   + ' ' * int(17 - len(cmd.name)) \
-                   + f":: {cmd.help}\n"
+                   + ' ' * int(13 - len(cmd.name)) \
+                   + f":: {file.get(f'_{cmd.name}__short')}\n"
 
             if isinstance(cmd, GroupPlus):
                 for group_command in cmd.commands:
                     pages[cmd.category] \
                         += f"└> {group_command.name}" \
-                           + ' ' * int(15 - len(group_command.name)) \
-                           + f":: {group_command.help}\n"
+                           + ' ' * int(10 - len(group_command.name)) \
+                           + f":: {file.get(f'_{group_command.parent}_{group_command.name}__short')}\n"
         for e in pages:
             pages[e] += "```"
         formatted = []
@@ -168,21 +174,23 @@ class HelpCommand(commands.HelpCommand):
             return await self.send_error_message(
                 self.command_not_found(group.name)
             )
+        file = Texts(group.qualified_name.lower() + '_help', self.context)
 
-        formatted = self.common_command_formatting(
+        formatted = self.command_formatting(
             discord.Embed(color=discord.Color.blue()),
             group
         )
-        sub_cmd_list = ""
+        sub_command_list = "⠀"  # this is braille, please don't touch unless you know what you're doing
         for group_command in group.commands:
-            sub_cmd_list += f"└> **{group_command.name}** - {group_command.description}\n"
+            sub_command_list += f"└> **{group_command.name}** - {file.get(f'_{group_command.parent}_{group_command.name}')}\n"
+
         subcommands = Texts(
             'help', self.context
         ).get(
             'command_help.subcommands'
         )
 
-        formatted.add_field(name=subcommands, value=sub_cmd_list, inline=False)
+        formatted.add_field(name=subcommands, value=sub_command_list, inline=False)
         await self.context.send(embed=formatted)
 
     async def send_command_help(self, command):
@@ -193,7 +201,7 @@ class HelpCommand(commands.HelpCommand):
             return await self.send_error_message(
                 self.command_not_found(command.name))
 
-        formatted = self.common_command_formatting(
+        formatted = self.command_formatting(
             discord.Embed(color=discord.Color.blue()),
             command
         )

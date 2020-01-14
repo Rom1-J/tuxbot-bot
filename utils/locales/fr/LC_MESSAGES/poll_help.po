@@ -15,3 +15,26 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
+###########################################################################
+##########################   POLLS    #####################################
+###########################################################################
+
+msgid '_poll'
+msgstr "Affiche l'aide relative a la commande `sondage`"
+
+msgid '_poll__short'
+msgstr "Afficher l'aide pour `sondage`"
+
+msgid '_poll__usage'
+msgstr '[sous-commande]'
+
+###########################################################################
+
+msgid '_poll_create'
+msgstr "Créez un sondage basé sur les réactions ! *(**BETA!** ajoutez `--anonyme` pour rendre les réponses anonymes)*"
+
+msgid '_poll_create__short'
+msgstr 'Créer un sondage'
+
+msgid '_poll_create__usage'
+msgstr '<question> | <réponse A> | <réponse B> | [réponse C] | [réponse D] | [...]'

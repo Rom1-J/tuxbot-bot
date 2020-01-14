@@ -19,16 +19,12 @@ class User(commands.Cog):
 
     ###########################################################################
 
-    @groupExtra(name='alias', aliases=['aliases'], category='alias',
-                description=Texts('user_help').get('_alias'),
-                help=Texts('user_help').get('_alias__short'))
+    @groupExtra(name='alias', aliases=['aliases'], category='alias')
     async def _alias(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('alias')
 
-    @_alias.command(name='add', aliases=['set', 'new'],
-                    description=Texts('user_help').get('_alias_add'),
-                    help=Texts('user_help').get('_alias_add__short'))
+    @_alias.command(name='add', aliases=['set', 'new'])
     async def _alias_add(self, ctx: commands.Context, *, user_alias: str):
         is_global = False
         if '--global' in user_alias:
@@ -55,15 +51,11 @@ class User(commands.Cog):
         self.bot.database.session.add(alias)
         self.bot.database.session.commit()
 
-    @_alias.command(name='remove', aliases=['drop', 'del', 'delete'],
-                    description=Texts('user_help').get('_alias_remove'),
-                    help=Texts('user_help').get('_alias_remove__short'))
+    @_alias.command(name='remove', aliases=['drop', 'del', 'delete'])
     async def _alias_remove(self, ctx: commands.Context, prefix: str):
         ...
 
-    @_alias.command(name='list', aliases=['show', 'all'],
-                    description=Texts('user_help').get('_alias_list'),
-                    help=Texts('user_help').get('_alias_list__short'))
+    @_alias.command(name='list', aliases=['show', 'all'])
     async def _alias_list(self, ctx: commands.Context):
         ...
 

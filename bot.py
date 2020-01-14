@@ -29,7 +29,7 @@ l_extensions: List[str] = [
     'cogs.Help',
     'cogs.Logs',
     # 'cogs.Monitoring',
-    'cogs.Polls',
+    'cogs.Poll',
     'cogs.Useful',
     'cogs.User',
     'jishaku',

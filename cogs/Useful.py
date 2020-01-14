@@ -81,9 +81,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='iplocalise', category='network',
-                  description=Texts('useful_help').get('_iplocalise'),
-                  help=Texts('useful_help').get('_iplocalise__short'))
+    @commandExtra(name='iplocalise', category='network')
     async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
         addr = re.sub(r'http(s?)://', '', addr)
         addr = addr[:-1] if addr.endswith('/') else addr
@@ -147,9 +145,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='getheaders', category='network',
-                  description=Texts('useful_help').get('_getheaders'),
-                  help=Texts('useful_help').get('_getheaders__short'))
+    @commandExtra(name='getheaders', category='network')
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
             addr = f"http://{addr}"
@@ -179,10 +175,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='git', aliases=['sources', 'source', 'github'],
-                  category='misc',
-                  description=Texts('useful_help').get('_git'),
-                  help=Texts('useful_help').get('_git__short'))
+    @commandExtra(name='git', aliases=['sources', 'source', 'github'], category='misc')
     async def _git(self, ctx):
         e = discord.Embed(
             title=Texts('useful', ctx).get('git repo'),
@@ -197,9 +190,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='quote', category='misc',
-                  description=Texts('useful_help').get('_quote'),
-                  help=Texts('useful_help').get('_quote__short'))
+    @commandExtra(name='quote', category='misc')
     async def _quote(self, ctx, message_id: discord.Message):
         e = discord.Embed(
             colour=message_id.author.colour,
@@ -221,9 +212,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='ping', category='network',
-                  description=Texts('useful_help').get('_ping'),
-                  help=Texts('useful_help').get('_ping__short'))
+    @commandExtra(name='ping', category='network')
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
         await ctx.trigger_typing()
@@ -241,9 +230,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='info', aliases=['about'], category='misc',
-                  description=Texts('useful_help').get('_info'),
-                  help=Texts('useful_help').get('_info__short'))
+    @commandExtra(name='info', aliases=['about'], category='misc')
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
         total, python = self.fetch_info()
@@ -326,10 +313,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='credits', aliases=['contributors', 'authors'],
-                  category='misc',
-                  description=Texts('useful_help').get('_credits'),
-                  help=Texts('useful_help').get('_credits__short'))
+    @commandExtra(name='credits', aliases=['contributors', 'authors'], category='misc')
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('useful', ctx).get('Contributors'),
@@ -353,18 +337,12 @@ class Useful(commands.Cog):
         await ctx.send(embed=e)
 
     ###########################################################################
-    @groupExtra(name='cb', aliases=['cc'],
-                category='misc',
-                description=Texts('useful_help').get('_cb'),
-                help=Texts('useful_help').get('_cb__short'))
+    @groupExtra(name='cb', aliases=['cc'], category='misc')
     async def _cb(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('cb')
 
-    @_cb.command(name='validate', aliases=['valid', 'correct'],
-                 category='misc',
-                 description=Texts('useful_help').get('_cb_validate'),
-                 help=Texts('useful_help').get('_cb_validate__short'))
+    @_cb.command(name='validate', aliases=['valid', 'correct'], category='misc')
     async def _cb_validate(self, ctx: commands.Context, *, number: int):
         valid = self.luhn_checker(number)
 
@@ -378,10 +356,7 @@ class Useful(commands.Cog):
             )
         )
 
-    @_cb.command(name='generate', aliases=['new', 'get'],
-                 category='misc',
-                 description=Texts('useful_help').get('_cb_generate'),
-                 help=Texts('useful_help').get('_cb_generate__short'))
+    @_cb.command(name='generate', aliases=['new', 'get'], category='misc')
     async def _cb_generate(self, ctx: commands.Context):
         number = random.randint(4000_0000_0000_0000, 5999_9999_9999_9999)
         while not self.luhn_checker(number):

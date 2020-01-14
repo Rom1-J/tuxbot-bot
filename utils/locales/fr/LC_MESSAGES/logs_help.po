@@ -16,4 +16,4 @@ msgstr ""
 
 
 msgid "_uptime__short"
-msgstr "Retourne depuis quand le bot est en ligne."
+msgstr "Retourne depuis quand TuxBot est en ligne."

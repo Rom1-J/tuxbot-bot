@@ -19,7 +19,7 @@ msgstr ""
 ###########################################################################
 
 msgid '_say'
-msgstr 'Permet de faire en sorte que le TuxBot envoi votre message'
+msgstr 'Permet de faire en sorte que le TuxBot envoie votre message'
 
 msgid '_say__short'
 msgstr 'Faire parler TuxBot'
@@ -161,13 +161,13 @@ msgstr '[sous-commande]'
 
 ###########################################################################
 
-msgid '_warn_new'
+msgid '_warn_add'
 msgstr "Permet d'ajouter un avertissement à un membre en donnant une raison"
 
-msgid '_warn_new__short'
+msgid '_warn_add__short'
 msgstr 'Ajouter un avertissement a un membre'
 
-msgid '_warn_new__usage'
+msgid '_warn_add__usage'
 msgstr '<ID/Pseudo/Mention du membre> <raison>'
 
 ###########################################################################
@@ -257,7 +257,7 @@ msgid '_prefix_list'
 msgstr "Permet d'afficher tous les prefixes définis pour ce serveur"
 
 msgid '_prefix_list__short'
-msgstr 'Lister les prefixes pour ce servuer'
+msgstr 'Lister les prefixes pour ce serveur'
 
 msgid '_prefix_list__usage'
 msgstr '⠀'

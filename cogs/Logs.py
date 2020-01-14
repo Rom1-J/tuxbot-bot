@@ -243,9 +243,7 @@ class Logs(commands.Cog):
         msg = f'{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`'
         await self.webhook.send(msg)
 
-    @commandExtra(name='commandstats', hidden=True, category='misc',
-                  description=Texts('logs_help').get('_commandstats'),
-                  help=Texts('logs_help').get('_commandstats__short'))
+    @commandExtra(name='commandstats', hidden=True, category='misc')
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats
@@ -260,9 +258,7 @@ class Logs(commands.Cog):
 
         await ctx.send(f'```\n{output}\n```')
 
-    @commandExtra(name='socketstats', hidden=True, category='misc',
-                  description=Texts('logs_help').get('_socketstats'),
-                  help=Texts('logs_help').get('_socketstats__short'))
+    @commandExtra(name='socketstats', hidden=True, category='misc')
     @commands.is_owner()
     async def _socketstats(self, ctx):
         delta = datetime.datetime.utcnow() - self.bot.uptime
@@ -272,9 +268,7 @@ class Logs(commands.Cog):
         await ctx.send(
             f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
 
-    @commandExtra(name='uptime', category='misc',
-                  description=Texts('logs_help').get('_uptime'),
-                  help=Texts('logs_help').get('_uptime__short'))
+    @commandExtra(name='uptime', category='misc')
     async def _uptime(self, ctx):
         uptime = humanize.naturaltime(
             datetime.datetime.utcnow() - self.bot.uptime)

@@ -15,7 +15,7 @@ from utils import groupExtra
 log = logging.getLogger(__name__)
 
 
-class Polls(commands.Cog):
+class Poll(commands.Cog):
 
     def __init__(self, bot: TuxBot):
         self.bot = bot
@@ -205,17 +205,12 @@ class Polls(commands.Cog):
         poll.content = json.dumps(content)
         self.bot.database.session.commit()
 
-    @groupExtra(name='poll', aliases=['sondage'],
-                category='poll',
-                description=Texts('poll_help').get('_poll'),
-                help=Texts('poll_help').get('_poll__short'))
+    @groupExtra(name='poll', aliases=['sondage'], category='poll')
     async def _poll(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
-            await ctx.send_help('sondage')
+            await ctx.send_help('poll')
 
-    @_poll.group(name='create', aliases=['new', 'nouveau'],
-                 description=Texts('poll_help').get('_poll_create'),
-                 help=Texts('poll_help').get('_poll_create__short'))
+    @_poll.group(name='create', aliases=['new', 'nouveau'])
     async def _poll_create(self, ctx: commands.Context, *, poll: str):
         is_anonymous = '--anonyme' in poll
         poll = poll.replace('--anonyme', '')
@@ -224,4 +219,4 @@ class Polls(commands.Cog):
 
 
 def setup(bot: TuxBot):
-    bot.add_cog(Polls(bot))
+    bot.add_cog(Poll(bot))

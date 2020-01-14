@@ -16,7 +16,7 @@ msgstr ""
 
 
 msgid 'main_page.description'
-msgstr "Made by {}\nWhen using commands, <> means a required argument and [] means an optional argument.\n***(These symbols shouldn't be written)***"
+msgstr "When using commands, **<>** means a **required argument** and **[]** means an **optional** argument.\n***(Don't type these symbols!)***"
 
 msgid 'main_page.commands'
 msgstr 'Commands'
