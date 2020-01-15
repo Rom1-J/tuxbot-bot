@@ -1,5 +1,5 @@
 from discord.ext import commands
-from utils import Config
+from utils.functions import Config
 
 
 class CommandsPlus(commands.Command):

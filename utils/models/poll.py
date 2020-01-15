@@ -1,27 +1,29 @@
-from . import Base
-from sqlalchemy import Column, Integer, BigInteger, JSON, ForeignKey, Boolean
-from sqlalchemy.orm import relationship
+import orm
+from . import database, metadata
 
 
-class PollModel(Base):
-    __tablename__ = 'polls'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    channel_id = Column(BigInteger)
-    message_id = Column(BigInteger)
-
-    content = Column(JSON)
-    is_anonymous = Column(Boolean)
-
-    available_choices = Column(Integer)
-    choice = relationship("ResponsesModel")
-
-
-class ResponsesModel(Base):
+class ResponsesModel(orm.Model):
     __tablename__ = 'responses'
+    __database__ = database
+    __metadata__ = metadata
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user = Column(BigInteger)
+    id = orm.Integer(primary_key=True)
+    user = orm.String(max_length=18)
 
-    poll_id = Column(Integer, ForeignKey('polls.id'))
-    choice = Column(Integer)
+    choice = orm.Integer()
+
+
+class PollModel(orm.Model):
+    __tablename__ = 'polls'
+    __database__ = database
+    __metadata__ = metadata
+
+    id = orm.Integer(primary_key=True)
+    channel_id = orm.String(max_length=18)
+    message_id = orm.String(max_length=18)
+
+    content = orm.JSON()
+    is_anonymous = orm.Boolean()
+
+    available_choices = orm.Integer()
+    choice = orm.ForeignKey(ResponsesModel)

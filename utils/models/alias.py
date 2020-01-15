@@ -1,28 +1,14 @@
-from sqlalchemy import Column, String, BigInteger, Integer
+import orm
+from . import database, metadata
 
-from . import Base
 
-
-class AliasesModel(Base):
+class AliasesModel(orm.Model):
     __tablename__ = 'aliases'
+    __database__ = database
+    __metadata__ = metadata
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(BigInteger)
-    alias = Column(String)
-    command = Column(String)
-    guild = Column(String)
-
-    def __repr__(self):
-        return "<AliasesModel(" \
-               "id='%s', " \
-               "user_id='%s', " \
-               "alias='%s', " \
-               "command='%s', " \
-               "guild='%s', " \
-               ")>" % (
-                   self.id,
-                   self.user_id,
-                   self.alias,
-                   self.command,
-                   self.guild
-               )
+    id = orm.Integer(primary_key=True)
+    user_id = orm.String(max_length=18)
+    alias = orm.String(max_length=255)
+    command = orm.String(max_length=255)
+    guild = orm.String(max_length=255)

@@ -150,13 +150,6 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(error)
-
-    ###########################################################################
-
     @commandExtra(name='getheaders', category='network')
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:

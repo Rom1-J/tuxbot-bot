@@ -10,11 +10,11 @@ import discord
 import git
 from discord.ext import commands
 
-from utils import Config
-from utils import Database
-from utils import Texts
-from utils import Version
-from utils import ContextPlus
+from utils.functions import Config
+from utils.functions import Database
+from utils.functions import Texts
+from utils.functions import Version
+from utils.functions import ContextPlus
 
 description = """
 Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
@@ -52,7 +52,7 @@ async def _prefix_callable(bot, message: discord.message) -> list:
 
 class TuxBot(commands.AutoShardedBot):
 
-    def __init__(self, database):
+    def __init__(self,):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -63,20 +63,20 @@ class TuxBot(commands.AutoShardedBot):
         self.socket_stats = Counter()
         self.command_stats = Counter()
 
-        self.uptime: datetime = datetime.datetime.utcnow()
-        self._prev_events = deque(maxlen=10)
-        self.session = aiohttp.ClientSession(loop=self.loop)
-        self.database = database
-
         self.config = Config('./configs/config.cfg')
         self.prefixes = Config('./configs/prefixes.cfg')
         self.blacklist = Config('./configs/blacklist.cfg')
         self.fallbacks = Config('./configs/fallbacks.cfg')
         self.cluster = self.fallbacks.find('True', key='This', first=True)
 
+        self.uptime: datetime = datetime.datetime.utcnow()
+        self._prev_events = deque(maxlen=10)
+        self.session = aiohttp.ClientSession(loop=self.loop)
+        self.database = Database(self.config)
+
         self.version = Version(*version, pre_release='rc2', build=build)
-        self.owner: discord.User = discord.User
-        self.owners: List[discord.User] = []
+        self.owner_ids = self.config.get('permissions', 'Owners').split(', ')
+        self.owner_id = int(self.owner_ids[0])
 
         for extension in l_extensions:
             try:
@@ -93,8 +93,7 @@ class TuxBot(commands.AutoShardedBot):
                           + extension, exc_info=e)
 
     async def is_owner(self, user: discord.User) -> bool:
-        return str(user.id) in self.config.get("permissions", "Owners").split(
-            ', ')
+        return str(user.id) in self.owner_ids
 
     async def get_context(self, message, *, cls=None):
         return await super().get_context(message, cls=cls or ContextPlus)
@@ -114,6 +113,8 @@ class TuxBot(commands.AutoShardedBot):
                     "Sorry. This command is disabled and cannot be used."
                 )
             )
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(str(error))
 
     async def process_commands(self, message: discord.message):
         ctx: commands.Context = await self.get_context(message)
@@ -193,13 +194,13 @@ class TuxBot(commands.AutoShardedBot):
 
 @contextlib.contextmanager
 def setup_logging():
+    logging.getLogger('discord').setLevel(logging.INFO)
+    logging.getLogger('discord.http').setLevel(logging.WARNING)
+
+    log = logging.getLogger()
+    log.setLevel(logging.INFO)
+
     try:
-        logging.getLogger('discord').setLevel(logging.INFO)
-        logging.getLogger('discord.http').setLevel(logging.WARNING)
-
-        log = logging.getLogger()
-        log.setLevel(logging.INFO)
-
         handler = logging.FileHandler(filename='logs/tuxbot.log',
                                       encoding='utf-8', mode='w')
         fmt = logging.Formatter('[{levelname:<7}] [{asctime}]'
@@ -218,14 +219,12 @@ def setup_logging():
 
 
 if __name__ == "__main__":
-    log = logging.getLogger()
-
     print(Texts().get('Starting...'))
 
-    bot = TuxBot(Database(Config("./configs/config.cfg")))
+    app = TuxBot()
 
     try:
         with setup_logging():
-            bot.run()
+            app.run()
     except KeyboardInterrupt:
-        bot.close()
+        app.close()

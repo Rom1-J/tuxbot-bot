@@ -9,7 +9,7 @@ from discord.ext import commands
 
 from bot import TuxBot
 from utils import Texts
-from utils import WarnModel, LangModel
+from utils.models import WarnModel
 from utils import commandExtra, groupExtra
 
 log = logging.getLogger(__name__)

@@ -1,19 +1,14 @@
-import datetime
-
-from . import Base
-from sqlalchemy import Column, Integer, String, BIGINT, TIMESTAMP
+import orm
+from . import database, metadata
 
 
-class WarnModel(Base):
+class WarnModel(orm.Model):
     __tablename__ = 'warns'
+    __database__ = database
+    __metadata__ = metadata
 
-    id = Column(Integer, primary_key=True)
-    server_id = Column(BIGINT)
-    user_id = Column(BIGINT)
-    reason = Column(String)
-    created_at = Column(TIMESTAMP, default=datetime.datetime.now())
-
-    def __repr__(self):
-        return "<WarnModel(server_id='%s', user_id='%s', reason='%s', " \
-               "created_at='%s')>" \
-               % (self.server_id, self.user_id, self.reason, self.created_at)
+    id = orm.Integer(primary_key=True)
+    server_id = orm.String(max_length=18)
+    user_id = orm.String(max_length=18)
+    reason = orm.String(max_length=255)
+    created_at = orm.DateTime()
