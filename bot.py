@@ -20,7 +20,7 @@ Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
 """
 
 build = git.Repo(search_parent_directories=True).head.object.hexsha
-version = (2, 1, 0)
+version = (2, 0, 0)
 
 log = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ class TuxBot(commands.AutoShardedBot):
         self.fallbacks = Config('./configs/fallbacks.cfg')
         self.cluster = self.fallbacks.find('True', key='This', first=True)
 
-        self.version = Version(*version, pre_release='rc1', build=build)
+        self.version = Version(*version, pre_release='rc2', build=build)
         self.owner: discord.User = discord.User
         self.owners: List[discord.User] = []
 

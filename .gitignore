@@ -13,6 +13,7 @@ private.py
 
 # other
 logs/tuxbot.log
+utils/images/tmp/*
  
 # Byte-compiled / optimized / DLL files
 __pycache__/

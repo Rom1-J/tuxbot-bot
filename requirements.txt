@@ -9,3 +9,4 @@ configparser
 psutil
 tcp_latency
 yarl
+pillow

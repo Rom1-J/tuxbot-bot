@@ -8,6 +8,11 @@ import re
 import socket
 import time
 from socket import AF_INET6
+from io import BytesIO
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+from PIL import ImageOps
 
 import aiohttp
 import discord
@@ -358,11 +363,44 @@ class Useful(commands.Cog):
 
     @_cb.command(name='generate', aliases=['new', 'get'], category='misc')
     async def _cb_generate(self, ctx: commands.Context):
+        await ctx.channel.trigger_typing()
+
         number = random.randint(4000_0000_0000_0000, 5999_9999_9999_9999)
         while not self.luhn_checker(number):
             number = random.randint(4000_0000_0000_0000, 5999_9999_9999_9999)
+        number = str(number)
+        cvv = ''.join(random.choice("abcdefghij") for _ in range(3))
 
-        await ctx.send(''.join(str(digit) for digit in str(number)))
+        with Image.open("utils/images/blank_credit_card.png") as blank:
+            cc_font = ImageFont.truetype('utils/fonts/credit_card.ttf', 26)
+            user_font = ImageFont.truetype('utils/fonts/credit_card.ttf', 20)
+            draw = ImageDraw.Draw(blank)
+
+            cvv_text = Image.new('L', (500, 50))
+            cvv_draw = ImageDraw.Draw(cvv_text)
+            cvv_draw.text((0, 0), cvv, font=user_font, fill=255)
+            cvv_rotated = cvv_text.rotate(23, expand=1)
+
+            draw.text(
+                (69, 510),
+                '  '.join([number[i:i+4] for i in range(0, len(number), 4)]),
+                (210, 210, 210),
+                font=cc_font
+            )
+
+            draw.text(
+                (69, 550),
+                ctx.author.name.upper(),
+                (210, 210, 210),
+                font=user_font
+            )
+            blank.paste(ImageOps.colorize(cvv_rotated, (0, 0, 0), (0, 0, 0)), (470, 0), cvv_rotated)
+
+            output = BytesIO()
+            blank.save(output, 'png')
+            output.seek(0)
+
+        await ctx.send(file=discord.File(fp=output, filename="credit_card.png"))
 
 
 def setup(bot: TuxBot):
