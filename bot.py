@@ -14,6 +14,7 @@ from utils import Config
 from utils import Database
 from utils import Texts
 from utils import Version
+from utils import ContextPlus
 
 description = """
 Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
@@ -95,6 +96,9 @@ class TuxBot(commands.AutoShardedBot):
         return str(user.id) in self.config.get("permissions", "Owners").split(
             ', ')
 
+    async def get_context(self, message, *, cls=None):
+        return await super().get_context(message, cls=cls or ContextPlus)
+
     async def on_socket_response(self, msg):
         self._prev_events.append(msg)
 
@@ -112,7 +116,7 @@ class TuxBot(commands.AutoShardedBot):
             )
 
     async def process_commands(self, message: discord.message):
-        ctx = await self.get_context(message)
+        ctx: commands.Context = await self.get_context(message)
 
         if ctx.command is None:
             return
