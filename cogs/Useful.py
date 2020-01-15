@@ -150,6 +150,13 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+
+    ###########################################################################
+
     @commandExtra(name='getheaders', category='network')
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
@@ -343,11 +350,13 @@ class Useful(commands.Cog):
 
     ###########################################################################
     @groupExtra(name='cb', aliases=['cc'], category='misc')
+    @commands.cooldown(1, 5, type=commands.BucketType.user)
     async def _cb(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('cb')
 
     @_cb.command(name='validate', aliases=['valid', 'correct'], category='misc')
+    @commands.cooldown(1, 5, type=commands.BucketType.user)
     async def _cb_validate(self, ctx: commands.Context, *, number: int):
         valid = self.luhn_checker(number)
 
@@ -362,6 +371,7 @@ class Useful(commands.Cog):
         )
 
     @_cb.command(name='generate', aliases=['new', 'get'], category='misc')
+    @commands.cooldown(1, 5, type=commands.BucketType.user)
     async def _cb_generate(self, ctx: commands.Context):
         await ctx.channel.trigger_typing()
 
