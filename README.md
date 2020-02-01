@@ -6,7 +6,7 @@ Ici ce trouve le code source du bot provenant du serveur Discord  [Aide GNU/Linu
 Il vous faut :
 
 - Un ordinateur sous **GNU/Linux** avec une connexion à internet;
-- Python3.5 ou + ;
+- Python3.7 ou + ;
 - Installer ``requirements.txt`` (avec ``pip install -r requirements.txt`` par ex)
 
 ### Installation
