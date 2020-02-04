@@ -19,11 +19,16 @@ class Texts:
         self.locale = lang
 
     @staticmethod
-    def get_locale(ctx):
-        with open('./configs/langs.json') as f:
-            data = json.load(f)
-
+    def get_locale(ctx: commands.Context):
+        lang = 'fr'
         if ctx is not None:
-            return data.get(str(ctx.guild.id), data['default'])
-        else:
-            return data['default']
+            try:
+                with open(f'./configs/guilds/{ctx.guild.id}.json', 'r') as f:
+                    data = json.load(f)
+
+                lang = data['lang']
+
+            except FileNotFoundError:
+                pass
+
+        return lang

@@ -15,21 +15,18 @@ class GroupPlus(commands.Group):
 
 
 class ContextPlus(commands.Context):
-    async def send(self, **kwargs):
+    async def send(self, content=None, **kwargs):
         config = Config('./configs/config.cfg')
-        content = kwargs.pop('content')
 
         content = content.replace(config.get("bot", "Token"), 'Whoops! leaked token')
         content = content.replace(config.get("webhook", "Token"), 'Whoops! leaked token')
 
-        kwargs['content'] = content
-
-        return await super().send(**kwargs)
+        return await super().send(content, **kwargs)
 
 
-def commandExtra(*args, **kwargs):
+def command_extra(*args, **kwargs):
     return commands.command(*args, **kwargs, cls=CommandsPlus)
 
 
-def groupExtra(*args, **kwargs):
+def group_extra(*args, **kwargs):
     return commands.group(*args, **kwargs, cls=GroupPlus)

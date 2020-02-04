@@ -18,3 +18,7 @@ Token =
 
 [misc]
 Separator =
+
+[API]
+Host =
+Port =

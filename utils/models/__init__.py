@@ -10,6 +10,9 @@ postgresql = 'postgresql://{}:{}@{}/{}'.format(
 database = databases.Database(postgresql)
 metadata = sqlalchemy.MetaData()
 
+engine = sqlalchemy.create_engine(str(database.url))
+metadata.create_all(engine)
+
 from .warn import WarnModel
 from .poll import PollModel, ResponsesModel
 from .alias import AliasesModel

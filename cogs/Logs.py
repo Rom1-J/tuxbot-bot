@@ -20,7 +20,7 @@ from discord.ext import commands, tasks
 
 from bot import TuxBot
 from utils import Texts
-from utils import commandExtra
+from utils import command_extra
 
 log = logging.getLogger(__name__)
 
@@ -243,7 +243,7 @@ class Logs(commands.Cog):
         msg = f'{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`'
         await self.webhook.send(msg)
 
-    @commandExtra(name='commandstats', hidden=True, category='misc')
+    @command_extra(name='commandstats', hidden=True, category='misc')
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats
@@ -258,7 +258,7 @@ class Logs(commands.Cog):
 
         await ctx.send(f'```\n{output}\n```')
 
-    @commandExtra(name='socketstats', hidden=True, category='misc')
+    @command_extra(name='socketstats', hidden=True, category='misc')
     @commands.is_owner()
     async def _socketstats(self, ctx):
         delta = datetime.datetime.utcnow() - self.bot.uptime
@@ -268,7 +268,7 @@ class Logs(commands.Cog):
         await ctx.send(
             f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
 
-    @commandExtra(name='uptime', category='misc')
+    @command_extra(name='uptime', category='misc')
     async def _uptime(self, ctx):
         uptime = humanize.naturaltime(
             datetime.datetime.utcnow() - self.bot.uptime)
