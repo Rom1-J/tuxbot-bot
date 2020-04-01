@@ -23,7 +23,7 @@ from tcp_latency import measure_latency
 
 from bot import TuxBot
 from utils import Texts
-from utils import commandExtra, groupExtra
+from utils import command_extra, group_extra
 
 log = logging.getLogger(__name__)
 
@@ -86,7 +86,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='iplocalise', category='network')
+    @command_extra(name='iplocalise', category='network')
     async def _iplocalise(self, ctx: commands.Context, addr, ip_type=''):
         addr = re.sub(r'http(s?)://', '', addr)
         addr = addr[:-1] if addr.endswith('/') else addr
@@ -150,14 +150,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(error)
-
-    ###########################################################################
-
-    @commandExtra(name='getheaders', category='network')
+    @command_extra(name='getheaders', category='network')
     async def _getheaders(self, ctx: commands.Context, addr: str):
         if (addr.startswith('http') or addr.startswith('ftp')) is not True:
             addr = f"http://{addr}"
@@ -187,7 +180,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='git', aliases=['sources', 'source', 'github'], category='misc')
+    @command_extra(name='git', aliases=['sources', 'source', 'github'], category='misc')
     async def _git(self, ctx):
         e = discord.Embed(
             title=Texts('useful', ctx).get('git repo'),
@@ -202,7 +195,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='quote', category='misc')
+    @command_extra(name='quote', category='misc')
     async def _quote(self, ctx, message_id: discord.Message):
         e = discord.Embed(
             colour=message_id.author.colour,
@@ -224,7 +217,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='ping', category='network')
+    @command_extra(name='ping', category='network')
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
         await ctx.trigger_typing()
@@ -242,7 +235,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='info', aliases=['about'], category='misc')
+    @command_extra(name='info', aliases=['about'], category='misc')
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
         total, python = self.fetch_info()
@@ -325,7 +318,7 @@ class Useful(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='credits', aliases=['contributors', 'authors'], category='misc')
+    @command_extra(name='credits', aliases=['contributors', 'authors'], category='misc')
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title=Texts('useful', ctx).get('Contributors'),
@@ -349,7 +342,7 @@ class Useful(commands.Cog):
         await ctx.send(embed=e)
 
     ###########################################################################
-    @groupExtra(name='cb', aliases=['cc'], category='misc')
+    @group_extra(name='cb', aliases=['cc'], category='misc')
     @commands.cooldown(1, 5, type=commands.BucketType.user)
     async def _cb(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:

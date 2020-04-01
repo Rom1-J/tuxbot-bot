@@ -1,5 +1,6 @@
 import contextlib
 import datetime
+import json
 import logging
 import sys
 from collections import deque, Counter
@@ -8,12 +9,15 @@ from typing import List
 import aiohttp
 import discord
 import git
+import sqlalchemy
 from discord.ext import commands
 
-from utils import Config
-from utils import Database
-from utils import Texts
-from utils import Version
+from utils.functions import Config
+from utils.functions import Texts
+from utils.functions import Version
+from utils.functions import ContextPlus
+
+from utils.models import metadata, database
 
 description = """
 Je suis TuxBot, le bot qui vit de l'OpenSource ! ;)
@@ -26,6 +30,7 @@ log = logging.getLogger(__name__)
 
 l_extensions: List[str] = [
     'cogs.Admin',
+    'cogs.API',
     'cogs.Help',
     'cogs.Logs',
     # 'cogs.Monitoring',
@@ -37,6 +42,7 @@ l_extensions: List[str] = [
 
 
 async def _prefix_callable(bot, message: discord.message) -> list:
+<<<<<<< HEAD
     extras = [bot.cluster.get('Name') + '.']
     if message.guild is not None:
         if str(message.guild.id) in bot.prefixes:
@@ -45,13 +51,25 @@ async def _prefix_callable(bot, message: discord.message) -> list:
                     bot.config.get("misc", "Separator")
                 )
             )
+=======
+    try:
+        with open(f'./configs/guilds/{message.guild.id}.json', 'r') as f:
+            data = json.load(f)
+
+        custom_prefix = data['prefixes']
+    except FileNotFoundError:
+        custom_prefix = ['']
+
+    extras = [bot.cluster.get('Name') + '.']
+    extras.extend(custom_prefix)
+>>>>>>> cce7bb409303e9ad27ef4e5617d0bc9068810f13
 
     return commands.when_mentioned_or(*extras)(bot, message)
 
 
 class TuxBot(commands.AutoShardedBot):
 
-    def __init__(self, database):
+    def __init__(self, ):
         super().__init__(command_prefix=_prefix_callable, pm_help=None,
                          help_command=None, description=description,
                          help_attrs=dict(hidden=True),
@@ -62,20 +80,22 @@ class TuxBot(commands.AutoShardedBot):
         self.socket_stats = Counter()
         self.command_stats = Counter()
 
-        self.uptime: datetime = datetime.datetime.utcnow()
-        self._prev_events = deque(maxlen=10)
-        self.session = aiohttp.ClientSession(loop=self.loop)
-        self.database = database
-
         self.config = Config('./configs/config.cfg')
-        self.prefixes = Config('./configs/prefixes.cfg')
         self.blacklist = Config('./configs/blacklist.cfg')
         self.fallbacks = Config('./configs/fallbacks.cfg')
         self.cluster = self.fallbacks.find('True', key='This', first=True)
 
+        self.uptime: datetime = datetime.datetime.utcnow()
+        self._prev_events = deque(maxlen=10)
+        self.session = aiohttp.ClientSession(loop=self.loop)
+
+        self.database, self.metadata = database, metadata
+        self.engine = sqlalchemy.create_engine(str(self.database.url))
+        self.metadata.create_all(self.engine)
+
         self.version = Version(*version, pre_release='rc2', build=build)
-        self.owner: discord.User = discord.User
-        self.owners: List[discord.User] = []
+        self.owners_id = [int(owner_id) for owner_id in self.config.get('permissions', 'Owners').split(', ')]
+        self.owner_id = int(self.owners_id[0])
 
         for extension in l_extensions:
             try:
@@ -91,9 +111,19 @@ class TuxBot(commands.AutoShardedBot):
                 log.error(Texts().get("Failed to load extension : ")
                           + extension, exc_info=e)
 
+    @property
+    def owner(self):
+        return self.get_user(self.owner_id)
+
+    @property
+    def owners(self):
+        return [self.get_user(owner_id) for owner_id in self.owners_id]
+
     async def is_owner(self, user: discord.User) -> bool:
-        return str(user.id) in self.config.get("permissions", "Owners").split(
-            ', ')
+        return user in self.owners
+
+    async def get_context(self, message, *, cls=None):
+        return await super().get_context(message, cls=cls or ContextPlus)
 
     async def on_socket_response(self, msg):
         self._prev_events.append(msg)
@@ -110,9 +140,11 @@ class TuxBot(commands.AutoShardedBot):
                     "Sorry. This command is disabled and cannot be used."
                 )
             )
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(str(error))
 
     async def process_commands(self, message: discord.message):
-        ctx = await self.get_context(message)
+        ctx: commands.Context = await self.get_context(message)
 
         if ctx.command is None:
             return
@@ -151,13 +183,6 @@ class TuxBot(commands.AutoShardedBot):
         print('-' * 60)
 
         await self.change_presence(**presence)
-        self.owner = await self.fetch_user(
-            int(self.config.get('permissions', 'Owners').split(', ')[0])
-        )
-        for owner in self.config.get('permissions', 'Owners').split(', '):
-            self.owners.append(
-                await self.fetch_user(int(owner))
-            )
 
     @staticmethod
     async def on_resumed():
@@ -189,13 +214,13 @@ class TuxBot(commands.AutoShardedBot):
 
 @contextlib.contextmanager
 def setup_logging():
+    logging.getLogger('discord').setLevel(logging.INFO)
+    logging.getLogger('discord.http').setLevel(logging.WARNING)
+
+    log = logging.getLogger()
+    log.setLevel(logging.INFO)
+
     try:
-        logging.getLogger('discord').setLevel(logging.INFO)
-        logging.getLogger('discord.http').setLevel(logging.WARNING)
-
-        log = logging.getLogger()
-        log.setLevel(logging.INFO)
-
         handler = logging.FileHandler(filename='logs/tuxbot.log',
                                       encoding='utf-8', mode='w')
         fmt = logging.Formatter('[{levelname:<7}] [{asctime}]'
@@ -214,14 +239,12 @@ def setup_logging():
 
 
 if __name__ == "__main__":
-    log = logging.getLogger()
-
     print(Texts().get('Starting...'))
 
-    bot = TuxBot(Database(Config("./configs/config.cfg")))
+    app = TuxBot()
 
     try:
         with setup_logging():
-            bot.run()
+            app.run()
     except KeyboardInterrupt:
-        bot.close()
+        app.close()

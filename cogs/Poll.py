@@ -10,7 +10,7 @@ from bot import TuxBot
 from utils import PollModel, ResponsesModel
 from utils import Texts
 from utils.functions import emotes as utils_emotes
-from utils import groupExtra
+from utils import group_extra
 
 log = logging.getLogger(__name__)
 
@@ -205,7 +205,7 @@ class Poll(commands.Cog):
         poll.content = json.dumps(content)
         self.bot.database.session.commit()
 
-    @groupExtra(name='poll', aliases=['sondage'], category='poll')
+    @group_extra(name='poll', aliases=['sondage'], category='poll')
     async def _poll(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('poll')

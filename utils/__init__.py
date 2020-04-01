@@ -1,5 +1,3 @@
-from .models import *
-
 from utils.functions.config import *
 from utils.functions.lang import *
 from utils.functions.version import *

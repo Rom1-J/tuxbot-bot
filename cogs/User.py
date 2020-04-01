@@ -5,7 +5,7 @@ from discord.ext import commands
 from bot import TuxBot
 from utils import AliasesModel
 from utils import Texts
-from utils import groupExtra
+from utils import group_extra
 
 log = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class User(commands.Cog):
 
     ###########################################################################
 
-    @groupExtra(name='alias', aliases=['aliases'], category='alias')
+    @group_extra(name='alias', aliases=['aliases'], category='alias')
     async def _alias(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('alias')

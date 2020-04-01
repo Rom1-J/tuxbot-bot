@@ -3,7 +3,8 @@ humanize
 git+https://github.com/Rapptz/discord.py@master
 jishaku
 gitpython
-sqlalchemy
+orm
+asyncpg
 psycopg2
 configparser
 psutil

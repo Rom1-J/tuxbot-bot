@@ -1,8 +1,6 @@
 import gettext
-from .config import Config
-from .database import Database
+import json
 
-from utils.models.lang import LangModel
 from discord.ext import commands
 
 
@@ -21,18 +19,16 @@ class Texts:
         self.locale = lang
 
     @staticmethod
-    def get_locale(ctx):
-        database = Database(Config("./configs/config.cfg"))
-
+    def get_locale(ctx: commands.Context):
+        lang = 'fr'
         if ctx is not None:
-            current = database.session\
-                .query(LangModel.value)\
-                .filter(LangModel.key == str(ctx.guild.id))
-            if current.count() > 0:
-                return current.one()[0]
+            try:
+                with open(f'./configs/guilds/{ctx.guild.id}.json', 'r') as f:
+                    data = json.load(f)
 
-        default = database.session\
-            .query(LangModel.value)\
-            .filter(LangModel.key == 'default')\
-            .one()[0]
-        return default
+                lang = data['lang']
+
+            except FileNotFoundError:
+                pass
+
+        return lang

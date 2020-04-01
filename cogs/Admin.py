@@ -9,8 +9,8 @@ from discord.ext import commands
 
 from bot import TuxBot
 from utils import Texts
-from utils import WarnModel, LangModel
-from utils import commandExtra, groupExtra
+from utils.models import WarnModel
+from utils import command_extra, group_extra
 
 log = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @groupExtra(name='say', invoke_without_command=True, category='text')
+    @group_extra(name='say', invoke_without_command=True, category='text')
     async def _say(self, ctx: commands.Context, *, content: str):
         if ctx.invoked_subcommand is None:
             try:
@@ -105,7 +105,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='ban', category='administration')
+    @command_extra(name='ban', category='administration')
     async def _ban(self, ctx: commands.Context, user: discord.Member, *,
                    reason=""):
         try:
@@ -132,7 +132,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='kick', category='administration')
+    @command_extra(name='kick', category='administration')
     async def _kick(self, ctx: commands.Context, user: discord.Member, *,
                     reason=""):
         try:
@@ -159,7 +159,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='clear', category='text')
+    @command_extra(name='clear', category='text')
     async def _clear(self, ctx: commands.Context, count: int):
         try:
             await ctx.message.delete()
@@ -169,7 +169,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @groupExtra(name='react', category='text')
+    @group_extra(name='react', category='text')
     async def _react(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('react')
@@ -203,7 +203,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @groupExtra(name='delete', invoke_without_command=True, category='text')
+    @group_extra(name='delete', invoke_without_command=True, category='text')
     async def _delete(self, ctx: commands.Context, message_id: int):
         try:
             await ctx.message.delete()
@@ -229,12 +229,14 @@ class Admin(commands.Cog):
 
         try:
             message: discord.Message = await channel.fetch_message(
-                message_id)
+                message_id
+            )
             await message.delete()
         except (discord.errors.NotFound, discord.errors.Forbidden):
             await ctx.send(
                 Texts('utils', ctx).get("Unable to find the message"),
-                delete_after=5)
+                delete_after=5
+            )
 
     ###########################################################################
 
@@ -242,24 +244,18 @@ class Admin(commands.Cog):
                        member: discord.Member = False):
         await ctx.trigger_typing()
 
-        week_ago = datetime.datetime.now() - datetime.timedelta(weeks=6)
-
         if member:
-            warns = self.bot.database.session \
-                .query(WarnModel) \
-                .filter(WarnModel.user_id == member.id,
-                        WarnModel.created_at > week_ago,
-                        WarnModel.server_id == ctx.guild.id) \
-                .order_by(WarnModel.created_at.desc())
+            warns = WarnModel.objects.filter(
+                server_id=str(ctx.guild.id),
+                user_id=member.id
+            )
         else:
-            warns = self.bot.database.session \
-                .query(WarnModel) \
-                .filter(WarnModel.created_at > week_ago,
-                        WarnModel.server_id == ctx.guild.id) \
-                .order_by(WarnModel.created_at.desc())
+            warns = WarnModel.objects.filter(
+                server_id=str(ctx.guild.id)
+            )
         warns_list = ''
 
-        for warn in warns:
+        for warn in await warns.all():
             row_id = warn.id
             user_id = warn.user_id
             user = await self.bot.fetch_user(user_id)
@@ -283,7 +279,7 @@ class Admin(commands.Cog):
         self.bot.database.session.add(warn)
         self.bot.database.session.commit()
 
-    @groupExtra(name='warn', aliases=['warns'], category='administration')
+    @group_extra(name='warn', aliases=['warns'], category='administration')
     async def _warn(self, ctx: commands.Context):
         await ctx.trigger_typing()
         if ctx.invoked_subcommand is None:
@@ -411,7 +407,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @commandExtra(name='language', aliases=['lang', 'langue', 'langage'], category='server')
+    @command_extra(name='language', aliases=['lang', 'langue', 'langage'], category='server')
     async def _language(self, ctx: commands.Context, locale: str):
         available = self.bot.database.session \
             .query(LangModel.value) \
@@ -442,7 +438,7 @@ class Admin(commands.Cog):
 
     ###########################################################################
 
-    @groupExtra(name='prefix', aliases=['prefixes'], category='server')
+    @group_extra(name='prefix', aliases=['prefixes'], category='server')
     async def _prefix(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help('prefix')
