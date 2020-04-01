@@ -94,7 +94,7 @@ class Useful(commands.Cog):
         await ctx.trigger_typing()
 
         try:
-            if ip_type in ('v6', 'ipv6'):
+            if 'v6' in ip_type:
                 try:
                     ip = socket.getaddrinfo(addr, None, AF_INET6)[1][4][0]
                 except socket.gaierror:
@@ -106,7 +106,6 @@ class Useful(commands.Cog):
             async with self.bot.session.get(f"http://ip-api.com/json/{ip}") \
                     as s:
                 response: dict = await s.json()
-
                 if response.get('status') == 'success':
                     e = discord.Embed(
                         title=f"{Texts('useful', ctx).get('Information for')}"
@@ -116,20 +115,20 @@ class Useful(commands.Cog):
 
                     e.add_field(
                         name=Texts('useful', ctx).get('Belongs to :'),
-                        value=response.get('org', 'N/A'),
+                        value=response['org'] if response['org'] else 'N/A',
                         inline=False
                     )
 
                     e.add_field(
                         name=Texts('useful', ctx).get('Is located at :'),
-                        value=response.get('city', 'N/A'),
+                        value=response['city'] if response['city'] else 'N/A',
                         inline=True
                     )
 
                     e.add_field(
                         name="Region :",
-                        value=f"{response.get('regionName', 'N/A')} "
-                              f"({response.get('country', 'N/A')})",
+                        value=f"{response['regionName'] if response['regionName'] else 'N/A'} "
+                              f"({response['country'] if response['country'] else 'N/A'})",
                         inline=True
                     )
 
@@ -141,9 +140,10 @@ class Useful(commands.Cog):
                 else:
                     await ctx.send(
                         content=f"{Texts('useful', ctx).get('info not available')}"
-                                f"``{response.get('query')}``")
+                                f"``{response['query'] if response['query'] else 'N/A'}``")
 
-        except Exception:
+        except Exception as e:
+            await ctx.send(e)
             await ctx.send(
                 f"{Texts('useful', ctx).get('Cannot connect to host')} {addr}"
             )

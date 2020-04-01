@@ -298,7 +298,6 @@ class Admin(commands.Cog):
     @_warn.command(name='add', aliases=['new'])
     async def _warn_add(self, ctx: commands.Context, member: discord.Member,
                         *, reason="N/A"):
-        member = await ctx.guild.fetch_member(member.id)
         if not member:
             return await ctx.send(
                 Texts('utils', ctx).get("Unable to find the user...")
@@ -310,9 +309,9 @@ class Admin(commands.Cog):
                 return False
             return pld.emoji.name in ('1⃣', '2⃣', '3⃣')
 
-        warns_list, warns = await self.get_warn(ctx)
+        warns_list, warns = await self.get_warn(ctx, member)
 
-        if warns.count() >= 3:
+        if warns.count() >= 2:
             e = discord.Embed(
                 title=Texts('admin', ctx).get('More than 2 warns'),
                 description=f"{member.mention} "
