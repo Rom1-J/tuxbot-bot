@@ -88,7 +88,7 @@ class Identity(commands.Cog):
                     embed.add_field(name="Configuration Système : ", value=isexist(result[7]), inline=True)
                     embed.add_field(name="Date de naissance sur discord : ", value=formated_user_birth, inline=True)
                     embed.add_field(name="Pays : ", value=isexist(result[8]), inline=True)
-                    embed.add_field(name="Profil sur le web : ", value=f"https://tuxbot.gnous.eu/users/{result[9]}", inline=True)
+                    embed.add_field(name="Profil sur le web : ", value="*indisponible*") # value=f"https://tuxbot.gnous.eu/users/{result[9]}", inline=True)
                     embed.set_footer(text=f"Enregistré dans le bureau {result[5]} le {formated_cidate}.")
                     await ctx.send(embed=embed)
                 except Exception as e:

@@ -85,6 +85,7 @@ class Sondage(commands.Cog):
                     end_msg += "\n\"{}\" est le gagnant!".format(top_result)
                 await ctx.send(end_msg)
         else:
+            await ctx.send("please use `@tuxbot poll` (this is rewrite version in beta")
             await ctx.message.delete()
 
             text = open('texts/rpoll.md').read()
