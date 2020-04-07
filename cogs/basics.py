@@ -18,7 +18,7 @@ class Basics(commands.Cog):
         ping_res = str(subprocess.Popen(["/bin/ping", "-c1", "discordapp.com"],
                                         stdout=subprocess.PIPE).stdout.read())
         formated_res = [item for item in ping_res.split() if 'time=' in item]
-        result = str(formated_res[0])[5:]
+        result = self.bot.latency * 1000 # str(formated_res[0])[5:]
 
         if float(result) >= 200:
             em = discord.Embed(title="Ping : " + str(result) + "ms",
