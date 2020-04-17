@@ -85,7 +85,7 @@ class Identity(commands.Cog):
                     embed.set_thumbnail(url = result[2])
                     embed.add_field(name="Nom :", value=result[1], inline=True)
                     embed.add_field(name="Système d'exploitation :", value=isexist(result[6]), inline=True)
-                    embed.add_field(name="Configuration Système : ", value=isexist(result[7]), inline=True)
+                    embed.add_field(name="Configuration Système : ", value=isexist(result[7]), inline=False)
                     embed.add_field(name="Date de naissance sur discord : ", value=formated_user_birth, inline=True)
                     embed.add_field(name="Pays : ", value=isexist(result[8]), inline=True)
                     embed.add_field(name="Profil sur le web : ", value="*indisponible*") # value=f"https://tuxbot.gnous.eu/users/{result[9]}", inline=True)
