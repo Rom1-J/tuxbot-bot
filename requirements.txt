@@ -7,3 +7,5 @@ pytz
 requests
 wikipedia
 pillow
+ipwhois
+ipinfo

@@ -13,6 +13,8 @@ Il vous faut :
 
 Une fois les pré-requis installés et ``config.py.example`` renommé en ``config.py`` éditez le. Ensuite placez vous dans le repertoire de tuxbot et lancez ``bot.py`` avec python3 (ex: ``python3 bot.py``)
 
+Tuxbot recommande l'utilisation de l'API https://ipinfo.io/ pour des résultats plus précis. Placez votre token d'accès dans un fichier nommé ``ipinfoio.key`` à la racine du dossier du bot. Si vous ne souhaitez pas utiliser leur API le bot rollback automatiquement sur une librairie moins précise. 
+
 ## Démarrage
 
 Placez vous dans le repertoire de tuxbot et exécutez ``bot.py`` avec python3 (ex: ``python3 bot.py``)

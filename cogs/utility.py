@@ -3,6 +3,10 @@ import json
 import pytz
 import random
 import urllib
+import ipinfo as ipinfoio
+
+from ipwhois.net import Net
+from ipwhois.asn import IPASN
 
 import discord
 import requests
@@ -199,7 +203,7 @@ class Utility(commands.Cog):
     @commands.command(name='iplocalise', pass_context=True)
     async def _iplocalise(self, ctx, ipaddress, iptype=""):
         realipaddress = ipaddress
-        """Recup headers."""
+        """Getting headers."""
         if ipaddress.startswith("http://"):
             if ipaddress[-1:] == '/':
                 ipaddress = ipaddress[:-1]
@@ -209,44 +213,70 @@ class Utility(commands.Cog):
                 ipaddress = ipaddress[:-1]
             ipaddress = ipaddress.split("https://")[1]
         
-        if(iptype=="ipv6" or iptype=="v6"):
+        if(iptype=="ipv6" or iptype=="v6" or iptype=="-6"):
             try:
                 ipaddress = socket.getaddrinfo(ipaddress, None, socket.AF_INET6)[1][4][0]
-
-                if (ipaddress == "2602:fe53:b:1::87") and not ("gnous" in realipaddress):
-                    await ctx.send("Erreur, cette adresse n'est pas disponible en IPv6.")
-                    return
             except Exception as e:
                 await ctx.send("Erreur, cette adresse n'est pas disponible en IPv6.")
-                print(e)
+                return
+        elif(iptype=="ipv4" or iptype=="v4" or iptype=="-4"):
+            try:
+                ipaddress = socket.getaddrinfo(ipaddress, None, socket.AF_INET)[1][4][0]
+            except Exception as e:
+                await ctx.send("Erreur, cette adresse n'est pas disponible en IPv4.")
+                return
+        else:
+            try:
+                ipaddress = socket.getaddrinfo(ipaddress, None)[1][4][0]
+            except Exception as e:
+                await ctx.send("Erreur, cette adresse n'est pas disponible.")
                 return
 
-        iploading = await ctx.send("_réfléchis..._")
-        ipapi = urllib.request.urlopen("http://ip-api.com/json/" + ipaddress)
-        ipinfo = json.loads(ipapi.read().decode())
+        iploading = await ctx.send("_Récupération des informations..._")
 
-        if ipinfo["status"] != "fail":
-            if ipinfo['query']:
-                embed = discord.Embed(title=f"Informations pour ``{realipaddress}`` *`({ipinfo['query']})`*", color=0x5858d7)
+        net = Net(ipaddress)
+        obj = IPASN(net)
+        ipinfo = obj.lookup()
 
-            if ipinfo['org']:
-                embed.add_field(name="Appartient à :", value=ipinfo['org'], inline = False)
+        try:
+            iphostname = socket.gethostbyaddr(ipaddress)[0]
+        except:
+            iphostname = "N/A"
 
-            if ipinfo['city']:
-                embed.add_field(name="Se situe à :", value=ipinfo['city'], inline = True)
+        # IPINFO api
+        api_result = True
+        try:
+            access_token = open('ipinfoio.key').read()
+            handler = ipinfoio.getHandler(access_token)
+            details = handler.getDetails(ipaddress)
+        except:
+            api_result = False
 
+        try:
+            embed = discord.Embed(title=f"Informations pour ``{realipaddress} ({ipaddress})``", color=0x5858d7)
+            
+            if(api_result):
+                embed.add_field(name="Appartient à :", value=f"{details.org}")
+            else:
+                embed.add_field(name="Appartient à :", value=f"{ipinfo['asn_description']} (AS{ipinfo['asn']})", inline = False)
+            
+            embed.add_field(name="RIR :", value=f"{ipinfo['asn_registry']}", inline = True)
+            
+            if(api_result):
+                embed.add_field(name="Région :", value=f"{details.city} - {details.region} ({details.country})")
+            else:
+                embed.add_field(name="Région :", value=f"{ipinfo['asn_country_code']}")
+            embed.add_field(name="Nom de l'hôte :", value=f"{iphostname}")
 
-            if ipinfo['country']:
-                if ipinfo['regionName']:
-                    regionName = ipinfo['regionName']
-                else:
-                    regionName = "N/A"
-                embed.add_field(name="Region :", value=f"{regionName} ({ipinfo['country']})", inline = True)
-
-            embed.set_thumbnail(url=f"https://www.countryflags.io/{ipinfo['countryCode']}/flat/64.png")
+            # Adding country flag 
+            if(api_result):
+                embed.set_thumbnail(url=f"https://www.countryflags.io/{details.country}/shiny/64.png")
+            else:
+                embed.set_thumbnail(url=f"https://www.countryflags.io/{ipinfo['asn_country_code']}/shiny/64.png")
+            
             await ctx.send(embed=embed)
-        else:
-            await ctx.send(content=f"Erreur, impossible d'avoir des informations sur l'adresse IP ``{ipinfo['query']}``")
+        except:
+            await ctx.send(content=f"Erreur, impossible d'avoir des informations sur l'adresse IP ``{realipaddress}``")
         await iploading.delete()
 
     """---------------------------------------------------------------------"""
@@ -308,6 +338,65 @@ class Utility(commands.Cog):
         else:
             await ctx.send("{0} Merci de faire commencer {1} par ``https://``, ``http://`` ou ``ftp://``.".format(ctx.author.mention, adresse))
     
+    """---------------------------------------------------------------------"""
+    @commands.command(name='peeringdb', pass_context=True)
+    async def _peeringdb(self, ctx, *, asn):
+        def notEmptyField(embed, name, value):
+            if(value != ""):
+                embed.add_field(name=name, value=value)
+
+        if asn.startswith("AS"):
+            asn = asn[2:]
+        loadingmsg = await ctx.send("_Récupération des informations..._")
+
+        """Getting the ASN id in the peeringdb database"""
+        try:
+            asnid = urllib.request.urlopen("https://www.peeringdb.com/api/as_set/" + asn)
+            asnid = json.loads(asnid.read().decode())
+            pdbid = asnid["data"][0][asn]
+
+            asinfo = urllib.request.urlopen("https://www.peeringdb.com/api/net?irr_as_set=" + pdbid)
+
+            asinfo = json.loads(asinfo.read().decode())["data"]
+
+            for asndata in asinfo:
+                if(asndata['asn'] == int(asn)):
+                    asinfo = asndata
+
+            asproto = ""
+            if(asinfo["info_ipv6"]):
+                asproto = asproto + "IPv6 "
+            if(asinfo["info_unicast"]):
+                asproto = asproto + "Unicast "
+            if(asinfo["info_multicast"]):
+                asproto = asproto + "Multicast "
+            if(asinfo["info_never_via_route_servers"]):
+                asproto = asproto + "Never via Route servers"
+            
+
+            print(pdbid)
+
+            embed = discord.Embed(title=f"Informations pour {asinfo['name']} ``AS{asn}``", color=0x5858d7)
+            notEmptyField(embed, name="Nom :", value=asinfo['name'])
+            notEmptyField(embed, name="Aka :", value=asinfo['aka'])
+            notEmptyField(embed, name="Site :", value=asinfo['website'])
+            notEmptyField(embed, name="Looking Glass :", value=asinfo['looking_glass'])
+            notEmptyField(embed, name="Traffic :", value=asinfo['info_traffic'])
+            notEmptyField(embed, name="Ratio du traffic :", value=asinfo['info_ratio'])
+            notEmptyField(embed, name="Prefixes IPv4 :", value=asinfo['info_prefixes4'])
+            notEmptyField(embed, name="Prefixes IPv6 :", value=asinfo['info_prefixes6'])
+            notEmptyField(embed, name="Politique de Peering :", value=f"[{asinfo['policy_general']}]({asinfo['policy_url']})")
+            notEmptyField(embed, name="Protocoles supportés :", value=asproto)
+            embed.set_footer(text=f"https://www.peeringdb.com/")
+            await ctx.send(embed=embed)
+            await loadingmsg.delete()
+        except IndexError:
+            await ctx.send(f"Impossible d'avoir des informations sur l'AS AS{asn}")
+            await loadingmsg.delete()
+        except urllib.error.HTTPError:
+            await ctx.send(f"L'AS{asn} est introuvable dans la base de données de PeeringDB.")
+            await loadingmsg.delete()
+
     """---------------------------------------------------------------------"""
     
     @commands.command(name='git', pass_context=True)
