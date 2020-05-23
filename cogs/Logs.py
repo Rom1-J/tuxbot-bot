@@ -18,9 +18,7 @@ import humanize
 import psutil
 from discord.ext import commands, tasks
 
-from bot import TuxBot
-from utils import Texts
-from utils import command_extra
+from app import TuxBot
 
 log = logging.getLogger(__name__)
 
@@ -51,9 +49,6 @@ class Logs(commands.Cog):
 
         self._resumes = []
         self._identifies = defaultdict(list)
-
-        self.icon = ":newspaper:"
-        self.big_icon = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/233/newspaper_1f4f0.png"
 
     def _clear_gateway_data(self):
         one_week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
@@ -112,8 +107,19 @@ class Logs(commands.Cog):
         self.bot.socket_stats[msg.get('t')] += 1
 
     @property
-    def webhook(self):
-        return self.bot.logs_webhook
+    def logs(self):
+        webhooks = {}
+
+        for key, value in self.bot.logs_channels.items():
+            webhooks[key] = discord.Webhook.partial(
+                id=value.get('webhook')['id'],
+                token=value.get('webhook')['token'],
+                adapter=discord.AsyncWebhookAdapter(
+                    self.bot.session
+                )
+            )
+
+        return webhooks
 
     async def log_error(self, *, ctx=None, extra=None):
         e = discord.Embed(title='Error', colour=0xdd5f53)
@@ -131,7 +137,7 @@ class Logs(commands.Cog):
             e.add_field(name='Channel', value=channel)
             e.add_field(name='Guild', value=guild)
 
-        await self.webhook.send(embed=e)
+        await self.logs.get('errors').send(embed=e)
 
     async def send_guild_stats(self, e, guild):
         e.add_field(name='Name', value=guild.name)
@@ -155,7 +161,7 @@ class Logs(commands.Cog):
         if guild.me:
             e.timestamp = guild.me.joined_at
 
-        await self.webhook.send(embed=e)
+        await self.logs.get('guilds').send(embed=e)
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.guild):
@@ -169,17 +175,37 @@ class Logs(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.message):
-        if message.guild is None:
-            e = discord.Embed(colour=0x0a97f5, title='New DM')  # blue colour
+        ctx = await self.bot.get_context(message)
+        if ctx.valid:
+            return
+
+        if isinstance(message.channel, discord.DMChannel):
+            if message.author is self.bot.user:
+                e = discord.Embed(
+                    title=f"DM to: {message.channel.recipient}",
+                    description=message.content,
+                    color=0x39e326
+                )
+            else:
+                e = discord.Embed(
+                    title="New DM:",
+                    description=message.content,
+                    color=0x0A97F5
+                )
             e.set_author(
-                name=message.author,
-                icon_url=message.author.avatar_url_as(format='png')
+                name=message.channel.recipient,
+                icon_url=message.channel.recipient.avatar_url_as(format="png")
             )
-            e.description = message.content
-            if len(message.attachments) > 0:
-                e.set_image(url=message.attachments[0].url)
-            e.set_footer(text=f"User ID: {message.author.id}")
-            await self.webhook.send(embed=e)
+
+            if message.attachments:
+                attachment_url = message.attachments[0].url
+                e.set_image(url=attachment_url)
+
+            e.set_footer(
+                text=f"User ID: {message.channel.recipient.id}"
+            )
+
+            await self.logs["dm"].send(embed=e)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -212,7 +238,7 @@ class Logs(commands.Cog):
         )
         e.description = f'```py\n{exc}\n```'
         e.timestamp = datetime.datetime.utcnow()
-        await self.webhook.send(embed=e)
+        await self.logs.get('errors').send(embed=e)
 
     @commands.Cog.listener()
     async def on_socket_raw_send(self, data):
@@ -241,9 +267,9 @@ class Logs(commands.Cog):
         emoji = types.get(record.levelname, ':heavy_multiplication_x:')
         dt = datetime.datetime.utcfromtimestamp(record.created)
         msg = f'{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`'
-        await self.webhook.send(msg)
+        await self.logs.get('gateway').send(msg)
 
-    @command_extra(name='commandstats', hidden=True, category='misc')
+    @commands.command('commandstats')
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats
@@ -258,7 +284,7 @@ class Logs(commands.Cog):
 
         await ctx.send(f'```\n{output}\n```')
 
-    @command_extra(name='socketstats', hidden=True, category='misc')
+    @commands.command('socketstats')
     @commands.is_owner()
     async def _socketstats(self, ctx):
         delta = datetime.datetime.utcnow() - self.bot.uptime
@@ -268,7 +294,7 @@ class Logs(commands.Cog):
         await ctx.send(
             f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
 
-    @command_extra(name='uptime', category='misc')
+    @commands.command('uptime')
     async def _uptime(self, ctx):
         uptime = humanize.naturaltime(
             datetime.datetime.utcnow() - self.bot.uptime)
@@ -287,7 +313,7 @@ async def on_error(self, event, *args):
     args_str.append('```')
     e.add_field(name='Args', value='\n'.join(args_str), inline=False)
 
-    hook = self.get_cog('Logs').webhook
+    hook = self.get_cog('Logs').logs.get('errors')
     try:
         await hook.send(embed=e)
     except (discord.HTTPException, discord.NotFound,

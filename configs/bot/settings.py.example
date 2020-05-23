@@ -1,0 +1,44 @@
+token = ""
+prefix = "drw."
+
+main_guild = int
+
+logs = {
+    "gateway": {
+        'channel': int,
+        'webhook': {
+            'id': int,
+            'token': ''
+        }
+    },
+    "dm": {
+        'channel': int,
+        'webhook': {
+            'id': int,
+            'token': ''
+        }
+    },
+    "mentions": {
+        'channel': int,
+        'webhook': {
+            'id': int,
+            'token': ''
+        }
+    },
+    "guilds": {
+        'channel': int,
+        'webhook': {
+            'id': int,
+            'token': ''
+        }
+    },
+    "errors": {
+        'channel': int,
+        'webhook': {
+            'id': int,
+            'token': ''
+        }
+    },
+}
+
+postgresql = 'postgres://tuxbot:tuxbot@localhost:5432/tuxbot-rewrite'
