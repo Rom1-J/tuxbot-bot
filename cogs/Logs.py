@@ -19,6 +19,7 @@ import psutil
 from discord.ext import commands, tasks
 
 from app import TuxBot
+from utils.functions.extra import command_extra
 
 log = logging.getLogger(__name__)
 
@@ -269,7 +270,7 @@ class Logs(commands.Cog):
         msg = f'{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`'
         await self.logs.get('gateway').send(msg)
 
-    @commands.command('commandstats')
+    @command_extra(name='commandstats')
     @commands.is_owner()
     async def _commandstats(self, ctx, limit=20):
         counter = self.bot.command_stats

@@ -2,68 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/issue_template.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/API.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Help.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cogs/Images.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/Images.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cogs/Logs.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/Logs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Monitoring.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Poll.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Useful.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/User.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/blacklist.cfg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/config.cfg.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/fallbacks.cfg.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/prefixes.cfg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generate_locales.sh" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/fonts/credit_card.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/database.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/emotes.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/functions/extra.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/functions/extra.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/lang.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/paginator.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/version.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/images/blank_credit_card.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/images/gnous.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/admin.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/admin_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/base.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/logs.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/poll.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/poll_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/useful.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/useful_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/user.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/user_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/en/LC_MESSAGES/utils.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/admin.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/admin_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/base.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/logs.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/logs_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/poll.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/poll_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/useful.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/useful_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/user.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/user_help.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/locales/fr/LC_MESSAGES/utils.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/models/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/models/alias.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/models/poll.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/models/warn.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,14 +38,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/configs/bot" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -128,7 +73,14 @@
       <workItem from="1590065919217" duration="8090000" />
       <workItem from="1590152430112" duration="7500000" />
       <workItem from="1590268542625" duration="3535000" />
-      <workItem from="1590273830049" duration="1288000" />
+      <workItem from="1590273830049" duration="3172000" />
+      <workItem from="1590337105277" duration="617000" />
+      <workItem from="1590352676311" duration="3854000" />
+      <workItem from="1590358535266" duration="6396000" />
+      <workItem from="1590434673007" duration="144000" />
+      <workItem from="1590438254185" duration="4301000" />
+      <workItem from="1590495843694" duration="35000" />
+      <workItem from="1590529983649" duration="3721000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <option name="createBranch" value="false" />
@@ -151,18 +103,18 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2613" y="304" width="528" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590160080814" />
-    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl" timestamp="1590152666732">
+    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl" timestamp="1590495877197">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590152666732" />
+    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590495877197" />
     <state x="2666" y="239" width="421" height="633" key="RollbackChangesDialog" timestamp="1589983513390">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2666" y="239" width="421" height="633" key="RollbackChangesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983513390" />
-    <state x="2669" y="310" key="SettingsEditor" timestamp="1589983575542">
+    <state x="2669" y="310" key="SettingsEditor" timestamp="1590440149207">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2669" y="310" key="SettingsEditor/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983575542" />
+    <state x="2669" y="310" key="SettingsEditor/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590440149207" />
     <state x="2656" y="388" key="SimpleOpenTaskDialog" timestamp="1589983150588">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -179,6 +131,10 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2440" y="156" width="873" height="799" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590155739870" />
+    <state x="2673" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590439153191">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2673" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590439153191" />
     <state x="2584" y="164" width="592" height="783" key="find.popup" timestamp="1589983672115">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>

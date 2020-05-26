@@ -19,6 +19,7 @@ l_extensions: List[str] = [
     "jishaku",
     "cogs.Logs",
     "cogs.Images",
+    "cogs.Useless",
 ]
 
 
@@ -48,9 +49,9 @@ class TuxBot(commands.AutoShardedBot):
         for extension in l_extensions:
             try:
                 self.load_extension(extension)
-                print(f"{extension} loaded !")
+                print(extension, "loaded !")
             except Exception as e:
-                print(f"{type(e).__name__}: {e}")
+                print(f"{type(e).__name__ }:", e)
 
         print("\n"*2)
 
@@ -69,9 +70,8 @@ class TuxBot(commands.AutoShardedBot):
 
         print(f"\n{'='*118}\n\n")
 
-    @staticmethod
-    async def on_resumed():
-        print("resumed...")
+    async def on_resumed(self):
+        print(f"resumed... {self.uptime}")
 
     async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=ContextPlus)

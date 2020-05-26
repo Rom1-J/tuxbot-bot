@@ -3,7 +3,7 @@ aiohttp==3.6.2
 aiosqlite==0.13.0
 astunparse==1.6.3
 async-timeout==3.0.1
-asyncpg==0.20.1
+# asyncpg==0.20.1
 attrs==19.3.0
 braceexpand==0.1.5
 chardet==3.0.4
@@ -20,8 +20,7 @@ Pillow==7.1.2
 psutil==5.7.0
 PyPika==0.37.6
 six==1.14.0
-sympy==1.5.1
-tortoise-orm==0.16.11
+# tortoise-orm==0.16.11
 typing-extensions==3.7.4.2
 websockets==8.1
 yarl==1.4.2
