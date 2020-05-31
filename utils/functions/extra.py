@@ -43,7 +43,8 @@ class ContextPlus(commands.Context):
                 ast.literal_eval(embed)
             )
 
-        if self.command.deletable:
+        if (hasattr(self.command, 'deletable') and self.command.deletable) \
+                and kwargs.pop('deletable', True):
             message = await super().send(content, *args, **kwargs)
             await message.add_reaction('🗑')
 
@@ -55,13 +56,14 @@ class ContextPlus(commands.Context):
             try:
                 await self.bot.wait_for(
                     'reaction_add',
-                    timeout=120.0,
+                    timeout=60.0,
                     check=check
                 )
             except asyncio.TimeoutError:
                 await message.remove_reaction('🗑', self.bot.user)
             else:
                 await message.delete()
+            return message
         else:
             return await super().send(content, *args, **kwargs)
 

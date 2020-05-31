@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="">
+    <list default="true" id="a3206292-bb22-4c8b-9df5-9120f30ba1d3" name="5ed033fd0a73a530ba05810d iplocalise" comment="">
+      <change beforePath="$PROJECT_DIR$/configs/bot/protected.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs/bot/protected.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/bot/settings.py.example" beforeDir="false" afterPath="$PROJECT_DIR$/configs/bot/settings.py.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/functions/extra.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/functions/extra.py" afterDir="false" />
+    </list>
+    <list id="77afe056-bf99-4d17-ac12-b340599c2650" name="5ed03423d0f94b557e83cafb ping" comment="">
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+    </list>
+    <list id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Images.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/Images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Logs.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/Logs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/extra.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/functions/extra.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,34 +42,34 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/cogs" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="preferences.startup.tasks" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/configs/bot" />
-      <recent name="$PROJECT_DIR$/cogs" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/cogs" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cogs" />
+      <recent name="$PROJECT_DIR$/configs/bot" />
     </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
+    <task id="Default" summary="Default task">
       <changelist id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="" />
       <created>1589922546510</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1589991138014</updated>
+      <updated>1590880224598</updated>
       <workItem from="1589922559463" duration="2090000" />
       <workItem from="1589925987600" duration="7107000" />
       <workItem from="1589991138257" duration="2797000" />
@@ -80,12 +84,49 @@
       <workItem from="1590434673007" duration="144000" />
       <workItem from="1590438254185" duration="4301000" />
       <workItem from="1590495843694" duration="35000" />
-      <workItem from="1590529983649" duration="3721000" />
+      <workItem from="1590529983649" duration="4298000" />
+      <workItem from="1590755733508" duration="16000" />
+      <workItem from="1590878235258" duration="1205000" />
+      <workItem from="1590880221861" duration="3000" />
+    </task>
+    <task id="5ed03423d0f94b557e83cafb" summary="ping">
+      <changelist id="77afe056-bf99-4d17-ac12-b340599c2650" name="5ed03423d0f94b557e83cafb ping" comment="" />
+      <option name="issue" value="true" />
+      <url>https://trello.com/c/lpMrzLET/17-ping</url>
+      <option name="number" value="17" />
+      <option name="presentableId" value="5ed03423d0f94b557e83cafb" />
+      <updated>1590880232278</updated>
+      <workItem from="1590879444660" duration="777000" />
+      <workItem from="1590880224862" duration="8000" />
+    </task>
+    <task active="true" id="5ed033fd0a73a530ba05810d" summary="iplocalise">
+      <changelist id="a3206292-bb22-4c8b-9df5-9120f30ba1d3" name="5ed033fd0a73a530ba05810d iplocalise" comment="" />
+      <option name="issue" value="true" />
+      <url>https://trello.com/c/A5f7QCk2/11-iplocalise</url>
+      <option name="number" value="11" />
+      <option name="presentableId" value="5ed033fd0a73a530ba05810d" />
+      <updated>1590880232278</updated>
+      <workItem from="1590880232865" duration="2379000" />
+      <workItem from="1590938725549" duration="4995000" />
+      <workItem from="1590957507554" duration="497000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <option name="createBranch" value="false" />
     <option name="commitChanges" value="false" />
-    <servers />
+    <servers>
+      <Trello>
+        <option name="currentBoard">
+          <TrelloBoard id="5ed02c737c07c06c8c31e203" name="Tuxbot-bot" />
+        </option>
+        <option name="currentList">
+          <TrelloList />
+        </option>
+        <option name="currentUser">
+          <TrelloUser id="5a7a28576e37eee7c9f16c9c" name="romain26692196" />
+        </option>
+        <option name="includeAllCards" value="true" />
+      </Trello>
+    </servers>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
@@ -103,22 +144,26 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2613" y="304" width="528" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590160080814" />
-    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl" timestamp="1590495877197">
+    <state x="2629" y="379" width="462" height="333" key="#com.intellij.tools.ToolEditorDialog" timestamp="1590878943253">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590495877197" />
+    <state x="2629" y="379" width="462" height="333" key="#com.intellij.tools.ToolEditorDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590878943253" />
+    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl" timestamp="1590755745934">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2663" y="313" width="428" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590755745934" />
     <state x="2666" y="239" width="421" height="633" key="RollbackChangesDialog" timestamp="1589983513390">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2666" y="239" width="421" height="633" key="RollbackChangesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983513390" />
-    <state x="2669" y="310" key="SettingsEditor" timestamp="1590440149207">
+    <state x="2362" y="183" key="SettingsEditor" timestamp="1590879331835">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2669" y="310" key="SettingsEditor/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590440149207" />
-    <state x="2656" y="388" key="SimpleOpenTaskDialog" timestamp="1589983150588">
+    <state x="2362" y="183" key="SettingsEditor/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590879331835" />
+    <state x="2656" y="388" width="499" height="366" key="SimpleOpenTaskDialog" timestamp="1590880232304">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2656" y="388" key="SimpleOpenTaskDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983150588" />
+    <state x="2656" y="388" width="499" height="366" key="SimpleOpenTaskDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590880232304" />
     <state x="2727" y="471" width="299" height="169" key="VCS.ChangelistChooser" timestamp="1589983445998">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -131,10 +176,10 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2440" y="156" width="873" height="799" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590155739870" />
-    <state x="2673" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590439153191">
+    <state x="2673" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590879398033">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2673" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590439153191" />
+    <state x="2673" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590879398033" />
     <state x="2584" y="164" width="592" height="783" key="find.popup" timestamp="1589983672115">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -147,9 +192,20 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2527" y="274" width="700" height="530" key="recent.locations.popup/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983638292" />
-    <state x="2543" y="261" width="672" height="678" key="search.everywhere.popup" timestamp="1589983695298">
+    <state x="2543" y="261" width="672" height="678" key="search.everywhere.popup" timestamp="1590943531475">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2543" y="261" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983695298" />
+    <state x="2543" y="261" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590943531475" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

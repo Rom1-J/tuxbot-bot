@@ -24,3 +24,5 @@ six==1.14.0
 typing-extensions==3.7.4.2
 websockets==8.1
 yarl==1.4.2
+ipinfo==3.0.0
+ipwhois==1.1.0

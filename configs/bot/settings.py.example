@@ -42,3 +42,6 @@ logs = {
 }
 
 postgresql = 'postgres://tuxbot:tuxbot@localhost:5432/tuxbot-rewrite'
+
+# https://ipinfo.io/
+ipfinfo = ''

@@ -19,6 +19,7 @@ l_extensions: List[str] = [
     "jishaku",
     "cogs.Logs",
     "cogs.Images",
+    "cogs.Network",
     "cogs.Useless",
 ]
 
