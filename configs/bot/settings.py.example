@@ -1,5 +1,6 @@
 token = ""
-prefix = "drw."
+prefixes = ["drw."]
+default_locale = "en-US"
 
 main_guild = int
 

@@ -60,7 +60,7 @@ class Network(commands.Cog, name="Useless"):
         ip_info = obj.lookup()
 
         try:
-            handler = ipinfo.getHandler(self.bot.config.ipinfo)
+            handler = ipinfo.getHandler(self.bot._config.ipinfo)
             details = handler.getDetails(target)
             api_result = True
         except (RequestQuotaExceededError, HTTPError):

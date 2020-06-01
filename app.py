@@ -6,14 +6,25 @@ from typing import List
 
 import aiohttp
 import discord
+from colorama import Fore, Style, init
 from discord.ext import commands
-from tortoise import Tortoise
 
 from configs.bot import settings
+from utils.functions.cli import bordered
 from utils.functions.extra import ContextPlus, get_prefix, \
     get_owners, get_blacklist
+from version import __version__
 
 log = logging.getLogger(__name__)
+init()
+
+NAME = r"""
+  _____           _           _        _           _   
+ |_   _|   ___  _| |__   ___ | |_     | |__   ___ | |_ 
+   | || | | \ \/ / '_ \ / _ \| __|____| '_ \ / _ \| __|
+   | || |_| |>  <| |_) | (_) | ||_____| |_) | (_) | |_ 
+   |_| \__,_/_/\_\_.__/ \___/ \__|    |_.__/ \___/ \__|                                    
+"""
 
 l_extensions: List[str] = [
     "jishaku",
@@ -32,44 +43,60 @@ class TuxBot(commands.AutoShardedBot):
 
     def __init__(self):
         self.uptime = datetime.datetime.utcnow()
-        self.config = settings
+        self._config = settings
+        self.locale = self._config.default_locale
+
         super().__init__(
             command_prefix=get_prefix,
             case_insensitive=True
         )
 
         self.logs_channels = {
-            "dm": self.config.logs["dm"],
-            "mentions": self.config.logs["mentions"],
-            "guilds": self.config.logs["guilds"],
-            "errors": self.config.logs["errors"],
+            "dm": self._config.logs["dm"],
+            "mentions": self._config.logs["mentions"],
+            "guilds": self._config.logs["guilds"],
+            "errors": self._config.logs["errors"],
+            "gateway": self._config.logs["gateway"],
         }
-
-        print("\n"*2)
 
         for extension in l_extensions:
             try:
                 self.load_extension(extension)
-                print(extension, "loaded !")
             except Exception as e:
-                print(f"{type(e).__name__ }:", e)
-
-        print("\n"*2)
+                log.warning(f"{type(e).__name__}: {e}")
 
     async def is_owner(self, user: discord.User):
         return user.id in get_owners()
 
     async def on_ready(self):
-        print(f"Connected !\n"
-              f"\n"
-              f"==> info: bot username {self.user}\n"
-              f"    info: bot id {self.user.id}\n"
-              f"    info: bot prefix {self.command_prefix}\n"
-              f"==> info: guild count {len(self.guilds)}\n"
-              f"    info: member count {len(list(self.get_all_members()))}\n"
-              f"    info: channel count {len(list(self.get_all_channels()))}")
+        INFO = {
+            'title': "INFO",
+            'rows': [
+                str(self.user),
+                f"Prefixes: {', '.join(self._config.prefixes)}",
+                f"Language: {self.locale}",
+                f"Tuxbot Version: {__version__}",
+                f"Discord.py Version: {discord.__version__}",
+                f"Shards: {self.shard_count}",
+                f"Servers: {len(self.guilds)}",
+                f"Users: {len(self.users)}"
+            ]
+        }
 
-        print(f"\n{'='*118}\n\n")
+        COGS = {
+            'title': "COGS",
+            'rows': []
+        }
+        for extension in l_extensions:
+            COGS['rows'].append(
+                f"[{'X' if extension in self.extensions else ' '}] {extension}"
+            )
+
+        print(Fore.LIGHTBLUE_EX + NAME)
+        print(Style.RESET_ALL)
+        print(bordered(INFO, COGS))
+
+        print(f"\n{'=' * 118}\n\n")
 
     async def on_resumed(self):
         print(f"resumed... {self.uptime}")
@@ -98,21 +125,23 @@ class TuxBot(commands.AutoShardedBot):
 
     async def bot_start(self):
         self.session = aiohttp.ClientSession(loop=self.loop)
-        await self.login(self.config.token, bot=True)
+        await self.login(self._config.token, bot=True)
         await self.connect()
 
     def run(self):
         loop = self.loop
 
-        loop.run_until_complete(Tortoise.init(
-            db_url=self.config.postgresql,
-            modules={
-                "models": [
-                    "models.__init__"
-                ]
-            }
-        ))
-        loop.run_until_complete(Tortoise.generate_schemas())
+        # loop.run_until_complete(
+        #     Tortoise.init(
+        #         db_url=self._config.postgresql,
+        #         modules={
+        #             "models": [
+        #                 "models.__init__"
+        #             ]
+        #         }
+        #     )
+        # )
+        # loop.run_until_complete(Tortoise.generate_schemas())
 
         try:
             loop.run_until_complete(self.bot_start())
@@ -129,7 +158,7 @@ def setup_logging():
     logger.setLevel(logging.INFO)
 
     try:
-        handler = logging.FileHandler(filename='logs/tuxbot.log',
+        handler = logging.FileHandler(filename='tuxbot.log',
                                       encoding='utf-8', mode='w')
         fmt = logging.Formatter('[{levelname:<7}] [{asctime}]'
                                 ' {name}: {message}',

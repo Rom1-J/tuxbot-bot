@@ -293,7 +293,8 @@ class Logs(commands.Cog):
         total = sum(self.bot.socket_stats.values())
         cpm = total / minutes
         await ctx.send(
-            f'{total} socket events observed ({cpm:.2f}/minute):\n{self.bot.socket_stats}')
+            f'{total} socket events observed ({cpm:.2f}/minute):\n'
+            f'{self.bot.socket_stats}')
 
     @commands.command('uptime')
     async def _uptime(self, ctx):

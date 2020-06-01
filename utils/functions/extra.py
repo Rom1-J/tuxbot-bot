@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands, flags
 
 from configs.bot.protected import protected
-from configs.bot.settings import prefix
+from configs.bot.settings import prefixes
 
 
 class ContextPlus(commands.Context):
@@ -89,7 +89,7 @@ def group_extra(*args, **kwargs):
 
 
 async def get_prefix(bot, message):
-    custom_prefix = [prefix]
+    custom_prefix = prefixes
     if message.guild:
         path = f"configs/guilds/{str(message.guild.id)}.json"
 
