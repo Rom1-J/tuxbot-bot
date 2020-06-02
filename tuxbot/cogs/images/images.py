@@ -173,8 +173,3 @@ class Images(commands.Cog, name="Images"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def _sot(self, ctx: ContextPlus, **passed_flags):
         await self._send_meme(ctx, 'scroll_of_truth', **passed_flags)
-
-
-def setup(bot: TuxBot):
-    cog = Images(bot)
-    bot.add_cog(cog)

@@ -103,8 +103,3 @@ class Network(commands.Cog, name="Useless"):
 
         await loading.delete()
         await ctx.send(embed=e)
-
-
-def setup(bot: TuxBot):
-    cog = Network(bot)
-    bot.add_cog(cog)

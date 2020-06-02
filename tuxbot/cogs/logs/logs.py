@@ -321,12 +321,3 @@ async def on_error(self, event, *args):
     except (discord.HTTPException, discord.NotFound,
             discord.Forbidden, discord.InvalidArgument):
         pass
-
-
-def setup(bot: TuxBot):
-    cog = Logs(bot)
-    bot.add_cog(cog)
-
-    handler = GatewayHandler(cog)
-    logging.getLogger().addHandler(handler)
-    commands.AutoShardedBot.on_error = on_error
