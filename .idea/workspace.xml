@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" name="5ed57ed9960f35191182a924 core" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/tuxbot-bot-rewrite.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tuxbot-bot-rewrite.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <list id="a3abf5c0-7587-46e4-8f09-88e34a1ab8a4" name="5ed41911b012e33f68a07e7a i18n" comment="" />
     <list id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="" />
@@ -114,7 +114,7 @@
       <workItem from="1591049956280" duration="4910000" />
       <workItem from="1591054878071" duration="1039000" />
       <workItem from="1591088657371" duration="4107000" />
-      <workItem from="1591128560850" duration="8992000" />
+      <workItem from="1591128560850" duration="9119000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <option name="createBranch" value="false" />

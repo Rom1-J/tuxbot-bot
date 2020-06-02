@@ -20,7 +20,7 @@ It is preferable to install the bot on a dedicated user. If you don't know how t
 sudo pacman -Syu python python-pip git jre11-openjdk-headless base-devel
 ```
 
-Continue by [creating virtual env](#Create-the-virtual-env).
+Continue by [creating virtual env](#creating-a-virtual-env).
 
 -----
 
@@ -32,7 +32,7 @@ sudo apt update
 sudo apt -y install make build-essential python3-openssl git openjdk-11-jre-headless
 ```
 
-Continue by [creating virtual env](#Create-the-virtual-env).
+Continue by [creating virtual env](#creating-a-virtual-env).
 
 ## Creating a virtual env
 
