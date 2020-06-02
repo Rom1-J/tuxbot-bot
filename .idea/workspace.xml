@@ -2,20 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" name="5ed57ed9960f35191182a924 core" comment="">
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Logs.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/Logs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cogs/Network.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/Network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/bot/settings.py.example" beforeDir="false" afterPath="$PROJECT_DIR$/configs/bot/settings.py.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions/extra.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/functions/extra.py" afterDir="false" />
-    </list>
-    <list id="a3abf5c0-7587-46e4-8f09-88e34a1ab8a4" name="5ed41911b012e33f68a07e7a i18n" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/romain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/romain.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-    </list>
-    <list id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/tuxbot-bot-rewrite.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tuxbot-bot-rewrite.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
+    <list id="a3abf5c0-7587-46e4-8f09-88e34a1ab8a4" name="5ed41911b012e33f68a07e7a i18n" comment="" />
+    <list id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,27 +22,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/app.py">
-      <ranges>
-        <range start1="8" end1="8" start2="8" end2="9" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="9" end1="10" start2="10" end2="10" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="12" end1="12" start2="12" end2="13" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="14" end1="14" start2="15" end2="16" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="16" end1="16" start2="18" end2="27" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="34" end1="35" start2="45" end2="48" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="41" end1="45" start2="54" end2="59" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="46" end1="48" start2="60" end2="60" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="52" end1="53" start2="64" end2="64" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="54" end1="57" start2="65" end2="66" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="62" end1="70" start2="71" end2="97" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="71" end1="72" start2="98" end2="99" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="100" end1="101" start2="127" end2="128" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="106" end1="115" start2="133" end2="144" changelist="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" />
-        <range start1="131" end1="132" start2="160" end2="161" changelist="a3abf5c0-7587-46e4-8f09-88e34a1ab8a4" />
-      </ranges>
-    </file>
-  </component>
   <component name="ProjectId" id="1c8uTCADTYzyrek4IjGPAZUYsa9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -65,25 +35,30 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="/Volumes/Cache/tmp/Red-DiscordBot" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.uml" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
     <property name="tasks.open.task.update.state.enabled" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/cogs" />
+      <recent name="$PROJECT_DIR$/tuxbot/cogs/network" />
+      <recent name="$PROJECT_DIR$/tuxbot/cogs/logs" />
+      <recent name="$PROJECT_DIR$/tuxbot/cogs/images" />
+      <recent name="$PROJECT_DIR$/tuxbot/cogs" />
+      <recent name="$PROJECT_DIR$/tuxbot/core" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/tuxbot/cogs/network" />
+      <recent name="$PROJECT_DIR$/tuxbot/cogs" />
       <recent name="$PROJECT_DIR$/utils/locales" />
       <recent name="$PROJECT_DIR$/cogs" />
-      <recent name="$PROJECT_DIR$/configs/bot" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -118,7 +93,7 @@
     </task>
     <task id="5ed41911b012e33f68a07e7a" summary="i18n">
       <changelist id="a3abf5c0-7587-46e4-8f09-88e34a1ab8a4" name="5ed41911b012e33f68a07e7a i18n" comment="" />
-      <created>1591054207986</created>
+      <created>1591139389877</created>
       <option name="issue" value="true" />
       <url>https://trello.com/c/vK0cBbF2/38-i18n</url>
       <option name="number" value="38" />
@@ -130,13 +105,16 @@
     </task>
     <task active="true" id="5ed57ed9960f35191182a924" summary="core">
       <changelist id="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" name="5ed57ed9960f35191182a924 core" comment="" />
-      <created>1591054207986</created>
+      <created>1591139389877</created>
       <option name="issue" value="true" />
       <url>https://trello.com/c/SafaMBht/40-core</url>
       <option name="number" value="40" />
       <option name="presentableId" value="5ed57ed9960f35191182a924" />
       <updated>1591049955763</updated>
       <workItem from="1591049956280" duration="4910000" />
+      <workItem from="1591054878071" duration="1039000" />
+      <workItem from="1591088657371" duration="4107000" />
+      <workItem from="1591128560850" duration="8992000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <option name="createBranch" value="false" />
@@ -168,10 +146,10 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2616" y="357" width="521" height="396" key="#com.intellij.fileTypes.FileTypeChooser/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589928148179" />
-    <state x="2613" y="304" width="528" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590160080814">
+    <state x="2613" y="304" width="528" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1591137172760">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2613" y="304" width="528" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590160080814" />
+    <state x="2613" y="304" width="528" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1591137172760" />
     <state x="2629" y="379" width="462" height="333" key="#com.intellij.tools.ToolEditorDialog" timestamp="1590878943253">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -184,10 +162,10 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2666" y="239" width="421" height="633" key="RollbackChangesDialog/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1589983513390" />
-    <state x="2362" y="183" key="SettingsEditor" timestamp="1590959187656">
+    <state x="2362" y="183" key="SettingsEditor" timestamp="1591135682515">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2362" y="183" key="SettingsEditor/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1590959187656" />
+    <state x="2362" y="183" key="SettingsEditor/1920.0.1920.1080/0.29.1920.1051@1920.0.1920.1080" timestamp="1591135682515" />
     <state x="2656" y="388" width="499" height="366" key="SimpleOpenTaskDialog" timestamp="1591049955869">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
