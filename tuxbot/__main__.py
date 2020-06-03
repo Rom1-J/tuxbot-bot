@@ -7,6 +7,7 @@ import platform
 import signal
 import sys
 from typing import NoReturn
+from argparse import Namespace
 
 import discord
 import pip
@@ -24,6 +25,9 @@ init()
 
 
 def list_instances() -> NoReturn:
+    """List all available instances
+
+    """
     with data_manager.config_file.open() as fs:
         datas = json.load(fs)
 
@@ -42,6 +46,9 @@ def list_instances() -> NoReturn:
 
 
 def debug_info() -> NoReturn:
+    """Show debug infos relatives to the bot
+
+    """
     python_version = sys.version.replace('\n', '')
     pip_version = pip.__version__
     tuxbot_version = __version__
@@ -72,7 +79,17 @@ def debug_info() -> NoReturn:
     sys.exit(0)
 
 
-def parse_cli_flags(args):
+def parse_cli_flags(args: list) -> Namespace:
+    """Parser for cli values.
+
+    Parameters
+    ----------
+    args:list
+        Is a list of all passed values.
+    Returns
+    -------
+    Namespace
+    """
     parser = argparse.ArgumentParser(
         description="Tuxbot - OpenSource bot",
         usage="tuxbot <instance_name> [arguments]"
@@ -102,7 +119,20 @@ def parse_cli_flags(args):
     return args
 
 
-async def shutdown_handler(tux, signal_type, exit_code=None):
+async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
+    """Handler when the bot shutdown
+
+    It cancels all running task.
+
+    Parameters
+    ----------
+    tux:Tux
+        Object for the bot.
+    signal_type:int
+        Exiting signal code.
+    exit_code:None|int
+        Code to show when exiting.
+    """
     if signal_type:
         log.info("%s received. Quitting...", signal_type)
         sys.exit(0)
@@ -126,7 +156,21 @@ async def shutdown_handler(tux, signal_type, exit_code=None):
         await asyncio.gather(*pending, return_exceptions=True)
 
 
-async def run_bot(tux: Tux, cli_flags: argparse.Namespace) -> None:
+async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
+    """This run the bot.
+
+    Parameters
+    ----------
+    tux:Tux
+        Object for the bot.
+    cli_flags:Namespace
+        All different flags passed in the console.
+
+    Returns
+    -------
+    None
+        When exiting, this function return None.
+    """
     data_path = data_manager.get_data_path(tux.instance_name)
 
     tuxbot.logging.init_logging(
@@ -155,7 +199,10 @@ async def run_bot(tux: Tux, cli_flags: argparse.Namespace) -> None:
     return None
 
 
-def main():
+def main() -> NoReturn:
+    """Main function
+
+    """
     tux = None
     cli_flags = parse_cli_flags(sys.argv[1:])
 

@@ -22,6 +22,14 @@ config_file = config_dir / "config.json"
 
 
 def load_existing_config() -> dict:
+    """Loading and returning configs.
+
+    Returns
+    -------
+    dict
+        a dict containing all configurations.
+
+    """
     if not config_file.exists():
         return {}
 
@@ -36,7 +44,18 @@ else:
     instances_list = list(instances_data.keys())
 
 
-def save_config(name, data, delete=False):
+def save_config(name: str, data: dict, delete=False) -> NoReturn:
+    """save data in config file.
+
+    Parameters
+    ----------
+    name:str
+        name of instance.
+    data:dict
+        settings for `name` instance.
+    delete:bool
+        delete or no data.
+    """
     _config = load_existing_config()
 
     if delete and name in _config:
@@ -49,6 +68,13 @@ def save_config(name, data, delete=False):
 
 
 def get_name() -> str:
+    """Get instance name via input.
+
+    Returns
+    -------
+    str
+        The instance name choose by user.
+    """
     name = ""
     while not name:
         print(
@@ -68,6 +94,19 @@ def get_name() -> str:
 
 
 def get_data_dir(instance_name: str) -> Path:
+    """Returning data path.
+
+    Parameters
+    ----------
+    instance_name:str
+        Instance name.
+
+    Returns
+    -------
+    Path
+        The data config path corresponding to the instance.
+
+    """
     data_path = Path(app_dir.user_data_dir) / "data" / instance_name
     data_path_input = ""
     print()
@@ -136,6 +175,13 @@ def get_data_dir(instance_name: str) -> Path:
 
 
 def get_token() -> str:
+    """Get token via input.
+
+    Returns
+    -------
+    str
+        The token choose by user.
+    """
     token = ""
 
     while not token:
@@ -156,6 +202,22 @@ def get_token() -> str:
 
 def get_multiple(question: str, confirmation: str, value_type: type)\
         -> List[Union[str, int]]:
+    """Give possibility to user to fill multiple value.
+
+    Parameters
+    ----------
+    question:str
+        First question.
+    confirmation:str
+        Asking text if user want to add another.
+    value_type:type
+        The type of values inside the list.
+
+    Returns
+    -------
+    List[Union[str, int]]
+        List containing user filled values.
+    """
     print(question)
     values = [value_type(input('> '))]
 
@@ -166,6 +228,13 @@ def get_multiple(question: str, confirmation: str, value_type: type)\
 
 
 def additional_config() -> dict:
+    """Asking for additional configs in cogs.
+
+    Returns
+    -------
+    dict:
+        Dict with cog name as key and configs as value.
+    """
     p = Path(r'tuxbot/cogs').glob('**/additional_config.json')
     datas = {}
 
@@ -188,6 +257,13 @@ def additional_config() -> dict:
 
 
 def finish_setup(data_dir: Path) -> NoReturn:
+    """Configs who directly refer to the bot.
+
+    Parameters
+    ----------
+    data_dir:Path
+        Where to save configs.
+    """
     print("Now, it's time to finish this setup by giving bot informations\n")
 
     token = get_token()
@@ -232,6 +308,9 @@ def finish_setup(data_dir: Path) -> NoReturn:
 
 
 def basic_setup() -> NoReturn:
+    """Configs who refer to instances.
+
+    """
     print("Hi ! it's time for you to give me informations about you instance")
     name = get_name()
 
@@ -269,7 +348,7 @@ def basic_setup() -> NoReturn:
     )
 
 
-def setup():
+def setup() -> NoReturn:
     try:
         """Create a new instance."""
         level = logging.DEBUG

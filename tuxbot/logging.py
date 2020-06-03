@@ -8,6 +8,15 @@ MAX_BYTES = 5_000_000
 
 
 def init_logging(level: int, location: pathlib.Path) -> None:
+    """Initialize loggers.
+
+    Parameters
+    ----------
+    level:int
+        Level of debug.
+    location:Path
+        Where to store logs.
+    """
     dpy_logger = logging.getLogger("discord")
     dpy_logger.setLevel(logging.WARN)
     dpy_logger_file = location / 'discord.log'

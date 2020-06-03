@@ -2,31 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c97c8a30-7573-4dcd-a0d4-5bf94b8ddbbd" name="5ed57ed9960f35191182a924 core" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tuxbot_bot.egg-info/PKG-INFO" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tuxbot_bot.egg-info/SOURCES.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tuxbot_bot.egg-info/dependency_links.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tuxbot_bot.egg-info/entry_points.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tuxbot_bot.egg-info/requires.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tuxbot_bot.egg-info/top_level.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/__main__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/cogs/images/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/cogs/images/images.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/cogs/logs/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/cogs/logs/logs.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/cogs/network/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/cogs/network/network.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/core/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/core/bot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/core/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/core/data_manager.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/core/utils/functions/cli.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/core/utils/functions/extra.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/logging.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/tuxbot/setup.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Tuxbot_bot-3.0.0-py3.8.egg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuxbot/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/tuxbot/__main__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuxbot/core/data_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/tuxbot/core/data_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuxbot/logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/tuxbot/logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuxbot/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/tuxbot/setup.py" afterDir="false" />
     </list>
     <list id="a3abf5c0-7587-46e4-8f09-88e34a1ab8a4" name="5ed41911b012e33f68a07e7a i18n" comment="" />
     <list id="6566fca1-2e90-48bb-9e74-dd3badbaca99" name="Default Changelist" comment="" />
@@ -137,7 +117,7 @@
       <workItem from="1591049956280" duration="4910000" />
       <workItem from="1591054878071" duration="1039000" />
       <workItem from="1591088657371" duration="4107000" />
-      <workItem from="1591128560850" duration="38413000" />
+      <workItem from="1591128560850" duration="40157000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <option name="createBranch" value="false" />
