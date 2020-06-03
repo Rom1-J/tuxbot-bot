@@ -1,0 +1,22 @@
+{
+    "dm": {
+        "description": "Webhook url for DMs events",
+        "value": "str"
+    },
+    "mentions": {
+        "description": "Webhook url for mentions events",
+        "value": "str"
+    },
+    "guilds": {
+        "description": "Webhook url for guilds events",
+        "value": "str"
+    },
+    "errors": {
+        "description": "Webhook url for errors events",
+        "value": "str"
+    },
+    "gateway": {
+        "description": "Webhook url for gateway events",
+        "value": "str"
+    }
+}

@@ -8,7 +8,7 @@ It is preferable to install the bot on a dedicated user. If you don't know how t
       - Python 3.7 or greater
       - Pip
       - Git
-      - JRE 11
+      - JRE 11 (voice support)
 
 ### Operating systems
 
