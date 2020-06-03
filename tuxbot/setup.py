@@ -1,19 +1,16 @@
 import json
 import logging
-import os
 import re
 import sys
 from pathlib import Path
-from typing import NoReturn, Union, List
+from typing import NoReturn, Union, List, Set
 
-import appdirs
 import click
 from colorama import Fore, Style, init
 
-init()
+from tuxbot.core.data_manager import config_dir, app_dir
 
-app_dir = appdirs.AppDirs("Tuxbot-bot")
-config_dir = Path(app_dir.user_config_dir)
+init()
 
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
@@ -133,6 +130,7 @@ def get_data_dir(instance_name: str) -> Path:
 
     (data_path_input / 'core').mkdir(parents=True, exist_ok=True)
     (data_path_input / 'cogs').mkdir(parents=True, exist_ok=True)
+    (data_path_input / 'logs').mkdir(parents=True, exist_ok=True)
 
     return data_path_input
 
@@ -156,14 +154,15 @@ def get_token() -> str:
     return token
 
 
-def get_prefixes() -> List[str]:
-    print("Choice a (or multiple) prefix for the bot")
-    prefixes = [input('> ')]
+def get_multiple(question: str, confirmation: str, value_type: type)\
+        -> Set[Union[str, int]]:
+    print(question)
+    values = [value_type(input('> '))]
 
-    while click.confirm("Add another prefix ?", default=False):
-        prefixes.append(input('> '))
+    while click.confirm(confirmation, default=False):
+        values.append(value_type(input('> ')))
 
-    return prefixes
+    return set(values)
 
 
 def additional_config() -> dict:
@@ -193,8 +192,21 @@ def finish_setup(data_dir: Path) -> NoReturn:
 
     token = get_token()
     print()
-    prefixes = get_prefixes()
-    mentionable = click.confirm("Does the bot answer if it's mentioned?", default=True)
+    prefixes = get_multiple(
+        "Choice a (or multiple) prefix for the bot",
+        "Add another prefix ?",
+        str
+    )
+    mentionable = click.confirm(
+        "Does the bot answer if it's mentioned?",
+        default=True
+    )
+
+    owners_id = get_multiple(
+        "Give the owner id of this bot",
+        "Add another owner ?",
+        int
+    )
 
     cogs_config = additional_config()
 
@@ -203,6 +215,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
         'token': token,
         'prefixes': prefixes,
         'mentionable': mentionable,
+        'owners_id': owners_id,
     }
 
     with core_file.open("w") as fs:
@@ -260,7 +273,7 @@ def setup():
     try:
         """Create a new instance."""
         level = logging.DEBUG
-        base_logger = logging.getLogger("tux")
+        base_logger = logging.getLogger("tuxbot")
         base_logger.setLevel(level)
         formatter = logging.Formatter(
             "[{asctime}] [{levelname}] {name}: {message}",
