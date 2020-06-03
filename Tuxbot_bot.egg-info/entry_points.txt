@@ -1,4 +1,0 @@
-[console_scripts]
-tuxbot = tuxbot.__main__:main
-tuxbot-setup = tuxbot.setup:setup
-
