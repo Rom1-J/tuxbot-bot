@@ -10,7 +10,5 @@ version_info = VersionInfo(
     releaselevel='alpha', build=build
 )
 
-__version__ = "v{}.{}.{}-{}.{}".format(
-    version_info.major, version_info.minor, version_info.micro,
-    version_info.releaselevel, version_info.build
-).replace('\n', '')
+__version__ = "v{}.{}.{}" \
+    .format(version_info.major, version_info.minor, version_info.micro)

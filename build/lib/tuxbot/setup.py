@@ -155,14 +155,14 @@ def get_token() -> str:
 
 
 def get_multiple(question: str, confirmation: str, value_type: type)\
-        -> List[Union[str, int]]:
+        -> Set[Union[str, int]]:
     print(question)
     values = [value_type(input('> '))]
 
     while click.confirm(confirmation, default=False):
         values.append(value_type(input('> ')))
 
-    return values
+    return set(values)
 
 
 def additional_config() -> dict:

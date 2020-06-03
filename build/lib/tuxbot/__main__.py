@@ -1,75 +1,18 @@
 import argparse
 import asyncio
-import getpass
-import json
 import logging
-import platform
 import signal
 import sys
-from typing import NoReturn
 
 import discord
-import pip
 from colorama import Fore, init, Style
-from pip._vendor import distro
 
 import tuxbot.logging
 from tuxbot.core import data_manager
 from tuxbot.core.bot import Tux
-from tuxbot.core.utils.functions.cli import bordered
-from . import __version__
 
 log = logging.getLogger("tuxbot.main")
 init()
-
-
-def list_instances() -> NoReturn:
-    with data_manager.config_file.open() as fs:
-        datas = json.load(fs)
-
-    instances = list(datas.keys())
-
-    info = {
-        'title': "Instances",
-        'rows': []
-    }
-
-    for instance in instances:
-        info['rows'].append(f"-> {instance}")
-
-    print(bordered(info))
-    sys.exit(0)
-
-
-def debug_info() -> NoReturn:
-    python_version = sys.version.replace('\n', '')
-    pip_version = pip.__version__
-    tuxbot_version = __version__
-    dpy_version = discord.__version__
-
-    os_info = distro.linux_distribution()
-    os_info = f"{os_info[0]} {os_info[1]}"
-
-    runner = getpass.getuser()
-
-    info = {
-        'title': "Debug Info",
-        'rows': [
-            f"Tuxbot version: {tuxbot_version}",
-            "",
-            f"Python version: {python_version}",
-            f"Python executable path: {sys.executable}",
-            f"Pip version: {pip_version}",
-            f"Discord.py version: {dpy_version}",
-            "",
-            f"OS info: {os_info}",
-            f"System arch: {platform.machine()}",
-            f"User: {runner}",
-        ]
-    }
-
-    print(bordered(info))
-    sys.exit(0)
 
 
 def parse_cli_flags(args):
@@ -77,27 +20,19 @@ def parse_cli_flags(args):
         description="Tuxbot - OpenSource bot",
         usage="tuxbot <instance_name> [arguments]"
     )
-    parser.add_argument(
-        "--version", "-V",
-        action="store_true",
-        help="Show tuxbot's used version"
-    )
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Show debug information."
-    )
-    parser.add_argument(
-        "--list-instances", "-L",
-        action="store_true",
-        help="List all instance names"
-    )
+    parser.add_argument("--version", "-V", help="Show tuxbot's used version")
+    parser.add_argument("--list-instances", "-L",
+                        help="List all instance names")
     parser.add_argument(
         "instance_name", nargs="?",
-        help="Name of the bot instance created during `tuxbot-setup`."
-    )
+        help="Name of the bot instance created during `redbot-setup`.")
 
     args = parser.parse_args(args)
+
+    if args.prefix:
+        args.prefix = sorted(args.prefix, reverse=True)
+    else:
+        args.prefix = []
 
     return args
 
@@ -158,21 +93,11 @@ async def run_bot(tux: Tux, cli_flags: argparse.Namespace) -> None:
 def main():
     tux = None
     cli_flags = parse_cli_flags(sys.argv[1:])
-
-    if cli_flags.list_instances:
-        list_instances()
-    elif cli_flags.debug:
-        debug_info()
-    elif cli_flags.version:
-        print("Tuxbot V3")
-        print(f"Complete Version: {__version__}")
-        sys.exit(0)
-
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
     try:
-        if not cli_flags.instance_name:
+        if cli_flags.no_instance:
             print(Fore.RED
                   + "No instance provided ! "
                     "You can use 'tuxbot -L' to list all available instances"

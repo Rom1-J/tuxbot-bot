@@ -52,7 +52,7 @@ source ~/tuxvenv/bin/activate
 
 Now, you can finish the installation by executing this single command:
 ```shell script
-python setup.py install
+pip install .
 ```
 
 ## Configuration
