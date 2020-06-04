@@ -292,6 +292,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
         'prefixes': prefixes,
         'mentionable': mentionable,
         'owners_id': owners_id,
+        'locale': "en-US"
     }
 
     with core_file.open("w") as fs:

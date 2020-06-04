@@ -3,7 +3,7 @@ import logging
 
 __all__ = ["Config"]
 
-from typing import List, Dict
+from typing import List, Dict, Union
 
 import discord
 
@@ -39,8 +39,8 @@ class Config:
     def __call__(self, item):
         return self.__getitem__(item)
 
-    def owner_ids(self) -> List[int]:
-        return self.__getitem__('core').get('owner_ids')
+    def owners_id(self) -> List[int]:
+        return self.__getitem__('core').get('owners_id')
 
     def token(self) -> str:
         return self.__getitem__('core').get('token')
@@ -53,3 +53,29 @@ class Config:
             .get('prefixes', [])
 
         return prefixes
+
+    def get_blacklist(self, key: str) -> List[Union[str, int]]:
+        core = self.__getitem__('core')
+        blacklist = core \
+            .get('blacklist', {}) \
+            .get(key, [])
+
+        return blacklist
+
+    def update(self, cog_name, item, value) -> dict:
+        datas = self.__getitem__(cog_name)
+        path = data_path(self._cog_instance)
+
+        datas[item] = value
+
+        if cog_name != 'core':
+            path = path / 'cogs' / cog_name
+        else:
+            path /= 'core'
+
+        settings_file = path / 'settings.json'
+
+        with settings_file.open('w') as f:
+            json.dump(datas, f, indent=4)
+
+        return datas

@@ -16,7 +16,7 @@ from pip._vendor import distro
 
 import tuxbot.logging
 from tuxbot.core import data_manager
-from tuxbot.core.bot import Tux
+from tuxbot.core.bot import Tux, ExitCodes
 from tuxbot.core.utils.functions.cli import bordered
 from . import __version__
 
@@ -140,10 +140,10 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
     """
     if signal_type:
         log.info("%s received. Quitting...", signal_type)
-        sys.exit(0)
+        sys.exit(ExitCodes.SHUTDOWN)
     elif exit_code is None:
         log.info("Shutting down from unhandled exception")
-        tux.shutdown_code = 1
+        tux.shutdown_code = ExitCodes.CRITICAL
 
     if exit_code is not None:
         tux.shutdown_code = exit_code
@@ -161,7 +161,7 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
         await asyncio.gather(*pending, return_exceptions=True)
 
 
-async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
+async def run_bot(tux: Tux, cli_flags: Namespace, loop) -> None:
     """This run the bot.
 
     Parameters
@@ -193,13 +193,14 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
 
     if not token:
         log.critical("Token must be set if you want to login.")
-        sys.exit(1)
+        sys.exit(ExitCodes.CRITICAL)
 
     try:
+        await tux.load_packages()
         await tux.start(token, bot=True)
     except discord.LoginFailure:
         log.critical("This token appears to be valid.")
-        sys.exit(1)
+        sys.exit(ExitCodes.CRITICAL)
 
     return None
 
@@ -229,7 +230,7 @@ def main() -> NoReturn:
                   + "No instance provided ! "
                     "You can use 'tuxbot -L' to list all available instances"
                   + Style.RESET_ALL)
-            sys.exit(1)
+            sys.exit(ExitCodes.CRITICAL)
 
         tux = Tux(
             cli_flags=cli_flags,
@@ -237,8 +238,11 @@ def main() -> NoReturn:
             dm_help=None
         )
 
-        loop.run_until_complete(run_bot(tux, cli_flags))
+        loop.run_until_complete(run_bot(tux, cli_flags, loop))
     except KeyboardInterrupt:
+        print(Fore.RED
+              + "Please use <prefix>quit instead of Ctrl+C to Shutdown!"
+              + Style.RESET_ALL)
         log.warning("Please use <prefix>quit instead of Ctrl+C to Shutdown!")
         log.error("Received KeyboardInterrupt")
         if tux is not None:
@@ -258,7 +262,7 @@ def main() -> NoReturn:
         asyncio.set_event_loop(None)
         loop.stop()
         loop.close()
-        exit_code = 1 if tux is None else tux.shutdown_code
+        exit_code = ExitCodes.CRITICAL if tux is None else tux.shutdown_code
         sys.exit(exit_code)
 
 

@@ -17,6 +17,7 @@ def init_logging(level: int, location: pathlib.Path) -> None:
     location:Path
         Where to store logs.
     """
+
     dpy_logger = logging.getLogger("discord")
     dpy_logger.setLevel(logging.WARN)
     dpy_logger_file = location / 'discord.log'
@@ -39,10 +40,7 @@ def init_logging(level: int, location: pathlib.Path) -> None:
         maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
     )
 
-    dpy_logger.addHandler(dpy_handler)
-    base_logger.addHandler(base_handler)
-
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setFormatter(formatter)
-    base_logger.addHandler(stdout_handler)
-    dpy_logger.addHandler(stdout_handler)
+    dpy_logger.addHandler(dpy_handler)
+    base_logger.addHandler(base_handler)

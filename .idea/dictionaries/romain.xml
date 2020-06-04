@@ -8,6 +8,7 @@
       <w>postgresql</w>
       <w>socketstats</w>
       <w>splt</w>
+      <w>systemd</w>
       <w>tutux</w>
       <w>webhooks</w>
     </words>
