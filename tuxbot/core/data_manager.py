@@ -7,7 +7,7 @@ config_dir = Path(app_dir.user_config_dir)
 config_file = config_dir / "config.json"
 
 
-def get_data_path(instance_name: str) -> Path:
+def data_path(instance_name: str) -> Path:
     """Return Path for data configs.
 
     Parameters
@@ -22,7 +22,7 @@ def get_data_path(instance_name: str) -> Path:
     return Path(app_dir.user_data_dir) / "data" / instance_name
 
 
-def get_core_path(instance_name: str) -> Path:
+def core_path(instance_name: str) -> Path:
     """Return Path for core configs.
 
     Parameters
@@ -34,11 +34,10 @@ def get_core_path(instance_name: str) -> Path:
     Path
         Generated path for core configs.
     """
-    data_path = get_data_path(instance_name)
-    return data_path / "data" / instance_name / "core"
+    return data_path(instance_name) / "data" / instance_name / "core"
 
 
-def get_cogs_path(instance_name: str) -> Path:
+def cogs_data_path(instance_name: str) -> Path:
     """Return Path for cogs configs.
 
     Parameters
@@ -50,11 +49,10 @@ def get_cogs_path(instance_name: str) -> Path:
     Path
         Generated path for cogs configs.
     """
-    data_path = get_data_path(instance_name)
-    return data_path / "data" / instance_name / "cogs"
+    return data_path(instance_name) / "data" / instance_name / "cogs"
 
 
-def get_cog_path(instance_name: str, cog_name: str) -> Path:
+def cog_data_path(instance_name: str, cog_name: str) -> Path:
     """Return Path for chosen configs for cog.
 
     Parameters
@@ -67,5 +65,4 @@ def get_cog_path(instance_name: str, cog_name: str) -> Path:
     Path
         Generated path for cog's configs.
     """
-    data_path = get_data_path(instance_name)
-    return data_path / "data" / instance_name / "cogs" / cog_name
+    return data_path(instance_name) / "data" / instance_name / "cogs" / cog_name

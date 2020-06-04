@@ -171,7 +171,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     None
         When exiting, this function return None.
     """
-    data_path = data_manager.get_data_path(tux.instance_name)
+    data_path = data_manager.data_path(tux.instance_name)
 
     tuxbot.logging.init_logging(
         level=cli_flags.logging_level,

@@ -18,7 +18,7 @@ class Tux(commands.AutoShardedBot):
         self.last_exception = None
 
         self.config = Config(
-            data_manager.get_data_path(self.instance_name)
+            data_manager.data_path(self.instance_name)
         )
         self.config.register_global(
             token=None,
