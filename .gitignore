@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.idea/workspace.xml
+
 *.log
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
