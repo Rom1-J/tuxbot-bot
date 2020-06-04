@@ -1,6 +1,9 @@
+import logging
 from pathlib import Path
 
 import appdirs
+
+log = logging.getLogger("tuxbot.data_manager")
 
 app_dir = appdirs.AppDirs("Tuxbot-bot")
 config_dir = Path(app_dir.user_config_dir)

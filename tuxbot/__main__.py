@@ -6,8 +6,8 @@ import logging
 import platform
 import signal
 import sys
-from typing import NoReturn
 from argparse import Namespace
+from typing import NoReturn
 
 import discord
 import pip
@@ -110,6 +110,11 @@ def parse_cli_flags(args: list) -> Namespace:
         help="List all instance names"
     )
     parser.add_argument(
+        "--token", "-T",
+        type=str,
+        help="Run Tuxbot with passed token"
+    )
+    parser.add_argument(
         "instance_name", nargs="?",
         help="Name of the bot instance created during `tuxbot-setup`."
     )
@@ -128,7 +133,7 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
     ----------
     tux:Tux
         Object for the bot.
-    signal_type:int
+    signal_type:int, None
         Exiting signal code.
     exit_code:None|int
         Code to show when exiting.
@@ -174,7 +179,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     data_path = data_manager.data_path(tux.instance_name)
 
     tuxbot.logging.init_logging(
-        level=cli_flags.logging_level,
+        10,
         location=data_path / "logs"
     )
 
@@ -184,14 +189,14 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     if cli_flags.token:
         token = cli_flags.token
     else:
-        token = await tux.config.token()
+        token = tux.config('core').get('token')
 
     if not token:
         log.critical("Token must be set if you want to login.")
         sys.exit(1)
 
     try:
-        await tux.start(token, bot=True, cli_flags=cli_flags)
+        await tux.start(token, bot=True)
     except discord.LoginFailure:
         log.critical("This token appears to be valid.")
         sys.exit(1)

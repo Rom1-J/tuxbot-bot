@@ -1,41 +1,55 @@
-from pathlib import Path
-from typing import Any, NoReturn
+import json
+import logging
+
+__all__ = ["Config"]
+
+from typing import List, Dict
+
+import discord
+
+from tuxbot.core.data_manager import data_path
+
+log = logging.getLogger("tuxbot.config")
 
 
 class Config:
-    GLOBAL = "GLOBAL"
-    GUILD = "GUILD"
-    CHANNEL = "TEXT_CHANNEL"
-    ROLE = "ROLE"
-    MEMBER = "MEMBER"
-    USER = "USER"
+    def __init__(
+            self,
+            cog_instance: str = None
+    ):
+        self._cog_instance = cog_instance
 
-    def __init__(self, config_dir: Path):
-        self._defaults = {}
+    def __getitem__(self, item) -> Dict:
+        path = data_path(self._cog_instance)
 
-    def __getattr__(self, item: str) -> dict:
-        return getattr(self._defaults, item)
+        if item != 'core':
+            path = path / 'cogs' / item
+        else:
+            path /= 'core'
 
-    def _register_default(self, key: str, **kwargs: Any):
-        ...
+        settings_file = path / 'settings.json'
 
-    def register_core(self, **kwargs) -> NoReturn:
-        self._register_default(self.GUILD, **kwargs)
+        if not settings_file.exists():
+            raise FileNotFoundError(f"Unable to find settings file "
+                                    f"'{settings_file}'")
+        else:
+            with settings_file.open('r') as f:
+                return json.load(f)
 
-    def register_global(self, **kwargs) -> NoReturn:
-        self._register_default(self.GLOBAL, **kwargs)
+    def __call__(self, item):
+        return self.__getitem__(item)
 
-    def register_guild(self, **kwargs) -> NoReturn:
-        self._register_default(self.GUILD, **kwargs)
+    def owner_ids(self) -> List[int]:
+        return self.__getitem__('core').get('owner_ids')
 
-    def register_channel(self, **kwargs) -> NoReturn:
-        self._register_default(self.CHANNEL, **kwargs)
+    def token(self) -> str:
+        return self.__getitem__('core').get('token')
 
-    def register_role(self, **kwargs) -> NoReturn:
-        self._register_default(self.ROLE, **kwargs)
+    def get_prefixes(self, guild: discord.Guild) -> List[str]:
+        core = self.__getitem__('core')
+        prefixes = core\
+            .get('guild', {}) \
+            .get(guild.id, {}) \
+            .get('prefixes', [])
 
-    def register_member(self, **kwargs) -> NoReturn:
-        self._register_default(self.MEMBER, **kwargs)
-
-    def register_user(self, **kwargs) -> NoReturn:
-        self._register_default(self.USER, **kwargs)
+        return prefixes
