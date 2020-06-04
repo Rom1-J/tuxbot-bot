@@ -219,7 +219,11 @@ def get_multiple(question: str, confirmation: str, value_type: type)\
         List containing user filled values.
     """
     print(question)
-    values = [value_type(input('> '))]
+    user_input = input('> ')
+    if not user_input:
+        return []
+
+    values = [user_input]
 
     while click.confirm(confirmation, default=False):
         values.append(value_type(input('> ')))
