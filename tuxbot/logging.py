@@ -42,5 +42,9 @@ def init_logging(level: int, location: pathlib.Path) -> None:
 
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setFormatter(formatter)
+
+    dpy_handler.setFormatter(formatter)
+    base_handler.setFormatter(formatter)
+
     dpy_logger.addHandler(dpy_handler)
     base_logger.addHandler(base_handler)

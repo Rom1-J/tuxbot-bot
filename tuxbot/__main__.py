@@ -161,7 +161,7 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
         await asyncio.gather(*pending, return_exceptions=True)
 
 
-async def run_bot(tux: Tux, cli_flags: Namespace, loop) -> None:
+async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     """This run the bot.
 
     Parameters
@@ -238,7 +238,7 @@ def main() -> NoReturn:
             dm_help=None
         )
 
-        loop.run_until_complete(run_bot(tux, cli_flags, loop))
+        loop.run_until_complete(run_bot(tux, cli_flags))
     except KeyboardInterrupt:
         print(Fore.RED
               + "Please use <prefix>quit instead of Ctrl+C to Shutdown!"

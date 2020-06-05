@@ -101,6 +101,7 @@ class Tux(commands.AutoShardedBot):
                 f"Language: {self.config('core').get('locale')}",
                 f"Tuxbot Version: {__version__}",
                 f"Discord.py Version: {discord.__version__}",
+                "Python Version: " + sys.version.replace('\n', ''),
                 f"Shards: {self.shard_count}",
                 f"Servers: {len(self.guilds)}",
                 f"Users: {len(self.users)}"

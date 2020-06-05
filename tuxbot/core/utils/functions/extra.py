@@ -6,7 +6,8 @@ from discord.ext import commands, flags
 
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
-        if (hasattr(self.command, 'deletable') and self.command.deletable) \
+        if (hasattr(self.command, 'deletable')
+            and self.command.deletable) \
                 and kwargs.pop('deletable', True):
             message = await super().send(content, *args, **kwargs)
             await message.add_reaction('🗑')
