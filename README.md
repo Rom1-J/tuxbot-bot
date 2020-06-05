@@ -61,7 +61,7 @@ pip install .
 
 ## Configuration
 
-It's time to set up your first instance, to do this, sou can simply execute this command:
+It's time to set up your first instance, to do this, you can simply execute this command:
 
 ```shell script
 tuxbot-setup [your instance name]
