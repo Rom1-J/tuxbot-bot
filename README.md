@@ -8,7 +8,6 @@ It is preferable to install the bot on a dedicated user. If you don't know how t
       - Python 3.7 or greater
       - Pip
       - Git
-      - JRE 11 (voice support)
 
 ### Operating systems
 
@@ -17,22 +16,27 @@ It is preferable to install the bot on a dedicated user. If you don't know how t
 ### Arch Linux
 
 ```shell script
-sudo pacman -Syu python python-pip git jre11-openjdk-headless base-devel
+sudo pacman -Syu python python-pip python-virtualenv git
 ```
 
 Continue by [creating virtual env](#creating-a-virtual-env).
 
 -----
 
-#### Debian Stretch
+#### Debian
 
 ```shell script
-sudo echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list.d/tuxbot.list
 sudo apt update
-sudo apt -y install make build-essential python3-openssl git openjdk-11-jre-headless
+sudo apt -y install python3 python3-dev python3-pip python3-venv git
 ```
 
 Continue by [creating virtual env](#creating-a-virtual-env).
+
+-----
+
+#### Windows
+
+*go to hell*
 
 ## Creating a virtual env
 
@@ -57,4 +61,19 @@ pip install .
 
 ## Configuration
 
-todo...
+It's time to set up your first instance, to do this, sou can simply execute this command:
+
+```shell script
+tuxbot-setup [your instance name]
+```
+
+After following the instructions, you can run your instance by executing this command:
+
+```shell script
+tuxbot [your instance name]
+```
+
+
+## Update
+
+*todo*
