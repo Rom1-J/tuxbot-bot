@@ -43,22 +43,22 @@ def bordered(*columns: dict) -> str:
 
     sep = " " * 4  # Separator between boxes
     widths = tuple(
-        max(
-            len(row) for row in column.get('rows')
-        ) + 9
-        for column in columns
+        max(len(row) for row in column.get("rows")) + 9 for column in columns
     )  # width of each col
     cols_done = [False] * len(columns)  # whether or not each column is done
     lines = [""]
 
     for i, column in enumerate(columns):
-        lines[0] += "{TL}" + "{HZ}" + column.get('title') \
-                    + "{HZ}" * (widths[i] - len(column.get('title')) - 1) \
-                    + "{TR}" + sep
+        lines[0] += (
+            "{TL}"
+            + "{HZ}"
+            + column.get("title")
+            + "{HZ}" * (widths[i] - len(column.get("title")) - 1)
+            + "{TR}"
+            + sep
+        )
 
-    for line in itertools.zip_longest(
-            *[column.get('rows') for column in columns]
-    ):
+    for line in itertools.zip_longest(*[column.get("rows") for column in columns]):
         row = []
         for colidx, column in enumerate(line):
             width = widths[colidx]

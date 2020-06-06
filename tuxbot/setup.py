@@ -84,11 +84,7 @@ def get_name() -> str:
         name = input("> ")
         if re.fullmatch(r"[a-zA-Z0-9_\-]*", name) is None:
             print()
-            print(
-                Fore.RED
-                + "ERROR: Invalid characters provided"
-                + Style.RESET_ALL
-            )
+            print(Fore.RED + "ERROR: Invalid characters provided" + Style.RESET_ALL)
             name = ""
     return name
 
@@ -117,10 +113,8 @@ def get_data_dir(instance_name: str) -> Path:
         except OSError:
             print()
             print(
-                Fore.RED
-                + f"mkdir: cannot create directory '{path}':"
-                  f" Permission denied"
-                + Style.RESET_ALL
+                Fore.RED + f"mkdir: cannot create directory '{path}':"
+                f" Permission denied" + Style.RESET_ALL
             )
             path = ""
 
@@ -136,7 +130,7 @@ def get_data_dir(instance_name: str) -> Path:
 
         data_path_input = input("> ")
 
-        if data_path_input != '':
+        if data_path_input != "":
             data_path_input = Path(data_path_input)
 
             try:
@@ -144,9 +138,8 @@ def get_data_dir(instance_name: str) -> Path:
             except OSError:
                 print()
                 print(
-                    Fore.RED
-                    + "Impossible to verify the validity of the path, "
-                      "make sure it does not contain any invalid characters."
+                    Fore.RED + "Impossible to verify the validity of the path, "
+                    "make sure it does not contain any invalid characters."
                     + Style.RESET_ALL
                 )
                 data_path_input = ""
@@ -167,9 +160,9 @@ def get_data_dir(instance_name: str) -> Path:
         print("Rerun the process to redo this configuration.")
         sys.exit(0)
 
-    (data_path_input / 'core').mkdir(parents=True, exist_ok=True)
-    (data_path_input / 'cogs').mkdir(parents=True, exist_ok=True)
-    (data_path_input / 'logs').mkdir(parents=True, exist_ok=True)
+    (data_path_input / "core").mkdir(parents=True, exist_ok=True)
+    (data_path_input / "cogs").mkdir(parents=True, exist_ok=True)
+    (data_path_input / "logs").mkdir(parents=True, exist_ok=True)
 
     return data_path_input
 
@@ -190,18 +183,21 @@ def get_token() -> str:
             "(you can find it at https://discord.com/developers/applications)"
         )
         token = input("> ")
-        if re.fullmatch(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9_]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})", token) is None:
-            print(
-                Fore.RED
-                + "ERROR: Invalid token provided"
-                + Style.RESET_ALL
+        if (
+            re.fullmatch(
+                r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9_]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})",
+                token,
             )
+            is None
+        ):
+            print(Fore.RED + "ERROR: Invalid token provided" + Style.RESET_ALL)
             token = ""
     return token
 
 
-def get_multiple(question: str, confirmation: str, value_type: type)\
-        -> List[Union[str, int]]:
+def get_multiple(
+    question: str, confirmation: str, value_type: type
+) -> List[Union[str, int]]:
     """Give possibility to user to fill multiple value.
 
     Parameters
@@ -219,14 +215,14 @@ def get_multiple(question: str, confirmation: str, value_type: type)\
         List containing user filled values.
     """
     print(question)
-    user_input = input('> ')
+    user_input = input("> ")
     if not user_input:
         return []
 
     values = [user_input]
 
     while click.confirm(confirmation, default=False):
-        values.append(value_type(input('> ')))
+        values.append(value_type(input("> ")))
 
     return values
 
@@ -239,23 +235,23 @@ def additional_config() -> dict:
     dict:
         Dict with cog name as key and configs as value.
     """
-    p = Path(r'tuxbot/cogs').glob('**/additional_config.json')
+    p = Path(r"tuxbot/cogs").glob("**/additional_config.json")
     datas = {}
 
     for file in p:
         print()
-        cog_name = str(file.parent).split('/')[-1]
+        cog_name = str(file.parent).split("/")[-1]
         datas[cog_name] = {}
 
-        with file.open('r') as f:
+        with file.open("r") as f:
             data = json.load(f)
 
         print(f"\n==Configuration for `{cog_name}` module==")
 
         for key, value in data.items():
             print()
-            print(value['description'])
-            datas[cog_name][key] = input('> ')
+            print(value["description"])
+            datas[cog_name][key] = input("> ")
 
     return datas
 
@@ -273,40 +269,33 @@ def finish_setup(data_dir: Path) -> NoReturn:
     token = get_token()
     print()
     prefixes = get_multiple(
-        "Choice a (or multiple) prefix for the bot",
-        "Add another prefix ?",
-        str
+        "Choice a (or multiple) prefix for the bot", "Add another prefix ?", str
     )
-    mentionable = click.confirm(
-        "Does the bot answer if it's mentioned?",
-        default=True
-    )
+    mentionable = click.confirm("Does the bot answer if it's mentioned?", default=True)
 
     owners_id = get_multiple(
-        "Give the owner id of this bot",
-        "Add another owner ?",
-        int
+        "Give the owner id of this bot", "Add another owner ?", int
     )
 
     cogs_config = additional_config()
 
-    core_file = data_dir / 'core' / 'settings.json'
+    core_file = data_dir / "core" / "settings.json"
     core = {
-        'token': token,
-        'prefixes': prefixes,
-        'mentionable': mentionable,
-        'owners_id': owners_id,
-        'locale': "en-US"
+        "token": token,
+        "prefixes": prefixes,
+        "mentionable": mentionable,
+        "owners_id": owners_id,
+        "locale": "en-US",
     }
 
     with core_file.open("w") as fs:
         json.dump(core, fs, indent=4)
 
     for cog, data in cogs_config.items():
-        data_cog_dir = data_dir / 'cogs' / cog
+        data_cog_dir = data_dir / "cogs" / cog
         data_cog_dir.mkdir(parents=True, exist_ok=True)
 
-        data_cog_file = data_cog_dir / 'settings.json'
+        data_cog_file = data_cog_dir / "settings.json"
 
         with data_cog_file.open("w") as fs:
             json.dump(data, fs, indent=4)
@@ -330,19 +319,16 @@ def basic_setup() -> NoReturn:
     if name in instances_list:
         print()
         print(
-            Fore.RED
-            + f"WARNING: An instance named `{name}` already exists "
-              f"Continuing will overwrite this instance configs."
-            + Style.RESET_ALL
+            Fore.RED + f"WARNING: An instance named `{name}` already exists "
+            f"Continuing will overwrite this instance configs." + Style.RESET_ALL
         )
-        if not click.confirm("Are you sure you want to continue?",
-                             default=False):
+        if not click.confirm("Are you sure you want to continue?", default=False):
             print("Abandon...")
             sys.exit(0)
 
     save_config(name, instance_config)
 
-    print("\n"*4)
+    print("\n" * 4)
 
     finish_setup(data_dir)
 
@@ -361,7 +347,8 @@ def setup() -> NoReturn:
         base_logger.setLevel(level)
         formatter = logging.Formatter(
             "[{asctime}] [{levelname}] {name}: {message}",
-            datefmt="%Y-%m-%d %H:%M:%S", style="{"
+            datefmt="%Y-%m-%d %H:%M:%S",
+            style="{",
         )
         stdout_handler = logging.StreamHandler(sys.stdout)
         stdout_handler.setFormatter(formatter)

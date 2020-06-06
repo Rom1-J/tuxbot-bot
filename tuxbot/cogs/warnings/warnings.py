@@ -11,7 +11,7 @@ class Warnings(commands.Cog, name="Warnings"):
     def __init__(self, bot: Tux):
         self.bot = bot
 
-    @commands.group(name='warn', alias=['warning'])
+    @commands.group(name="warn", alias=["warning"])
     @commands.guild_only()
     @checks.is_mod()
     async def _warn(self, ctx: commands.Context):
@@ -20,28 +20,21 @@ class Warnings(commands.Cog, name="Warnings"):
     @_warn.command(name="add")
     @commands.guild_only()
     async def _warn_add(
-            self,
-            ctx: commands.Context,
-            member: Union[discord.User, discord.Member],
-            reason: str
+        self,
+        ctx: commands.Context,
+        member: Union[discord.User, discord.Member],
+        reason: str,
     ):
         pass
 
     @_warn.command(name="delete", aliases=["del", "remove"])
     @commands.guild_only()
-    async def action_del(
-            self,
-            ctx: commands.Context,
-            warn_id: int,
-            reason: str = ""
-    ):
+    async def action_del(self, ctx: commands.Context, warn_id: int, reason: str = ""):
         pass
 
     @_warn.command(name="list", aliases=["all"])
     @commands.guild_only()
     async def action_del(
-            self,
-            ctx: commands.Context,
-            member: Union[discord.User, discord.Member] = None
+        self, ctx: commands.Context, member: Union[discord.User, discord.Member] = None
     ):
         pass

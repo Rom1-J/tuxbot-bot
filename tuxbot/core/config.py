@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from typing import List, Dict, Union, Any
@@ -12,27 +13,31 @@ log = logging.getLogger("tuxbot.core.config")
 
 
 class Config:
-    def __init__(
-            self,
-            cog_instance: str = None
-    ):
+    def __init__(self, cog_instance: str = None):
         self._cog_instance = cog_instance
+
+        self.lock = asyncio.Lock()
+        self.loop = asyncio.get_event_loop()
+
+        self._settings_file = None
+        self._datas = {}
 
     def __getitem__(self, item) -> Dict:
         path = data_path(self._cog_instance)
 
-        if item != 'core':
-            path = path / 'cogs' / item
+        if item != "core":
+            path = path / "cogs" / item
         else:
-            path /= 'core'
+            path /= "core"
 
-        settings_file = path / 'settings.json'
+        settings_file = path / "settings.json"
 
         if not settings_file.exists():
-            raise FileNotFoundError(f"Unable to find settings file "
-                                    f"'{settings_file}'")
+            raise FileNotFoundError(
+                f"Unable to find settings file " f"'{settings_file}'"
+            )
         else:
-            with settings_file.open('r') as f:
+            with settings_file.open("r") as f:
                 return json.load(f)
 
     def __call__(self, item):
@@ -46,7 +51,7 @@ class Config:
         str
             Owners id.
         """
-        return self.__getitem__('core').get('owners_id')
+        return self.__getitem__("core").get("owners_id")
 
     def token(self) -> str:
         """Simply return the bot token saved in config file.
@@ -56,7 +61,7 @@ class Config:
         str
             Bot token.
         """
-        return self.__getitem__('core').get('token')
+        return self.__getitem__("core").get("token")
 
     def get_prefixes(self, guild: discord.Guild) -> List[str]:
         """Get custom  prefixes for one guild.
@@ -71,11 +76,8 @@ class Config:
         List[str]
             List of all prefixes.
         """
-        core = self.__getitem__('core')
-        prefixes = core \
-            .get('guild', {}) \
-            .get(guild.id, {}) \
-            .get('prefixes', [])
+        core = self.__getitem__("core")
+        prefixes = core.get("guild", {}).get(guild.id, {}).get("prefixes", [])
 
         return prefixes
 
@@ -92,14 +94,16 @@ class Config:
         List[Union[str, int]]
             List containing blacklisted values.
         """
-        core = self.__getitem__('core')
-        blacklist = core \
-            .get('blacklist', {}) \
-            .get(key, [])
+        core = self.__getitem__("core")
+        blacklist = core.get("blacklist", {}).get(key, [])
 
         return blacklist
 
-    def update(self, cog_name: str, item: str, value: Any) -> dict:
+    def _dump(self):
+        with self._settings_file.open("w") as f:
+            json.dump(self._datas, f, indent=4)
+
+    async def update(self, cog_name: str, item: str, value: Any) -> dict:
         """Update values in config file.
 
         Parameters
@@ -122,14 +126,16 @@ class Config:
 
         datas[item] = value
 
-        if cog_name != 'core':
-            path = path / 'cogs' / cog_name
+        self._datas = datas
+
+        if cog_name != "core":
+            path = path / "cogs" / cog_name
         else:
-            path /= 'core'
+            path /= "core"
 
-        settings_file = path / 'settings.json'
+        self._settings_file = path / "settings.json"
 
-        with settings_file.open('w') as f:
-            json.dump(datas, f, indent=4)
+        async with self.lock:
+            await self.loop.run_in_executor(None, self._dump)
 
         return datas

@@ -25,6 +25,7 @@ def is_mod():
     """Is the user a moderator ?
 
     """
+
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
             return True
@@ -38,6 +39,7 @@ def is_admin():
     """Is the user admin ?
 
     """
+
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
             return True
@@ -64,9 +66,7 @@ async def check_permissions(ctx: "ContextPlus", **perms: Dict[str, bool]):
         return False
     resolved = ctx.channel.permissions_for(ctx.author)
 
-    return all(
-        getattr(resolved, name, None) == value for name, value in perms.items()
-    )
+    return all(getattr(resolved, name, None) == value for name, value in perms.items())
 
 
 def guild_owner_or_permissions(**perms: Dict[str, bool]):
@@ -77,6 +77,7 @@ def guild_owner_or_permissions(**perms: Dict[str, bool]):
     **perms:dict
         Perms to verify.
     """
+
     async def pred(ctx):
         if ctx.author is ctx.guild.owner:
             return True

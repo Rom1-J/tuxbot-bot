@@ -15,8 +15,8 @@ class AntiRaid(commands.Cog, name="AntiRaid"):
         self.bot = bot
 
     @commands.group(
-        name='anti_raid',
-        alias=['anti-raid', 'raid_protect', 'raid-protect', 'no_raid', 'no-raid']
+        name="anti_raid",
+        alias=["anti-raid", "raid_protect", "raid-protect", "no_raid", "no-raid"],
     )
     @commands.guild_only()
     @checks.is_admin()

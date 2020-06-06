@@ -6,25 +6,23 @@ from discord.ext import commands, flags
 
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
-        if (hasattr(self.command, 'deletable')
-            and self.command.deletable) \
-                and kwargs.pop('deletable', True):
+        if (
+            hasattr(self.command, "deletable") and self.command.deletable
+        ) and kwargs.pop("deletable", True):
             message = await super().send(content, *args, **kwargs)
-            await message.add_reaction('🗑')
+            await message.add_reaction("🗑")
 
             def check(reaction: discord.Reaction, user: discord.User):
-                return user == self.author \
-                       and str(reaction.emoji) == '🗑' \
-                       and reaction.message.id == message.id
+                return (
+                    user == self.author
+                    and str(reaction.emoji) == "🗑"
+                    and reaction.message.id == message.id
+                )
 
             try:
-                await self.bot.wait_for(
-                    'reaction_add',
-                    timeout=60.0,
-                    check=check
-                )
+                await self.bot.wait_for("reaction_add", timeout=60.0, check=check)
             except asyncio.TimeoutError:
-                await message.remove_reaction('🗑', self.bot.user)
+                await message.remove_reaction("🗑", self.bot.user)
             else:
                 await message.delete()
             return message

@@ -26,10 +26,7 @@ NAME = r"""
    |_| \__,_/_/\_\_.__/ \___/ \__|    |_.__/ \___/ \__|                                    
 """
 
-packages: List[str] = [
-    "jishaku",
-    "tuxbot.cogs.warnings"
-]
+packages: List[str] = ["jishaku", "tuxbot.cogs.warnings"]
 
 
 class Tux(commands.AutoShardedBot):
@@ -47,11 +44,11 @@ class Tux(commands.AutoShardedBot):
         self.config = Config(self.instance_name)
 
         async def _prefixes(bot, message) -> List[str]:
-            prefixes = self.config('core').get('prefixes')
+            prefixes = self.config("core").get("prefixes")
 
             prefixes.extend(self.config.get_prefixes(message.guild))
 
-            if self.config('core').get('mentionable'):
+            if self.config("core").get("mentionable"):
                 return commands.when_mentioned_or(*prefixes)(bot, message)
             return prefixes
 
@@ -79,41 +76,37 @@ class Tux(commands.AutoShardedBot):
                 try:
                     self.load_extension(package)
                 except Exception as e:
-                    print(Fore.RED
-                          + f"Failed to load package {package}"
-                          + Style.RESET_ALL
-                          + f" check "
-                            f"{str((self.logs / 'tuxbot.log').resolve())} "
-                            f"for more details")
-
-                    log.exception(
-                        f"Failed to load package {package}",
-                        exc_info=e
+                    print(
+                        Fore.RED
+                        + f"Failed to load package {package}"
+                        + Style.RESET_ALL
+                        + f" check "
+                        f"{str((self.logs / 'tuxbot.log').resolve())} "
+                        f"for more details"
                     )
+
+                    log.exception(f"Failed to load package {package}", exc_info=e)
 
     async def on_ready(self):
         self.uptime = datetime.datetime.now()
         INFO = {
-            'title': "INFO",
-            'rows': [
+            "title": "INFO",
+            "rows": [
                 str(self.user),
                 f"Prefixes: {', '.join(self.config('core').get('prefixes'))}",
                 f"Language: {self.config('core').get('locale')}",
                 f"Tuxbot Version: {__version__}",
                 f"Discord.py Version: {discord.__version__}",
-                "Python Version: " + sys.version.replace('\n', ''),
+                "Python Version: " + sys.version.replace("\n", ""),
                 f"Shards: {self.shard_count}",
                 f"Servers: {len(self.guilds)}",
-                f"Users: {len(self.users)}"
-            ]
+                f"Users: {len(self.users)}",
+            ],
         }
 
-        COGS = {
-            'title': "COGS",
-            'rows': []
-        }
+        COGS = {"title": "COGS", "rows": []}
         for extension in packages:
-            COGS['rows'].append(
+            COGS["rows"].append(
                 f"[{'X' if extension in self.extensions else ' '}] {extension}"
             )
 
@@ -142,7 +135,7 @@ class Tux(commands.AutoShardedBot):
             app = await self.application_info()
             if app.team:
                 ids = [m.id for m in app.team.members]
-                self.config.update('core', 'owners_id', ids)
+                await self.config.update("core", "owners_id", ids)
                 owner = user.id in ids
             self._app_owners_fetched = True
 
@@ -158,9 +151,11 @@ class Tux(commands.AutoShardedBot):
         if message.author.bot:
             return
 
-        if message.guild.id in self.config.get_blacklist('guild') \
-                or message.channel.id in self.config.get_blacklist('channel') \
-                or message.author.id in self.config.get_blacklist('user'):
+        if (
+            message.guild.id in self.config.get_blacklist("guild")
+            or message.channel.id in self.config.get_blacklist("channel")
+            or message.author.id in self.config.get_blacklist("user")
+        ):
             return
 
         ctx = await self.get_context(message)

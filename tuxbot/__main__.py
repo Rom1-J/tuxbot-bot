@@ -33,13 +33,10 @@ def list_instances() -> NoReturn:
 
     instances = list(datas.keys())
 
-    info = {
-        'title': "Instances",
-        'rows': []
-    }
+    info = {"title": "Instances", "rows": []}
 
     for instance in instances:
-        info['rows'].append(f"-> {instance}")
+        info["rows"].append(f"-> {instance}")
 
     print(bordered(info))
     sys.exit(0)
@@ -49,7 +46,7 @@ def debug_info() -> NoReturn:
     """Show debug infos relatives to the bot
 
     """
-    python_version = sys.version.replace('\n', '')
+    python_version = sys.version.replace("\n", "")
     pip_version = pip.__version__
     tuxbot_version = __version__
     dpy_version = discord.__version__
@@ -60,8 +57,8 @@ def debug_info() -> NoReturn:
     runner = getpass.getuser()
 
     info = {
-        'title': "Debug Info",
-        'rows': [
+        "title": "Debug Info",
+        "rows": [
             f"Tuxbot version: {tuxbot_version}",
             "",
             f"Python version: {python_version}",
@@ -72,7 +69,7 @@ def debug_info() -> NoReturn:
             f"OS info: {os_info}",
             f"System arch: {platform.machine()}",
             f"User: {runner}",
-        ]
+        ],
     }
 
     print(bordered(info))
@@ -92,31 +89,20 @@ def parse_cli_flags(args: list) -> Namespace:
     """
     parser = argparse.ArgumentParser(
         description="Tuxbot - OpenSource bot",
-        usage="tuxbot <instance_name> [arguments]"
+        usage="tuxbot <instance_name> [arguments]",
     )
     parser.add_argument(
-        "--version", "-V",
-        action="store_true",
-        help="Show tuxbot's used version"
+        "--version", "-V", action="store_true", help="Show tuxbot's used version"
     )
+    parser.add_argument("--debug", action="store_true", help="Show debug information.")
     parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Show debug information."
+        "--list-instances", "-L", action="store_true", help="List all instance names"
     )
+    parser.add_argument("--token", "-T", type=str, help="Run Tuxbot with passed token")
     parser.add_argument(
-        "--list-instances", "-L",
-        action="store_true",
-        help="List all instance names"
-    )
-    parser.add_argument(
-        "--token", "-T",
-        type=str,
-        help="Run Tuxbot with passed token"
-    )
-    parser.add_argument(
-        "instance_name", nargs="?",
-        help="Name of the bot instance created during `tuxbot-setup`."
+        "instance_name",
+        nargs="?",
+        help="Name of the bot instance created during `tuxbot-setup`.",
     )
 
     args = parser.parse_args(args)
@@ -151,9 +137,7 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
     try:
         await tux.logout()
     finally:
-        pending = [
-            t for t in asyncio.all_tasks() if t is not asyncio.current_task()
-        ]
+        pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
 
         for task in pending:
             task.cancel()
@@ -178,10 +162,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     """
     data_path = data_manager.data_path(tux.instance_name)
 
-    tuxbot.logging.init_logging(
-        10,
-        location=data_path / "logs"
-    )
+    tuxbot.logging.init_logging(10, location=data_path / "logs")
 
     log.debug("====Basic Config====")
     log.debug("Data Path: %s", data_path)
@@ -189,7 +170,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     if cli_flags.token:
         token = cli_flags.token
     else:
-        token = tux.config('core').get('token')
+        token = tux.config("core").get("token")
 
     if not token:
         log.critical("Token must be set if you want to login.")
@@ -226,23 +207,26 @@ def main() -> NoReturn:
 
     try:
         if not cli_flags.instance_name:
-            print(Fore.RED
-                  + "No instance provided ! "
-                    "You can use 'tuxbot -L' to list all available instances"
-                  + Style.RESET_ALL)
+            print(
+                Fore.RED + "No instance provided ! "
+                "You can use 'tuxbot -L' to list all available instances"
+                + Style.RESET_ALL
+            )
             sys.exit(ExitCodes.CRITICAL)
 
         tux = Tux(
             cli_flags=cli_flags,
             description="Tuxbot, made from and for OpenSource",
-            dm_help=None
+            dm_help=None,
         )
 
         loop.run_until_complete(run_bot(tux, cli_flags))
     except KeyboardInterrupt:
-        print(Fore.RED
-              + "Please use <prefix>quit instead of Ctrl+C to Shutdown!"
-              + Style.RESET_ALL)
+        print(
+            Fore.RED
+            + "Please use <prefix>quit instead of Ctrl+C to Shutdown!"
+            + Style.RESET_ALL
+        )
         log.warning("Please use <prefix>quit instead of Ctrl+C to Shutdown!")
         log.error("Received KeyboardInterrupt")
         if tux is not None:
