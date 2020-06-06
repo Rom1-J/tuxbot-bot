@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from typing import Callable, Union, Dict
@@ -8,6 +9,8 @@ __all__ = [
     "reload_locales",
     "Translator",
 ]
+
+log = logging.getLogger("tuxbot.core.i18n")
 
 _translators = []
 _current_locale = "en-US"
