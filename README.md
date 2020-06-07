@@ -22,7 +22,7 @@ It is preferable to install the bot on a dedicated user. If you don't know how t
 sudo pacman -Syu python python-pip python-virtualenv git
 ```
 
-Continue to [installing Tuxbot](#installing-tuxbot).
+Continue to [create the venv](#creating-the-virtual-environnement).
 
 -----
 
@@ -33,7 +33,7 @@ sudo apt update
 sudo apt -y install python3 python3-dev python3-pip python3-venv git
 ```
 
-Continue to [installing Tuxbot](#installing-tuxbot).
+Continue to [create the venv](#creating-the-virtual-environnement).
 
 -----
 
@@ -42,7 +42,7 @@ Continue to [installing Tuxbot](#installing-tuxbot).
 *go to hell*
 
 
-## Installing Tuxbot
+## Creating the Virtual Environnement
 
 To set up the virtual environnement and install the bot, simply run this two commands:
 

@@ -6,11 +6,11 @@ from tuxbot.core import checks
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 
-log = logging.getLogger("tuxbot.cogs.anti_raid")
-T_ = Translator("AntiRaid", __file__)
+log = logging.getLogger("tuxbot.cogs.admin")
+T_ = Translator("Admin", __file__)
 
 
-class AntiRaid(commands.Cog, name="AntiRaid"):
+class Admin(commands.Cog, name="Admin"):
     def __init__(self, bot: Tux):
         self.bot = bot
 
