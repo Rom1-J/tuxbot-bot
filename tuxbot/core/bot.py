@@ -26,7 +26,7 @@ NAME = r"""
    |_| \__,_/_/\_\_.__/ \___/ \__|    |_.__/ \___/ \__|                                    
 """
 
-packages: List[str] = ["jishaku", "tuxbot.cogs.warnings"]
+packages: List[str] = ["jishaku", "tuxbot.cogs.warnings", "tuxbot.cogs.admin"]
 
 
 class Tux(commands.AutoShardedBot):

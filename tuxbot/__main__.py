@@ -31,12 +31,12 @@ def list_instances() -> NoReturn:
     with data_manager.config_file.open() as fs:
         datas = json.load(fs)
 
-    instances = list(datas.keys())
-
     info = {"title": "Instances", "rows": []}
 
-    for instance in instances:
-        info["rows"].append(f"-> {instance}")
+    for instance, details in datas.items():
+        info["rows"].append(
+            f"-> {instance} " f"{'up' if details.get('IS_RUNNING') else 'down'}"
+        )
 
     print(bordered(info))
     sys.exit(0)

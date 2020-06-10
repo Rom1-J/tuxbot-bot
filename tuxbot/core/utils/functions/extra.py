@@ -20,7 +20,7 @@ class ContextPlus(commands.Context):
                 )
 
             try:
-                await self.bot.wait_for("reaction_add", timeout=60.0, check=check)
+                await self.bot.wait_for("reaction_add", timeout=45.0, check=check)
             except asyncio.TimeoutError:
                 await message.remove_reaction("🗑", self.bot.user)
             else:

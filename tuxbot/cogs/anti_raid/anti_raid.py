@@ -6,11 +6,11 @@ from tuxbot.core import checks
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 
-log = logging.getLogger("tuxbot.cogs.admin")
-T_ = Translator("Admin", __file__)
+log = logging.getLogger("tuxbot.cogs.anti_raid")
+T_ = Translator("AntiRaid", __file__)
 
 
-class Admin(commands.Cog, name="Admin"):
+class AntiRaid(commands.Cog, name="AntiRaid"):
     def __init__(self, bot: Tux):
         self.bot = bot
 
@@ -20,5 +20,5 @@ class Admin(commands.Cog, name="Admin"):
     )
     @commands.guild_only()
     @checks.is_admin()
-    async def _warn(self, ctx: commands.Context):
+    async def _anti_raid(self, ctx: commands.Context):
         pass
