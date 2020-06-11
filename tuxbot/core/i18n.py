@@ -5,42 +5,34 @@ from typing import Callable, Union, Dict, List
 
 from babel.messages.pofile import read_po
 
+from tuxbot.core import Config
+from tuxbot.core.utils.functions.extra import ContextPlus
+
 log = logging.getLogger("tuxbot.core.i18n")
 
 _translators = []
 
-_current_locale = "en-US"
-_locale_key_value: Dict[str, List[str]] = {
-    "en": ["english", "anglais", "en", "us"],
-    "fr": ["français", "francais", "french", "fr", "be"],
+available_locales: Dict[str, List[str]] = {
+    "en-US": ["english", "anglais", "en", "us", "en-us"],
+    "fr-FR": ["français", "francais", "french", "fr", "be", "fr-fr"],
 }
-_available_locales: Dict[str, str] = {"en": "en-US", "fr": "fr-FR"}
-
-
-def get_locale() -> str:
-    return _current_locale
 
 
 def find_locale(locale: str) -> str:
-    """We suppose `locale` is in `_locale_key_value.values()`"""
+    """We suppose `locale` is in `_available_locales.values()`"""
 
-    for key, val in _locale_key_value.items():
+    for key, val in available_locales.items():
         if locale in val:
             return key
 
-
-def set_locale(locale: str) -> None:
-    if not any(locale in values for values in _locale_key_value.values()):
-        raise NotImplementedError("This locale isn't implemented")
-    else:
-        global _current_locale
-        _current_locale = _available_locales.get(find_locale(locale))
-        reload_locales()
+    raise NotImplementedError("This locale isn't implemented")
 
 
-def reload_locales() -> None:
-    for translator in _translators:
-        translator.load_translations()
+def get_locale_name(locale: str) -> str:
+    """Return the name of this `locale`
+
+    """
+    return available_locales.get(find_locale(locale))[0]
 
 
 class Translator(Callable[[str], str]):
@@ -65,9 +57,14 @@ class Translator(Callable[[str], str]):
 
         self.load_translations()
 
-    def __call__(self, untranslated: str) -> str:
+    def __call__(self, untranslated: str, ctx: ContextPlus, config: Config) -> str:
         try:
-            return self.translations[untranslated]
+            locale = config.get_value(
+                "core",
+                f"guild.{ctx.guild.id}.locale",
+                config.get_value("core", "locale"),
+            )
+            return self.translations[locale][untranslated]
         except KeyError:
             return untranslated
 
@@ -81,16 +78,19 @@ class Translator(Callable[[str], str]):
         """Loads the current translations.
 
         """
-        self.translations = {}
-        locale_path = self.cog_folder / "locales" / f"{get_locale()}.po"
+        for locale in available_locales.keys():
+            locale_path = self.cog_folder / "locales" / f"{locale}.po"
 
-        with locale_path.open("r") as f:
-            catalog = read_po(f)
+            with locale_path.open("r") as f:
+                catalog = read_po(f)
 
-        for message in catalog:
-            if message.id:
-                self._add_translation(message.id, message.string)
+            for message in catalog:
+                if message.id:
+                    self._add_translation(locale, message.id, message.string)
 
-    def _add_translation(self, untranslated, translated):
+    def _add_translation(self, locale: str, untranslated: str, translated: str):
         if translated:
-            self.translations[untranslated] = translated
+            if not self.translations.get(locale, False):
+                self.translations[locale] = {}
+
+            self.translations[locale][untranslated] = translated

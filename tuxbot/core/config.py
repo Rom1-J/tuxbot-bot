@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 from typing import List, Dict, Union, Any
+from flatten_dict import flatten, unflatten
 
 import discord
 
@@ -124,7 +125,9 @@ class Config:
         datas = self.__getitem__(cog_name)
         path = data_path(self._cog_instance)
 
-        datas[item] = value
+        flat_datas = flatten(datas)
+        flat_datas[tuple(item.split("."))] = value
+        datas = unflatten(flat_datas)
 
         self._datas = datas
 
@@ -139,3 +142,30 @@ class Config:
             await self.loop.run_in_executor(None, self._dump)
 
         return datas
+
+    def get_value(self, cog_name: str, key: str, default: Any = None) -> Any:
+        """Get value by key.
+
+        Parameters
+        ----------
+        cog_name:str
+            Name of cog who's corresponding to the config file.
+        key:str
+            Key to fetch.
+        default:Any|Optional
+            Default value.
+
+        Returns
+        -------
+        Any:
+            Recovered value.
+
+        """
+        datas = self.__getitem__(cog_name)
+
+        flat_datas = flatten(datas)
+
+        try:
+            return flat_datas[tuple(key.split("."))]
+        except KeyError:
+            return default
