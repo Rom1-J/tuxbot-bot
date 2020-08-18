@@ -3,6 +3,7 @@ import json
 import pytz
 import random
 import urllib
+import aiohttp
 import ipinfo as ipinfoio
 
 from ipwhois.net import Net
@@ -246,10 +247,12 @@ class Utility(commands.Cog):
         # IPINFO api
         api_result = True
         try:
-            access_token = open('ipinfoio.key').read()
+            with open('ipinfoio.key') as k:
+                access_token = k.read().replace("\n", "")
             handler = ipinfoio.getHandler(access_token)
             details = handler.getDetails(ipaddress)
-        except:
+        except Exception as e:
+            await ctx.send(e)
             api_result = False
 
         try:
@@ -280,64 +283,36 @@ class Utility(commands.Cog):
         await iploading.delete()
 
     """---------------------------------------------------------------------"""
-    @commands.command(name='getheaders', pass_context=True)
-    async def _getheaders(self, ctx, *, adresse):
-        """Recuperer les HEADERS :d"""
-        if adresse.startswith("http://") != True and adresse.startswith("https://") != True:
-             adresse = "http://" + adresse
-        if len(adresse) > 200:
-            await ctx.send("{0} Essaye d'entrer une adresse de moins de 200 caractères plutôt.".format(ctx.author.mention))
-        
-        elif adresse.startswith("http://") or adresse.startswith("https://") or adresse.startswith("ftp://"):
-            try:
-                get = urllib.request.urlopen(adresse, timeout = 1)
-                embed = discord.Embed(title="Entêtes de {0}".format(adresse), color=0xd75858)
-                embed.add_field(name="Code Réponse", value=get.getcode(), inline = True)
-                embed.set_thumbnail(url="https://http.cat/{}".format(str(get.getcode())))
-                if get.getheader('location'):
-                    embed.add_field(name="Redirection vers", value=get.getheader('location'), inline=True)
-                if get.getheader('server'):
-                    embed.add_field(name="Serveur", value=get.getheader('server'), inline=True)
-                if get.getheader('content-type'):
-                    embed.add_field(name="Type de contenu", value = get.getheader('content-type'), inline = True)
-                if get.getheader('x-content-type-options'):
-                    embed.add_field(name="x-content-type", value= get.getheader('x-content-type-options'), inline=True)
-                if get.getheader('x-frame-options'):
-                    embed.add_field(name="x-frame-options", value= get.getheader('x-frame-options'), inline=True)
-                if get.getheader('cache-control'):
-                    embed.add_field(name="Controle du cache", value = get.getheader('cache-control'), inline = True)
-                await ctx.send(embed=embed)
-            except urllib.error.HTTPError as e:
-                embed = discord.Embed(title="Entêtes de {0}".format(adresse), color=0xd75858)
-                embed.add_field(name="Code Réponse", value=e.getcode(), inline = True)
-                embed.set_thumbnail(url="https://http.cat/{}".format(str(e.getcode())))
-                await ctx.send(embed=embed)
-                print('''An error occurred: {} The response code was {}'''.format(e, e.getcode()))
-            except urllib.error.URLError as e:
-                if "No address associated" in str(e):
-                    await ctx.send("Erreur, aucune adresse n'est associé à ce nom d'hôte.")
-                    return
-                if "timed out" in str(e):
-                    await ctx.send("Erreur, l'adresse en question dépasse le délais d'attente :(")
-                    return
-                if "SSL" in str(e):
-                    await ctx.send("Erreur avec le certificat SSL, essayez sans ``https://`` !")
-                    return
-                    return
-                if "no host":
-                    await ctx.send("Erreur, aucun nom d'hôte n'a été donné.")
-                    return
-                if "not known":
-                    await ctx.send("Erreur, nom de l'hôte inconnu.")
-                    return
-                print("ERROR @ getheaders @ urlerror : {} - adress {}".format(e, adresse))
-                await ctx.send('[CONTACTER ADMIN] URLError: {}'.format(e.reason))
-            except Exception as e:
-                print("ERROR @ getheaders @ Exception : {} - adress {}".format(e, adresse))
-                await ctx.send("{0} Impossible d'accèder à {1}, es-tu sur que l'adresse {1} est correcte et que le serveur est allumé ?".format(ctx.author.mention, adresse))
-        else:
-            await ctx.send("{0} Merci de faire commencer {1} par ``https://``, ``http://`` ou ``ftp://``.".format(ctx.author.mention, adresse))
-    
+
+    @commands.command(name='getheaders')
+    async def _getheaders(self, ctx: commands.Context, addr: str):
+        if (addr.startswith('http') or addr.startswith('ftp')) is not True:
+           addr = f"http://{addr}"
+
+        await ctx.trigger_typing()
+
+        try:
+            async with self.bot.session.get(addr) as s:
+                e = discord.Embed(
+                    title=f"Headers : {addr}",
+                    color=0xd75858
+                )
+                e.add_field(name="Status", value=s.status, inline=True)
+                e.set_thumbnail(url=f"https://http.cat/{s.status}")
+
+                headers = dict(s.headers.items())
+                headers.pop('Set-Cookie', headers)
+
+                for key, value in headers.items():
+                    e.add_field(name=key, value=value, inline=True)
+                await ctx.send(embed=e)
+
+        except aiohttp.ClientError:
+            await ctx.send(
+                f"Cannot connect to host {addr}"
+            )
+
+
     """---------------------------------------------------------------------"""
     @commands.command(name='peeringdb', pass_context=True)
     async def _peeringdb(self, ctx, *, asn):
