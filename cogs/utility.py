@@ -7,6 +7,7 @@ import ipinfo as ipinfoio
 
 from ipwhois.net import Net
 from ipwhois.asn import IPASN
+import ipwhois
 
 import discord
 import requests
@@ -234,9 +235,14 @@ class Utility(commands.Cog):
 
         iploading = await ctx.send("_Récupération des informations..._")
 
-        net = Net(ipaddress)
-        obj = IPASN(net)
-        ipinfo = obj.lookup()
+        try:
+            net = Net(ipaddress)
+            obj = IPASN(net)
+            ipinfo = obj.lookup()
+        except ipwhois.exceptions.IPDefinedError: 
+            await ctx.send("Cette IP est reservée à un usage local selon la RFC 1918. Impossible d'avoir des informations supplémentaires à son propos.")
+            await iploading.delete()
+            return
 
         try:
             iphostname = socket.gethostbyaddr(ipaddress)[0]
@@ -256,9 +262,10 @@ class Utility(commands.Cog):
             embed = discord.Embed(title=f"Informations pour ``{realipaddress} ({ipaddress})``", color=0x5858d7)
             
             if(api_result):
-                embed.add_field(name="Appartient à :", value=f"{details.org}")
+                asn = details.org.split(" ")[0]
+                embed.add_field(name="Appartient à :", value=f"[{details.org}](https://bgp.he.net/{asn})")
             else:
-                embed.add_field(name="Appartient à :", value=f"{ipinfo['asn_description']} (AS{ipinfo['asn']})", inline = False)
+                embed.add_field(name="Appartient à :", value=f"{ipinfo['asn_description']} ([AS{ipinfo['asn']}](https://bgp.he.net/{ipinfo['asn']}))", inline = False)
             
             embed.add_field(name="RIR :", value=f"{ipinfo['asn_registry']}", inline = True)
             
