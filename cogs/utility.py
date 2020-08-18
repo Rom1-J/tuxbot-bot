@@ -5,6 +5,8 @@ import random
 import urllib
 import ipinfo as ipinfoio
 
+import pydig 
+
 from ipwhois.net import Net
 from ipwhois.asn import IPASN
 import ipwhois
@@ -285,6 +287,43 @@ class Utility(commands.Cog):
         except:
             await ctx.send(content=f"Erreur, impossible d'avoir des informations sur l'adresse IP ``{realipaddress}``")
         await iploading.delete()
+
+    """---------------------------------------------------------------------"""
+    @commands.command(name='dig', pass_context=True)
+    async def _dig(self, ctx, domain, querytype="abc", dnssec="no"): 
+        if not querytype in ['A', 'AAAA', 'CNAME', 'NS', 'DS', 'DNSKEY', 'SOA', 'TXT', 'PTR', 'MX']: 
+            await ctx.send("Requêtes supportées : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX")
+            return
+        
+        if(dnssec == "no"):
+            resolver = pydig.Resolver(
+                nameservers=[
+                    '80.67.169.40',
+                    '80.67.169.12',
+                ]
+            )
+        else: 
+            resolver = pydig.Resolver(
+                nameservers=[
+                    '80.67.169.40',
+                    '80.67.169.12',
+                ],
+                additional_args=[
+                    '+dnssec',
+                ]
+            )
+
+        resquery = resolver.query(domain, querytype)
+        embed = discord.Embed(title=f"Requête DIG sur {domain} pour une entrée {querytype}", color=0x5858d7)
+        
+        champ_id = 1
+        for champ in resquery:
+            embed.add_field(name=f"Champ {champ_id} :", value=champ)
+            champ_id = champ_id + 1 
+
+        if champ_id == 1: 
+            embed.add_field(name="Ooops", value="Pas de résultat")
+        await ctx.send(embed=embed)
 
     """---------------------------------------------------------------------"""
     @commands.command(name='getheaders', pass_context=True)
