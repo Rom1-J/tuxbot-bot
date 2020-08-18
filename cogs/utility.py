@@ -252,7 +252,6 @@ class Utility(commands.Cog):
             handler = ipinfoio.getHandler(access_token)
             details = handler.getDetails(ipaddress)
         except Exception as e:
-            await ctx.send(e)
             api_result = False
 
         try:
