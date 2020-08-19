@@ -46,7 +46,7 @@ class Admin(commands.Cog):
         user = get_user(ctx.message, user)
         if user and str(user.id) not in self.bot.config.unkickable_id:
             try:
-                await user.ban(reason=reason)
+                await user.ban(reason=reason, delete_message_days=0)
                 return_msg = f"`{user.mention}` a été banni\n"
                 if reason:
                     return_msg += f"raison : `{reason}`"
