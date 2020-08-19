@@ -1,4 +1,5 @@
 from discord.ext import commands
+from typing import Union
 import asyncio
 import discord
 import urllib.request
@@ -16,7 +17,7 @@ class Funs(commands.Cog):
     """---------------------------------------------------------------------"""
 
     @commands.command()
-    async def avatar(self, ctx, user: discord.Member = None):
+    async def avatar(self, ctx, user: Union[discord.Member, discord.User] = None):
         """Récuperer l'avatar de ..."""
 
         if user is None:
