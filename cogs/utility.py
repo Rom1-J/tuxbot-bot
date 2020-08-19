@@ -3,6 +3,7 @@ import json
 import pytz
 import random
 import urllib
+import aiohttp
 import ipinfo as ipinfoio
 
 import pydig 
@@ -257,10 +258,11 @@ class Utility(commands.Cog):
         # IPINFO api
         api_result = True
         try:
-            access_token = open('ipinfoio.key').read()
+            with open('ipinfoio.key') as k:
+                access_token = k.read().replace("\n", "")
             handler = ipinfoio.getHandler(access_token)
             details = handler.getDetails(ipaddress)
-        except:
+        except Exception as e:
             api_result = False
 
         try:
@@ -292,6 +294,7 @@ class Utility(commands.Cog):
         await iploading.delete()
 
     """---------------------------------------------------------------------"""
+<<<<<<< HEAD
     @commands.command(name='dig', pass_context=True)
     async def _dig(self, ctx, domain, querytype="abc", dnssec="no"): 
         if not querytype in ['A', 'AAAA', 'CNAME', 'NS', 'DS', 'DNSKEY', 'SOA', 'TXT', 'PTR', 'MX']: 
@@ -389,6 +392,38 @@ class Utility(commands.Cog):
         else:
             await ctx.send("{0} Merci de faire commencer {1} par ``https://``, ``http://`` ou ``ftp://``.".format(ctx.author.mention, adresse))
     
+=======
+
+    @commands.command(name='getheaders')
+    async def _getheaders(self, ctx: commands.Context, addr: str):
+        if (addr.startswith('http') or addr.startswith('ftp')) is not True:
+           addr = f"http://{addr}"
+
+        await ctx.trigger_typing()
+
+        try:
+            async with self.bot.session.get(addr) as s:
+                e = discord.Embed(
+                    title=f"Headers : {addr}",
+                    color=0xd75858
+                )
+                e.add_field(name="Status", value=s.status, inline=True)
+                e.set_thumbnail(url=f"https://http.cat/{s.status}")
+
+                headers = dict(s.headers.items())
+                headers.pop('Set-Cookie', headers)
+
+                for key, value in headers.items():
+                    e.add_field(name=key, value=value, inline=True)
+                await ctx.send(embed=e)
+
+        except aiohttp.ClientError:
+            await ctx.send(
+                f"Cannot connect to host {addr}"
+            )
+
+
+>>>>>>> 17b3e658fc1d4bfdc8a60bde09d876d72954f060
     """---------------------------------------------------------------------"""
     @commands.command(name='peeringdb', pass_context=True)
     async def _peeringdb(self, ctx, *, asn):
