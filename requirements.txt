@@ -10,3 +10,4 @@ pillow
 ipwhois
 ipinfo
 pydig
+networkx
