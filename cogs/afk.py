@@ -29,9 +29,7 @@ class AFK(commands.Cog):
                     "reviens bientôt",
                     "va nourrir son cochon",
                     "va manger des cookies",
-                    "va manger de la poutine",
-                    "va faire caca",
-                    "va faire pipi"]
+                    "va manger de la poutine"]
 
             await ctx.send(f"**{user.mention}** {random.choice(msgs)}...")
 
@@ -51,7 +49,6 @@ class AFK(commands.Cog):
 
             msgs = ["a réssuscité",
                     "est de nouveau parmi nous",
-                    "a fini de faire caca",
                     "a fini d'uriner",
                     "n'est plus mort",
                     "est de nouveau sur son PC",
