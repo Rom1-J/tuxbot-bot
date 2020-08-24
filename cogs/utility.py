@@ -396,9 +396,6 @@ class Utility(commands.Cog):
             if(asinfo["info_never_via_route_servers"]):
                 asproto = asproto + "Never via Route servers"
             
-
-            print(pdbid)
-
             embed = discord.Embed(title=f"Informations pour {asinfo['name']} ``AS{asn}``", color=0x5858d7)
             notEmptyField(embed, name="Nom :", value=asinfo['name'])
             notEmptyField(embed, name="Aka :", value=asinfo['aka'])
@@ -490,7 +487,6 @@ class Utility(commands.Cog):
             if(srv == "att"):
                 tn.read_until("Password:".encode())
                 tn.write((password + "\n").encode())
-                print("ok")
             else: 
                 tn.read_until("Password: ".encode())
                 tn.write((password + "\n").encode())
