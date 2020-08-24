@@ -1,35 +1,32 @@
-TuxBot, un bot discord écrit en Python.
-Ici ce trouve le code source du bot provenant du serveur Discord  [Aide GNU/Linux-Fr"](https://gnous.eu/discord "Rejoindre le serveur"), il à été créé spécialement pour ce discord, si vous souhaitez l'utiliser il vous faudra modifier ``params.json`` et ``cogs/utils/checks.py`` ;)
+Tuxbot is a french speaking Discord bot made for the GnousEU's discord server. He has been maintened since 2016.
 
-### Pré-requis
+This code is not intended to reuse "as is". If you want to configure your own instance, you will need to modify some files in the source code (see below).
 
-Il vous faut :
-
-- Un ordinateur sous **GNU/Linux** avec une connexion à internet;
-- Python3.7 ou + ;
-- Installer ``requirements.txt`` (avec ``pip install -r requirements.txt`` par ex)
+### Requirements
+- A server with a modern GNU/Linux distribution with internet connectivity 
+- Python 3.7 or later with PIP
+- Graphviz
 
 ### Installation
+Install Python dependencies using ``pip3 install -r requirements.txt`` (make sure the pip executable match the correct python version)
 
-Une fois les pré-requis installés et ``config.py.example`` renommé en ``config.py`` éditez le. Ensuite placez vous dans le repertoire de tuxbot et lancez ``bot.py`` avec python3 (ex: ``python3 bot.py``)
+Rename ``config.py.example`` to ``config.py`` and edit it with the required information. 
+You may want to edit the file ``cogs/filter_messages.py`` as well.  
 
-Tuxbot recommande l'utilisation de l'API https://ipinfo.io/ pour des résultats plus précis. Placez votre token d'accès dans un fichier nommé ``ipinfoio.key`` à la racine du dossier du bot. Si vous ne souhaitez pas utiliser leur API le bot rollback automatiquement sur une librairie moins précise. 
+### Launch 
+Start the program using ``python3 bot.py`` (make sure you use the right Python executable)
 
-## Démarrage
+### Additional features 
+#### Ipinfo.io API 
+Tuxbot can use the ipinfo.io API for more precises results for the ``iplocalise`` command. If you want to use it you should create a ``ipinfoio.key`` in the top tuxbot folder.
 
-Placez vous dans le repertoire de tuxbot et exécutez ``bot.py`` avec python3 (ex: ``python3 bot.py``)
+### Versions
+Version list : [Click here to display](https://git.gnous.eu/gnouseu/tuxbot-bot/releases)
 
-## Fabriqué avec
-* [PyCharm](https://www.jetbrains.com/pycharm/) - Editeur de texte payant :3
-* [discord.py](https://github.com/Rapptz/discord.py) - API Python pour discord
-
-## Versions
-Liste des versions : [Cliquer pour afficher](https://github.com/outout14/tuxbot-bot/tags)
-
-## Auteurs
-* **Maël** _alias_ [@outout14](https://github.com/outout14)
+### Main contributors
+* **Maël** _alias_ [@outoutxyz](https://twitter.com/outoutxyz)
 * **Romain** _alias_ [Romain le malchanceux](https://github.com/Rom194)
 
-## License
+### Licensing
 
-Ce projet est sous licence ``Creative Commons BY-NC-SA 4.0`` - voir le fichier [LICENSE.md](LICENSE.md) pour plus d'informations
+This project is under the ``Creative Commons BY-NC-SA 4.0`` license - see [LICENSE.md](LICENSE.md) for more details 
