@@ -42,9 +42,7 @@ class Search(commands.Cog):
                                               "org/" + args,
                                   url='http://doc.ubuntu-fr.org/')
             embed.set_author(name="DocUbuntu-Fr",
-                             url='http://doc.ubuntu-fr.org/',
-                             icon_url='https://tuxbot.outout.xyz/data/ubuntu.png')
-            embed.set_thumbnail(url='https://tuxbot.outout.xyz/data/ubuntu.png')
+                             url='http://doc.ubuntu-fr.org/')
             embed.set_footer(text="Merci à ceux qui ont pris le temps d'écrire "
                                   "cette documentation")
             await ctx.send(embed=embed)
@@ -66,10 +64,7 @@ class Search(commands.Cog):
                                               ":wink: : https://wiki.archlinux."
                                               "org/index.php/" + args,
                                   url='https://wiki.archlinux.org/index.php/')
-            embed.set_author(name="Doc ArchLinux",
-                             url='https://wiki.archlinux.org/index.php/',
-                             icon_url='https://tuxbot.outout.xyz/data/arch.png')
-            embed.set_thumbnail(url='https://tuxbot.outout.xyz/data/arch.png')
+            embed.set_author(name="Doc ArchLinux")
             embed.set_footer(text="Merci à ceux qui ont pris le temps d'écrire "
                                   "cette documentation")
             await ctx.send(embed=embed)
