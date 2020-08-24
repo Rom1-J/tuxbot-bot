@@ -15,17 +15,14 @@ class Basics(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
-        ping_res = str(subprocess.Popen(["/bin/ping", "-c1", "discord.com"],
-                                        stdout=subprocess.PIPE).stdout.read())
-        formated_res = [item for item in ping_res.split() if 'time=' in item]
-        result = self.bot.latency * 1000 # str(formated_res[0])[5:]
+        result = self.bot.latency * 1000
 
-        if float(result) >= 200:
+        if float(result) >= 300:
             em = discord.Embed(title="Ping : " + str(result) + "ms",
                                description="... c'est quoi ce ping !",
                                colour=0xFF1111)
             await ctx.send(embed=em)
-        elif float(result) > 100 < 200:
+        elif float(result) > 200:
             em = discord.Embed(title="Ping : " + str(result) + "ms",
                                description="Ca va, ça peut aller, mais j'ai "
                                            "l'impression d'avoir 40 ans !",
