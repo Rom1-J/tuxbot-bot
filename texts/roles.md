@@ -1,5 +1,5 @@
 
-Pour améliorer l'expérience utilisateur de tout le monde, vous pouvez spécifier la·les distribution·s que vous utilisez via les rôles Discord.
+Pour améliorer l'expérience utilisateur de tout le monde, vous pouvez spécifier la ou les distributions que vous utilisez via les rôles Discord.
 
 **Liste des rôles**
   └> Arch : pour les utilisateurs de Arch, Manjaro et TuxNVape
