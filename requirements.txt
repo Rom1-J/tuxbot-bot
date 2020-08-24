@@ -11,3 +11,5 @@ ipwhois
 ipinfo
 pydig
 networkx
+graphviz
+jishaku
