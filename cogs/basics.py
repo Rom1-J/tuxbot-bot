@@ -15,7 +15,7 @@ class Basics(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
-        ping_res = str(subprocess.Popen(["/bin/ping", "-c1", "discordapp.com"],
+        ping_res = str(subprocess.Popen(["/bin/ping", "-c1", "discord.com"],
                                         stdout=subprocess.PIPE).stdout.read())
         formated_res = [item for item in ping_res.split() if 'time=' in item]
         result = self.bot.latency * 1000 # str(formated_res[0])[5:]
