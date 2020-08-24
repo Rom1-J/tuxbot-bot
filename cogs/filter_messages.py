@@ -10,6 +10,10 @@ class FilterMessages(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        
+        #
+        # These are hard-coded ID that you should change in production to adapt your requirements
+        #
         no_pub_guild = [280805240977227776, 303633056944881686,
                         274247231534792704]
         lien_channel = [280805783795662848, 508794201509593088,
