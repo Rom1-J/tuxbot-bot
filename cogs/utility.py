@@ -422,11 +422,14 @@ class Utility(commands.Cog):
 
     """---------------------------------------------------------------------"""
     @commands.command(name='shroute', pass_context=True)
-    async def _shroute(self, ctx, srv, ipaddress): 
+    async def _shroute(self, ctx, srv, ipaddress):
+        """Show as path graph to an IP via data from a Route Server using graphviz"""
+
         if not srv in ["opentransit", 'he', 'att', "oregonuniv", "warian", 'csaholdigs', 'iamageeknz']: 
             await ctx.send("Requêtes supportées : opentransit (Orange), he (Huricanne Electric), att (AT&T), oregonuniv, warian, csaholdigs, iamageeknz")
             return
-        print("k")
+
+        #List of RS 
         if srv == "opentransit": 
             host = "route-server.opentransit.net"
             user = "rviews"
@@ -445,19 +448,19 @@ class Utility(commands.Cog):
             password = "rviews"
             lg_asn = "56911"
             cmd = "show bgp ipv4 unicast {}"
-        elif srv == "csaholdigs": #Blacklist des fois
+        elif srv == "csaholdigs": #Blacklist sometime
             host = "route-views.sg.routeviews.org"
             user = "none"
             password = "none"
             lg_asn = "45494"
             cmd = "show bgp ipv4 unicast {}"
-        elif srv == "he": #Blacklist des fois
+        elif srv == "he": #Blacklist sometime
             host = "route-server.he.net"
             user = "none"
             password = "none"
             lg_asn = "6939"
             cmd = "show bgp ipv4 unicast {}"
-        elif srv == "iamageeknz": #Blacklist des fois
+        elif srv == "iamageeknz": #Blacklist sometime
             host = "rs.as45186.net"
             user = "none"
             password = "none"
@@ -474,6 +477,7 @@ class Utility(commands.Cog):
         await ctx.send("Connexion en cours au route server...")
         tn = telnetlib.Telnet(host)
 
+        #Login to the RS via Telnet 
         if user != "none":
             if(srv == "att"):
                 tn.read_until("login: ".encode())
@@ -493,7 +497,7 @@ class Utility(commands.Cog):
 
         await ctx.send("Connecté ! Récupération des données...")
 
-        # Execution d'une commande d'information BGP
+        #Sending show route via telnet to the RS
         tn.write((cmd + "\n").format(ip).encode())
         tn.write(chr(25).encode())
         tn.write(chr(25).encode())
@@ -503,41 +507,50 @@ class Utility(commands.Cog):
 
         await ctx.send("Données récupérées ! Traitement en cours")
 
-        # Decodage des données pour les adaptées à python
+        #Parsing data
         data = tn.read_all().decode("utf-8")
-
-        print(data)
-
-        # Récupération des données grâce à l'utilisation d'expression régulière (module re)
         paths = {}
 
+        #Parsing as paths
         paths["as_list"] = re.findall(r"  ([0-9][0-9 ]+),", data)
         if(paths["as_list"] == []):
             paths["as_list"] = re.findall(r"  ([0-9][0-9 ]+)[^0-9.]", data)
 
+        #Custom parsing for AT&T 
         if(srv == "att"):
             paths["as_list"] = re.findall(r"(?<=AS path: 7018 )[0-9][0-9 ]+[^ I]", data)
 
-        as_list = paths['as_list']
+        #Graphviz diagram
+        g = Digraph('G', filename='bgpgraph', format='png', graph_attr={'rankdir':'LR', 'concentrate': 'true'})
 
-        g = Digraph('G', filename='hello', format='png', graph_attr={'rankdir':'LR', 'concentrate': 'true'})
-
-        for as_path in as_list: 
+        #Diagram paths generation
+        as_path_count = 0
+        for as_path in paths['as_list']: 
             as_path = as_path.split(" ")
             as_path.reverse()
             original_asn = as_path[0]
             border_asn = as_path[-1]
             precedent_asn = original_asn
             for asn in as_path:
-                if asn != original_asn: 
-                    g.edge("AS" + asn, "AS" + precedent_asn)
-                    precedent_asn = asn 
-                if asn == border_asn: 
-                    g.edge("AS" + lg_asn, "AS" + asn)
+                if asn != "2001": #Cause HE got a default or something weird to this asn 
+                    if asn != original_asn: 
+                        g.edge("AS" + asn, "AS" + precedent_asn)
+                        precedent_asn = asn 
+                    if asn == border_asn: 
+                        g.edge("AS" + lg_asn, "AS" + asn)
+                    as_path_count += 1
+        
+        #If empty as_path
+        if as_path_count == 0: 
+            await ctx.send("Pas de route trouvée vers l'IP demandée depuis le route server choisi.")
+            return 
 
+        #Render the graph
         g.render()
-        with open('hello.png', 'rb') as fp:
-            await ctx.send(file=discord.File(fp, 'hello.png'))
+
+        #Send it
+        with open('bgpgraph.png', 'rb') as fp:
+            await ctx.send(file=discord.File(fp, 'bgpgraph.png'))
 
     """---------------------------------------------------------------------"""
     
