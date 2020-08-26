@@ -3,14 +3,17 @@ import logging
 import re
 import sys
 from pathlib import Path
-from typing import NoReturn, Union, List, Set
+from typing import NoReturn, Union, List
 
-import click
-from colorama import Fore, Style, init
+from rich.prompt import Prompt, IntPrompt
+from rich.console import Console
+from rich.rule import Rule
+from rich import print
 
 from tuxbot.core.data_manager import config_dir, app_dir
 
-init()
+console = Console()
+console.clear()
 
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
@@ -77,14 +80,15 @@ def get_name() -> str:
     """
     name = ""
     while not name:
-        print(
+        name = Prompt.ask(
             "What name do you want to give this instance?\n"
-            "(valid characters: A-Z, a-z, 0-9, _, -)"
+            "[i](valid characters: A-Z, a-z, 0-9, _, -)[/i]\n",
+            default="prod",
+            console=console
         )
-        name = input("> ")
         if re.fullmatch(r"[a-zA-Z0-9_\-]*", name) is None:
             print()
-            print(Fore.RED + "ERROR: Invalid characters provided" + Style.RESET_ALL)
+            print("[prompt.invalid]ERROR: Invalid characters provided")
             name = ""
     return name
 
@@ -113,42 +117,35 @@ def get_data_dir(instance_name: str) -> Path:
         except OSError:
             print()
             print(
-                Fore.RED + f"mkdir: cannot create directory '{path}':"
-                f" Permission denied" + Style.RESET_ALL
+                f"mkdir: cannot create directory '{path}': Permission denied"
             )
             path = ""
 
         return path
 
     while not data_path_input:
-        print(
-            "where do you want to save the configurations?\n"
-            "Press [enter] to keep the default path"
+        data_path_input = Path(
+            Prompt.ask(
+                "where do you want to save the configurations?",
+                default=str(data_path),
+                console=console
+            )
         )
-        print()
-        print(f"Default: {data_path}")
 
-        data_path_input = input("> ")
+        try:
+            exists = data_path_input.exists()
+        except OSError:
+            print()
+            print(
+                "[prompt.invalid]"
+                "Impossible to verify the validity of the path,"
+                " make sure it does not contain any invalid characters."
+            )
+            data_path_input = ""
+            exists = False
 
-        if data_path_input != "":
-            data_path_input = Path(data_path_input)
-
-            try:
-                exists = data_path_input.exists()
-            except OSError:
-                print()
-                print(
-                    Fore.RED + "Impossible to verify the validity of the path, "
-                    "make sure it does not contain any invalid characters."
-                    + Style.RESET_ALL
-                )
-                data_path_input = ""
-                exists = False
-
-            if data_path_input and not exists:
-                data_path_input = make_data_dir(data_path_input)
-        else:
-            data_path_input = make_data_dir(data_path)
+        if data_path_input and not exists:
+            data_path_input = make_data_dir(data_path_input)
 
     print()
     print(
@@ -156,7 +153,11 @@ def get_data_dir(instance_name: str) -> Path:
         f"`{instance_name}` instance"
     )
 
-    if not click.confirm("Please confirm", default=True):
+    if Prompt.ask(
+            "Please confirm",
+            choices=["y", "n"], default="y",
+            console=console
+    ) != "y":
         print("Rerun the process to redo this configuration.")
         sys.exit(0)
 
@@ -178,25 +179,23 @@ def get_token() -> str:
     token = ""
 
     while not token:
-        print(
-            "Please enter the bot token\n"
-            "(you can find it at https://discord.com/developers/applications)"
+        token = Prompt.ask(
+            "Please enter the bot token "
+            "(you can find it at https://discord.com/developers/applications)",
+            console=console
         )
-        token = input("> ")
-        if (
-            re.fullmatch(
-                r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9_]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})",
-                token,
-            )
-            is None
-        ):
-            print(Fore.RED + "ERROR: Invalid token provided" + Style.RESET_ALL)
+        if re.fullmatch(
+                r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9_]{6}\.[a-zA-Z0-9_\-]{27}"
+                r"|mfa\.[a-zA-Z0-9_\-]{84})",
+                token) \
+                is None:
+            print("[prompt.invalid]ERROR: Invalid token provided")
             token = ""
     return token
 
 
 def get_multiple(
-    question: str, confirmation: str, value_type: type
+        question: str, confirmation: str, value_type: type
 ) -> List[Union[str, int]]:
     """Give possibility to user to fill multiple value.
 
@@ -214,15 +213,29 @@ def get_multiple(
     List[Union[str, int]]
         List containing user filled values.
     """
-    print(question)
-    user_input = input("> ")
+    prompt = IntPrompt if value_type is int else Prompt
+
+    user_input = prompt.ask(question, console=console)
+
     if not user_input:
         return []
 
     values = [user_input]
 
-    while click.confirm(confirmation, default=False):
-        values.append(value_type(input("> ")))
+    while Prompt.ask(
+            confirmation,
+            choices=["y", "n"], default="y",
+            console=console
+    ) != "n":
+        new = prompt.ask("Other")
+
+        if new not in values:
+            values.append(new)
+        else:
+            print(
+                f"[prompt.invalid]"
+                f"ERROR: `{new}` is already present, [i]ignored[/i]"
+            )
 
     return values
 
@@ -236,24 +249,23 @@ def additional_config() -> dict:
         Dict with cog name as key and configs as value.
     """
     p = Path(r"tuxbot/cogs").glob("**/additional_config.json")
-    datas = {}
+    data = {}
 
     for file in p:
-        print()
+        print("\n" * 4)
         cog_name = str(file.parent).split("/")[-1]
-        datas[cog_name] = {}
+        data[cog_name] = {}
 
         with file.open("r") as f:
             data = json.load(f)
 
-        print(f"\n==Configuration for `{cog_name}` module==")
+        print(Rule(f"\nConfiguration for `{cog_name}` module"))
 
         for key, value in data.items():
             print()
-            print(value["description"])
-            datas[cog_name][key] = input("> ")
+            data[cog_name][key] = Prompt.ask(value["description"])
 
-    return datas
+    return data
 
 
 def finish_setup(data_dir: Path) -> NoReturn:
@@ -264,15 +276,29 @@ def finish_setup(data_dir: Path) -> NoReturn:
     data_dir:Path
         Where to save configs.
     """
-    print("Now, it's time to finish this setup by giving bot informations\n")
+    print(
+        Rule(
+            "Now, it's time to finish this setup by giving bot information"
+        )
+    )
+    print()
 
     token = get_token()
+
     print()
     prefixes = get_multiple(
-        "Choice a (or multiple) prefix for the bot", "Add another prefix ?", str
+        "Choice a (or multiple) prefix for the bot", "Add another prefix ?",
+        str
     )
-    mentionable = click.confirm("Does the bot answer if it's mentioned?", default=True)
 
+    print()
+    mentionable = Prompt.ask(
+        "Does the bot answer if it's mentioned?",
+        choices=["y", "n"],
+        default="y"
+    ) == "y"
+
+    print()
     owners_id = get_multiple(
         "Give the owner id of this bot", "Add another owner ?", int
     )
@@ -305,7 +331,13 @@ def basic_setup() -> NoReturn:
     """Configs who refer to instances.
 
     """
-    print("Hi ! it's time for you to give me informations about you instance")
+    print(
+        Rule(
+            "Hi ! it's time for you to give me information about you instance"
+        )
+    )
+    print()
+
     name = get_name()
 
     data_dir = get_data_dir(name)
@@ -318,11 +350,14 @@ def basic_setup() -> NoReturn:
 
     if name in instances_list:
         print()
-        print(
-            Fore.RED + f"WARNING: An instance named `{name}` already exists "
-            f"Continuing will overwrite this instance configs." + Style.RESET_ALL
+        console.print(
+            f"WARNING: An instance named `{name}` already exists "
+            f"Continuing will overwrite this instance configs.", style="red"
         )
-        if not click.confirm("Are you sure you want to continue?", default=False):
+        if Prompt.ask(
+                "Are you sure you want to continue?",
+                choices=["y", "n"], default="n"
+        ) == "n":
             print("Abandon...")
             sys.exit(0)
 

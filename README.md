@@ -39,12 +39,12 @@ Continue to [create the venv](#creating-the-virtual-environnement).
 
 #### Windows
 
-*go to hell*
+*not for now and not for the future*
 
 
-## Creating the Virtual Environnement
+## Creating the Virtual Environment
 
-To set up the virtual environnement and install the bot, simply run this two commands:
+To set up the virtual environment and install the bot, simply run this two commands:
 
 ```shell script
 make
