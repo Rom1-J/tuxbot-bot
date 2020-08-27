@@ -5,18 +5,20 @@ import sys
 from typing import List, Union
 
 import discord
-from colorama import Fore, Style, init
 from discord.ext import commands
+from rich.traceback import install
+
 from . import Config
 from .data_manager import logs_data_path
 
 from .utils.functions.cli import bordered
 
-from . import __version__
+from . import __version__, ExitCodes
 from .utils.functions.extra import ContextPlus
 
+
 log = logging.getLogger("tuxbot")
-init()
+install()
 
 NAME = r"""
   _____           _           _        _           _   
@@ -192,9 +194,3 @@ class Tux(commands.AutoShardedBot):
 
         await self.logout()
         sys.exit(self.shutdown_code)
-
-
-class ExitCodes:
-    CRITICAL = 1
-    SHUTDOWN = 0
-    RESTART = 42

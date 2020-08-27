@@ -24,6 +24,7 @@ class Admin(commands.Cog, name="Admin"):
     @checks.is_admin()
     async def _lang(self, ctx: ContextPlus):
         """Manage lang settings."""
+        pass
 
     @_lang.command(name="set", aliases=["define", "choice"])
     async def _lang_set(self, ctx: ContextPlus, lang: str):

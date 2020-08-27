@@ -1,16 +1,19 @@
 <component name="ProjectDictionaryState">
   <dictionary name="romain">
     <words>
+      <w>asctime</w>
       <w>commandstats</w>
       <w>francais</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
+      <w>levelname</w>
       <w>localiseip</w>
       <w>postgresql</w>
       <w>socketstats</w>
       <w>splt</w>
       <w>systemd</w>
       <w>tutux</w>
+      <w>tuxbot</w>
       <w>tuxvenv</w>
       <w>webhooks</w>
     </words>

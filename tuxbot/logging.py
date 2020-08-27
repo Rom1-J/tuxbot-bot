@@ -33,10 +33,12 @@ def init_logging(level: int, location: pathlib.Path) -> None:
     )
 
     dpy_handler = logging.handlers.RotatingFileHandler(
-        str(dpy_logger_file.resolve()), maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
+        str(dpy_logger_file.resolve()),
+        maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
     )
     base_handler = logging.handlers.RotatingFileHandler(
-        str(base_logger_file.resolve()), maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
+        str(base_logger_file.resolve()),
+        maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
     )
 
     stdout_handler = logging.StreamHandler(sys.stdout)

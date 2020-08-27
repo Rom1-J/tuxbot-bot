@@ -8,12 +8,14 @@ from typing import NoReturn, Union, List
 from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
 from rich.rule import Rule
+from rich.traceback import install
 from rich import print
 
 from tuxbot.core.data_manager import config_dir, app_dir
 
 console = Console()
 console.clear()
+install(console=console)
 
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
@@ -337,7 +339,6 @@ def basic_setup() -> NoReturn:
         )
     )
     print()
-
     name = get_name()
 
     data_dir = get_data_dir(name)
@@ -392,6 +393,8 @@ def setup() -> NoReturn:
         basic_setup()
     except KeyboardInterrupt:
         print("Exiting...")
+    except:
+        console.print_exception()
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ class Warnings(commands.Cog, name="Warnings"):
     @commands.guild_only()
     @checks.is_mod()
     async def _warn(self, ctx: commands.Context):
-        pass
+        division_by_zero = 1 / 0
 
     @_warn.command(name="add")
     @commands.guild_only()

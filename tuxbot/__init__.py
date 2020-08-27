@@ -1,10 +1,16 @@
-import subprocess
+import os
 from collections import namedtuple
 
-build = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode()
+build = os.popen('git rev-parse --short HEAD').read().strip()
+info = os.popen('git log -n 1 -s --format="%s"').read().strip()
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel build")
-version_info = VersionInfo(major=3, minor=0, micro=0, releaselevel="alpha", build=build)
+VersionInfo = namedtuple(
+    "VersionInfo", "major minor micro releaselevel build, info"
+)
+version_info = VersionInfo(
+    major=3, minor=0, micro=0,
+    releaselevel="alpha", build=build, info=info
+)
 
 __version__ = "v{}.{}.{}-{}.{}".format(
     version_info.major,
@@ -13,3 +19,9 @@ __version__ = "v{}.{}.{}-{}.{}".format(
     version_info.releaselevel,
     version_info.build,
 ).replace("\n", "")
+
+
+class ExitCodes:
+    CRITICAL = 1
+    SHUTDOWN = 0
+    RESTART = 42
