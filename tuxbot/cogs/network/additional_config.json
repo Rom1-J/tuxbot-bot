@@ -1,6 +1,0 @@
-{
-    "ipinfo": {
-        "description": "API token for ipinfo.io",
-        "value": "str"
-    }
-}

@@ -1,11 +1,24 @@
 import asyncio
+import yaml
 
 import discord
+from discord import Embed
 from discord.ext import commands, flags
 
 
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
+        if content is not None:
+            content = content.replace(
+                self.bot.config('core').get('token'), '<token>'
+            )
+        if kwargs.get('embed'):
+            e = str(kwargs.get('embed').to_dict())
+            e = e.replace(self.bot.config('core').get('token'), '<token>')
+            e = yaml.load(e, Loader=yaml.FullLoader)
+
+            kwargs['embed'] = Embed.from_dict(e)
+
         if (
             hasattr(self.command, "deletable") and self.command.deletable
         ) and kwargs.pop("deletable", True):

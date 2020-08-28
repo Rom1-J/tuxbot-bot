@@ -1,4 +1,4 @@
-from typing import Awaitable, Dict
+from typing import Dict
 
 import discord
 from discord.ext import commands
@@ -29,7 +29,9 @@ def is_mod():
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
             return True
-        permissions: discord.Permissions = ctx.channel.permissions_for(ctx.author)
+        permissions: discord.Permissions = ctx.channel.permissions_for(
+            ctx.author
+        )
         return permissions.manage_messages
 
     return commands.check(pred)
@@ -43,7 +45,9 @@ def is_admin():
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
             return True
-        permissions: discord.Permissions = ctx.channel.permissions_for(ctx.author)
+        permissions: discord.Permissions = ctx.channel.permissions_for(
+            ctx.author
+        )
         return permissions.administrator
 
     return commands.check(pred)
@@ -66,7 +70,9 @@ async def check_permissions(ctx: "ContextPlus", **perms: Dict[str, bool]):
         return False
     resolved = ctx.channel.permissions_for(ctx.author)
 
-    return all(getattr(resolved, name, None) == value for name, value in perms.items())
+    return all(
+        getattr(resolved, name, None) == value for name, value in perms.items()
+    )
 
 
 def guild_owner_or_permissions(**perms: Dict[str, bool]):

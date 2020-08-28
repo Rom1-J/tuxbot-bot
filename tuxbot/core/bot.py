@@ -25,14 +25,6 @@ log = logging.getLogger("tuxbot")
 console = Console()
 install(console=console)
 
-NAME = r"""
-  _____           _           _        _           _   
- |_   _|   ___  _| |__   ___ | |_     | |__   ___ | |_ 
-   | || | | \ \/ / '_ \ / _ \| __|____| '_ \ / _ \| __|
-   | || |_| |>  <| |_) | (_) | ||_____| |_) | (_) | |_ 
-   |_| \__,_/_/\_\_.__/ \___/ \__|    |_.__/ \___/ \__|                                    
-"""
-
 packages: List[str] = ["jishaku", "tuxbot.cogs.warnings", "tuxbot.cogs.admin"]
 
 
@@ -153,9 +145,9 @@ class Tux(commands.AutoShardedBot):
         )
         for extension in packages:
             if extension in self.extensions:
-                status = f"[green]:heavy_check_mark: {extension} "
+                status = f"[green]:heavy_check_mark: {extension}"
             else:
-                status = f"[red]:cross_mark: {extension} "
+                status = f"[red]:heavy_multiplication_x: {extension}"
 
             table.add_row(status)
         columns.add_renderable(table)

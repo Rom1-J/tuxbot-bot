@@ -290,7 +290,7 @@ def main() -> NoReturn:
             "  [red]Please use <prefix>quit instead of Ctrl+C to Shutdown!"
         )
         log.warning("Please use <prefix>quit instead of Ctrl+C to Shutdown!")
-        log.error("Received KeyboardInterrupt")
+        log.info("Received KeyboardInterrupt")
         console.print("[i]Trying to shutdown...")
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, signal.SIGINT))
@@ -299,8 +299,8 @@ def main() -> NoReturn:
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, exc.code))
     except Exception as exc:
+        log.error("Unexpected exception (%s): ", type(exc))
         console.print_exception()
-        log.exception("Unexpected exception (%s): ", type(exc), exc_info=exc)
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, 1))
     finally:

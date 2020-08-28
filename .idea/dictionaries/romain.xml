@@ -1,15 +1,18 @@
 <component name="ProjectDictionaryState">
   <dictionary name="romain">
     <words>
+      <w>appdirs</w>
       <w>asctime</w>
       <w>commandstats</w>
       <w>francais</w>
+      <w>gnous</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
       <w>jishaku</w>
       <w>levelname</w>
       <w>localiseip</w>
       <w>postgresql</w>
+      <w>pred</w>
       <w>releaselevel</w>
       <w>socketstats</w>
       <w>splt</w>
