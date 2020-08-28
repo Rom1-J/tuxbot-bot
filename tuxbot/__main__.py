@@ -1,9 +1,7 @@
 import argparse
 import asyncio
-import getpass
 import json
 import logging
-import platform
 import signal
 import sys
 import os
@@ -12,7 +10,7 @@ from typing import NoReturn
 
 import discord
 import pip
-from pip._vendor import distro
+import tracemalloc
 from rich.columns import Columns
 from rich.console import Console
 from rich.panel import Panel
@@ -30,6 +28,7 @@ log = logging.getLogger("tuxbot.main")
 
 console = Console()
 install(console=console)
+tracemalloc.start()
 
 
 def list_instances() -> NoReturn:
@@ -64,11 +63,11 @@ def list_instances() -> NoReturn:
     console.print(columns)
     console.print()
 
-    sys.exit(0)
+    sys.exit(os.EX_OK)
 
 
 def debug_info() -> NoReturn:
-    """Show debug infos relatives to the bot
+    """Show debug info relatives to the bot
 
     """
     python_version = sys.version.replace("\n", "")
@@ -76,12 +75,6 @@ def debug_info() -> NoReturn:
     tuxbot_version = __version__
     dpy_version = discord.__version__
 
-    os_info = distro.linux_distribution()
-    os_info = f"{os_info[0]} {os_info[1]}"
-
-    runner = getpass.getuser()
-
-    uname = os.popen('uname -a').read().strip().split()
     uptime = os.popen('uptime').read().strip().split()
 
     console.print(
@@ -127,17 +120,20 @@ def debug_info() -> NoReturn:
     table.add_column(
         "Server Info",
     )
-    table.add_row(f"[u]OS:[/u] {os_info}")
-    table.add_row(f"[u]Kernel:[/u] {uname[2]}")
-    table.add_row(f"[u]System arch:[/u] {platform.machine()}")
-    table.add_row(f"[u]User:[/u] {runner}")
+    table.add_row(f"[u]System:[/u] {os.uname().sysname}")
+    table.add_row(f"[u]System arch:[/u] {os.uname().machine}")
+    table.add_row(f"[u]Kernel:[/u] {os.uname().release}")
+    table.add_row(f"[u]User:[/u] {os.getlogin()}")
     table.add_row(f"[u]Uptime:[/u] {uptime[2]}")
-    table.add_row(f"[u]Load Average:[/u] {' '.join(uptime[-3:])}")
+    table.add_row(
+        f"[u]Load Average:[/u] {' '.join(map(str, os.getloadavg()))}"
+    )
     columns.add_renderable(table)
 
     console.print(columns)
     console.print()
-    sys.exit(0)
+
+    sys.exit(os.EX_OK)
 
 
 def parse_cli_flags(args: list) -> Namespace:
@@ -159,8 +155,10 @@ def parse_cli_flags(args: list) -> Namespace:
         "--version", "-V", action="store_true",
         help="Show tuxbot's used version"
     )
-    parser.add_argument("--debug", action="store_true",
-                        help="Show debug information.")
+    parser.add_argument(
+        "--debug", action="store_true",
+        help="Show debug information."
+    )
     parser.add_argument(
         "--list-instances", "-L", action="store_true",
         help="List all instance names"
@@ -194,7 +192,6 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
     """
     if signal_type:
         log.info("%s received. Quitting...", signal_type)
-        sys.exit(ExitCodes.SHUTDOWN)
     elif exit_code is None:
         log.info("Shutting down from unhandled exception")
         tux.shutdown_code = ExitCodes.CRITICAL
@@ -202,16 +199,7 @@ async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
     if exit_code is not None:
         tux.shutdown_code = exit_code
 
-    try:
-        await tux.logout()
-    finally:
-        pending = [t for t in asyncio.all_tasks() if
-                   t is not asyncio.current_task()]
-
-        for task in pending:
-            task.cancel()
-
-        await asyncio.gather(*pending, return_exceptions=True)
+    await tux.shutdown()
 
 
 async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
@@ -247,11 +235,17 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
 
     try:
         await tux.load_packages()
-        await tux.start(token, bot=True)
+        console.print()
+        await tux.start(token=token, bot=True)
     except discord.LoginFailure:
         log.critical("This token appears to be valid.")
-        console.print_exception()
+        console.print()
+        console.print(
+            "[prompt.invalid]This token appears to be valid. [i]exiting...[/i]"
+        )
         sys.exit(ExitCodes.CRITICAL)
+    except Exception as e:
+        raise e
 
     return None
 
@@ -268,9 +262,10 @@ def main() -> NoReturn:
     elif cli_flags.debug:
         debug_info()
     elif cli_flags.version:
-        print("Tuxbot V3")
+        print(f"Tuxbot V{version_info.major}")
         print(f"Complete Version: {__version__}")
-        sys.exit(0)
+
+        sys.exit(os.EX_OK)
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -292,10 +287,11 @@ def main() -> NoReturn:
         loop.run_until_complete(run_bot(tux, cli_flags))
     except KeyboardInterrupt:
         console.print(
-            "[red]Please use <prefix>quit instead of Ctrl+C to Shutdown!"
+            "  [red]Please use <prefix>quit instead of Ctrl+C to Shutdown!"
         )
         log.warning("Please use <prefix>quit instead of Ctrl+C to Shutdown!")
         log.error("Received KeyboardInterrupt")
+        console.print("[i]Trying to shutdown...")
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, signal.SIGINT))
     except SystemExit as exc:
@@ -303,6 +299,7 @@ def main() -> NoReturn:
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, exc.code))
     except Exception as exc:
+        console.print_exception()
         log.exception("Unexpected exception (%s): ", type(exc), exc_info=exc)
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, 1))
@@ -314,6 +311,7 @@ def main() -> NoReturn:
         loop.stop()
         loop.close()
         exit_code = ExitCodes.CRITICAL if tux is None else tux.shutdown_code
+
         sys.exit(exit_code)
 
 

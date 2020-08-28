@@ -6,19 +6,24 @@ from typing import List, Union
 
 import discord
 from discord.ext import commands
+from rich import box
+from rich.columns import Columns
+from rich.console import Console
+from rich.panel import Panel
+from rich.progress import Progress, TextColumn, BarColumn
+from rich.table import Table
 from rich.traceback import install
+from tuxbot import version_info
 
 from . import Config
 from .data_manager import logs_data_path
 
-from .utils.functions.cli import bordered
-
 from . import __version__, ExitCodes
 from .utils.functions.extra import ContextPlus
 
-
 log = logging.getLogger("tuxbot")
-install()
+console = Console()
+install(console=console)
 
 NAME = r"""
   _____           _           _        _           _   
@@ -33,6 +38,13 @@ packages: List[str] = ["jishaku", "tuxbot.cogs.warnings", "tuxbot.cogs.admin"]
 
 class Tux(commands.AutoShardedBot):
     _loading: asyncio.Task
+    _progress = {
+        'main': Progress(
+            TextColumn("[bold blue]{task.fields[task_name]}", justify="right"),
+            BarColumn()
+        ),
+        'tasks': {}
+    }
 
     def __init__(self, *args, cli_flags=None, **kwargs):
         # by default, if the bot shutdown without any intervention,
@@ -73,52 +85,86 @@ class Tux(commands.AutoShardedBot):
 
     async def load_packages(self):
         if packages:
-            print("Loading packages...")
-            for package in packages:
-                try:
-                    self.load_extension(package)
-                except Exception as e:
-                    print(
-                        Fore.RED
-                        + f"Failed to load package {package}"
-                        + Style.RESET_ALL
-                        + f" check "
-                        f"{str((self.logs / 'tuxbot.log').resolve())} "
-                        f"for more details"
-                    )
+            with Progress() as progress:
+                task = progress.add_task(
+                    "Loading packages...",
+                    total=len(packages)
+                )
 
-                    log.exception(f"Failed to load package {package}", exc_info=e)
+                for package in packages:
+                    try:
+                        self.load_extension(package)
+                        progress.console.print(f"{package} loaded")
+                    except Exception as e:
+                        log.exception(
+                            f"Failed to load package {package}",
+                            exc_info=e
+                        )
+                        progress.console.print(
+                            f"[red]Failed to load package {package} "
+                            f"[i](see "
+                            f"{str((self.logs / 'tuxbot.log').resolve())} "
+                            f"for more details)[/i]"
+                        )
+
+                    progress.advance(task)
 
     async def on_ready(self):
         self.uptime = datetime.datetime.now()
-        INFO = {
-            "title": "INFO",
-            "rows": [
-                str(self.user),
-                f"Prefixes: {', '.join(self.config('core').get('prefixes'))}",
-                f"Language: {self.config('core').get('locale')}",
-                f"Tuxbot Version: {__version__}",
-                f"Discord.py Version: {discord.__version__}",
-                "Python Version: " + sys.version.replace("\n", ""),
-                f"Shards: {self.shard_count}",
-                f"Servers: {len(self.guilds)}",
-                f"Users: {len(self.users)}",
-            ],
-        }
+        self._progress.get("main").stop_task(
+            self._progress.get("tasks")["connecting"]
+        )
+        self._progress.get("main").remove_task(
+            self._progress.get("tasks")["connecting"]
+        )
+        console.clear()
 
-        COGS = {"title": "COGS", "rows": []}
+        console.print(
+            Panel(f"[bold blue]Tuxbot V{version_info.major}", style="blue"),
+            justify="center"
+        )
+        console.print()
+
+        columns = Columns(expand=True, padding=2, align="center")
+
+        table = Table(
+            style="dim", border_style="not dim",
+            box=box.HEAVY_HEAD
+        )
+        table.add_column(
+            "INFO",
+        )
+        table.add_row(str(self.user))
+        table.add_row(f"Prefixes: {', '.join(self.config('core').get('prefixes'))}")
+        table.add_row(f"Language: {self.config('core').get('locale')}")
+        table.add_row(f"Tuxbot Version: {__version__}")
+        table.add_row(f"Discord.py Version: {discord.__version__}")
+        table.add_row(f"Shards: {self.shard_count}")
+        table.add_row(f"Servers: {len(self.guilds)}")
+        table.add_row(f"Users: {len(self.users)}")
+        columns.add_renderable(table)
+
+        table = Table(
+            style="dim", border_style="not dim",
+            box=box.HEAVY_HEAD
+        )
+        table.add_column(
+            "COGS",
+        )
         for extension in packages:
-            COGS["rows"].append(
-                f"[{'X' if extension in self.extensions else ' '}] {extension}"
-            )
+            if extension in self.extensions:
+                status = f"[green]:heavy_check_mark: {extension} "
+            else:
+                status = f"[red]:cross_mark: {extension} "
 
-        print(Fore.LIGHTBLUE_EX + NAME)
-        print(Style.RESET_ALL)
-        print(bordered(INFO, COGS))
+            table.add_row(status)
+        columns.add_renderable(table)
 
-        print(f"\n{'=' * 118}\n\n")
+        console.print(columns)
+        console.print()
 
-    async def is_owner(self, user: Union[discord.User, discord.Member]) -> bool:
+    async def is_owner(self,
+                       user: Union[discord.User, discord.Member]) -> bool:
         """Determines if the user is a bot owner.
 
         Parameters
@@ -154,9 +200,9 @@ class Tux(commands.AutoShardedBot):
             return
 
         if (
-            message.guild.id in self.config.get_blacklist("guild")
-            or message.channel.id in self.config.get_blacklist("channel")
-            or message.author.id in self.config.get_blacklist("user")
+                message.guild.id in self.config.get_blacklist("guild")
+                or message.channel.id in self.config.get_blacklist("channel")
+                or message.author.id in self.config.get_blacklist("user")
         ):
             return
 
@@ -170,11 +216,45 @@ class Tux(commands.AutoShardedBot):
     async def on_message(self, message: discord.Message):
         await self.process_commands(message)
 
+    async def start(self, token, bot):
+        """Connect to Discord and start all connections.
+
+        Todo: add postgresql connect here
+        """
+        with self._progress.get("main") as pg:
+            task_id = self._progress.get("tasks")["connecting"] = pg.add_task(
+                "connecting",
+                task_name="Connecting to Discord...", start=False
+            )
+            pg.update(task_id)
+            await super().start(token, bot=bot)
+
     async def logout(self):
         """Disconnect from Discord and closes all actives connections.
 
         Todo: add postgresql logout here
         """
+        for task in self._progress.get("tasks").keys():
+            self._progress.get("main").log("Shutting down", task)
+
+            self._progress.get("main").stop_task(
+                self._progress.get("tasks")[task]
+            )
+            self._progress.get("main").remove_task(
+                self._progress.get("tasks")["connecting"]
+            )
+        self._progress.get("main").stop()
+
+        pending = [
+            t for t in asyncio.all_tasks() if
+            t is not asyncio.current_task()
+        ]
+
+        for task in pending:
+            console.log("Canceling", task.get_name(), f"({task.get_coro()})")
+            task.cancel()
+        await asyncio.gather(*pending, return_exceptions=True)
+
         await super().logout()
 
     async def shutdown(self, *, restart: bool = False):

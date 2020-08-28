@@ -6,14 +6,17 @@
       <w>francais</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
+      <w>jishaku</w>
       <w>levelname</w>
       <w>localiseip</w>
       <w>postgresql</w>
+      <w>releaselevel</w>
       <w>socketstats</w>
       <w>splt</w>
       <w>systemd</w>
       <w>tutux</w>
       <w>tuxbot</w>
+      <w>tuxbot's</w>
       <w>tuxvenv</w>
       <w>webhooks</w>
     </words>
