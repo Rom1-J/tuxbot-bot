@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 from .admin import Admin
+from .config import AdminConfig
 from ...core.bot import Tux
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")

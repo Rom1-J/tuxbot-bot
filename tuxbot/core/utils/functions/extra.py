@@ -5,6 +5,11 @@ import discord
 from discord import Embed
 from discord.ext import commands, flags
 
+from rich.console import Console
+console = Console()
+
+console.clear()
+
 
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
@@ -16,12 +21,11 @@ class ContextPlus(commands.Context):
             e = str(kwargs.get('embed').to_dict())
             e = e.replace(self.bot.config('core').get('token'), '<token>')
             e = yaml.load(e, Loader=yaml.FullLoader)
-
             kwargs['embed'] = Embed.from_dict(e)
 
         if (
             hasattr(self.command, "deletable") and self.command.deletable
-        ) and kwargs.pop("deletable", True):
+        ) or kwargs.pop("deletable", False):
             message = await super().send(content, *args, **kwargs)
             await message.add_reaction("🗑")
 
@@ -33,7 +37,10 @@ class ContextPlus(commands.Context):
                 )
 
             try:
-                await self.bot.wait_for("reaction_add", timeout=45.0, check=check)
+                await self.bot.wait_for(
+                    "reaction_add",
+                    timeout=42.0, check=check
+                )
             except asyncio.TimeoutError:
                 await message.remove_reaction("🗑", self.bot.user)
             else:

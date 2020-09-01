@@ -7,7 +7,7 @@ log = logging.getLogger("tuxbot.core.data_manager")
 
 app_dir = appdirs.AppDirs("Tuxbot-bot")
 config_dir = Path(app_dir.user_config_dir)
-config_file = config_dir / "config.json"
+config_file = config_dir / "config.yaml"
 
 
 def data_path(instance_name: str) -> Path:

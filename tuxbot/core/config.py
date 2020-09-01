@@ -1,8 +1,10 @@
 import asyncio
-import json
 import logging
-from typing import List, Dict, Union, Any
-from flatten_dict import flatten, unflatten
+from typing import List, Dict
+from structured_config import (
+    ConfigFile,
+    Structure, IntField, StrField, BoolField
+)
 
 import discord
 
@@ -13,159 +15,44 @@ __all__ = ["Config"]
 log = logging.getLogger("tuxbot.core.config")
 
 
-class Config:
-    def __init__(self, cog_instance: str = None):
-        self._cog_instance = cog_instance
+class Server(Structure):
+    prefixes: List[str] = []
+    disabled_command: List[str] = []
+    locale: str = StrField("")
 
-        self.lock = asyncio.Lock()
-        self.loop = asyncio.get_event_loop()
 
-        self._settings_file = None
-        self._datas = {}
+class User(Structure):
+    aliases: List[dict] = []
+    locale: str = StrField("")
 
-    def __getitem__(self, item) -> Dict:
-        path = data_path(self._cog_instance)
 
-        if item != "core":
-            path = path / "cogs" / item
-        else:
-            path /= "core"
+class Config(Structure):
+    class Servers(Structure):
+        count: int = IntField(0)
+        all: List[Server] = []
 
-        settings_file = path / "settings.json"
+    class Users(Structure):
+        all: List[User] = []
 
-        if not settings_file.exists():
-            raise FileNotFoundError(
-                f"Unable to find settings file " f"'{settings_file}'"
-            )
-        else:
-            with settings_file.open("r") as f:
-                return json.load(f)
+    class Core(Structure):
+        owners_id: List[int] = []
+        prefixes: List[str] = []
+        token: str = StrField("")
+        mentionable: bool = BoolField("")
+        locale: str = StrField("")
 
-    def __call__(self, item):
-        return self.__getitem__(item)
+    class Cogs(Structure):
+        pass
 
-    def owners_id(self) -> List[int]:
-        """Simply return the owners id saved in config file.
 
-        Returns
-        -------
-        str
-            Owners id.
-        """
-        return self.__getitem__("core").get("owners_id")
+# =============================================================================
+# Configuration of Tuxbot Application (not the bot)
+# =============================================================================
 
-    def token(self) -> str:
-        """Simply return the bot token saved in config file.
+class Instance(Structure):
+    path: str = StrField("")
+    active: bool = BoolField(False)
 
-        Returns
-        -------
-        str
-            Bot token.
-        """
-        return self.__getitem__("core").get("token")
 
-    def get_prefixes(self, guild: discord.Guild) -> List[str]:
-        """Get custom  prefixes for one guild.
-
-        Parameters
-        ----------
-        guild:discord.Guild
-            The required guild prefixes.
-
-        Returns
-        -------
-        List[str]
-            List of all prefixes.
-        """
-        core = self.__getitem__("core")
-        prefixes = core.get("guild", {}).get(guild.id, {}).get("prefixes", [])
-
-        return prefixes
-
-    def get_blacklist(self, key: str) -> List[Union[str, int]]:
-        """Return list off all blacklisted values
-
-        Parameters
-        ----------
-        key:str
-            Which type of blacklist to choice (guilds ? channels ?,...).
-
-        Returns
-        -------
-        List[Union[str, int]]
-            List containing blacklisted values.
-        """
-        core = self.__getitem__("core")
-        blacklist = core.get("blacklist", {}).get(key, [])
-
-        return blacklist
-
-    def _dump(self):
-        with self._settings_file.open("w") as f:
-            json.dump(self._datas, f, indent=4)
-
-    async def update(self, cog_name: str, item: str, value: Any) -> dict:
-        """Update values in config file.
-
-        Parameters
-        ----------
-        cog_name:str
-            Name of cog who's corresponding to the config file.
-        item:str
-            Key to update.
-        value:Any
-            New values to apply.
-
-        Returns
-        -------
-        dict:
-            Updated values.
-
-        """
-        datas = self.__getitem__(cog_name)
-        path = data_path(self._cog_instance)
-
-        flat_datas = flatten(datas)
-        flat_datas[tuple(item.split("."))] = value
-        datas = unflatten(flat_datas)
-
-        self._datas = datas
-
-        if cog_name != "core":
-            path = path / "cogs" / cog_name
-        else:
-            path /= "core"
-
-        self._settings_file = path / "settings.json"
-
-        async with self.lock:
-            await self.loop.run_in_executor(None, self._dump)
-
-        return datas
-
-    def get_value(self, cog_name: str, key: str, default: Any = None) -> Any:
-        """Get value by key.
-
-        Parameters
-        ----------
-        cog_name:str
-            Name of cog who's corresponding to the config file.
-        key:str
-            Key to fetch.
-        default:Any|Optional
-            Default value.
-
-        Returns
-        -------
-        Any:
-            Recovered value.
-
-        """
-        datas = self.__getitem__(cog_name)
-
-        flat_datas = flatten(datas)
-
-        try:
-            return flat_datas[tuple(key.split("."))]
-        except KeyError:
-            return default
+class AppConfig(Structure):
+    instances: Dict[str, Instance] = {}

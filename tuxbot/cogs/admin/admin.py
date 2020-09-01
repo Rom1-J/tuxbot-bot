@@ -6,7 +6,10 @@ from discord.ext import commands
 from tuxbot.core import checks
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator, find_locale, get_locale_name, available_locales
-from tuxbot.core.utils.functions.extra import group_extra, ContextPlus
+from tuxbot.core.utils.functions.extra import (
+    group_extra, command_extra,
+    ContextPlus
+)
 
 log = logging.getLogger("tuxbot.cogs.admin")
 _ = Translator("Admin", __file__)
@@ -40,10 +43,30 @@ class Admin(commands.Cog, name="Admin"):
 
     @_lang.command(name="list", aliases=["liste", "all", "view"])
     async def _lang_list(self, ctx: ContextPlus):
+        description = ''
+        for key, value in available_locales.items():
+            description += f":flag_{key[-2:].lower()}: {value[0]}\n"
+
         e = discord.Embed(
             title=_("List of available locales: ", ctx, self.bot.config),
-            description="\n".join([i[0] for i in available_locales.values()]),
+            description=description,
             color=0x36393E,
         )
 
         await ctx.send(embed=e)
+
+    # =========================================================================
+
+    @command_extra(name="quit", aliases=["shutdown"], deletable=False)
+    @commands.guild_only()
+    @checks.is_owner()
+    async def _quit(self, ctx: ContextPlus):
+        await ctx.send("*quit...*")
+        await self.bot.shutdown()
+
+    @command_extra(name="restart", deletable=False)
+    @commands.guild_only()
+    @checks.is_owner()
+    async def _restart(self, ctx: ContextPlus):
+        await ctx.send("*restart...*")
+        await self.bot.shutdown(restart=True)

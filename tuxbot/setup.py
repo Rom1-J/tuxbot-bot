@@ -9,9 +9,9 @@ from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
 from rich.rule import Rule
 from rich.traceback import install
-from rich import print
 
 from tuxbot.core.data_manager import config_dir, app_dir
+from tuxbot.core import config
 
 console = Console()
 console.clear()
@@ -20,56 +20,15 @@ install(console=console)
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
 except PermissionError:
-    print(f"mkdir: cannot create directory '{config_dir}': Permission denied")
+    console.print(f"mkdir: cannot create directory '{config_dir}': Permission denied")
     sys.exit(1)
 
-config_file = config_dir / "config.json"
+app_config = config.ConfigFile(config_dir / "config.yaml", config.AppConfig)
 
-
-def load_existing_config() -> dict:
-    """Loading and returning configs.
-
-    Returns
-    -------
-    dict
-        a dict containing all configurations.
-
-    """
-    if not config_file.exists():
-        return {}
-
-    with config_file.open() as fs:
-        return json.load(fs)
-
-
-instances_data = load_existing_config()
-if not instances_data:
+if not app_config.config.instances:
     instances_list = []
 else:
-    instances_list = list(instances_data.keys())
-
-
-def save_config(name: str, data: dict, delete=False) -> NoReturn:
-    """save data in config file.
-
-    Parameters
-    ----------
-    name:str
-        name of instance.
-    data:dict
-        settings for `name` instance.
-    delete:bool
-        delete or no data.
-    """
-    _config = load_existing_config()
-
-    if delete and name in _config:
-        _config.pop(name)
-    else:
-        _config[name] = data
-
-    with config_file.open("w") as fs:
-        json.dump(_config, fs, indent=4)
+    instances_list = list(app_config.config.instances.keys())
 
 
 def get_name() -> str:
@@ -89,8 +48,8 @@ def get_name() -> str:
             console=console
         )
         if re.fullmatch(r"[a-zA-Z0-9_\-]*", name) is None:
-            print()
-            print("[prompt.invalid]ERROR: Invalid characters provided")
+            console.print()
+            console.print("[prompt.invalid]ERROR: Invalid characters provided")
             name = ""
     return name
 
@@ -111,14 +70,14 @@ def get_data_dir(instance_name: str) -> Path:
     """
     data_path = Path(app_dir.user_data_dir) / "data" / instance_name
     data_path_input = ""
-    print()
+    console.print()
 
     def make_data_dir(path: Path) -> Union[Path, str]:
         try:
             path.mkdir(parents=True, exist_ok=True)
         except OSError:
-            print()
-            print(
+            console.print()
+            console.print(
                 f"mkdir: cannot create directory '{path}': Permission denied"
             )
             path = ""
@@ -137,8 +96,8 @@ def get_data_dir(instance_name: str) -> Path:
         try:
             exists = data_path_input.exists()
         except OSError:
-            print()
-            print(
+            console.print()
+            console.print(
                 "[prompt.invalid]"
                 "Impossible to verify the validity of the path,"
                 " make sure it does not contain any invalid characters."
@@ -149,8 +108,8 @@ def get_data_dir(instance_name: str) -> Path:
         if data_path_input and not exists:
             data_path_input = make_data_dir(data_path_input)
 
-    print()
-    print(
+    console.print()
+    console.print(
         f"You have chosen {data_path_input} to be your config directory for "
         f"`{instance_name}` instance"
     )
@@ -160,7 +119,7 @@ def get_data_dir(instance_name: str) -> Path:
             choices=["y", "n"], default="y",
             console=console
     ) != "y":
-        print("Rerun the process to redo this configuration.")
+        console.print("Rerun the process to redo this configuration.")
         sys.exit(0)
 
     (data_path_input / "core").mkdir(parents=True, exist_ok=True)
@@ -191,7 +150,7 @@ def get_token() -> str:
                 r"|mfa\.[a-zA-Z0-9_\-]{84})",
                 token) \
                 is None:
-            print("[prompt.invalid]ERROR: Invalid token provided")
+            console.print("[prompt.invalid]ERROR: Invalid token provided")
             token = ""
     return token
 
@@ -234,7 +193,7 @@ def get_multiple(
         if new not in values:
             values.append(new)
         else:
-            print(
+            console.print(
                 f"[prompt.invalid]"
                 f"ERROR: `{new}` is already present, [i]ignored[/i]"
             )
@@ -250,21 +209,21 @@ def additional_config() -> dict:
     dict:
         Dict with cog name as key and configs as value.
     """
-    p = Path(r"tuxbot/cogs").glob("**/additional_config.json")
+    p = Path("tuxbot/cogs").glob("**/config.py")
     data = {}
 
     for file in p:
-        print("\n" * 4)
+        console.print("\n" * 4)
         cog_name = str(file.parent).split("/")[-1]
         data[cog_name] = {}
 
         with file.open("r") as f:
             data = json.load(f)
 
-        print(Rule(f"\nConfiguration for `{cog_name}` module"))
+        console.print(Rule(f"\nConfiguration for `{cog_name}` module"))
 
         for key, value in data.items():
-            print()
+            console.print()
             data[cog_name][key] = Prompt.ask(value["description"])
 
     return data
@@ -278,79 +237,62 @@ def finish_setup(data_dir: Path) -> NoReturn:
     data_dir:Path
         Where to save configs.
     """
-    print(
+    console.print(
         Rule(
             "Now, it's time to finish this setup by giving bot information"
         )
     )
-    print()
+    console.print()
 
     token = get_token()
 
-    print()
+    console.print()
     prefixes = get_multiple(
         "Choice a (or multiple) prefix for the bot", "Add another prefix ?",
         str
     )
 
-    print()
+    console.print()
     mentionable = Prompt.ask(
         "Does the bot answer if it's mentioned?",
         choices=["y", "n"],
         default="y"
     ) == "y"
 
-    print()
+    console.print()
     owners_id = get_multiple(
         "Give the owner id of this bot", "Add another owner ?", int
     )
 
-    cogs_config = additional_config()
+    # cogs_config = additional_config()
 
-    core_file = data_dir / "core" / "settings.json"
-    core = {
-        "token": token,
-        "prefixes": prefixes,
-        "mentionable": mentionable,
-        "owners_id": owners_id,
-        "locale": "en-US",
-    }
+    instance_config = config.ConfigFile(
+        str(data_dir / "config.yaml"), config.Config
+    )
 
-    with core_file.open("w") as fs:
-        json.dump(core, fs, indent=4)
-
-    for cog, data in cogs_config.items():
-        data_cog_dir = data_dir / "cogs" / cog
-        data_cog_dir.mkdir(parents=True, exist_ok=True)
-
-        data_cog_file = data_cog_dir / "settings.json"
-
-        with data_cog_file.open("w") as fs:
-            json.dump(data, fs, indent=4)
+    instance_config.config.Core.owners_id = owners_id
+    instance_config.config.Core.prefixes = prefixes
+    instance_config.config.Core.token = token
+    instance_config.config.Core.mentionable = mentionable
+    instance_config.config.Core.locale = "en-US"
 
 
 def basic_setup() -> NoReturn:
     """Configs who refer to instances.
 
     """
-    print(
+    console.print(
         Rule(
             "Hi ! it's time for you to give me information about you instance"
         )
     )
-    print()
+    console.print()
     name = get_name()
 
     data_dir = get_data_dir(name)
 
-    configs = load_existing_config()
-    instance_config = configs[name] if name in instances_list else {}
-
-    instance_config["DATA_PATH"] = str(data_dir.resolve())
-    instance_config["IS_RUNNING"] = False
-
     if name in instances_list:
-        print()
+        console.print()
         console.print(
             f"WARNING: An instance named `{name}` already exists "
             f"Continuing will overwrite this instance configs.", style="red"
@@ -359,17 +301,21 @@ def basic_setup() -> NoReturn:
                 "Are you sure you want to continue?",
                 choices=["y", "n"], default="n"
         ) == "n":
-            print("Abandon...")
+            console.print("Abandon...")
             sys.exit(0)
 
-    save_config(name, instance_config)
+    instance = config.Instance()
+    instance.path = str(data_dir.resolve())
+    instance.active = False
 
-    print("\n" * 4)
+    app_config.config.instances[name] = instance
+
+    console.print("\n" * 4)
 
     finish_setup(data_dir)
 
-    print()
-    print(
+    console.print()
+    console.print(
         f"Instance successfully created! "
         f"You can now run `tuxbot {name}` to launch this instance"
     )
@@ -392,8 +338,8 @@ def setup() -> NoReturn:
 
         basic_setup()
     except KeyboardInterrupt:
-        print("Exiting...")
-    except:
+        console.print("Exiting...")
+    except Exception:
         console.print_exception()
 
 

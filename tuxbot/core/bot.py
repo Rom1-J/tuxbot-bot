@@ -25,7 +25,10 @@ log = logging.getLogger("tuxbot")
 console = Console()
 install(console=console)
 
-packages: List[str] = ["jishaku", "tuxbot.cogs.warnings", "tuxbot.cogs.admin"]
+packages: List[str] = [
+    "jishaku",
+    "tuxbot.cogs.admin"
+]
 
 
 class Tux(commands.AutoShardedBot):
@@ -109,6 +112,7 @@ class Tux(commands.AutoShardedBot):
         self._progress.get("main").remove_task(
             self._progress.get("tasks")["connecting"]
         )
+        self._progress.get("tasks").pop("connecting")
         console.clear()
 
         console.print(
@@ -155,8 +159,8 @@ class Tux(commands.AutoShardedBot):
         console.print(columns)
         console.print()
 
-    async def is_owner(self,
-                       user: Union[discord.User, discord.Member]) -> bool:
+    async def is_owner(self, user: Union[discord.User, discord.Member])\
+            -> bool:
         """Determines if the user is a bot owner.
 
         Parameters
@@ -245,7 +249,7 @@ class Tux(commands.AutoShardedBot):
         for task in pending:
             console.log("Canceling", task.get_name(), f"({task.get_coro()})")
             task.cancel()
-        await asyncio.gather(*pending, return_exceptions=True)
+        await asyncio.gather(*pending, return_exceptions=False)
 
         await super().logout()
 
@@ -265,4 +269,8 @@ class Tux(commands.AutoShardedBot):
             self.shutdown_code = ExitCodes.RESTART
 
         await self.logout()
-        sys.exit(self.shutdown_code)
+
+        sys_e = SystemExit()
+        sys_e.code = self.shutdown_code
+
+        raise sys_e
