@@ -15,7 +15,7 @@ from rich.traceback import install
 
 from tuxbot import version_info
 
-from . import Config, ConfigFile
+from .config import Config, ConfigFile, search_for
 from .data_manager import logs_data_path, data_path
 
 from . import __version__, ExitCodes
@@ -189,9 +189,11 @@ class Tux(commands.AutoShardedBot):
             return
 
         if (
-            self.config.Servers.all[message.guild.id].blacklisted
-            or self.config.Channels.all[message.channel.id].blacklisted
-            or self.config.Users.all[message.author.id].blacklisted
+            search_for(self.config.Servers, message.guild.id, "blacklisted")
+            or search_for(
+                self.config.Channels, message.channel.id, "blacklisted"
+            )
+            or search_for(self.config.Users, message.author.id, "blacklisted")
         ):
             return
 
@@ -200,9 +202,8 @@ class Tux(commands.AutoShardedBot):
         if ctx is None or ctx.valid is False:
             self.dispatch("message_without_command", message)
         else:
-            if (
-                ctx.command
-                in self.config.Servers.all[message.guild.id].disabled_command
+            if ctx.command in search_for(
+                self.config.Servers, message.guild.id, "disabled_command", []
             ):
                 raise exceptions.DisabledCommandByServerOwner
 

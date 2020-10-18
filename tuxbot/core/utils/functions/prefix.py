@@ -2,10 +2,10 @@ from typing import List
 
 import discord
 
-from tuxbot.core.bot import Tux
+from tuxbot.core.config import search_for
 
 
-def get_prefixes(tux: Tux, guild: discord.Guild) -> List[str]:
+def get_prefixes(tux, guild: discord.Guild) -> List[str]:
     """Get custom  prefixes for one guild.
     Parameters
     ----------
@@ -19,4 +19,4 @@ def get_prefixes(tux: Tux, guild: discord.Guild) -> List[str]:
     List[str]
         List of all prefixes.
     """
-    return tux.config.Servers.all[guild.id].prefixes or []
+    return search_for(tux.config.Servers, guild.id, "prefixes", [])

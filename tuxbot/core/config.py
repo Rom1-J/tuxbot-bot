@@ -9,7 +9,7 @@ from structured_config import (
 )
 
 
-__all__ = ["Config", "ConfigFile"]
+__all__ = ["Config", "ConfigFile", "search_for"]
 
 log = logging.getLogger("tuxbot.core.config")
 
@@ -67,3 +67,14 @@ class AppConfig(Structure):
         last_run: int = IntField(0)
 
     instances: Dict[str, Instance] = {}
+
+
+# =============================================================================
+# Useful functions to browse configs
+# =============================================================================
+
+
+def search_for(config, key, value, default=False):
+    if key in config.all:
+        return getattr(config.all[key], value)
+    return default

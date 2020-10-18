@@ -15,9 +15,7 @@ console.clear()
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
         if content is not None:
-            content = content.replace(
-                self.bot.config("core").get("token"), "<token>"
-            )
+            content = content.replace(self.bot.config.Core.token, "<token>")
         if kwargs.get("embed"):
             e = str(kwargs.get("embed").to_dict())
             e = e.replace(self.bot.config("core").get("token"), "<token>")
