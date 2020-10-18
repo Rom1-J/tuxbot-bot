@@ -10,9 +10,9 @@ class AdminConfig(Structure):
 
 
 extra = {
-    'dm': str,
-    'mentions': str,
-    'guilds': str,
-    'errors': str,
-    'gateway': str,
+    "dm": str,
+    "mentions": str,
+    "guilds": str,
+    "errors": str,
+    "gateway": str,
 }

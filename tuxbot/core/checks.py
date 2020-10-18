@@ -22,9 +22,7 @@ __all__ = [
 
 
 def is_mod():
-    """Is the user a moderator ?
-
-    """
+    """Is the user a moderator ?"""
 
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
@@ -38,9 +36,7 @@ def is_mod():
 
 
 def is_admin():
-    """Is the user admin ?
-
-    """
+    """Is the user admin ?"""
 
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
@@ -53,7 +49,7 @@ def is_admin():
     return commands.check(pred)
 
 
-async def check_permissions(ctx: "ContextPlus", **perms: Dict[str, bool]):
+async def check_permissions(ctx: ContextPlus, **perms: Dict[str, bool]):
     """Does a user have any perms ?
 
     Parameters
@@ -66,8 +62,9 @@ async def check_permissions(ctx: "ContextPlus", **perms: Dict[str, bool]):
     if await ctx.bot.is_owner(ctx.author):
         return True
 
-    elif not perms:
+    if not perms:
         return False
+
     resolved = ctx.channel.permissions_for(ctx.author)
 
     return all(

@@ -14,7 +14,7 @@ update:
 
 # Blackify code
 reformat:
-	$(PYTHON) -m black `git ls-files "*.py"`
+	$(PYTHON) -m black `git ls-files "*.py"` --line-length=79 && pylint tuxbot
 
 # Translations
 xgettext:

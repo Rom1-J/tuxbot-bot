@@ -1,27 +1,29 @@
 import argparse
 import asyncio
-import json
 import logging
 import signal
 import sys
 import os
+import tracemalloc
 from argparse import Namespace
 from typing import NoReturn
+from datetime import datetime
 
 import discord
+import humanize
 import pip
-import tracemalloc
 from rich.columns import Columns
 from rich.console import Console
 from rich.panel import Panel
 from rich.traceback import install
 from rich.table import Table, box
 from rich.text import Text
-from rich import print
+from rich import print as rprint
 
 import tuxbot.logging
-from tuxbot.core import data_manager
 from tuxbot.core.bot import Tux
+from tuxbot.core import data_manager
+from tuxbot.core import config
 from . import __version__, version_info, ExitCodes
 
 log = logging.getLogger("tuxbot.main")
@@ -30,35 +32,37 @@ console = Console()
 install(console=console)
 tracemalloc.start()
 
+BORDER_STYLE = "not dim"
+
 
 def list_instances() -> NoReturn:
-    """List all available instances
-
-    """
-    with data_manager.config_file.open() as fs:
-        data = json.load(fs)
+    """List all available instances"""
+    app_config = config.ConfigFile(
+        data_manager.config_dir / "config.yaml", config.AppConfig
+    ).config
 
     console.print(
-        Panel("[bold green]Instances", style="green"),
-        justify="center"
+        Panel("[bold green]Instances", style="green"), justify="center"
     )
     console.print()
 
     columns = Columns(expand=True, padding=2, align="center")
-    for instance, details in data.items():
-        is_running = details.get('IS_RUNNING')
+    for instance, details in app_config.instances.items():
+        active = details["active"]
+        last_run = (
+            humanize.naturaltime(
+                datetime.now() - datetime.fromtimestamp(details["last_run"])
+            )
+            or "[i]unknown"
+        )
 
         table = Table(
-            style="dim", border_style="not dim",
-            box=box.HEAVY_HEAD
+            style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD
         )
         table.add_column("Name")
-        table.add_column(("Running" if is_running else "Down") + " since")
-        table.add_row(instance, "42")
-        table.title = Text(
-            instance,
-            style="green" if is_running else "red"
-        )
+        table.add_column(("Running since" if active else "Last run"))
+        table.add_row(instance, last_run)
+        table.title = Text(instance, style="green" if active else "red")
         columns.add_renderable(table)
     console.print(columns)
     console.print()
@@ -67,28 +71,22 @@ def list_instances() -> NoReturn:
 
 
 def debug_info() -> NoReturn:
-    """Show debug info relatives to the bot
-
-    """
+    """Show debug info relatives to the bot"""
     python_version = sys.version.replace("\n", "")
     pip_version = pip.__version__
     tuxbot_version = __version__
     dpy_version = discord.__version__
 
-    uptime = os.popen('uptime').read().strip().split()
+    uptime = os.popen("uptime").read().strip().split()
 
     console.print(
-        Panel("[bold blue]Debug Info", style="blue"),
-        justify="center"
+        Panel("[bold blue]Debug Info", style="blue"), justify="center"
     )
     console.print()
 
     columns = Columns(expand=True, padding=2, align="center")
 
-    table = Table(
-        style="dim", border_style="not dim",
-        box=box.HEAVY_HEAD
-    )
+    table = Table(style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD)
     table.add_column(
         "Bot Info",
     )
@@ -100,10 +98,7 @@ def debug_info() -> NoReturn:
     table.add_row(f"[u]Last change:[/u] {version_info.info}")
     columns.add_renderable(table)
 
-    table = Table(
-        style="dim", border_style="not dim",
-        box=box.HEAVY_HEAD
-    )
+    table = Table(style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD)
     table.add_column(
         "Python Info",
     )
@@ -113,10 +108,7 @@ def debug_info() -> NoReturn:
     table.add_row(f"[u]Discord.py version:[/u] {dpy_version}")
     columns.add_renderable(table)
 
-    table = Table(
-        style="dim", border_style="not dim",
-        box=box.HEAVY_HEAD
-    )
+    table = Table(style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD)
     table.add_column(
         "Server Info",
     )
@@ -152,19 +144,23 @@ def parse_cli_flags(args: list) -> Namespace:
         usage="tuxbot <instance_name> [arguments]",
     )
     parser.add_argument(
-        "--version", "-V", action="store_true",
-        help="Show tuxbot's used version"
+        "--version",
+        "-V",
+        action="store_true",
+        help="Show tuxbot's used version",
     )
     parser.add_argument(
-        "--debug", action="store_true",
-        help="Show debug information."
+        "--debug", action="store_true", help="Show debug information."
     )
     parser.add_argument(
-        "--list-instances", "-L", action="store_true",
-        help="List all instance names"
+        "--list-instances",
+        "-L",
+        action="store_true",
+        help="List all instance names",
     )
-    parser.add_argument("--token", "-T", type=str,
-                        help="Run Tuxbot with passed token")
+    parser.add_argument(
+        "--token", "-T", type=str, help="Run Tuxbot with passed token"
+    )
     parser.add_argument(
         "instance_name",
         nargs="?",
@@ -227,7 +223,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     if cli_flags.token:
         token = cli_flags.token
     else:
-        token = tux.config("core").get("token")
+        token = tux.config.Core.token
 
     if not token:
         log.critical("Token must be set if you want to login.")
@@ -245,15 +241,14 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
         )
         sys.exit(ExitCodes.CRITICAL)
     except Exception as e:
+        log.critical(e)
         raise e
 
     return None
 
 
 def run() -> NoReturn:
-    """Main function
-
-    """
+    """Main function"""
     tux = None
     cli_flags = parse_cli_flags(sys.argv[1:])
 
@@ -262,8 +257,8 @@ def run() -> NoReturn:
     elif cli_flags.debug:
         debug_info()
     elif cli_flags.version:
-        print(f"Tuxbot V{version_info.major}")
-        print(f"Complete Version: {__version__}")
+        rprint(f"Tuxbot V{version_info.major}")
+        rprint(f"Complete Version: {__version__}")
 
         sys.exit(os.EX_OK)
 
@@ -298,6 +293,7 @@ def run() -> NoReturn:
         log.info("Shutting down with exit code: %s", exc.code)
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, exc.code))
+        raise
     except Exception as exc:
         log.error("Unexpected exception (%s): ", type(exc))
         console.print_exception()

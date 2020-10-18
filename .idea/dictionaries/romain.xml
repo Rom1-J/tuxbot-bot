@@ -1,10 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="romain">
     <words>
+      <w>anglais</w>
       <w>appdirs</w>
       <w>asctime</w>
       <w>commandstats</w>
       <w>francais</w>
+      <w>français</w>
       <w>gnous</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
@@ -13,10 +15,13 @@
       <w>localiseip</w>
       <w>postgresql</w>
       <w>pred</w>
+      <w>pylint</w>
       <w>releaselevel</w>
+      <w>rprint</w>
       <w>socketstats</w>
       <w>splt</w>
       <w>systemd</w>
+      <w>tldr</w>
       <w>tutux</w>
       <w>tuxbot</w>
       <w>tuxbot's</w>

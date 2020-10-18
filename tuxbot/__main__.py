@@ -10,12 +10,14 @@ install(console=console)
 
 def main() -> NoReturn:
     try:
-        from .__run__ import run
+        from .__run__ import run  # pylint: disable=import-outside-toplevel
 
         run()
     except SystemExit as exc:
         if exc.code == ExitCodes.RESTART:
-            from .__run__ import run  # reimport to load changes
+            # reimport to load changes
+            from .__run__ import run  # pylint: disable=import-outside-toplevel
+
             run()
         else:
             raise exc

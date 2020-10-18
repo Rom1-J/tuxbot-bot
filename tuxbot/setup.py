@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.rule import Rule
 from rich.traceback import install
 
+from tuxbot.logging import formatter
 from tuxbot.core.data_manager import config_dir, app_dir
 from tuxbot.core import config
 
@@ -20,7 +21,9 @@ install(console=console)
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
 except PermissionError:
-    console.print(f"mkdir: cannot create directory '{config_dir}': Permission denied")
+    console.print(
+        f"mkdir: cannot create directory '{config_dir}': Permission denied"
+    )
     sys.exit(1)
 
 app_config = config.ConfigFile(config_dir / "config.yaml", config.AppConfig)
@@ -45,7 +48,7 @@ def get_name() -> str:
             "What name do you want to give this instance?\n"
             "[i](valid characters: A-Z, a-z, 0-9, _, -)[/i]\n",
             default="prod",
-            console=console
+            console=console,
         )
         if re.fullmatch(r"[a-zA-Z0-9_\-]*", name) is None:
             console.print()
@@ -89,7 +92,7 @@ def get_data_dir(instance_name: str) -> Path:
             Prompt.ask(
                 "where do you want to save the configurations?",
                 default=str(data_path),
-                console=console
+                console=console,
             )
         )
 
@@ -114,16 +117,15 @@ def get_data_dir(instance_name: str) -> Path:
         f"`{instance_name}` instance"
     )
 
-    if Prompt.ask(
-            "Please confirm",
-            choices=["y", "n"], default="y",
-            console=console
-    ) != "y":
+    if (
+        Prompt.ask(
+            "Please confirm", choices=["y", "n"], default="y", console=console
+        )
+        != "y"
+    ):
         console.print("Rerun the process to redo this configuration.")
         sys.exit(0)
 
-    (data_path_input / "core").mkdir(parents=True, exist_ok=True)
-    (data_path_input / "cogs").mkdir(parents=True, exist_ok=True)
     (data_path_input / "logs").mkdir(parents=True, exist_ok=True)
 
     return data_path_input
@@ -143,20 +145,23 @@ def get_token() -> str:
         token = Prompt.ask(
             "Please enter the bot token "
             "(you can find it at https://discord.com/developers/applications)",
-            console=console
+            console=console,
         )
-        if re.fullmatch(
+        if (
+            re.fullmatch(
                 r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9_]{6}\.[a-zA-Z0-9_\-]{27}"
                 r"|mfa\.[a-zA-Z0-9_\-]{84})",
-                token) \
-                is None:
+                token,
+            )
+            is None
+        ):
             console.print("[prompt.invalid]ERROR: Invalid token provided")
             token = ""
     return token
 
 
 def get_multiple(
-        question: str, confirmation: str, value_type: type
+    question: str, confirmation: str, value_type: type
 ) -> List[Union[str, int]]:
     """Give possibility to user to fill multiple value.
 
@@ -183,11 +188,12 @@ def get_multiple(
 
     values = [user_input]
 
-    while Prompt.ask(
-            confirmation,
-            choices=["y", "n"], default="y",
-            console=console
-    ) != "n":
+    while (
+        Prompt.ask(
+            confirmation, choices=["y", "n"], default="n", console=console
+        )
+        != "n"
+    ):
         new = prompt.ask("Other")
 
         if new not in values:
@@ -209,10 +215,10 @@ def additional_config() -> dict:
     dict:
         Dict with cog name as key and configs as value.
     """
-    p = Path("tuxbot/cogs").glob("**/config.py")
+    paths = Path("tuxbot/cogs").glob("**/config.py")
     data = {}
 
-    for file in p:
+    for file in paths:
         console.print("\n" * 4)
         cog_name = str(file.parent).split("/")[-1]
         data[cog_name] = {}
@@ -238,9 +244,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
         Where to save configs.
     """
     console.print(
-        Rule(
-            "Now, it's time to finish this setup by giving bot information"
-        )
+        Rule("Now, it's time to finish this setup by giving bot information")
     )
     console.print()
 
@@ -248,23 +252,25 @@ def finish_setup(data_dir: Path) -> NoReturn:
 
     console.print()
     prefixes = get_multiple(
-        "Choice a (or multiple) prefix for the bot", "Add another prefix ?",
-        str
+        "Choice a (or multiple) prefix for the bot",
+        "Add another prefix ?",
+        str,
     )
 
     console.print()
-    mentionable = Prompt.ask(
-        "Does the bot answer if it's mentioned?",
-        choices=["y", "n"],
-        default="y"
-    ) == "y"
+    mentionable = (
+        Prompt.ask(
+            "Does the bot answer if it's mentioned?",
+            choices=["y", "n"],
+            default="y",
+        )
+        == "y"
+    )
 
     console.print()
     owners_id = get_multiple(
         "Give the owner id of this bot", "Add another owner ?", int
     )
-
-    # cogs_config = additional_config()
 
     instance_config = config.ConfigFile(
         str(data_dir / "config.yaml"), config.Config
@@ -278,9 +284,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
 
 
 def basic_setup() -> NoReturn:
-    """Configs who refer to instances.
-
-    """
+    """Configs who refer to instances."""
     console.print(
         Rule(
             "Hi ! it's time for you to give me information about you instance"
@@ -295,16 +299,21 @@ def basic_setup() -> NoReturn:
         console.print()
         console.print(
             f"WARNING: An instance named `{name}` already exists "
-            f"Continuing will overwrite this instance configs.", style="red"
+            f"Continuing will overwrite this instance configs.",
+            style="red",
         )
-        if Prompt.ask(
+        if (
+            Prompt.ask(
                 "Are you sure you want to continue?",
-                choices=["y", "n"], default="n"
-        ) == "n":
+                choices=["y", "n"],
+                default="n",
+            )
+            == "n"
+        ):
             console.print("Abandon...")
             sys.exit(0)
 
-    instance = config.Instance()
+    instance = config.AppConfig.Instance()
     instance.path = str(data_dir.resolve())
     instance.active = False
 
@@ -323,15 +332,10 @@ def basic_setup() -> NoReturn:
 
 def setup() -> NoReturn:
     try:
-        """Create a new instance."""
+        # Create a new instance.
         level = logging.DEBUG
         base_logger = logging.getLogger("tuxbot")
         base_logger.setLevel(level)
-        formatter = logging.Formatter(
-            "[{asctime}] [{levelname}] {name}: {message}",
-            datefmt="%Y-%m-%d %H:%M:%S",
-            style="{",
-        )
         stdout_handler = logging.StreamHandler(sys.stdout)
         stdout_handler.setFormatter(formatter)
         base_logger.addHandler(stdout_handler)

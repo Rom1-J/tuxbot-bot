@@ -25,52 +25,6 @@ def data_path(instance_name: str) -> Path:
     return Path(app_dir.user_data_dir) / "data" / instance_name
 
 
-def core_path(instance_name: str) -> Path:
-    """Return Path for core configs.
-
-    Parameters
-    ----------
-    instance_name:str
-
-    Returns
-    -------
-    Path
-        Generated path for core configs.
-    """
-    return data_path(instance_name) / "data" / instance_name / "core"
-
-
-def cogs_data_path(instance_name: str) -> Path:
-    """Return Path for cogs configs.
-
-    Parameters
-    ----------
-    instance_name:str
-
-    Returns
-    -------
-    Path
-        Generated path for cogs configs.
-    """
-    return data_path(instance_name) / "data" / instance_name / "cogs"
-
-
-def cog_data_path(instance_name: str, cog_name: str) -> Path:
-    """Return Path for chosen configs for cog.
-
-    Parameters
-    ----------
-    instance_name:str
-    cog_name:str
-
-    Returns
-    -------
-    Path
-        Generated path for cog's configs.
-    """
-    return data_path(instance_name) / "data" / instance_name / "cogs" / cog_name
-
-
 def logs_data_path(instance_name: str) -> Path:
     """Return Path for logs.
 

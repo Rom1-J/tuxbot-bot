@@ -29,9 +29,7 @@ def find_locale(locale: str) -> str:
 
 
 def get_locale_name(locale: str) -> str:
-    """Return the name of this `locale`
-
-    """
+    """Return the name of this `locale`"""
     return available_locales.get(find_locale(locale))[0]
 
 
@@ -57,7 +55,9 @@ class Translator(Callable[[str], str]):
 
         self.load_translations()
 
-    def __call__(self, untranslated: str, ctx: ContextPlus, config: Config) -> str:
+    def __call__(
+        self, untranslated: str, ctx: ContextPlus, config: Config
+    ) -> str:
         try:
             locale = config.get_value(
                 "core",
@@ -75,10 +75,8 @@ class Translator(Callable[[str], str]):
         )
 
     def load_translations(self):
-        """Loads the current translations.
-
-        """
-        for locale in available_locales.keys():
+        """Loads the current translations."""
+        for locale in available_locales:
             locale_path = self.cog_folder / "locales" / f"{locale}.po"
 
             with locale_path.open("r") as f:
@@ -88,7 +86,9 @@ class Translator(Callable[[str], str]):
                 if message.id:
                     self._add_translation(locale, message.id, message.string)
 
-    def _add_translation(self, locale: str, untranslated: str, translated: str):
+    def _add_translation(
+        self, locale: str, untranslated: str, translated: str
+    ):
         if translated:
             if not self.translations.get(locale, False):
                 self.translations[locale] = {}

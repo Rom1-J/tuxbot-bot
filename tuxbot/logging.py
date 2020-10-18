@@ -6,6 +6,12 @@ import sys
 MAX_OLD_LOGS = 8
 MAX_BYTES = 5_000_000
 
+formatter = logging.Formatter(
+    "[{asctime}] [{levelname}] {name}: {message}",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    style="{",
+)
+
 
 def init_logging(level: int, location: pathlib.Path) -> None:
     """Initialize loggers.
@@ -26,19 +32,15 @@ def init_logging(level: int, location: pathlib.Path) -> None:
     base_logger.setLevel(level)
     base_logger_file = location / "tuxbot.log"
 
-    formatter = logging.Formatter(
-        "[{asctime}] [{levelname}] {name}: {message}",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        style="{",
-    )
-
     dpy_handler = logging.handlers.RotatingFileHandler(
         str(dpy_logger_file.resolve()),
-        maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
+        maxBytes=MAX_BYTES,
+        backupCount=MAX_OLD_LOGS,
     )
     base_handler = logging.handlers.RotatingFileHandler(
         str(base_logger_file.resolve()),
-        maxBytes=MAX_BYTES, backupCount=MAX_OLD_LOGS
+        maxBytes=MAX_BYTES,
+        backupCount=MAX_OLD_LOGS,
     )
 
     stdout_handler = logging.StreamHandler(sys.stdout)

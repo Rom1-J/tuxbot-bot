@@ -5,10 +5,16 @@ from discord.ext import commands
 
 from tuxbot.core import checks
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import Translator, find_locale, get_locale_name, available_locales
+from tuxbot.core.i18n import (
+    Translator,
+    find_locale,
+    get_locale_name,
+    available_locales,
+)
 from tuxbot.core.utils.functions.extra import (
-    group_extra, command_extra,
-    ContextPlus
+    group_extra,
+    command_extra,
+    ContextPlus,
 )
 
 log = logging.getLogger("tuxbot.cogs.admin")
@@ -20,30 +26,33 @@ class Admin(commands.Cog, name="Admin"):
         self.bot = bot
 
     async def _save_lang(self, ctx: ContextPlus, lang: str):
-        await self.bot.config.update("core", f"guild.{ctx.guild.id}.locale", lang)
+        await self.bot.config.update(
+            "core", f"guild.{ctx.guild.id}.locale", lang
+        )
 
     @group_extra(name="lang", aliases=["locale", "langue"], deletable=True)
     @commands.guild_only()
     @checks.is_admin()
     async def _lang(self, ctx: ContextPlus):
         """Manage lang settings."""
-        pass
 
     @_lang.command(name="set", aliases=["define", "choice"])
     async def _lang_set(self, ctx: ContextPlus, lang: str):
         try:
             await self._save_lang(ctx, find_locale(lang.lower()))
             await ctx.send(
-                _("Locale changed to {lang} successfully", ctx, self.bot.config).format(
-                    lang=f"`{get_locale_name(lang).lower()}`"
-                )
+                _(
+                    "Locale changed to {lang} successfully",
+                    ctx,
+                    self.bot.config,
+                ).format(lang=f"`{get_locale_name(lang).lower()}`")
             )
         except NotImplementedError:
             await self._lang_list(ctx)
 
     @_lang.command(name="list", aliases=["liste", "all", "view"])
     async def _lang_list(self, ctx: ContextPlus):
-        description = ''
+        description = ""
         for key, value in available_locales.items():
             description += f":flag_{key[-2:].lower()}: {value[0]}\n"
 
