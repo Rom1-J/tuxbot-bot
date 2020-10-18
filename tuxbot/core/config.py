@@ -70,7 +70,7 @@ class AppConfig(Structure):
 
 
 # =============================================================================
-# Useful functions to browse configs
+# Useful functions to interact with configs
 # =============================================================================
 
 

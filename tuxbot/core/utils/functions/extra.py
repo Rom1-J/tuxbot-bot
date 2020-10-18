@@ -1,5 +1,4 @@
 import asyncio
-import yaml
 
 import discord
 from discord import Embed
@@ -9,18 +8,23 @@ from rich.console import Console
 
 console = Console()
 
-console.clear()
+TOKEN_REPLACEMENT = "whoops, leaked token"
 
 
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
         if content is not None:
-            content = content.replace(self.bot.config.Core.token, "<token>")
+            content = content.replace(
+                self.bot.config.Core.token, TOKEN_REPLACEMENT
+            )
         if kwargs.get("embed"):
-            e = str(kwargs.get("embed").to_dict())
-            e = e.replace(self.bot.config("core").get("token"), "<token>")
-            e = yaml.load(e, Loader=yaml.FullLoader)
-            kwargs["embed"] = Embed.from_dict(e)
+            embed = kwargs.get("embed").to_dict()
+            for key, value in embed.items():
+                if isinstance(value, (str, bytes)):
+                    embed[key] = value.replace(
+                        self.bot.config.Core.token, TOKEN_REPLACEMENT
+                    )
+            kwargs["embed"] = Embed.from_dict(embed)
 
         if (
             hasattr(self.command, "deletable") and self.command.deletable

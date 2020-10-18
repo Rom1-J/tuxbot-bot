@@ -6,6 +6,7 @@ from typing import Callable, Union, Dict, List
 from babel.messages.pofile import read_po
 
 from tuxbot.core import Config
+from tuxbot.core.config import search_for
 from tuxbot.core.utils.functions.extra import ContextPlus
 
 log = logging.getLogger("tuxbot.core.i18n")
@@ -59,12 +60,19 @@ class Translator(Callable[[str], str]):
         self, untranslated: str, ctx: ContextPlus, config: Config
     ) -> str:
         try:
-            locale = config.get_value(
-                "core",
-                f"guild.{ctx.guild.id}.locale",
-                config.get_value("core", "locale"),
+            user_locale = search_for(
+                config.Users, ctx.author.id, "locale", None
             )
-            return self.translations[locale][untranslated]
+            if user_locale:
+                return self.translations[user_locale][untranslated]
+
+            guild_locale = search_for(
+                config.Servers, ctx.guild.id, "locale", None
+            )
+            if guild_locale:
+                return self.translations[guild_locale][untranslated]
+
+            return self.translations[config.Core.locale][untranslated]
         except KeyError:
             return untranslated
 

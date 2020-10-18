@@ -116,7 +116,7 @@ def debug_info() -> NoReturn:
     table.add_row(f"[u]System arch:[/u] {os.uname().machine}")
     table.add_row(f"[u]Kernel:[/u] {os.uname().release}")
     table.add_row(f"[u]User:[/u] {os.getlogin()}")
-    table.add_row(f"[u]Uptime:[/u] {uptime[2]}")
+    table.add_row(f"[u]Uptime:[/u] {uptime[2][:-1]}")
     table.add_row(
         f"[u]Load Average:[/u] {' '.join(map(str, os.getloadavg()))}"
     )

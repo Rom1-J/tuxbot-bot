@@ -26,9 +26,7 @@ class Admin(commands.Cog, name="Admin"):
         self.bot = bot
 
     async def _save_lang(self, ctx: ContextPlus, lang: str):
-        await self.bot.config.update(
-            "core", f"guild.{ctx.guild.id}.locale", lang
-        )
+        self.bot.config.Servers.all[ctx.guild.id].locale = lang
 
     @group_extra(name="lang", aliases=["locale", "langue"], deletable=True)
     @commands.guild_only()
