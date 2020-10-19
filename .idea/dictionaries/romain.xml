@@ -3,30 +3,43 @@
     <words>
       <w>anglais</w>
       <w>appdirs</w>
+      <w>apres</w>
       <w>asctime</w>
       <w>commandstats</w>
+      <w>ctype</w>
+      <w>debian</w>
+      <w>découverte</w>
+      <w>fonction</w>
       <w>francais</w>
       <w>français</w>
       <w>gnous</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
       <w>jishaku</w>
+      <w>langue</w>
       <w>levelname</w>
+      <w>liste</w>
       <w>localiseip</w>
+      <w>octobre</w>
+      <w>pacman</w>
       <w>postgresql</w>
       <w>pred</w>
       <w>pylint</w>
       <w>releaselevel</w>
       <w>rprint</w>
       <w>socketstats</w>
+      <w>soit</w>
       <w>splt</w>
+      <w>suivante</w>
       <w>systemd</w>
       <w>tldr</w>
       <w>tutux</w>
       <w>tuxbot</w>
       <w>tuxbot's</w>
       <w>tuxvenv</w>
+      <w>venv</w>
       <w>webhooks</w>
+      <w>écrite</w>
     </words>
   </dictionary>
 </component>

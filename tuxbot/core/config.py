@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict
+from typing import List, Dict, Any
 from structured_config import (
     Structure,
     IntField,
@@ -9,39 +9,35 @@ from structured_config import (
 )
 
 
-__all__ = ["Config", "ConfigFile", "search_for"]
+__all__ = ["Config", "ConfigFile", "search_for", "set_for"]
 
 log = logging.getLogger("tuxbot.core.config")
 
 
-class Server(Structure):
-    prefixes: List[str] = []
-    disabled_command: List[str] = []
-    locale: str = StrField("")
-    blacklisted: bool = BoolField(False)
-
-
-class Channel(Structure):
-    disabled_command: List[str] = []
-    locale: str = StrField("")
-    blacklisted: bool = BoolField(False)
-
-
-class User(Structure):
-    aliases: List[dict] = []
-    locale: str = StrField("")
-    blacklisted: bool = BoolField(False)
-
-
 class Config(Structure):
-    class Servers(Structure):
-        all: Dict[int, Server] = {}
+    class Server(Structure):
+        prefixes: List[str] = []
+        disabled_command: List[str] = []
+        locale: str = StrField("")
+        blacklisted: bool = BoolField(False)
 
-    class Channels(Structure):
-        all: Dict[int, Channel] = {}
+    class Channel(Structure):
+        disabled_command: List[str] = []
+        locale: str = StrField("")
+        blacklisted: bool = BoolField(False)
 
-    class Users(Structure):
-        all: Dict[int, User] = {}
+    class User(Structure):
+        aliases: List[dict] = []
+        locale: str = StrField("")
+        blacklisted: bool = BoolField(False)
+
+    class Cog(Structure):
+        pass
+
+    Servers: Dict[int, Server] = {}
+    Channels: Dict[int, Channel] = {}
+    Users: Dict[int, User] = {}
+    Cogs: Dict[str, Cog] = {}
 
     class Core(Structure):
         owners_id: List[int] = []
@@ -50,9 +46,6 @@ class Config(Structure):
         mentionable: bool = BoolField("")
         locale: str = StrField("")
         disabled_command: List[str] = []
-
-    class Cogs(Structure):
-        pass
 
 
 # =============================================================================
@@ -74,7 +67,17 @@ class AppConfig(Structure):
 # =============================================================================
 
 
-def search_for(config, key, value, default=False):
-    if key in config.all:
-        return getattr(config.all[key], value)
+def search_for(config, key, value, default=False) -> Any:
+    if key in config:
+        return getattr(config[key], value)
     return default
+
+
+# la fonction suivante a été écrite le lundi 19 octobre 2020 à 13h49 soit 1h
+# apres la découverte de mon chat, rip roxy, 201?-2020 :'(
+def set_for(config, key, ctype, **values) -> Any:
+    if key not in config:
+        config[key] = ctype()
+
+    for k, v in values.items():
+        setattr(config[key], k, v)

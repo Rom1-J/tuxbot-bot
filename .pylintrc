@@ -2,6 +2,8 @@
 good-names=
     e,  # (exception) as e
     f,  # (file) as f
+    k,  # for k, v in
+    v,  # for k, v in
 
 [MASTER]
 disable=

@@ -28,7 +28,7 @@ Arch Linux
 
     $ sudo pacman -Syu python python-pip python-virtualenv git
 
-Continue to `create the venv <#creating-the-virtual-environnement>`__.
+Continue to `create the venv <#creating-the-virtual-environment>`__.
 
 --------------
 
@@ -40,7 +40,7 @@ Debian
     $ sudo apt update
     $ sudo apt -y install python3 python3-dev python3-pip python3-venv git
 
-Continue to `create the venv <#creating-the-virtual-environnement>`__.
+Continue to `create the venv <#creating-the-virtual-environment>`__.
 
 --------------
 
