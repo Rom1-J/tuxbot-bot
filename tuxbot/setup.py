@@ -251,9 +251,6 @@ def additional_config(instance: str, cogs: str = "**"):
             for key, value in mod_extra.items():
                 extras[key] = get_extra(value["description"], value["type"])
 
-            console.log(mod_config)
-            console.log(dir(mod_config))
-            console.log(mod_config_type)
             set_for(mod_config, **extras)
         else:
             console.print(
