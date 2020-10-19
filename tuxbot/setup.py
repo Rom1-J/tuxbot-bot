@@ -1,21 +1,24 @@
-import json
+import argparse
+import importlib
 import logging
 import re
 import sys
+from argparse import Namespace
 from pathlib import Path
 from typing import NoReturn, Union, List
 
 from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
 from rich.rule import Rule
+from rich.style import Style
 from rich.traceback import install
 
+from tuxbot.core.config import set_for
 from tuxbot.logging import formatter
-from tuxbot.core.data_manager import config_dir, app_dir
+from tuxbot.core.data_manager import config_dir, app_dir, cogs_data_path
 from tuxbot.core import config
 
 console = Console()
-console.clear()
 install(console=console)
 
 try:
@@ -207,7 +210,12 @@ def get_multiple(
     return values
 
 
-def additional_config() -> dict:
+def get_extra(question: str, value_type: type) -> Union[str, int]:
+    prompt = IntPrompt if value_type is int else Prompt
+    return prompt.ask(question, console=console)
+
+
+def additional_config(instance: str, cogs: str = "**"):
     """Asking for additional configs in cogs.
 
     Returns
@@ -215,24 +223,45 @@ def additional_config() -> dict:
     dict:
         Dict with cog name as key and configs as value.
     """
-    paths = Path("tuxbot/cogs").glob("**/config.py")
-    data = {}
+    if cogs is None or "all" in sum(cogs, []):
+        cogs = []
+    else:
+        cogs = sum(cogs, [])
 
-    for file in paths:
-        console.print("\n" * 4)
-        cog_name = str(file.parent).split("/")[-1]
-        data[cog_name] = {}
+    if len(cogs) == 0:
+        paths = Path("tuxbot/cogs").glob("**/config.py")
+    else:
+        paths = [Path(f"tuxbot/cogs/{cog}/config.py") for cog in cogs]
 
-        with file.open("r") as f:
-            data = json.load(f)
+    for path in paths:
+        cog_name = str(path.parent).split("/")[-1]
+        if path.exists():
+            console.print(Rule(f"\nConfiguration for `{cog_name}` module"))
+            mod = importlib.import_module(str(path).replace("/", ".")[:-3])
+            mod_config_type = getattr(mod, cog_name.capitalize() + "Config")
+            mod_extra = getattr(mod, "extra")
 
-        console.print(Rule(f"\nConfiguration for `{cog_name}` module"))
+            mod_config = config.ConfigFile(
+                str(cogs_data_path(instance, cog_name) / "config.yaml"),
+                mod_config_type,
+            ).config
 
-        for key, value in data.items():
-            console.print()
-            data[cog_name][key] = Prompt.ask(value["description"])
+            extras = {}
 
-    return data
+            for key, value in mod_extra.items():
+                extras[key] = get_extra(value["description"], value["type"])
+
+            console.log(mod_config)
+            console.log(dir(mod_config))
+            console.log(mod_config_type)
+            set_for(mod_config, **extras)
+        else:
+            console.print(
+                Rule(
+                    f"\nFailed to fetch information for `{cog_name}` module",
+                    style=Style(color="red"),
+                )
+            )
 
 
 def finish_setup(data_dir: Path) -> NoReturn:
@@ -326,11 +355,48 @@ def basic_setup() -> NoReturn:
     console.print()
     console.print(
         f"Instance successfully created! "
-        f"You can now run `tuxbot {name}` to launch this instance"
+        f"You can now run `tuxbot {name}` to launch this instance now or "
+        f"setup the additional configs by running "
+        f"`tuxbot-setup {name} --additional-config=all`"
     )
 
 
+def parse_cli_flags(args: list) -> Namespace:
+    """Parser for cli values.
+
+    Parameters
+    ----------
+    args:list
+        Is a list of all passed values.
+    Returns
+    -------
+    Namespace
+    """
+    parser = argparse.ArgumentParser(
+        description="Tuxbot Setup - OpenSource bot",
+        usage="tuxbot-setup [instance] [arguments]",
+    )
+    parser.add_argument(
+        "instance_name",
+        nargs="?",
+        help="Name of the bot instance to edit.",
+    )
+    parser.add_argument(
+        "-a",
+        "--additional-config",
+        action="append",
+        nargs="+",
+        help="Execute setup to additional configs",
+    )
+
+    args = parser.parse_args(args)
+
+    return args
+
+
 def setup() -> NoReturn:
+    cli_flags = parse_cli_flags(sys.argv[1:])
+
     try:
         # Create a new instance.
         level = logging.DEBUG
@@ -340,7 +406,18 @@ def setup() -> NoReturn:
         stdout_handler.setFormatter(formatter)
         base_logger.addHandler(stdout_handler)
 
-        basic_setup()
+        if cli_flags.additional_config and not cli_flags.instance_name:
+            console.print(
+                "[red]No instance to modify provided ! "
+                "You can use 'tuxbot -L' to list all available instances"
+            )
+        elif cli_flags.instance_name:
+            additional_config(
+                cli_flags.instance_name, cli_flags.additional_config
+            )
+        else:
+            console.clear()
+            basic_setup()
     except KeyboardInterrupt:
         console.print("Exiting...")
     except Exception:

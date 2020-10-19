@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from tuxbot.core import checks
 from tuxbot.core.bot import Tux
-from tuxbot.core.config import set_for
+from tuxbot.core.config import set_for_key
 from tuxbot.core.config import Config
 from tuxbot.core.i18n import (
     Translator,
@@ -28,7 +28,7 @@ class Admin(commands.Cog, name="Admin"):
         self.bot = bot
 
     async def _save_lang(self, ctx: ContextPlus, lang: str):
-        set_for(
+        set_for_key(
             self.bot.config.Servers, ctx.guild.id, Config.Server, locale=lang
         )
 

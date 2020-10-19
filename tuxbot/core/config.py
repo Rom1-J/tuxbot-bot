@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, NoReturn
 from structured_config import (
     Structure,
     IntField,
@@ -9,7 +9,7 @@ from structured_config import (
 )
 
 
-__all__ = ["Config", "ConfigFile", "search_for", "set_for"]
+__all__ = ["Config", "ConfigFile", "search_for", "set_for_key", "set_for_key"]
 
 log = logging.getLogger("tuxbot.core.config")
 
@@ -73,11 +73,31 @@ def search_for(config, key, value, default=False) -> Any:
     return default
 
 
-# la fonction suivante a été écrite le lundi 19 octobre 2020 à 13h49 soit 1h
-# apres la découverte de mon chat, rip roxy, 201?-2020 :'(
-def set_for(config, key, ctype, **values) -> Any:
+def set_for_key(config, key, ctype, **values) -> NoReturn:
+    # pylint: disable=anomalous-backslash-in-string
+    """
+    La fonction suivante        \`*-.
+    a été écrite le lundi        )  _`-.
+    19 octobre 2020 a 13h40     .  : `. .
+    soit 1h apres la découverte : _   '  \
+    du corps de mon chat        ; *` _.   `*-._
+                                `-.-'          `-.
+                                  ;       `       `.
+                                  :.       .        \
+                                  . \  .   :   .-'   .
+                                  '  `+.;  ;  '      :
+                                  :  '  |    ;       ;-.
+                                  ; '   : :`-:     _.`* ;
+               rip roxy        .*' /  .*' ; .*`- +'  `*'
+           201?-2020 :,(       `*-*   `*-*  `*-*'
+    """
     if key not in config:
         config[key] = ctype()
 
     for k, v in values.items():
         setattr(config[key], k, v)
+
+
+def set_for(config, **values) -> NoReturn:
+    for k, v in values.items():
+        setattr(config, k, v)
