@@ -15,8 +15,14 @@ from rich.traceback import install
 
 from tuxbot import version_info
 
-from .config import Config, ConfigFile, search_for
-from .data_manager import logs_data_path, data_path
+from .config import (
+    Config,
+    ConfigFile,
+    search_for,
+    AppConfig,
+    set_for_key,
+)
+from .data_manager import logs_data_path, data_path, config_dir
 
 from . import __version__, ExitCodes
 from . import exceptions
@@ -105,6 +111,15 @@ class Tux(commands.AutoShardedBot):
 
     async def on_ready(self):
         self.uptime = datetime.datetime.now()
+        app_config = ConfigFile(config_dir / "config.yaml", AppConfig).config
+        set_for_key(
+            app_config.Instances,
+            self.instance_name,
+            AppConfig.Instance,
+            active=True,
+            last_run=datetime.datetime.timestamp(self.uptime),
+        )
+
         self._progress.get("main").stop_task(
             self._progress.get("tasks")["connecting"]
         )
@@ -234,6 +249,14 @@ class Tux(commands.AutoShardedBot):
 
         Todo: add postgresql logout here
         """
+        app_config = ConfigFile(config_dir / "config.yaml", AppConfig).config
+        set_for_key(
+            app_config.Instances,
+            self.instance_name,
+            AppConfig.Instance,
+            active=False,
+        )
+
         for task in self._progress.get("tasks").keys():
             self._progress.get("main").log("Shutting down", task)
 

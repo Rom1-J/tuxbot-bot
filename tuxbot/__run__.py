@@ -47,7 +47,7 @@ def list_instances() -> NoReturn:
     console.print()
 
     columns = Columns(expand=True, padding=2, align="center")
-    for instance, details in app_config.instances.items():
+    for instance, details in app_config.Instances.items():
         active = details["active"]
         last_run = (
             humanize.naturaltime(

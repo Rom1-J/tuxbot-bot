@@ -9,7 +9,14 @@ from structured_config import (
 )
 
 
-__all__ = ["Config", "ConfigFile", "search_for", "set_for_key", "set_for_key"]
+__all__ = [
+    "Config",
+    "ConfigFile",
+    "AppConfig",
+    "search_for",
+    "set_for_key",
+    "set_for",
+]
 
 log = logging.getLogger("tuxbot.core.config")
 
@@ -59,7 +66,7 @@ class AppConfig(Structure):
         active: bool = BoolField(False)
         last_run: int = IntField(0)
 
-    instances: Dict[str, Instance] = {}
+    Instances: Dict[str, Instance] = {}
 
 
 # =============================================================================

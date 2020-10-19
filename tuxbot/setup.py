@@ -13,7 +13,7 @@ from rich.rule import Rule
 from rich.style import Style
 from rich.traceback import install
 
-from tuxbot.core.config import set_for
+from tuxbot.core.config import set_for, set_for_key
 from tuxbot.logging import formatter
 from tuxbot.core.data_manager import config_dir, app_dir, cogs_data_path
 from tuxbot.core import config
@@ -29,12 +29,14 @@ except PermissionError:
     )
     sys.exit(1)
 
-app_config = config.ConfigFile(config_dir / "config.yaml", config.AppConfig)
+app_config = config.ConfigFile(
+    config_dir / "config.yaml", config.AppConfig
+).config
 
-if not app_config.config.instances:
+if not app_config.Instances:
     instances_list = []
 else:
-    instances_list = list(app_config.config.instances.keys())
+    instances_list = list(app_config.Instances.keys())
 
 
 def get_name() -> str:
@@ -339,11 +341,13 @@ def basic_setup() -> NoReturn:
             console.print("Abandon...")
             sys.exit(0)
 
-    instance = config.AppConfig.Instance()
-    instance.path = str(data_dir.resolve())
-    instance.active = False
-
-    app_config.config.instances[name] = instance
+    set_for_key(
+        app_config.Instances,
+        name,
+        config.AppConfig.Instance,
+        path=str(data_dir.resolve()),
+        active=False,
+    )
 
     console.print("\n" * 4)
 
