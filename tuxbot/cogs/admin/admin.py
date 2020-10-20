@@ -28,9 +28,7 @@ class Admin(commands.Cog, name="Admin"):
         self.bot = bot
 
     async def _save_lang(self, ctx: ContextPlus, lang: str):
-        set_for_key(
-            self.bot.config.Servers, ctx.guild.id, Config.Server, locale=lang
-        )
+        set_for_key(self.bot.config.Servers, ctx.guild.id, Config.Server, locale=lang)
 
     @group_extra(name="lang", aliases=["locale", "langue"], deletable=True)
     @commands.guild_only()

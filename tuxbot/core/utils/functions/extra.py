@@ -14,9 +14,7 @@ TOKEN_REPLACEMENT = "whoops, leaked token"
 class ContextPlus(commands.Context):
     async def send(self, content=None, *args, **kwargs):
         if content is not None:
-            content = content.replace(
-                self.bot.config.Core.token, TOKEN_REPLACEMENT
-            )
+            content = content.replace(self.bot.config.Core.token, TOKEN_REPLACEMENT)
         if kwargs.get("embed"):
             embed = kwargs.get("embed").to_dict()
             for key, value in embed.items():
@@ -40,9 +38,7 @@ class ContextPlus(commands.Context):
                 )
 
             try:
-                await self.bot.wait_for(
-                    "reaction_add", timeout=42.0, check=check
-                )
+                await self.bot.wait_for("reaction_add", timeout=42.0, check=check)
             except asyncio.TimeoutError:
                 await message.remove_reaction("🗑", self.bot.user)
             else:

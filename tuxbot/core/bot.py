@@ -88,18 +88,14 @@ class Tux(commands.AutoShardedBot):
     async def load_packages(self):
         if packages:
             with Progress() as progress:
-                task = progress.add_task(
-                    "Loading packages...", total=len(packages)
-                )
+                task = progress.add_task("Loading packages...", total=len(packages))
 
                 for package in packages:
                     try:
                         self.load_extension(package)
                         progress.console.print(f"{package} loaded")
                     except Exception as e:
-                        log.exception(
-                            "Failed to load package %s", package, exc_info=e
-                        )
+                        log.exception("Failed to load package %s", package, exc_info=e)
                         progress.console.print(
                             f"[red]Failed to load package {package} "
                             f"[i](see "
@@ -120,9 +116,7 @@ class Tux(commands.AutoShardedBot):
             last_run=datetime.datetime.timestamp(self.uptime),
         )
 
-        self._progress.get("main").stop_task(
-            self._progress.get("tasks")["connecting"]
-        )
+        self._progress.get("main").stop_task(self._progress.get("tasks")["connecting"])
         self._progress.get("main").remove_task(
             self._progress.get("tasks")["connecting"]
         )
@@ -167,9 +161,7 @@ class Tux(commands.AutoShardedBot):
         console.print(columns)
         console.print()
 
-    async def is_owner(
-        self, user: Union[discord.User, discord.Member]
-    ) -> bool:
+    async def is_owner(self, user: Union[discord.User, discord.Member]) -> bool:
         """Determines if the user is a bot owner.
 
         Parameters
@@ -205,9 +197,7 @@ class Tux(commands.AutoShardedBot):
 
         if (
             search_for(self.config.Servers, message.guild.id, "blacklisted")
-            or search_for(
-                self.config.Channels, message.channel.id, "blacklisted"
-            )
+            or search_for(self.config.Channels, message.channel.id, "blacklisted")
             or search_for(self.config.Users, message.author.id, "blacklisted")
         ):
             return
@@ -236,9 +226,7 @@ class Tux(commands.AutoShardedBot):
         Todo: add postgresql connect here
         """
         with self._progress.get("main") as progress:
-            task_id = self._progress.get("tasks")[
-                "connecting"
-            ] = progress.add_task(
+            task_id = self._progress.get("tasks")["connecting"] = progress.add_task(
                 "connecting", task_name="Connecting to Discord...", start=False
             )
             progress.update(task_id)
@@ -260,17 +248,13 @@ class Tux(commands.AutoShardedBot):
         for task in self._progress.get("tasks").keys():
             self._progress.get("main").log("Shutting down", task)
 
-            self._progress.get("main").stop_task(
-                self._progress.get("tasks")[task]
-            )
+            self._progress.get("main").stop_task(self._progress.get("tasks")[task])
             self._progress.get("main").remove_task(
                 self._progress.get("tasks")["connecting"]
             )
         self._progress.get("main").stop()
 
-        pending = [
-            t for t in asyncio.all_tasks() if t is not asyncio.current_task()
-        ]
+        pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
 
         for task in pending:
             console.log("Canceling", task.get_name(), f"({task.get_coro()})")

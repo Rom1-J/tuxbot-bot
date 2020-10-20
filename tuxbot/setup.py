@@ -24,14 +24,10 @@ install(console=console)
 try:
     config_dir.mkdir(parents=True, exist_ok=True)
 except PermissionError:
-    console.print(
-        f"mkdir: cannot create directory '{config_dir}': Permission denied"
-    )
+    console.print(f"mkdir: cannot create directory '{config_dir}': Permission denied")
     sys.exit(1)
 
-app_config = config.ConfigFile(
-    config_dir / "config.yaml", config.AppConfig
-).config
+app_config = config.ConfigFile(config_dir / "config.yaml", config.AppConfig).config
 
 if not app_config.Instances:
     instances_list = []
@@ -85,9 +81,7 @@ def get_data_dir(instance_name: str) -> Path:
             path.mkdir(parents=True, exist_ok=True)
         except OSError:
             console.print()
-            console.print(
-                f"mkdir: cannot create directory '{path}': Permission denied"
-            )
+            console.print(f"mkdir: cannot create directory '{path}': Permission denied")
             path = ""
 
         return path
@@ -123,9 +117,7 @@ def get_data_dir(instance_name: str) -> Path:
     )
 
     if (
-        Prompt.ask(
-            "Please confirm", choices=["y", "n"], default="y", console=console
-        )
+        Prompt.ask("Please confirm", choices=["y", "n"], default="y", console=console)
         != "y"
     ):
         console.print("Rerun the process to redo this configuration.")
@@ -194,9 +186,7 @@ def get_multiple(
     values = [user_input]
 
     while (
-        Prompt.ask(
-            confirmation, choices=["y", "n"], default="n", console=console
-        )
+        Prompt.ask(confirmation, choices=["y", "n"], default="n", console=console)
         != "n"
     ):
         new = prompt.ask("Other")
@@ -205,8 +195,7 @@ def get_multiple(
             values.append(new)
         else:
             console.print(
-                f"[prompt.invalid]"
-                f"ERROR: `{new}` is already present, [i]ignored[/i]"
+                f"[prompt.invalid]" f"ERROR: `{new}` is already present, [i]ignored[/i]"
             )
 
     return values
@@ -271,9 +260,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
     data_dir:Path
         Where to save configs.
     """
-    console.print(
-        Rule("Now, it's time to finish this setup by giving bot information")
-    )
+    console.print(Rule("Now, it's time to finish this setup by giving bot information"))
     console.print()
 
     token = get_token()
@@ -300,9 +287,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
         "Give the owner id of this bot", "Add another owner ?", int
     )
 
-    instance_config = config.ConfigFile(
-        str(data_dir / "config.yaml"), config.Config
-    )
+    instance_config = config.ConfigFile(str(data_dir / "config.yaml"), config.Config)
 
     instance_config.config.Core.owners_id = owners_id
     instance_config.config.Core.prefixes = prefixes
@@ -314,9 +299,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
 def basic_setup() -> NoReturn:
     """Configs who refer to instances."""
     console.print(
-        Rule(
-            "Hi ! it's time for you to give me information about you instance"
-        )
+        Rule("Hi ! it's time for you to give me information about you instance")
     )
     console.print()
     name = get_name()
@@ -413,9 +396,7 @@ def setup() -> NoReturn:
                 "You can use 'tuxbot -L' to list all available instances"
             )
         elif cli_flags.instance_name:
-            additional_config(
-                cli_flags.instance_name, cli_flags.additional_config
-            )
+            additional_config(cli_flags.instance_name, cli_flags.additional_config)
         else:
             console.clear()
             basic_setup()

@@ -56,19 +56,13 @@ class Translator(Callable[[str], str]):
 
         self.load_translations()
 
-    def __call__(
-        self, untranslated: str, ctx: ContextPlus, config: Config
-    ) -> str:
+    def __call__(self, untranslated: str, ctx: ContextPlus, config: Config) -> str:
         try:
-            user_locale = search_for(
-                config.Users, ctx.author.id, "locale", None
-            )
+            user_locale = search_for(config.Users, ctx.author.id, "locale", None)
             if user_locale:
                 return self.translations[user_locale][untranslated]
 
-            guild_locale = search_for(
-                config.Servers, ctx.guild.id, "locale", None
-            )
+            guild_locale = search_for(config.Servers, ctx.guild.id, "locale", None)
             if guild_locale:
                 return self.translations[guild_locale][untranslated]
 
@@ -94,9 +88,7 @@ class Translator(Callable[[str], str]):
                 if message.id:
                     self._add_translation(locale, message.id, message.string)
 
-    def _add_translation(
-        self, locale: str, untranslated: str, translated: str
-    ):
+    def _add_translation(self, locale: str, untranslated: str, translated: str):
         if translated:
             if not self.translations.get(locale, False):
                 self.translations[locale] = {}

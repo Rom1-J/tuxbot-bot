@@ -4,9 +4,7 @@ from collections import namedtuple
 build = os.popen("git rev-parse --short HEAD").read().strip()
 info = os.popen('git log -n 1 -s --format="%s"').read().strip()
 
-VersionInfo = namedtuple(
-    "VersionInfo", "major minor micro releaselevel build, info"
-)
+VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel build, info")
 version_info = VersionInfo(
     major=3, minor=0, micro=0, releaselevel="alpha", build=build, info=info
 )

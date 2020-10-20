@@ -41,9 +41,7 @@ def list_instances() -> NoReturn:
         data_manager.config_dir / "config.yaml", config.AppConfig
     ).config
 
-    console.print(
-        Panel("[bold green]Instances", style="green"), justify="center"
-    )
+    console.print(Panel("[bold green]Instances", style="green"), justify="center")
     console.print()
 
     columns = Columns(expand=True, padding=2, align="center")
@@ -56,9 +54,7 @@ def list_instances() -> NoReturn:
             or "[i]unknown"
         )
 
-        table = Table(
-            style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD
-        )
+        table = Table(style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD)
         table.add_column("Name")
         table.add_column(("Running since" if active else "Last run"))
         table.add_row(instance, last_run)
@@ -79,9 +75,7 @@ def debug_info() -> NoReturn:
 
     uptime = os.popen("uptime").read().strip().split()
 
-    console.print(
-        Panel("[bold blue]Debug Info", style="blue"), justify="center"
-    )
+    console.print(Panel("[bold blue]Debug Info", style="blue"), justify="center")
     console.print()
 
     columns = Columns(expand=True, padding=2, align="center")
@@ -117,9 +111,7 @@ def debug_info() -> NoReturn:
     table.add_row(f"[u]Kernel:[/u] {os.uname().release}")
     table.add_row(f"[u]User:[/u] {os.getlogin()}")
     table.add_row(f"[u]Uptime:[/u] {uptime[2][:-1]}")
-    table.add_row(
-        f"[u]Load Average:[/u] {' '.join(map(str, os.getloadavg()))}"
-    )
+    table.add_row(f"[u]Load Average:[/u] {' '.join(map(str, os.getloadavg()))}")
     columns.add_renderable(table)
 
     console.print(columns)
@@ -149,18 +141,14 @@ def parse_cli_flags(args: list) -> Namespace:
         action="store_true",
         help="Show tuxbot's used version",
     )
-    parser.add_argument(
-        "--debug", action="store_true", help="Show debug information."
-    )
+    parser.add_argument("--debug", action="store_true", help="Show debug information.")
     parser.add_argument(
         "--list-instances",
         "-L",
         action="store_true",
         help="List all instance names",
     )
-    parser.add_argument(
-        "--token", "-T", type=str, help="Run Tuxbot with passed token"
-    )
+    parser.add_argument("--token", "-T", type=str, help="Run Tuxbot with passed token")
     parser.add_argument(
         "instance_name",
         nargs="?",
@@ -281,9 +269,7 @@ def run() -> NoReturn:
 
         loop.run_until_complete(run_bot(tux, cli_flags))
     except KeyboardInterrupt:
-        console.print(
-            "  [red]Please use <prefix>quit instead of Ctrl+C to Shutdown!"
-        )
+        console.print("  [red]Please use <prefix>quit instead of Ctrl+C to Shutdown!")
         log.warning("Please use <prefix>quit instead of Ctrl+C to Shutdown!")
         log.info("Received KeyboardInterrupt")
         console.print("[i]Trying to shutdown...")
