@@ -12,7 +12,7 @@ TOKEN_REPLACEMENT = "whoops, leaked token"
 
 
 class ContextPlus(commands.Context):
-    async def send(self, content=None, *args, **kwargs):
+    async def send(self, *args, content=None, **kwargs):
         if content is not None:
             content = content.replace(
                 self.bot.config.Core.token, TOKEN_REPLACEMENT
