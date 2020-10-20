@@ -120,13 +120,13 @@ class Tux(commands.AutoShardedBot):
             last_run=datetime.datetime.timestamp(self.uptime),
         )
 
-        self._progress.get("main").stop_task(
-            self._progress.get("tasks")["connecting"]
+        self._progress["main"].stop_task(
+            self._progress["tasks"]["connecting"]
         )
-        self._progress.get("main").remove_task(
-            self._progress.get("tasks")["connecting"]
+        self._progress["main"].remove_task(
+            self._progress["tasks"]["connecting"]
         )
-        self._progress.get("tasks").pop("connecting")
+        self._progress["tasks"].pop("connecting")
         console.clear()
 
         console.print(
@@ -257,16 +257,16 @@ class Tux(commands.AutoShardedBot):
             active=False,
         )
 
-        for task in self._progress.get("tasks").keys():
-            self._progress.get("main").log("Shutting down", task)
+        for task in self._progress["tasks"].keys():
+            self._progress["main"].log("Shutting down", task)
 
-            self._progress.get("main").stop_task(
-                self._progress.get("tasks")[task]
+            self._progress["main"].stop_task(
+                self._progress["tasks"][task]
             )
-            self._progress.get("main").remove_task(
-                self._progress.get("tasks")["connecting"]
+            self._progress["main"].remove_task(
+                self._progress["tasks"]["connecting"]
             )
-        self._progress.get("main").stop()
+        self._progress["main"].stop()
 
         pending = [
             t for t in asyncio.all_tasks() if t is not asyncio.current_task()

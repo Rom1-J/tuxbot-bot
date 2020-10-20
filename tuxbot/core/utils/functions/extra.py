@@ -18,7 +18,7 @@ class ContextPlus(commands.Context):
                 self.bot.config.Core.token, TOKEN_REPLACEMENT
             )
         if kwargs.get("embed"):
-            embed = kwargs.get("embed").to_dict()
+            embed = kwargs["embed"].to_dict()
             for key, value in embed.items():
                 if isinstance(value, (str, bytes)):
                     embed[key] = value.replace(
