@@ -241,7 +241,7 @@ def additional_config(instance: str, cogs: str = "**"):
             console.print(Rule(f"\nConfiguration for `{cog_name}` module"))
             mod = importlib.import_module(str(path).replace("/", ".")[:-3])
             mod_config_type = getattr(mod, cog_name.capitalize() + "Config")
-            mod_extra = getattr(mod, "extra")
+            mod_extra = mod.extra
 
             mod_config = config.ConfigFile(
                 str(cogs_data_path(instance, cog_name) / "config.yaml"),
