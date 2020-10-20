@@ -77,7 +77,7 @@ def debug_info() -> NoReturn:
     tuxbot_version = __version__
     dpy_version = discord.__version__
 
-    uptime = os.popen("uptime").read().strip().split()
+    uptime = os.popen("/usr/bin/uptime").read().strip().split()
 
     console.print(
         Panel("[bold blue]Debug Info", style="blue"), justify="center"

@@ -1,8 +1,8 @@
 import os
 from collections import namedtuple
 
-build = os.popen("git rev-parse --short HEAD").read().strip()
-info = os.popen('git log -n 1 -s --format="%s"').read().strip()
+build = os.popen("/usr/bin/git rev-parse --short HEAD").read().strip()
+info = os.popen('/usr/bin/git log -n 1 -s --format="%s"').read().strip()
 
 VersionInfo = namedtuple(
     "VersionInfo", "major minor micro releaselevel build, info"
