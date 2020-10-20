@@ -48,8 +48,8 @@ class ContextPlus(commands.Context):
             else:
                 await message.delete()
             return message
-        else:
-            return await super().send(content, *args, **kwargs)
+
+        return await super().send(content, *args, **kwargs)
 
 
 class CommandPLus(flags.FlagCommand):
