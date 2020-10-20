@@ -120,9 +120,7 @@ class Tux(commands.AutoShardedBot):
             last_run=datetime.datetime.timestamp(self.uptime),
         )
 
-        self._progress["main"].stop_task(
-            self._progress["tasks"]["connecting"]
-        )
+        self._progress["main"].stop_task(self._progress["tasks"]["connecting"])
         self._progress["main"].remove_task(
             self._progress["tasks"]["connecting"]
         )
@@ -257,12 +255,10 @@ class Tux(commands.AutoShardedBot):
             active=False,
         )
 
-        for task in self._progress["tasks"].keys():
+        for task in self._progress["tasks"]:
             self._progress["main"].log("Shutting down", task)
 
-            self._progress["main"].stop_task(
-                self._progress["tasks"][task]
-            )
+            self._progress["main"].stop_task(self._progress["tasks"][task])
             self._progress["main"].remove_task(
                 self._progress["tasks"]["connecting"]
             )
