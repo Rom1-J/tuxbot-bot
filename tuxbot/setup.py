@@ -5,7 +5,7 @@ import re
 import sys
 from argparse import Namespace
 from pathlib import Path
-from typing import NoReturn, Union, List
+from typing import Union, List
 
 from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
@@ -263,7 +263,7 @@ def additional_config(instance: str, cogs: str = "**"):
             )
 
 
-def finish_setup(data_dir: Path) -> NoReturn:
+def finish_setup(data_dir: Path) -> None:
     """Configs who directly refer to the bot.
 
     Parameters
@@ -311,7 +311,7 @@ def finish_setup(data_dir: Path) -> NoReturn:
     instance_config.config.Core.locale = "en-US"
 
 
-def basic_setup() -> NoReturn:
+def basic_setup() -> None:
     """Configs who refer to instances."""
     console.print(
         Rule(
@@ -395,7 +395,7 @@ def parse_cli_flags(args: list) -> Namespace:
     return args
 
 
-def setup() -> NoReturn:
+def setup() -> None:
     cli_flags = parse_cli_flags(sys.argv[1:])
 
     try:

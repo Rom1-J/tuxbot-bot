@@ -1,8 +1,10 @@
 import asyncio
 import datetime
 import logging
+from collections import Counter
 from typing import List, Union
 
+import aiohttp
 import discord
 from discord.ext import commands
 from rich import box
@@ -33,7 +35,7 @@ log = logging.getLogger("tuxbot")
 console = Console()
 install(console=console)
 
-packages: List[str] = ["jishaku", "tuxbot.cogs.admin"]
+packages: List[str] = ["jishaku", "tuxbot.cogs.admin", "tuxbot.cogs.logs"]
 
 
 class Tux(commands.AutoShardedBot):
@@ -54,6 +56,10 @@ class Tux(commands.AutoShardedBot):
         self.instance_name = self.cli_flags.instance_name
         self.last_exception = None
         self.logs = logs_data_path(self.instance_name)
+
+        self.console = console
+
+        self.stats = {"commands": Counter(), "socket": Counter()}
 
         self.config: Config = ConfigFile(
             str(data_path(self.instance_name) / "config.yaml"), Config
@@ -84,6 +90,7 @@ class Tux(commands.AutoShardedBot):
         self._app_owners_fetched = False  # to prevent abusive API calls
 
         super().__init__(*args, help_command=None, **kwargs)
+        self.session = aiohttp.ClientSession(loop=self.loop)
 
     async def load_packages(self):
         if packages:

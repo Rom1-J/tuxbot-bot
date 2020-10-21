@@ -6,7 +6,6 @@ import sys
 import os
 import tracemalloc
 from argparse import Namespace
-from typing import NoReturn
 from datetime import datetime
 
 import discord
@@ -35,7 +34,7 @@ tracemalloc.start()
 BORDER_STYLE = "not dim"
 
 
-def list_instances() -> NoReturn:
+def list_instances() -> None:
     """List all available instances"""
     app_config = config.ConfigFile(
         data_manager.config_dir / "config.yaml", config.AppConfig
@@ -70,7 +69,7 @@ def list_instances() -> NoReturn:
     sys.exit(os.EX_OK)
 
 
-def debug_info() -> NoReturn:
+def debug_info() -> None:
     """Show debug info relatives to the bot"""
     python_version = sys.version.replace("\n", "")
     pip_version = pip.__version__
@@ -172,7 +171,7 @@ def parse_cli_flags(args: list) -> Namespace:
     return args
 
 
-async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> NoReturn:
+async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> None:
     """Handler when the bot shutdown
 
     It cancels all running task.
@@ -247,7 +246,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     return None
 
 
-def run() -> NoReturn:
+def run() -> None:
     """Main function"""
     tux = None
     cli_flags = parse_cli_flags(sys.argv[1:])

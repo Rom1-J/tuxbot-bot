@@ -1,5 +1,3 @@
-from typing import NoReturn
-
 from rich.console import Console
 from rich.traceback import install
 from tuxbot import ExitCodes
@@ -8,7 +6,7 @@ console = Console()
 install(console=console)
 
 
-def main() -> NoReturn:
+def main() -> None:
     try:
         from .__run__ import run  # pylint: disable=import-outside-toplevel
 

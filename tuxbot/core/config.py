@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any, NoReturn
+from typing import List, Dict, Any
 from structured_config import (
     Structure,
     IntField,
@@ -80,7 +80,7 @@ def search_for(config, key, value, default=False) -> Any:
     return default
 
 
-def set_for_key(config, key, ctype, **values) -> NoReturn:
+def set_for_key(config, key, ctype, **values) -> None:
     # pylint: disable=anomalous-backslash-in-string
     """
     La fonction suivante        \`*-.
@@ -105,6 +105,6 @@ def set_for_key(config, key, ctype, **values) -> NoReturn:
         setattr(config[key], k, v)
 
 
-def set_for(config, **values) -> NoReturn:
+def set_for(config, **values) -> None:
     for k, v in values.items():
         setattr(config, k, v)

@@ -12,24 +12,45 @@ TOKEN_REPLACEMENT = "whoops, leaked token"
 
 
 class ContextPlus(commands.Context):
-    async def send(self, *args, content=None, **kwargs):
-        if content is not None:
+    async def send(
+        self,
+        content=None,
+        *,
+        tts=False,
+        embed=None,
+        file=None,
+        files=None,
+        delete_after=None,
+        nonce=None,
+        allowed_mentions=None,
+        deletable=False
+    ):  # i know *args and **kwargs but, i prefer work with same values
+        if content:
             content = content.replace(
                 self.bot.config.Core.token, TOKEN_REPLACEMENT
             )
-        if kwargs.get("embed"):
-            embed = kwargs["embed"].to_dict()
-            for key, value in embed.items():
+        if embed:
+            e = embed.to_dict()
+            for key, value in e.items():
                 if isinstance(value, (str, bytes)):
-                    embed[key] = value.replace(
+                    e[key] = value.replace(
                         self.bot.config.Core.token, TOKEN_REPLACEMENT
                     )
-            kwargs["embed"] = Embed.from_dict(embed)
+            embed = Embed.from_dict(e)
 
         if (
             hasattr(self.command, "deletable") and self.command.deletable
-        ) or kwargs.pop("deletable", False):
-            message = await super().send(content, *args, **kwargs)
+        ) or deletable:
+            message = await super().send(
+                content=content,
+                tts=tts,
+                embed=embed,
+                file=file,
+                files=files,
+                delete_after=delete_after,
+                nonce=nonce,
+                allowed_mentions=allowed_mentions,
+            )
             await message.add_reaction("🗑")
 
             def check(reaction: discord.Reaction, user: discord.User):
@@ -49,7 +70,16 @@ class ContextPlus(commands.Context):
                 await message.delete()
             return message
 
-        return await super().send(content, *args, **kwargs)
+        return await super().send(
+            content=content,
+            tts=tts,
+            embed=embed,
+            file=file,
+            files=files,
+            delete_after=delete_after,
+            nonce=nonce,
+            allowed_mentions=allowed_mentions,
+        )
 
 
 class CommandPLus(flags.FlagCommand):
