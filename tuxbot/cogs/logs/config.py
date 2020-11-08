@@ -1,5 +1,7 @@
 from structured_config import Structure, StrField
 
+HAS_MODELS = False
+
 
 class LogsConfig(Structure):
     dm: str = StrField("")

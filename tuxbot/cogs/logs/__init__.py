@@ -4,7 +4,7 @@ from collections import namedtuple
 from discord.ext import commands
 
 from .logs import Logs, on_error, GatewayHandler
-from .config import LogsConfig
+from .config import LogsConfig, HAS_MODELS
 from ...core.bot import Tux
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")

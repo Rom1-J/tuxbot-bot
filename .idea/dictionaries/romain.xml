@@ -22,6 +22,7 @@
       <w>localiseip</w>
       <w>octobre</w>
       <w>pacman</w>
+      <w>postgre</w>
       <w>postgresql</w>
       <w>pred</w>
       <w>pylint</w>
@@ -32,6 +33,7 @@
       <w>splt</w>
       <w>suivante</w>
       <w>systemd</w>
+      <w>tablename</w>
       <w>tldr</w>
       <w>tutux</w>
       <w>tuxbot</w>
@@ -40,6 +42,7 @@
       <w>venv</w>
       <w>webhook</w>
       <w>webhooks</w>
+      <w>youtrack</w>
       <w>écrite</w>
     </words>
   </dictionary>

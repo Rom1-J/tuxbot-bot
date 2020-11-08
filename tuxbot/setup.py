@@ -15,7 +15,7 @@ from rich.traceback import install
 
 from tuxbot.core.config import set_for, set_for_key
 from tuxbot.logging import formatter
-from tuxbot.core.data_manager import config_dir, app_dir, cogs_data_path
+from tuxbot.core.utils.data_manager import config_dir, app_dir, cogs_data_path
 from tuxbot.core import config
 
 console = Console()
@@ -300,6 +300,34 @@ def finish_setup(data_dir: Path) -> None:
         "Give the owner id of this bot", "Add another owner ?", int
     )
 
+    console.print("\n" * 4)
+    console.print(Rule("\nAnd to finish, the configuration for PostgreSQL"))
+    console.print()
+
+    database = {
+        "username": Prompt.ask(
+            "Please enter the username for PostgreSQL",
+            console=console,
+        ),
+        "password": Prompt.ask(
+            "Please enter the password for PostgreSQL",
+            console=console,
+        ),
+        "domain": Prompt.ask(
+            "Please enter the domain for PostgreSQL",
+            console=console,
+            default="localhost",
+        ),
+        "port": IntPrompt.ask(
+            "Please enter the port for PostgreSQL",
+            console=console,
+            default="5432",
+        ),
+        "db_name": Prompt.ask(
+            "Please enter the database name for PostgreSQL", console=console
+        ),
+    }
+
     instance_config = config.ConfigFile(
         str(data_dir / "config.yaml"), config.Config
     )
@@ -309,6 +337,12 @@ def finish_setup(data_dir: Path) -> None:
     instance_config.config.Core.token = token
     instance_config.config.Core.mentionable = mentionable
     instance_config.config.Core.locale = "en-US"
+
+    instance_config.config.Core.Database.username = database["username"]
+    instance_config.config.Core.Database.password = database["password"]
+    instance_config.config.Core.Database.domain = database["domain"]
+    instance_config.config.Core.Database.port = database["port"]
+    instance_config.config.Core.Database.db_name = database["db_name"]
 
 
 def basic_setup() -> None:

@@ -8,7 +8,6 @@ from structured_config import (
     ConfigFile,
 )
 
-
 __all__ = [
     "Config",
     "ConfigFile",
@@ -47,6 +46,13 @@ class Config(Structure):
     Cogs: Dict[str, Cog] = {}
 
     class Core(Structure):
+        class Database(Structure):
+            username: str = StrField("")
+            password: str = StrField("")
+            domain: str = StrField("")
+            port: str = IntField(5432)
+            db_name: str = StrField("")
+
         owners_id: List[int] = []
         prefixes: List[str] = []
         token: str = StrField("")

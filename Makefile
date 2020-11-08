@@ -9,6 +9,8 @@ main:
 	$(VENV)/bin/pip install -U pip setuptools
 install:
 	$(VENV)/bin/pip install .
+install-dev:
+	$(VENV)/bin/pip install -r dev.requirements.txt
 update:
 	$(VENV)/bin/pip install -U .
 

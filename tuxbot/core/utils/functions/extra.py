@@ -9,6 +9,7 @@ from rich.console import Console
 console = Console()
 
 TOKEN_REPLACEMENT = "whoops, leaked token"
+PASSWORD_REPLACEMENT = "whoops, leaked password"
 
 
 class ContextPlus(commands.Context):
@@ -28,6 +29,8 @@ class ContextPlus(commands.Context):
         if content:
             content = content.replace(
                 self.bot.config.Core.token, TOKEN_REPLACEMENT
+            ).replace(
+                self.bot.config.Core.Database.password, PASSWORD_REPLACEMENT
             )
         if embed:
             e = embed.to_dict()
@@ -35,6 +38,9 @@ class ContextPlus(commands.Context):
                 if isinstance(value, (str, bytes)):
                     e[key] = value.replace(
                         self.bot.config.Core.token, TOKEN_REPLACEMENT
+                    ).replace(
+                        self.bot.config.Core.Database.password,
+                        PASSWORD_REPLACEMENT,
                     )
             embed = Embed.from_dict(e)
 

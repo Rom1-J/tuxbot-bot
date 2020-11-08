@@ -3,7 +3,7 @@ import logging
 import discord
 from discord.ext import commands
 
-from tuxbot.core import checks
+from tuxbot.core.utils import checks
 from tuxbot.core.bot import Tux
 from tuxbot.core.config import set_for_key
 from tuxbot.core.config import Config

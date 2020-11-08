@@ -4,7 +4,6 @@ import logging
 import signal
 import sys
 import os
-import tracemalloc
 from argparse import Namespace
 from datetime import datetime
 
@@ -21,15 +20,14 @@ from rich import print as rprint
 
 import tuxbot.logging
 from tuxbot.core.bot import Tux
-from tuxbot.core import data_manager
 from tuxbot.core import config
+from .core.utils import data_manager
 from . import __version__, version_info, ExitCodes
 
 log = logging.getLogger("tuxbot.main")
 
 console = Console()
-install(console=console)
-tracemalloc.start()
+install(console=console, show_locals=True)
 
 BORDER_STYLE = "not dim"
 
@@ -295,7 +293,7 @@ def run() -> None:
         raise
     except Exception as exc:
         log.error("Unexpected exception (%s): ", type(exc))
-        console.print_exception()
+        console.print_exception(show_locals=True)
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, 1))
     finally:

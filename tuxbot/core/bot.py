@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import importlib
 import logging
 from collections import Counter
 from typing import List, Union
@@ -13,10 +14,14 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, TextColumn, BarColumn
 from rich.table import Table
-from rich.traceback import install
+from tortoise import Tortoise
 
 from tuxbot import version_info
-
+from tuxbot.core.utils.data_manager import (
+    logs_data_path,
+    data_path,
+    config_dir,
+)
 from .config import (
     Config,
     ConfigFile,
@@ -24,8 +29,6 @@ from .config import (
     AppConfig,
     set_for_key,
 )
-from .data_manager import logs_data_path, data_path, config_dir
-
 from . import __version__, ExitCodes
 from . import exceptions
 from .utils.functions.extra import ContextPlus
@@ -33,9 +36,13 @@ from .utils.functions.prefix import get_prefixes
 
 log = logging.getLogger("tuxbot")
 console = Console()
-install(console=console)
 
-packages: List[str] = ["jishaku", "tuxbot.cogs.admin", "tuxbot.cogs.logs"]
+packages: List[str] = [
+    "jishaku",
+    "tuxbot.cogs.admin",
+    "tuxbot.cogs.logs",
+    "tuxbot.cogs.dev",
+]
 
 
 class Tux(commands.AutoShardedBot):
@@ -140,7 +147,7 @@ class Tux(commands.AutoShardedBot):
         )
         console.print()
 
-        columns = Columns(expand=True, padding=2, align="center")
+        columns = Columns(expand=True, align="center")
 
         table = Table(style="dim", border_style="not dim", box=box.HEAVY_HEAD)
         table.add_column(
@@ -240,6 +247,43 @@ class Tux(commands.AutoShardedBot):
 
         Todo: add postgresql connect here
         """
+        with self._progress.get("main") as progress:
+            task_id = self._progress.get("tasks")[
+                "connecting"
+            ] = progress.add_task(
+                "connecting",
+                task_name="Connecting to PostgreSQL...",
+                start=False,
+            )
+
+            models = []
+
+            for extension, _ in self.extensions.items():
+                if extension == "jishaku":
+                    continue
+
+                if importlib.import_module(extension).HAS_MODELS:
+                    models.append(f"{extension}.models.__init__")
+
+            progress.update(task_id)
+            await Tortoise.init(
+                db_url="postgres://{}:{}@{}:{}/{}".format(
+                    self.config.Core.Database.username,
+                    self.config.Core.Database.password,
+                    self.config.Core.Database.domain,
+                    self.config.Core.Database.port,
+                    self.config.Core.Database.db_name,
+                ),
+                modules={"models": models},
+            )
+            await Tortoise.generate_schemas()
+
+        self._progress["main"].stop_task(self._progress["tasks"]["connecting"])
+        self._progress["main"].remove_task(
+            self._progress["tasks"]["connecting"]
+        )
+        self._progress["tasks"].pop("connecting")
+
         with self._progress.get("main") as progress:
             task_id = self._progress.get("tasks")[
                 "connecting"

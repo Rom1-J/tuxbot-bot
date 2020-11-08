@@ -3,7 +3,7 @@ from rich.traceback import install
 from tuxbot import ExitCodes
 
 console = Console()
-install(console=console)
+install(console=console, show_locals=True)
 
 
 def main() -> None:
@@ -20,11 +20,11 @@ def main() -> None:
         else:
             raise exc
     except Exception:
-        console.print_exception()
+        console.print_exception(show_locals=True)
 
 
 if __name__ == "__main__":
     try:
         main()
     except Exception:
-        console.print_exception()
+        console.print_exception(show_locals=True)

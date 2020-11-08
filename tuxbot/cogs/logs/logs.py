@@ -21,8 +21,8 @@ from tuxbot.core.utils.functions.extra import (
     command_extra,
     ContextPlus,
 )
+from tuxbot.core.utils.data_manager import cogs_data_path
 from .config import LogsConfig
-from ...core.data_manager import cogs_data_path
 
 log = logging.getLogger("tuxbot.cogs.logs")
 _ = Translator("Logs", __file__)
