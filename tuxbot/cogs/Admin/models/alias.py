@@ -13,10 +13,12 @@ class AliasesModel(tortoise.Model):
         table = "aliases"
 
     def __str__(self):
-        return f"<AliasesModel id={self.id} " \
-               f"user_id={self.user_id} " \
-               f"alias='{self.alias}' " \
-               f"command='{self.command}' " \
-               f"guild={self.guild}>"
+        return (
+            f"<AliasesModel id={self.id} "
+            f"user_id={self.user_id} "
+            f"alias='{self.alias}' "
+            f"command='{self.command}' "
+            f"guild={self.guild}>"
+        )
 
     __repr__ = __str__

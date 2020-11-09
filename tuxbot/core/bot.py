@@ -39,9 +39,10 @@ console = Console()
 
 packages: List[str] = [
     "jishaku",
-    "tuxbot.cogs.admin",
-    "tuxbot.cogs.logs",
-    "tuxbot.cogs.dev",
+    "tuxbot.cogs.Admin",
+    "tuxbot.cogs.Logs",
+    "tuxbot.cogs.Dev",
+    "tuxbot.cogs.Utils",
 ]
 
 

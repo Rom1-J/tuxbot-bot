@@ -36,7 +36,7 @@ def is_mod():
 
 
 def is_admin():
-    """Is the user admin ?"""
+    """Is the user Admin ?"""
 
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):

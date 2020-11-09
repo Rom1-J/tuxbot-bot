@@ -26,7 +26,7 @@ def data_path(instance_name: str) -> Path:
 
 
 def logs_data_path(instance_name: str) -> Path:
-    """Return Path for logs.
+    """Return Path for Logs.
 
     Parameters
     ----------
@@ -35,9 +35,9 @@ def logs_data_path(instance_name: str) -> Path:
     Returns
     -------
     Path
-        Generated path for logs files.
+        Generated path for Logs files.
     """
-    return data_path(instance_name) / "logs"
+    return data_path(instance_name) / "Logs"
 
 
 def cogs_data_path(instance_name: str, cog_name: str = "") -> Path:

@@ -131,7 +131,7 @@ def get_data_dir(instance_name: str) -> Path:
         console.print("Rerun the process to redo this configuration.")
         sys.exit(0)
 
-    (data_path_input / "logs").mkdir(parents=True, exist_ok=True)
+    (data_path_input / "Logs").mkdir(parents=True, exist_ok=True)
 
     return data_path_input
 

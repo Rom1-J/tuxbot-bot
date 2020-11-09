@@ -12,12 +12,9 @@ class DevConfig(Structure):
 extra = {
     "url": {
         "type": str,
-        "description": "URL of the YouTrack instance (without /youtrack/)"
+        "description": "URL of the YouTrack instance (without /youtrack/)",
     },
-    "login": {
-        "type": str,
-        "description": "Login for YouTrack instance"
-    },
+    "login": {"type": str, "description": "Login for YouTrack instance"},
     "password": {
         "type": str,
         "description": "Password for YouTrack instance",

@@ -21,7 +21,7 @@ def init_logging(level: int, location: pathlib.Path) -> None:
     level:int
         Level of debug.
     location:Path
-        Where to store logs.
+        Where to store Logs.
     """
 
     # dpy_logger = logging.getLogger("discord")

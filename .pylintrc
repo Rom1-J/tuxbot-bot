@@ -8,6 +8,7 @@ good-names=
 
 [MASTER]
 disable=
+	C0103,  # invalid-name
 	C0114,  # missing-module-docstring
 	C0115,  # missing-class-docstring
 	C0116,  # missing-function-docstring
@@ -15,3 +16,4 @@ disable=
 	R0801,  # duplicate-code
 	R0902,  # too-many-instance-attributes
 	R0903,  # too-few-public-methods
+	E1136,  # unsubscriptable-object (false positive with python 3.9)

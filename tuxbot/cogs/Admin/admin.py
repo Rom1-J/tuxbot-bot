@@ -19,7 +19,7 @@ from tuxbot.core.utils.functions.extra import (
     ContextPlus,
 )
 
-log = logging.getLogger("tuxbot.cogs.admin")
+log = logging.getLogger("tuxbot.cogs.Admin")
 _ = Translator("Admin", __file__)
 
 

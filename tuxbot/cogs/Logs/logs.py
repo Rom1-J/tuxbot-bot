@@ -24,7 +24,7 @@ from tuxbot.core.utils.functions.extra import (
 from tuxbot.core.utils.data_manager import cogs_data_path
 from .config import LogsConfig
 
-log = logging.getLogger("tuxbot.cogs.logs")
+log = logging.getLogger("tuxbot.cogs.Logs")
 _ = Translator("Logs", __file__)
 
 
@@ -55,7 +55,7 @@ class Logs(commands.Cog, name="Logs"):
 
         self.config: LogsConfig = ConfigFile(
             str(
-                cogs_data_path(self.bot.instance_name, "logs") / "config.yaml"
+                cogs_data_path(self.bot.instance_name, "Logs") / "config.yaml"
             ),
             LogsConfig,
         ).config

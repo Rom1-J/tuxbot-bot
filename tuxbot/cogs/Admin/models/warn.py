@@ -13,10 +13,12 @@ class WarnsModel(tortoise.Model):
         table = "warns"
 
     def __str__(self):
-        return f"<WarnsModel id={self.id} " \
-               f"server_id={self.server_id} " \
-               f"user_id={self.user_id} " \
-               f"reason='{self.reason}' " \
-               f"created_at={self.created_at}>"
+        return (
+            f"<WarnsModel id={self.id} "
+            f"server_id={self.server_id} "
+            f"user_id={self.user_id} "
+            f"reason='{self.reason}' "
+            f"created_at={self.created_at}>"
+        )
 
     __repr__ = __str__

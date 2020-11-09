@@ -12,7 +12,7 @@ from .config import DevConfig
 from ...core.utils import checks
 from ...core.utils.functions.extra import group_extra, ContextPlus
 
-log = logging.getLogger("tuxbot.cogs.dev")
+log = logging.getLogger("tuxbot.cogs.Dev")
 _ = Translator("Dev", __file__)
 
 
@@ -22,17 +22,15 @@ class Dev(commands.Cog, name="Dev"):
     def __init__(self, bot: Tux):
         self.bot = bot
         self.config: DevConfig = ConfigFile(
-            str(
-                cogs_data_path(self.bot.instance_name, "dev") / "config.yaml"
-            ),
+            str(cogs_data_path(self.bot.instance_name, "Dev") / "config.yaml"),
             DevConfig,
         ).config
 
         # pylint: disable=invalid-name
         self.yt = YouTrack(
-            self.config.url.rstrip('/') + '/youtrack/',
+            self.config.url.rstrip("/") + "/youtrack/",
             login=self.config.login,
-            password=self.config.password
+            password=self.config.password,
         )
 
     @group_extra(name="issue", aliases=["issues"], deletable=True)
