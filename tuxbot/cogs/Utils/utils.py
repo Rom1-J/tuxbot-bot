@@ -108,8 +108,6 @@ class Utils(commands.Cog, name="Utils"):
                 inline=False,
             )
 
-            e.set_footer(
-                text=f"version: {__version__} • prefix: {ctx.prefix}"
-            )
+            e.set_footer(text=f"version: {__version__} • prefix: {ctx.prefix}")
 
         await ctx.send(embed=e)

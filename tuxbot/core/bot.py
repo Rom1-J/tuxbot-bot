@@ -97,7 +97,9 @@ class Tux(commands.AutoShardedBot):
         self.uptime = None
         self._app_owners_fetched = False  # to prevent abusive API calls
 
-        super().__init__(*args, help_command=None, **kwargs)
+        super().__init__(
+            *args, help_command=None, intents=discord.Intents.all(), **kwargs
+        )
         self.session = aiohttp.ClientSession(loop=self.loop)
 
     async def load_packages(self):
