@@ -43,6 +43,7 @@ packages: List[str] = [
     "tuxbot.cogs.Logs",
     "tuxbot.cogs.Dev",
     "tuxbot.cogs.Utils",
+    "tuxbot.cogs.Polls",
 ]
 
 
@@ -172,9 +173,9 @@ class Tux(commands.AutoShardedBot):
         )
         for extension in packages:
             if extension in self.extensions:
-                status = f"[green]:heavy_check_mark: {extension}"
+                status = f"[green]:heavy_check_mark: {extension} "
             else:
-                status = f"[red]:heavy_multiplication_x: {extension}"
+                status = f"[red]:heavy_multiplication_x: {extension} "
 
             table.add_row(status)
         columns.add_renderable(table)

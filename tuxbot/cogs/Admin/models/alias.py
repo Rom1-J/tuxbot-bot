@@ -2,7 +2,7 @@ import tortoise
 from tortoise import fields
 
 
-class AliasesModel(tortoise.Model):
+class Alias(tortoise.Model):
     id = fields.BigIntField(pk=True)
     user_id = fields.BigIntField()
     alias = fields.TextField(max_length=255)
@@ -14,7 +14,7 @@ class AliasesModel(tortoise.Model):
 
     def __str__(self):
         return (
-            f"<AliasesModel id={self.id} "
+            f"<Alias id={self.id} "
             f"user_id={self.user_id} "
             f"alias='{self.alias}' "
             f"command='{self.command}' "

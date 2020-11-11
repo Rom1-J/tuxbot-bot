@@ -2,7 +2,7 @@ import tortoise
 from tortoise import fields
 
 
-class WarnsModel(tortoise.Model):
+class Warn(tortoise.Model):
     id = fields.BigIntField(pk=True)
     server_id = fields.BigIntField()
     user_id = fields.BigIntField()
@@ -14,7 +14,7 @@ class WarnsModel(tortoise.Model):
 
     def __str__(self):
         return (
-            f"<WarnsModel id={self.id} "
+            f"<Warn id={self.id} "
             f"server_id={self.server_id} "
             f"user_id={self.user_id} "
             f"reason='{self.reason}' "

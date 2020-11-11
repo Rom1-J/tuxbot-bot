@@ -1,15 +1,16 @@
 import asyncio
+import random
 
 import discord
 from discord import Embed
-from discord.ext import commands, flags
+from discord.ext import commands
 
 from rich.console import Console
 
 console = Console()
 
-TOKEN_REPLACEMENT = "whoops, leaked token"
-PASSWORD_REPLACEMENT = "whoops, leaked password"
+TOKEN_REPLACEMENT = "\*" * random.randint(3, 15)
+PASSWORD_REPLACEMENT = "\*" * random.randint(3, 15)
 
 
 class ContextPlus(commands.Context):
@@ -88,7 +89,7 @@ class ContextPlus(commands.Context):
         )
 
 
-class CommandPLus(flags.FlagCommand):
+class CommandPLus(commands.Command):
     def __init__(self, function, **kwargs):
         super().__init__(function, **kwargs)
         self.deletable = kwargs.pop("deletable", True)
@@ -98,7 +99,7 @@ def command_extra(*args, **kwargs):
     return commands.command(*args, **kwargs, cls=CommandPLus)
 
 
-class GroupPlus(flags.FlagGroup):
+class GroupPlus(commands.Group):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.deletable = kwargs.pop("deletable", True)

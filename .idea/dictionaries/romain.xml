@@ -2,6 +2,7 @@
   <dictionary name="romain">
     <words>
       <w>anglais</w>
+      <w>anonyme</w>
       <w>appdirs</w>
       <w>apres</w>
       <w>asctime</w>
@@ -30,6 +31,8 @@
       <w>rprint</w>
       <w>socketstats</w>
       <w>soit</w>
+      <w>sondage</w>
+      <w>sondages</w>
       <w>splt</w>
       <w>suivante</w>
       <w>systemd</w>
