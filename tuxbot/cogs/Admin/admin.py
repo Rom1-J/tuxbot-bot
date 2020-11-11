@@ -32,6 +32,9 @@ class Admin(commands.Cog, name="Admin"):
             self.bot.config.Servers, ctx.guild.id, Config.Server, locale=lang
         )
 
+    # =========================================================================
+    # =========================================================================
+
     @group_extra(name="lang", aliases=["locale", "langue"], deletable=True)
     @commands.guild_only()
     @checks.is_admin()

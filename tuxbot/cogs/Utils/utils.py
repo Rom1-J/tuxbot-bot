@@ -22,6 +22,9 @@ class Utils(commands.Cog, name="Utils"):
     def __init__(self, bot: Tux):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @command_extra(name="info", aliases=["about"])
     async def _info(self, ctx: ContextPlus):
         proc = psutil.Process()
@@ -109,5 +112,96 @@ class Utils(commands.Cog, name="Utils"):
             )
 
             e.set_footer(text=f"version: {__version__} • prefix: {ctx.prefix}")
+
+        await ctx.send(embed=e)
+
+    # =========================================================================
+
+    @command_extra(name="credits", aliases=["contributors", "authors"])
+    async def _credits(self, ctx: ContextPlus):
+        e = discord.Embed(
+            title=_("Contributors", ctx, self.bot.config), color=0x36393F
+        )
+
+        e.add_field(
+            name="**Romain#5117** ",
+            value="• [github](https://github.com/Rom1-J)\n"
+            "• [gitea](https://git.gnous.eu/Romain)\n"
+            "• romain@gnous.eu",
+            inline=True,
+        )
+        e.add_field(
+            name="**Outout#4039** ",
+            value="• [gitea](https://git.gnous.eu/mael)\n"
+            "• [@outoutxyz](https://twitter.com/outouxyz)\n"
+            "• mael@gnous.eu",
+            inline=True,
+        )
+
+        await ctx.send(embed=e)
+
+    # =========================================================================
+
+    @command_extra(name="invite")
+    async def _invite(self, ctx: ContextPlus):
+        basic_perms = discord.Permissions(
+            add_reactions=True,
+            read_messages=True,
+            send_messages=True,
+            manage_messages=True,
+            embed_links=True,
+            attach_files=True,
+            read_message_history=True,
+            external_emojis=True,
+            connect=True,
+            speak=True,
+            manage_roles=True,
+        )
+
+        admin_perms = discord.Permissions(
+            create_instant_invite=True,
+            kick_members=True,
+            ban_members=True,
+            add_reactions=True,
+            read_messages=True,
+            send_messages=True,
+            manage_messages=True,
+            embed_links=True,
+            attach_files=True,
+            read_message_history=True,
+            external_emojis=True,
+            connect=True,
+            speak=True,
+            manage_roles=True,
+        )
+
+        e = discord.Embed(
+            title=_("Invite", ctx, self.bot.config), color=0x36393F
+        )
+
+        e.add_field(
+            name=_("Minimal", ctx, self.bot.config),
+            value=_(
+                "The minimum permissions include the strict requirements for "
+                "the proper functioning of all basics commands.\n",
+                ctx,
+                self.bot.config,
+            )
+            + f"[{_('Add!', ctx, self.bot.config, )}]"
+            f"({discord.utils.oauth_url(self.bot.user.id, basic_perms)})",
+            inline=False,
+        )
+        e.add_field(
+            name=_("Admin", ctx, self.bot.config),
+            value=_(
+                "All minimal permissions + extra permissions for admin "
+                "commands such as kick and ban\n",
+                ctx,
+                self.bot.config,
+            )
+            + f"[{_('Add!', ctx, self.bot.config, )}]"
+            f"({discord.utils.oauth_url(self.bot.user.id, admin_perms)})",
+            inline=False,
+        )
 
         await ctx.send(embed=e)
