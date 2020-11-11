@@ -9,8 +9,8 @@ from rich.console import Console
 
 console = Console()
 
-TOKEN_REPLACEMENT = "\*" * random.randint(3, 15)
-PASSWORD_REPLACEMENT = "\*" * random.randint(3, 15)
+TOKEN_REPLACEMENT = "\\*" * random.randint(3, 15)
+PASSWORD_REPLACEMENT = "\\*" * random.randint(3, 15)
 
 
 class ContextPlus(commands.Context):
