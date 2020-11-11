@@ -40,8 +40,11 @@ class Utils(commands.Cog, name="Utils"):
             )
 
             e.add_field(
-                name=f"__:busts_in_silhouette: "
-                f"{_('Development', ctx, self.bot.config)}__",
+                name=_(
+                    "__:busts_in_silhouette: Development__",
+                    ctx,
+                    self.bot.config,
+                ),
                 value="**Romain#5117:** [git](https://git.gnous.eu/Romain)\n"
                 "**Outout#4039:** [git](https://git.gnous.eu/mael)\n",
                 inline=True,
@@ -54,39 +57,42 @@ class Utils(commands.Cog, name="Utils"):
             )
             e.add_field(
                 name="__:gear: Usage__",
-                value=f"**{humanize.naturalsize(mem.rss)}** "
-                f"{_('physical memory', ctx, self.bot.config)}\n"
-                f"**{humanize.naturalsize(mem.vms)}** "
-                f"{_('virtual memory', ctx, self.bot.config)}\n",
+                value=_(
+                    "**{}** physical memory\n**{}** virtual memory",
+                    ctx,
+                    self.bot.config,
+                ).format(
+                    humanize.naturalsize(mem.rss),
+                    humanize.naturalsize(mem.vms),
+                ),
                 inline=True,
             )
 
             e.add_field(
-                name=f"__{_('Servers count', ctx, self.bot.config)}__",
+                name=_("__Servers count__", ctx, self.bot.config),
                 value=str(len(self.bot.guilds)),
                 inline=True,
             )
             e.add_field(
-                name=f"__{_('Channels count', ctx, self.bot.config)}__",
+                name=_("__Channels count__", ctx, self.bot.config),
                 value=str(len(list(self.bot.get_all_channels()))),
                 inline=True,
             )
             e.add_field(
-                name=f"__{_('Members count', ctx, self.bot.config)}__",
+                name=_("__Members count__", ctx, self.bot.config),
                 value=str(len(list(self.bot.get_all_members()))),
                 inline=True,
             )
 
             e.add_field(
-                name=f"__:file_folder: "
-                f"{_('Files', ctx, self.bot.config)}__",
+                name=_("__:file_folder: Files__", ctx, self.bot.config),
                 value=f"{infos.get('file_amount')} "
                 f"*({infos.get('python_file_amount')}"
                 f" <:python:596577462335307777>)*",
                 inline=True,
             )
             e.add_field(
-                name=f"__¶ {_('Lines', ctx, self.bot.config)}__",
+                name=_("__¶ Lines__", ctx, self.bot.config),
                 value=f"{infos.get('total_lines')} "
                 f"*({infos.get('total_python_class')} class,"
                 f" {infos.get('total_python_functions')} functions,"
@@ -96,20 +102,20 @@ class Utils(commands.Cog, name="Utils"):
             )
 
             e.add_field(
-                name=f"__{_('Latest changes', ctx, self.bot.config)}__",
+                name=_("__Latest changes__", ctx, self.bot.config),
                 value=version_info.info,
                 inline=False,
             )
 
             e.add_field(
-                name=f"__:link: {_('Links', ctx, self.bot.config)}__",
+                name=_("__:link: Links__", ctx, self.bot.config),
                 value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                 "| [gnous.eu](https://gnous.eu/) "
                 "| [git](https://git.gnous.eu/gnouseu/tuxbot-bot) "
                 "| [status](https://status.gnous.eu/check/154250) "
-                f"| [{_('Invite', ctx, self.bot.config)}]"
-                f"(https://discordapp.com/oauth2/authorize?client_id="
-                f"301062143942590465&scope=bot&permissions=268749888)",
+                + _("| [Invite]", ctx, self.bot.config)
+                + "(https://discordapp.com/oauth2/authorize?client_id="
+                "301062143942590465&scope=bot&permissions=268749888)",
                 inline=False,
             )
 
@@ -189,8 +195,8 @@ class Utils(commands.Cog, name="Utils"):
                 ctx,
                 self.bot.config,
             )
-            + f"[{_('Add!', ctx, self.bot.config, )}]"
-            f"({discord.utils.oauth_url(self.bot.user.id, basic_perms)})",
+            + _("[Add!]", ctx, self.bot.config)
+            + f"({discord.utils.oauth_url(self.bot.user.id, basic_perms)})",
             inline=False,
         )
         e.add_field(
@@ -201,8 +207,8 @@ class Utils(commands.Cog, name="Utils"):
                 ctx,
                 self.bot.config,
             )
-            + f"[{_('Add!', ctx, self.bot.config, )}]"
-            f"({discord.utils.oauth_url(self.bot.user.id, admin_perms)})",
+            + _("[Add!]", ctx, self.bot.config)
+            + f"({discord.utils.oauth_url(self.bot.user.id, admin_perms)})",
             inline=False,
         )
 
@@ -211,7 +217,7 @@ class Utils(commands.Cog, name="Utils"):
     # =========================================================================
 
     @command_extra(name="source")
-    async def _invite(self, ctx: ContextPlus, *, name=None):
+    async def _source(self, ctx: ContextPlus, *, name=None):
         base_url = "https://github.com/Rom1-J/tuxbot-bot"
 
         if not name:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2020-06-11 18:24+0200\n"
+"POT-Creation-Date: 2020-10-21 01:13+0200\n"
 "PO-Revision-Date: 2020-06-10 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tuxbot/cogs/admin/admin.py:38
+#: tuxbot/cogs/admin/admin.py:47
 #, fuzzy, python-brace-format
 msgid "Locale changed to {lang} successfully"
 msgstr "Langue changée pour {lang} avec succès"
 
-#: tuxbot/cogs/admin/admin.py:47
+#: tuxbot/cogs/admin/admin.py:62
 msgid "List of available locales: "
 msgstr "Liste des langues disponibles : "
