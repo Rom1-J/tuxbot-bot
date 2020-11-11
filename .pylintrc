@@ -12,7 +12,6 @@ disable=
 	C0114,  # missing-module-docstring
 	C0115,  # missing-class-docstring
 	C0116,  # missing-function-docstring
-	W0511,  # fixme
 	W0703,  # broad-except
 	R0801,  # duplicate-code
 	R0902,  # too-many-instance-attributes

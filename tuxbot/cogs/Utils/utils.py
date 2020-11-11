@@ -229,7 +229,6 @@ class Utils(commands.Cog, name="Utils"):
 
         try:
             lines, start_line = inspect.getsourcelines(src)
-            start_line -= 3  # todo: find why this -3 is necessary
         except OSError:
             return await ctx.send(
                 _(
