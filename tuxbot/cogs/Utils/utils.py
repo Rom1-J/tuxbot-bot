@@ -1,4 +1,6 @@
+import inspect
 import logging
+import os
 import platform
 
 import discord
@@ -205,3 +207,44 @@ class Utils(commands.Cog, name="Utils"):
         )
 
         await ctx.send(embed=e)
+
+    # =========================================================================
+
+    @command_extra(name="source")
+    async def _invite(self, ctx: ContextPlus, *, name=None):
+        base_url = "https://github.com/Rom1-J/tuxbot-bot"
+
+        if not name:
+            return await ctx.send(f"<{base_url}>")
+
+        cmd = self.bot.get_command(name)
+
+        if cmd:
+            src = cmd.callback.__code__
+            rpath = src.co_filename
+        else:
+            return await ctx.send(
+                _("Unable to find `{}`", ctx, self.bot.config).format(name)
+            )
+
+        try:
+            lines, start_line = inspect.getsourcelines(src)
+            start_line -= 3  # todo: find why this -3 is necessary
+        except OSError:
+            return await ctx.send(
+                _(
+                    "Unable to fetch lines for `{}`", ctx, self.bot.config
+                ).format(name)
+            )
+
+        location = (
+            os.path.relpath(rpath)
+            .replace("\\", "/")
+            .split("site-packages/")[1]
+        )
+
+        final_url = (
+            f"<{base_url}/tree/master/{location}#L{start_line}"
+            f"-L{start_line + len(lines) - 1}>"
+        )
+        await ctx.send(final_url)
