@@ -99,21 +99,6 @@ class Custom(commands.Cog, name="Custom"):
                 ).format(alias=alias, command=user_aliases.get(alias))
             )
 
-        if command in user_aliases.values():
-            return await ctx.send(
-                _(
-                    "There is already an alias for `{command}` "
-                    "which is `{alias}`",
-                    ctx,
-                    self.bot.config,
-                ).format(
-                    command=command,
-                    alias=list(user_aliases.keys())[
-                        list(user_aliases.values()).index(command)
-                    ],
-                )
-            )
-
         user_aliases[alias] = command
 
         await self._save_alias(ctx, user_aliases)

@@ -61,7 +61,7 @@ two commands:
     $ make install
 
 Now, switch your environment to the virtual one by run this single
-command: :bash:`source ~/tuxvenv/bin/activate`
+command: :bash:`source ~/venv/bin/activate`
 
 Configuration
 -------------

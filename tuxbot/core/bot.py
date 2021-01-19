@@ -104,6 +104,22 @@ class Tux(commands.AutoShardedBot):
         )
         self.session = aiohttp.ClientSession(loop=self.loop)
 
+    async def _is_blacklister(self, message: discord.Message) -> bool:
+        """Check for blacklists."""
+        if message.author.bot:
+            return True
+
+        if (
+            search_for(self.config.Servers, message.guild.id, "blacklisted")
+            or search_for(
+                self.config.Channels, message.channel.id, "blacklisted"
+            )
+            or search_for(self.config.Users, message.author.id, "blacklisted")
+        ):
+            return True
+
+        return False
+
     async def load_packages(self):
         if packages:
             with Progress() as progress:
@@ -216,24 +232,28 @@ class Tux(commands.AutoShardedBot):
         return await super().get_context(message, cls=ContextPlus)
 
     async def process_commands(self, message: discord.Message):
-        """Check for blacklists."""
-        if message.author.bot:
-            return
-
-        if (
-            search_for(self.config.Servers, message.guild.id, "blacklisted")
-            or search_for(
-                self.config.Channels, message.channel.id, "blacklisted"
-            )
-            or search_for(self.config.Users, message.author.id, "blacklisted")
-        ):
-            return
-
         ctx: ContextPlus = await self.get_context(message)
 
         if ctx is None or not ctx.valid:
+            if user_aliases := search_for(
+                self.config.Users, message.author.id, "aliases"
+            ):
+                for alias, command in user_aliases.items():
+                    back_content = message.content
+                    message.content = message.content.replace(
+                        alias, command, 1
+                    )
+
+                    if (
+                        ctx := await self.get_context(message)
+                    ) is None or not ctx.valid:
+                        message.content = back_content
+                    else:
+                        break
+
             self.dispatch("message_without_command", message)
-        else:
+
+        if ctx is not None and ctx.valid:
             if ctx.command in search_for(
                 self.config.Servers, message.guild.id, "disabled_command", []
             ):

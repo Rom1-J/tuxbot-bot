@@ -22,7 +22,7 @@ class AliasConvertor(commands.Converter):
         if command_ctx.command is None:
             raise commands.BadArgument(_("Unknown command"))
 
-        if alias_ctx.command is not None:
+        if args[0] != args[1] and alias_ctx.command is not None:
             raise commands.BadArgument(_("Command already exists"))
 
         return argument

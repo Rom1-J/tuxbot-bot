@@ -31,11 +31,6 @@ msgstr ""
 msgid "The alias `{alias}` is already defined for the command `{command}`"
 msgstr ""
 
-#: tuxbot/cogs/Custom/custom.py:105
-#, python-brace-format
-msgid "There is already an alias for `{command}` which is `{alias}`"
-msgstr ""
-
 #: tuxbot/cogs/Custom/custom.py:123
 #, python-brace-format
 msgid "The alias `{alias}` for the command `{command}` was successfully created"

@@ -17,11 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: tuxbot/cogs/Admin/admin.py:50
+#: tuxbot/cogs/Custom/custom.py:69
 #, python-brace-format
-msgid "Locale changed to {lang} successfully"
+msgid "Locale changed for you to {lang} successfully"
 msgstr ""
 
-#: tuxbot/cogs/Admin/admin.py:65
+#: tuxbot/cogs/Custom/custom.py:76
 msgid "List of available locales: "
+msgstr ""
+
+#: tuxbot/cogs/Custom/custom.py:95
+#, python-brace-format
+msgid "The alias `{alias}` is already defined for the command `{command}`"
+msgstr ""
+
+#: tuxbot/cogs/Custom/custom.py:123
+#, python-brace-format
+msgid "The alias `{alias}` for the command `{command}` was successfully created"
+msgstr ""
+
+#: tuxbot/cogs/Custom/functions/converters.py:14
+msgid "Alias must be like `[command] | [alias]`"
+msgstr ""
+
+#: tuxbot/cogs/Custom/functions/converters.py:23
+#, python-brace-format
+msgid "Unknown command"
+msgstr ""
+
+#: tuxbot/cogs/Custom/functions/converters.py:26
+#, python-brace-format
+msgid "Command already exists"
 msgstr ""
