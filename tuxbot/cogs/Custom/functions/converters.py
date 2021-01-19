@@ -20,9 +20,9 @@ class AliasConvertor(commands.Converter):
         alias_ctx = await copy_context_with(ctx, content=ctx.prefix + args[1])
 
         if command_ctx.command is None:
-            raise commands.BadArgument(_(f"Unknown command `{args[0]}`"))
+            raise commands.BadArgument(_("Unknown command"))
 
         if alias_ctx.command is not None:
-            raise commands.BadArgument(_(f"Command `{args[1]}` already exists"))
+            raise commands.BadArgument(_("Command already exists"))
 
         return argument

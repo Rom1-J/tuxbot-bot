@@ -48,10 +48,10 @@ msgstr "L'alias doit être comme `[command] | [alias"
 
 #: tuxbot/cogs/Custom/functions/converters.py:23
 #, python-brace-format
-msgid "Unknown command `{args[0]}`"
-msgstr "Commande `{args[0]}` inconnue"
+msgid "Unknown command"
+msgstr "Commande inconnue"
 
 #: tuxbot/cogs/Custom/functions/converters.py:26
 #, python-brace-format
-msgid "Command `{args[1]}` already exists"
-msgstr "La commande `{args[1]}` existe déjà"
+msgid "Command already exists"
+msgstr "La commande existe déjà"
