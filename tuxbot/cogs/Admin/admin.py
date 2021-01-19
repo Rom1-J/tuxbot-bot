@@ -11,7 +11,7 @@ from tuxbot.core.i18n import (
     Translator,
     find_locale,
     get_locale_name,
-    available_locales,
+    list_locales,
 )
 from tuxbot.core.utils.functions.extra import (
     group_extra,
@@ -57,13 +57,9 @@ class Admin(commands.Cog, name="Admin"):
 
     @_lang.command(name="list", aliases=["liste", "all", "view"])
     async def _lang_list(self, ctx: ContextPlus):
-        description = ""
-        for key, value in available_locales.items():
-            description += f":flag_{key[-2:].lower()}: {value[0]}\n"
-
         e = discord.Embed(
             title=_("List of available locales: ", ctx, self.bot.config),
-            description=description,
+            description=list_locales,
             color=0x36393E,
         )
 

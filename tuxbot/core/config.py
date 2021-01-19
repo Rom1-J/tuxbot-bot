@@ -33,7 +33,7 @@ class Config(Structure):
         blacklisted: bool = BoolField(False)
 
     class User(Structure):
-        aliases: List[dict] = []
+        aliases: dict = {}
         locale: str = StrField("")
         blacklisted: bool = BoolField(False)
 

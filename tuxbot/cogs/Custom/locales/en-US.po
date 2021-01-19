@@ -1,0 +1,27 @@
+# English translations for Tuxbot-bot package.
+# Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tuxbot-bot package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tuxbot-bot\n"
+"Report-Msgid-Bugs-To: rick@gnous.eu\n"
+"POT-Creation-Date: 2020-11-11 02:40+0100\n"
+"PO-Revision-Date: 2020-06-10 00:38+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tuxbot/cogs/Admin/admin.py:50
+#, python-brace-format
+msgid "Locale changed to {lang} successfully"
+msgstr ""
+
+#: tuxbot/cogs/Admin/admin.py:65
+msgid "List of available locales: "
+msgstr ""

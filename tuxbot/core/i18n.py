@@ -29,6 +29,15 @@ def find_locale(locale: str) -> str:
     raise NotImplementedError("This locale isn't implemented")
 
 
+def list_locales() -> str:
+    description = ""
+
+    for key, value in available_locales.items():
+        description += f":flag_{key[-2:].lower()}: {value[0]}\n"
+
+    return description
+
+
 def get_locale_name(locale: str) -> str:
     """Return the name of this `locale`"""
     return available_locales.get(find_locale(locale))[0]

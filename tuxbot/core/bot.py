@@ -44,6 +44,7 @@ packages: List[str] = [
     "tuxbot.cogs.Dev",
     "tuxbot.cogs.Utils",
     "tuxbot.cogs.Polls",
+    "tuxbot.cogs.Custom",
 ]
 
 
@@ -230,7 +231,7 @@ class Tux(commands.AutoShardedBot):
 
         ctx: ContextPlus = await self.get_context(message)
 
-        if ctx is None or ctx.valid is False:
+        if ctx is None or not ctx.valid:
             self.dispatch("message_without_command", message)
         else:
             if ctx.command in search_for(
