@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2020-11-11 02:40+0100\n"
-"PO-Revision-Date: 2020-06-10 00:38+0200\n"
+"POT-Creation-Date: 2021-01-19 14:39+0100\n"
+"PO-Revision-Date: 2021-01-19 14:39+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: fr\n"
@@ -18,11 +18,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tuxbot/cogs/Admin/admin.py:50
-#, fuzzy, python-brace-format
-msgid "Locale changed to {lang} successfully"
-msgstr "Langue changée pour {lang} avec succès"
+#: tuxbot/cogs/Custom/custom.py:69
+#, python-brace-format
+msgid "Locale changed for you to {lang} successfully"
+msgstr "Langue changée pour vous en {lang} avec succès"
 
-#: tuxbot/cogs/Admin/admin.py:65
+#: tuxbot/cogs/Custom/custom.py:76
 msgid "List of available locales: "
-msgstr "Liste des langues disponibles : "
+msgstr "Liste des langues disponibles: "
+
+#: tuxbot/cogs/Custom/custom.py:95
+#, python-brace-format
+msgid "The alias `{alias}` is already defined for the command `{command}`"
+msgstr "L'alias `{alias}` est déjà défini pour la commande `{command}`"
+
+#: tuxbot/cogs/Custom/custom.py:105
+#, python-brace-format
+msgid "There is already an alias for `{command}` which is `{alias}`"
+msgstr "Il existe déjà un alias pour `{command}`, qui est `{alias}`"
+
+#: tuxbot/cogs/Custom/custom.py:123
+#, python-brace-format
+msgid "The alias `{alias}` for the command `{command}` was successfully created"
+msgstr "L'alias `{alias}` pour la commande `{command}` a été créé avec succès"
+
+#: tuxbot/cogs/Custom/functions/converters.py:14
+msgid "Alias must be like `[command] | [alias]`"
+msgstr "L'alias doit être comme `[command] | [alias"
+
+#: tuxbot/cogs/Custom/functions/converters.py:23
+#, python-brace-format
+msgid "Unknown command `{args[0]}`"
+msgstr "Commande `{args[0]}` inconnue"
+
+#: tuxbot/cogs/Custom/functions/converters.py:26
+#, python-brace-format
+msgid "Command `{args[1]}` already exists"
+msgstr "La commande `{args[1]}` existe déjà"

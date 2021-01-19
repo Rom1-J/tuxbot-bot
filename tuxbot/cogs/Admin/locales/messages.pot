@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2020-11-11 16:42+0100\n"
+"POT-Creation-Date: 2021-01-19 14:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,6 @@ msgstr ""
 msgid "Locale changed to {lang} successfully"
 msgstr ""
 
-#: tuxbot/cogs/Admin/admin.py:65
+#: tuxbot/cogs/Admin/admin.py:61
 msgid "List of available locales: "
 msgstr ""

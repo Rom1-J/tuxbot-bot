@@ -41,7 +41,7 @@ packages: List[str] = [
     "jishaku",
     "tuxbot.cogs.Admin",
     "tuxbot.cogs.Logs",
-    "tuxbot.cogs.Dev",
+    # "tuxbot.cogs.Dev",
     "tuxbot.cogs.Utils",
     "tuxbot.cogs.Polls",
     "tuxbot.cogs.Custom",
