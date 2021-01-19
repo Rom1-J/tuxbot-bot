@@ -13,6 +13,8 @@ install-dev:
 	$(VENV)/bin/pip install -r dev.requirements.txt
 update:
 	$(VENV)/bin/pip install --upgrade --force-reinstall .
+update_soft:
+	$(VENV)/bin/pip install --upgrade .
 
 # Blackify code
 reformat:

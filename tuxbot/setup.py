@@ -1,11 +1,14 @@
 import argparse
 import importlib
+import json
 import logging
+import os
 import re
 import sys
 from argparse import Namespace
 from pathlib import Path
 from typing import Union, List
+from urllib.request import urlopen
 
 from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
@@ -13,6 +16,7 @@ from rich.rule import Rule
 from rich.style import Style
 from rich.traceback import install
 
+from tuxbot import version_info
 from tuxbot.core.config import set_for, set_for_key
 from tuxbot.logging import formatter
 from tuxbot.core.utils.data_manager import config_dir, app_dir, cogs_data_path
@@ -396,6 +400,30 @@ def basic_setup() -> None:
     )
 
 
+def update() -> None:
+    response = (
+        urlopen(
+            "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
+        )
+        .read()
+        .decode("utf-8")
+    )
+
+    json_response = json.loads(response)
+
+    if json_response.get("sha")[:6] == version_info.build:
+        print(
+            "Nothing to update, you can run `tuxbot [instance_name]` "
+            "to start the bot"
+        )
+    else:
+        print(f"Updating to {json_response.get('sha')[:6]}...")
+
+        os.popen("/usr/bin/git pull")
+
+        print("Done!")
+
+
 def parse_cli_flags(args: list) -> Namespace:
     """Parser for cli values.
 
@@ -423,6 +451,12 @@ def parse_cli_flags(args: list) -> Namespace:
         nargs="+",
         help="Execute setup to additional configs",
     )
+    parser.add_argument(
+        "-U",
+        "--update",
+        action="store_true",
+        help="Check for update",
+    )
 
     args = parser.parse_args(args)
 
@@ -433,6 +467,10 @@ def setup() -> None:
     cli_flags = parse_cli_flags(sys.argv[1:])
 
     try:
+        if cli_flags.update:
+            update()
+            sys.exit()
+
         # Create a new instance.
         level = logging.DEBUG
         base_logger = logging.getLogger("tuxbot")

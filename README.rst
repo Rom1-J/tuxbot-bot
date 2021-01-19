@@ -1,4 +1,4 @@
-|image0| |image1| |image2|
+|image0| |image1| |image2| |image3|
 
 .. role:: bash(code)
    :language: bash
@@ -88,3 +88,5 @@ To update the whole bot after a :bash:`git pull`, just execute
 .. |image0| image:: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-%23007ec6
 .. |image1| image:: https://img.shields.io/badge/dynamic/json?color=%23dfb317&label=issues&query=%24.open_issues_count&suffix=%20open&url=https%3A%2F%2Fgit.gnous.eu%2Fapi%2Fv1%2Frepos%2FGnousEU%2Ftuxbot-bot%2F
 .. |image2| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+.. |image3| image:: https://wakatime.com/badge/github/Rom1-J/tuxbot-bot.svg
+    :target: https://wakatime.com/badge/github/Rom1-J/tuxbot-bot
