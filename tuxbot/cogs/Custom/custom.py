@@ -28,13 +28,7 @@ class Custom(commands.Cog, name="Custom"):
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await ctx.send(
-                _(
-                    str(error),
-                    ctx,
-                    self.bot.config,
-                )
-            )
+            await ctx.send(_(str(error), ctx, self.bot.config))
 
     # =========================================================================
     # =========================================================================

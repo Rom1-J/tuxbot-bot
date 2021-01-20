@@ -51,6 +51,22 @@ msgstr ""
 msgid "__¶ Lines__"
 msgstr ""
 
+#: tuxbot/cogs/Utils/utils.py:98
+msgid "class"
+msgstr ""
+
+#: tuxbot/cogs/Utils/utils.py:100
+msgid "functions"
+msgstr ""
+
+#: tuxbot/cogs/Utils/utils.py:102
+msgid "coroutines"
+msgstr ""
+
+#: tuxbot/cogs/Utils/utils.py:104
+msgid "comments"
+msgstr ""
+
 #: tuxbot/cogs/Utils/utils.py:105
 msgid "__Latest changes__"
 msgstr ""

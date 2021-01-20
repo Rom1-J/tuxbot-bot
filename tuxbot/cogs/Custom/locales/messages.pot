@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-01-19 14:42+0100\n"
+"POT-Creation-Date: 2021-01-20 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,21 +17,21 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tuxbot/cogs/Custom/custom.py:69
+#: tuxbot/cogs/Custom/custom.py:63
 #, python-brace-format
 msgid "Locale changed for you to {lang} successfully"
 msgstr ""
 
-#: tuxbot/cogs/Custom/custom.py:76
+#: tuxbot/cogs/Custom/custom.py:70
 msgid "List of available locales: "
 msgstr ""
 
-#: tuxbot/cogs/Custom/custom.py:95
+#: tuxbot/cogs/Custom/custom.py:89
 #, python-brace-format
 msgid "The alias `{alias}` is already defined for the command `{command}`"
 msgstr ""
 
-#: tuxbot/cogs/Custom/custom.py:123
+#: tuxbot/cogs/Custom/custom.py:102
 #, python-brace-format
 msgid "The alias `{alias}` for the command `{command}` was successfully created"
 msgstr ""
@@ -41,11 +41,9 @@ msgid "Alias must be like `[command] | [alias]`"
 msgstr ""
 
 #: tuxbot/cogs/Custom/functions/converters.py:23
-#, python-brace-format
 msgid "Unknown command"
 msgstr ""
 
 #: tuxbot/cogs/Custom/functions/converters.py:26
-#, python-brace-format
 msgid "Command already exists"
 msgstr ""

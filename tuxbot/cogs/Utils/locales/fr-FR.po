@@ -52,7 +52,23 @@ msgstr "__:file_folder: Fichiers__"
 
 #: tuxbot/cogs/Utils/utils.py:95
 msgid "__¶ Lines__"
-msgstr "__¶ Lignes__"
+msgstr "__¶ Lines__"
+
+#: tuxbot/cogs/Utils/utils.py:98
+msgid "class"
+msgstr "classes"
+
+#: tuxbot/cogs/Utils/utils.py:100
+msgid "functions"
+msgstr "fonctions"
+
+#: tuxbot/cogs/Utils/utils.py:102
+msgid "coroutines"
+msgstr ""
+
+#: tuxbot/cogs/Utils/utils.py:104
+msgid "comments"
+msgstr "commentaires"
 
 #: tuxbot/cogs/Utils/utils.py:105
 msgid "__Latest changes__"

@@ -94,10 +94,18 @@ class Utils(commands.Cog, name="Utils"):
             e.add_field(
                 name=_("__¶ Lines__", ctx, self.bot.config),
                 value=f"{infos.get('total_lines')} "
-                f"*({infos.get('total_python_class')} class,"
-                f" {infos.get('total_python_functions')} functions,"
-                f" {infos.get('total_python_coroutines')} coroutines,"
-                f" {infos.get('total_python_comments')} comments)*",
+                f"*({infos.get('total_python_class')} "
+                + _("class", ctx, self.bot.config)
+                + ","
+                f" {infos.get('total_python_functions')} "
+                + _("functions", ctx, self.bot.config)
+                + ","
+                f" {infos.get('total_python_coroutines')} "
+                + _("coroutines", ctx, self.bot.config)
+                + ","
+                f" {infos.get('total_python_comments')} "
+                + _("comments", ctx, self.bot.config)
+                + ")*",
                 inline=True,
             )
 
