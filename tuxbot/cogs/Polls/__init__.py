@@ -1,8 +1,8 @@
 from collections import namedtuple
 
+from tuxbot.core.bot import Tux
 from .polls import Polls
 from .config import PollsConfig, HAS_MODELS
-from ...core.bot import Tux
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")
