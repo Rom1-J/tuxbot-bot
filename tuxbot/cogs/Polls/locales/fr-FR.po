@@ -17,3 +17,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tuxbot/cogs/Polls/polls.py:92
+msgid "**Preparation**"
+msgstr "**Préparation**"
+
+#: tuxbot/cogs/Polls/polls.py:221
+#, python-brace-format
+msgid "Proposed addition for poll #{id}"
+msgstr "Proposition d'ajout pour le sondage #{id}"
+
+#: tuxbot/cogs/Polls/polls.py:226
+#, python-brace-format
+msgid "Requested by {author}"
+msgstr "Demandé par {author}"
+
+#: tuxbot/cogs/Polls/functions/converters.py:20
+#: tuxbot/cogs/Polls/functions/converters.py:45
+msgid "Please provide a message in this channel"
+msgstr "Veuillez fournir un message dans ce salon"
+
+#: tuxbot/cogs/Polls/functions/converters.py:29
+#: tuxbot/cogs/Polls/functions/converters.py:35
+#: tuxbot/cogs/Polls/functions/converters.py:40
+#: tuxbot/cogs/Polls/functions/converters.py:48
+msgid "Unable to find this poll"
+msgstr "Impossible de trouver ce sondage"
+
+#: tuxbot/cogs/Polls/functions/converters.py:57
+msgid "Your proposal must be smaller than 30"
+msgstr "Votre proposition doit être inférieure à 30"

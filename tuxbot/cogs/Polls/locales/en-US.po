@@ -1,4 +1,5 @@
-# English translations for Tuxbot-bot package.
+# French translations for Tuxbot-bot package
+# Traductions françaises du paquet Tuxbot-bot.
 # Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Tuxbot-bot package.
 # Automatically generated, 2020.
@@ -16,3 +17,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tuxbot/cogs/Polls/polls.py:92
+msgid "**Preparation**"
+msgstr ""
+
+#: tuxbot/cogs/Polls/polls.py:221
+#, python-brace-format
+msgid "Proposed addition for survey #{id}"
+msgstr ""
+
+#: tuxbot/cogs/Polls/polls.py:226
+#, python-brace-format
+msgid "Requested by {author}"
+msgstr ""
+
+#: tuxbot/cogs/Polls/functions/converters.py:20
+#: tuxbot/cogs/Polls/functions/converters.py:45
+msgid "Please provide a message in this channel"
+msgstr ""
+
+#: tuxbot/cogs/Polls/functions/converters.py:29
+#: tuxbot/cogs/Polls/functions/converters.py:35
+#: tuxbot/cogs/Polls/functions/converters.py:40
+#: tuxbot/cogs/Polls/functions/converters.py:48
+msgid "Unable to find this poll"
+msgstr ""
+
+#: tuxbot/cogs/Polls/functions/converters.py:57
+msgid "Your proposal must be smaller than 30"
+msgstr ""

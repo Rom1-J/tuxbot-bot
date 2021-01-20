@@ -12,7 +12,10 @@ from tuxbot.core.i18n import (
     Translator,
 )
 from .functions import emotes as utils_emotes
+from .functions.converters import NewPropositionConvertor, PollConverter
+from .functions.exceptions import InvalidChannel, BadPoll, TooLongProposition
 from .models import Poll, Response
+from .models.suggests import Suggest
 
 log = logging.getLogger("tuxbot.cogs.Polls")
 _ = Translator("Polls", __file__)
@@ -21,6 +24,10 @@ _ = Translator("Polls", __file__)
 class Polls(commands.Cog, name="Polls"):
     def __init__(self, bot: Tux):
         self.bot = bot
+
+    async def cog_command_error(self, ctx, error):
+        if isinstance(error, (InvalidChannel, BadPoll, TooLongProposition)):
+            await ctx.send(_(str(error), ctx, self.bot.config))
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, pld: discord.RawReactionActionEvent):
@@ -200,6 +207,33 @@ class Polls(commands.Cog, name="Polls"):
 
         await message.remove_reaction(pld.emoji.name, user)
 
+    async def propose_new(
+        self, ctx: ContextPlus, poll: PollConverter, new: str
+    ):
+        await Suggest.create(poll=poll, user_id=ctx.author.id, proposition=new)
+
+        if isinstance(poll, Poll):
+            # pylint: disable=pointless-string-statement
+            """Just to change type for PyCharm"""
+
+        e = discord.Embed(
+            title=_(
+                "Proposed addition for poll #{id}", ctx, self.bot.config
+            ).format(id=poll.id),
+            description=new,
+        )
+        e.set_footer(
+            text=_("Requested by {author}", ctx, self.bot.config).format(
+                author=ctx.author.name
+            ),
+            icon_url=ctx.author.avatar_url_as(format="png"),
+        )
+
+        message = await ctx.send(embed=e)
+
+        for emote in utils_emotes.check:
+            await message.add_reaction(emote)
+
     # =========================================================================
     # =========================================================================
 
@@ -208,7 +242,7 @@ class Polls(commands.Cog, name="Polls"):
         if ctx.invoked_subcommand is None:
             await ctx.send_help("poll")
 
-    @_poll.group(name="create", aliases=["new", "nouveau"])
+    @_poll.command(name="create", aliases=["new", "nouveau"])
     async def _poll_create(self, ctx: ContextPlus, *, poll: str):
         args: list = poll.lower().split()
         is_anonymous = False
@@ -235,3 +269,13 @@ class Polls(commands.Cog, name="Polls"):
             answers.append(" ".join(args[start:end]).capitalize())
 
         await self.create_poll(ctx, question, answers, anonymous=is_anonymous)
+
+    @_poll.command(name="propose", aliases=["suggest", "ajout"])
+    async def _poll_propose(
+        self,
+        ctx: ContextPlus,
+        poll: PollConverter,
+        *,
+        new: NewPropositionConvertor,
+    ):
+        await self.propose_new(ctx, poll, str(new))
