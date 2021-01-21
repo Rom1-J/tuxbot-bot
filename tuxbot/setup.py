@@ -1,6 +1,5 @@
 import argparse
 import importlib
-import json
 import logging
 import os
 import re
@@ -401,11 +400,9 @@ def basic_setup() -> None:
 
 
 def update() -> None:
-    response = (
-        requests.get(
-            "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
-        ).json()
-    )
+    response = requests.get(
+        "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
+    ).json()
 
     if response.get("sha")[:6] == version_info.build:
         print(

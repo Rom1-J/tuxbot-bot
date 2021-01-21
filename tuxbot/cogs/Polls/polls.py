@@ -170,9 +170,7 @@ class Polls(commands.Cog, name="Polls"):
                 field["name"][6:].replace("__", "")
             )
 
-            chart_options["data"]["datasets"][0].get("data").append(
-                responders
-            )
+            chart_options["data"]["datasets"][0]["data"].append(responders)
 
             if responders <= 1:
                 field["value"] = f"**{responders}** vote"

@@ -7,7 +7,8 @@ from tuxbot.cogs.Polls.functions.exceptions import (
 from tuxbot.cogs.Polls.models import Poll
 
 
-def _(x): return x
+def _(x):
+    return x
 
 
 class PollConverter(commands.Converter):

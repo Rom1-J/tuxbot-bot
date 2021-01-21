@@ -2,7 +2,8 @@ from discord.ext import commands
 from jishaku.models import copy_context_with
 
 
-def _(x): return x
+def _(x):
+    return x
 
 
 class AliasConvertor(commands.Converter):
