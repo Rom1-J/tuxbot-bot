@@ -166,11 +166,11 @@ class Polls(commands.Cog, name="Polls"):
         for i, field in enumerate(content.get("fields")):
             responders = responses.get(i, 0)
 
-            chart_options.get("data").get("labels").append(
-                field.get("name")[6:].replace("__", "")
+            chart_options["data"]["labels"].append(
+                field["name"][6:].replace("__", "")
             )
 
-            chart_options.get("data").get("datasets")[0].get("data").append(
+            chart_options["data"]["datasets"][0].get("data").append(
                 responders
             )
 

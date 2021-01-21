@@ -8,7 +8,7 @@ import sys
 from argparse import Namespace
 from pathlib import Path
 from typing import Union, List
-from urllib.request import urlopen
+import requests
 
 from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
@@ -402,22 +402,18 @@ def basic_setup() -> None:
 
 def update() -> None:
     response = (
-        urlopen(
+        requests.get(
             "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
-        )
-        .read()
-        .decode("utf-8")
+        ).json()
     )
 
-    json_response = json.loads(response)
-
-    if json_response.get("sha")[:6] == version_info.build:
+    if response.get("sha")[:6] == version_info.build:
         print(
             "Nothing to update, you can run `tuxbot [instance_name]` "
             "to start the bot"
         )
     else:
-        print(f"Updating to {json_response.get('sha')[:6]}...")
+        print(f"Updating to {response.get('sha')[:6]}...")
 
         os.popen("/usr/bin/git pull")
 

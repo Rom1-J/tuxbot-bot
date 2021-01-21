@@ -6,7 +6,8 @@ from tuxbot.cogs.Polls.functions.exceptions import (
 )
 from tuxbot.cogs.Polls.models import Poll
 
-_ = lambda x: x
+
+def _(x): return x
 
 
 class PollConverter(commands.Converter):
@@ -50,7 +51,7 @@ class PollConverter(commands.Converter):
 
 
 class NewPropositionConvertor(commands.Converter):
-    async def convert(self, ctx, argument):
+    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
         if len(argument) > 30:
             raise TooLongProposition(
                 _("Your proposal must be smaller than 30")
