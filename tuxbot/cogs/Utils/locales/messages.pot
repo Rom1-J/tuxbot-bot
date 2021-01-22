@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-01-20 17:24+0100\n"
+"POT-Creation-Date: 2021-01-22 10:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,62 +55,62 @@ msgstr ""
 msgid "class"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:100
+#: tuxbot/cogs/Utils/utils.py:101
 msgid "functions"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:102
+#: tuxbot/cogs/Utils/utils.py:104
 msgid "coroutines"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:104
+#: tuxbot/cogs/Utils/utils.py:107
 msgid "comments"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:109
+#: tuxbot/cogs/Utils/utils.py:113
 msgid "__Latest changes__"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:115
+#: tuxbot/cogs/Utils/utils.py:119
 msgid "__:link: Links__"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:120
+#: tuxbot/cogs/Utils/utils.py:124
 msgid "| [Invite]"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:135
+#: tuxbot/cogs/Utils/utils.py:139
 msgid "Contributors"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:191
+#: tuxbot/cogs/Utils/utils.py:195
 msgid "Invite"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:195
+#: tuxbot/cogs/Utils/utils.py:199
 msgid "Minimal"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:197
+#: tuxbot/cogs/Utils/utils.py:201
 msgid "The minimum permissions include the strict requirements for the proper functioning of all basics commands.\n"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:202 tuxbot/cogs/Utils/utils.py:214
+#: tuxbot/cogs/Utils/utils.py:206 tuxbot/cogs/Utils/utils.py:218
 msgid "[Add!]"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:207
+#: tuxbot/cogs/Utils/utils.py:211
 msgid "Admin"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:209
+#: tuxbot/cogs/Utils/utils.py:213
 msgid "All minimal permissions + extra permissions for admin commands such as kick and ban\n"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:237
+#: tuxbot/cogs/Utils/utils.py:241
 msgid "Unable to find `{}`"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:245
+#: tuxbot/cogs/Utils/utils.py:249
 msgid "Unable to fetch lines for `{}`"
 msgstr ""

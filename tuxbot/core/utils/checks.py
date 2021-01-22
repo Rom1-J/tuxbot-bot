@@ -36,7 +36,7 @@ def is_mod():
 
 
 def is_admin():
-    """Is the user Admin ?"""
+    """Is the user Admin ? as @check"""
 
     async def pred(ctx):
         if await ctx.bot.is_owner(ctx.author):
@@ -47,6 +47,17 @@ def is_admin():
         return permissions.administrator
 
     return commands.check(pred)
+
+
+async def is_user_admin(ctx):
+    """Is the user Admin ? as function"""
+
+    if await ctx.bot.is_owner(ctx.author):
+        return True
+
+    permissions: discord.Permissions = ctx.channel.permissions_for(ctx.author)
+
+    return permissions.administrator
 
 
 async def check_permissions(ctx: ContextPlus, **perms: Dict[str, bool]):

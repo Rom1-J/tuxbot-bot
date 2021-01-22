@@ -42,11 +42,11 @@ class PollConverter(commands.Converter):
 
         poll = await Poll.get_or_none(id=int(poll_id))
 
-        if poll.channel_id != ctx.channel.id:
-            raise InvalidChannel(_("Please provide a message in this channel"))
-
         if poll is None:
             raise BadPoll(_("Unable to find this poll"))
+
+        if poll.channel_id != ctx.channel.id:
+            raise InvalidChannel(_("Please provide a message in this channel"))
 
         return poll
 

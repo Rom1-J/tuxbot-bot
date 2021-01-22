@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-01-20 17:24+0100\n"
+"POT-Creation-Date: 2021-01-22 10:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,14 +36,14 @@ msgstr ""
 msgid "The alias `{alias}` for the command `{command}` was successfully created"
 msgstr ""
 
-#: tuxbot/cogs/Custom/functions/converters.py:14
+#: tuxbot/cogs/Custom/functions/converters.py:15
 msgid "Alias must be like `[command] | [alias]`"
 msgstr ""
 
-#: tuxbot/cogs/Custom/functions/converters.py:23
+#: tuxbot/cogs/Custom/functions/converters.py:24
 msgid "Unknown command"
 msgstr ""
 
-#: tuxbot/cogs/Custom/functions/converters.py:26
+#: tuxbot/cogs/Custom/functions/converters.py:27
 msgid "Command already exists"
 msgstr ""

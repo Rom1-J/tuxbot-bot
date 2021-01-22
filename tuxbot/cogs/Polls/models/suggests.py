@@ -5,7 +5,9 @@ from tortoise import fields
 class Suggest(tortoise.Model):
     suggest_id = fields.BigIntField(pk=True)
     poll = fields.ForeignKeyField("models.Poll")
-    user_id = fields.BigIntField()
+    channel_id = fields.BigIntField()
+    message_id = fields.BigIntField()
+    author_id = fields.BigIntField()
 
     proposition = fields.CharField(max_length=30)
 
@@ -15,7 +17,7 @@ class Suggest(tortoise.Model):
     def __str__(self):
         return (
             f"<suggest_id poll={self.poll} "
-            f"user_id={self.user_id} "
+            f"author_id={self.author_id} "
             f"proposition={self.proposition}>"
         )
 

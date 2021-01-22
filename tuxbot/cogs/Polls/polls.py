@@ -7,14 +7,14 @@ from discord.ext import commands
 from yarl import URL
 
 from tuxbot.core.utils.functions.extra import ContextPlus, group_extra
+from tuxbot.core.utils.functions.utils import upper_first
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import (
     Translator,
 )
-from .functions import emotes as utils_emotes
+from .functions import emotes as utils_emotes, listeners
 from .functions.converters import NewPropositionConvertor, PollConverter
-from .functions.exceptions import InvalidChannel, BadPoll, TooLongProposition
-from .models import Poll, Response
+from .models import Poll
 from .models.suggests import Suggest
 
 log = logging.getLogger("tuxbot.cogs.Polls")
@@ -26,54 +26,17 @@ class Polls(commands.Cog, name="Polls"):
         self.bot = bot
 
     async def cog_command_error(self, ctx, error):
-        if isinstance(error, (InvalidChannel, BadPoll, TooLongProposition)):
-            await ctx.send(_(str(error), ctx, self.bot.config))
+        await listeners.cog_command_error(self, ctx, error)
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, pld: discord.RawReactionActionEvent):
-        poll = await self.get_poll(pld)
-
-        if poll:
-            if poll.is_anonymous:
-                try:
-                    await self.remove_reaction(pld)
-                except discord.errors.Forbidden:
-                    pass
-            choice = utils_emotes.get_index(pld.emoji.name)
-
-            response = await Response.get_or_none(
-                user_id=pld.user_id, choice=choice, poll__id=poll.id
-            )
-
-            if response is not None:
-                await poll.choices.remove(response)
-                await response.delete()
-            else:
-                res = await Response.create(
-                    user_id=pld.user_id, poll=poll, choice=choice
-                )
-                await poll.choices.add(res)
-
-            await self.update_poll(poll)
+        await listeners.on_raw_reaction_add(self, pld)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(
         self, pld: discord.RawReactionActionEvent
     ):
-        poll = await self.get_poll(pld)
-
-        if poll:
-            choice = utils_emotes.get_index(pld.emoji.name)
-
-            response = await Response.get_or_none(
-                user_id=pld.user_id, choice=choice, poll__id=poll.id
-            )
-
-            if response is not None:
-                await poll.choices.remove(response)
-                await response.delete()
-
-            await self.update_poll(poll)
+        await listeners.on_raw_reaction_remove(self, pld)
 
     # =========================================================================
     # =========================================================================
@@ -113,7 +76,7 @@ class Polls(commands.Cog, name="Polls"):
         )
         for i, answer in enumerate(answers):
             e.add_field(
-                name=f"__{emotes[i]} - {answer.capitalize()}__",
+                name=f"__{emotes[i]} - {upper_first(answer)}__",
                 value="**0** vote",
             )
         e.set_footer(text=f"ID: #{poll_row.id}")
@@ -205,20 +168,48 @@ class Polls(commands.Cog, name="Polls"):
 
         await message.remove_reaction(pld.emoji.name, user)
 
-    async def propose_new(
+    async def created_suggest(
         self, ctx: ContextPlus, poll: PollConverter, new: str
     ):
-        await Suggest.create(poll=poll, user_id=ctx.author.id, proposition=new)
+        stmt = await ctx.send(
+            _(
+                "**Preparation**",
+                ctx,
+                self.bot.config,
+            )
+        )
+
+        suggest_row = await Suggest()
+
+        suggest_row.channel_id = ctx.channel.id
+        suggest_row.message_id = stmt.id
+        suggest_row.author_id = ctx.author.id
 
         if isinstance(poll, Poll):
             # pylint: disable=pointless-string-statement
             """Just to change type for PyCharm"""
+
+        suggest_row.poll = poll
+        suggest_row.proposition = new
+
+        await suggest_row.save()
+
+        poll_channel: discord.TextChannel = await self.bot.fetch_channel(
+            poll.channel_id
+        )
+        poll_message = await poll_channel.fetch_message(poll.message_id)
 
         e = discord.Embed(
             title=_(
                 "Proposed addition for poll #{id}", ctx, self.bot.config
             ).format(id=poll.id),
             description=new,
+        )
+        e.add_field(
+            name=_("Poll", ctx, self.bot.config),
+            value="[{}]({})".format(
+                _("here", ctx, self.bot.config), poll_message.jump_url
+            ),
         )
         e.set_footer(
             text=_("Requested by {author}", ctx, self.bot.config).format(
@@ -227,10 +218,21 @@ class Polls(commands.Cog, name="Polls"):
             icon_url=ctx.author.avatar_url_as(format="png"),
         )
 
-        message = await ctx.send(embed=e)
+        await stmt.edit(content="", embed=e)
 
         for emote in utils_emotes.check:
-            await message.add_reaction(emote)
+            await stmt.add_reaction(emote)
+
+    async def get_suggest(
+        self, pld: discord.RawReactionActionEvent
+    ) -> Union[bool, Suggest]:
+        if pld.user_id != self.bot.user.id:
+            suggest = await Suggest.get_or_none(message_id=pld.message_id)
+
+            if suggest is not None and pld.emoji.name in utils_emotes.check:
+                return suggest
+
+        return False
 
     # =========================================================================
     # =========================================================================
@@ -242,13 +244,13 @@ class Polls(commands.Cog, name="Polls"):
 
     @_poll.command(name="create", aliases=["new", "nouveau"])
     async def _poll_create(self, ctx: ContextPlus, *, poll: str):
-        args: list = poll.lower().split()
+        args: list = poll.split()
         is_anonymous = False
 
-        if "--anonymous" in args:
+        if "--anonymous" in map(str.lower, args):
             is_anonymous = True
             args.remove("--anonymous")
-        elif "--anonyme" in args:
+        elif "--anonyme" in map(str.lower, args):
             is_anonymous = True
             args.remove("--anonyme")
 
@@ -257,14 +259,14 @@ class Polls(commands.Cog, name="Polls"):
 
         delimiters = [i for i, val in enumerate(args) if val == "|"]
 
-        question = " ".join(args[: delimiters[0]]).capitalize()
+        question = upper_first(" ".join(args[: delimiters[0]]))
         answers = []
 
         for i in range(len(delimiters) - 1):
             start = delimiters[i] + 1
             end = delimiters[i + 1]
 
-            answers.append(" ".join(args[start:end]).capitalize())
+            answers.append(upper_first(" ".join(args[start:end])))
 
         await self.create_poll(ctx, question, answers, anonymous=is_anonymous)
 
@@ -276,4 +278,4 @@ class Polls(commands.Cog, name="Polls"):
         *,
         new: NewPropositionConvertor,
     ):
-        await self.propose_new(ctx, poll, str(new))
+        await self.created_suggest(ctx, poll, str(new))
