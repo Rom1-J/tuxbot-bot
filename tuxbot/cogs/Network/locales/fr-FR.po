@@ -1,0 +1,64 @@
+# French translations for Tuxbot-bot package
+# Traductions françaises du paquet Tuxbot-bot.
+# Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tuxbot-bot package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tuxbot-bot\n"
+"Report-Msgid-Bugs-To: rick@gnous.eu\n"
+"POT-Creation-Date: 2021-01-19 14:39+0100\n"
+"PO-Revision-Date: 2021-01-19 14:39+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tuxbot/cogs/Network/functions/converters.py:22
+msgid "Invalid ip or domain"
+msgstr "Nome de domaine ou adresse IP invalide"
+
+#: tuxbot/cogs/Network/functions/converters.py:35
+msgid "Invalid ip version"
+msgstr "Version d'adresse IP invalide"
+
+#: tuxbot/cogs/Network/network.py:49 tuxbot/cogs/Network/network.py:52
+#, python-brace-format
+msgid "in v{v}"
+msgstr "en v{v}"
+
+#: tuxbot/cogs/Network/network.py:61
+#, python-brace-format
+msgid "Impossible to collect information on this ip {version}"
+msgstr "Impossible de collecter des informations pour cette IP {version}"
+
+#: tuxbot/cogs/Network/network.py:89
+#, python-brace-format
+msgid "IP address {ip_address} is already defined as Private-Use Networks via RFC 1918."
+msgstr "L'adresse ip {ip_address} est est reservée à un usage local selon la RFC 1918"
+
+#: tuxbot/cogs/Network/network.py:109
+msgid "*Retrieving information...*"
+msgstr "*Récupération des informations...*"
+
+#: tuxbot/cogs/Network/network.py:123
+#, python-brace-format
+msgid "Information for ``{ip} ({ip_address})``"
+msgstr "Informations pour ``{ip} ({ip_address})``"
+
+#: tuxbot/cogs/Network/network.py:135 tuxbot/cogs/Network/network.py:156
+msgid "Belongs to:"
+msgstr "Appartient à :"
+
+#: tuxbot/cogs/Network/network.py:140 tuxbot/cogs/Network/network.py:161
+msgid "Region:"
+msgstr "Région :"
+
+#: tuxbot/cogs/Network/network.py:174
+#, python-brace-format
+msgid "Hostname: {hostname}"
+msgstr "Nom d'hôte : {hostname}"

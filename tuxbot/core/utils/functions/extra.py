@@ -25,8 +25,9 @@ class ContextPlus(commands.Context):
         delete_after=None,
         nonce=None,
         allowed_mentions=None,
-        deletable=False
+        deletable=True
     ):  # i know *args and **kwargs but, i prefer work with same values
+
         if content:
             content = content.replace(
                 self.bot.config.Core.token, TOKEN_REPLACEMENT
@@ -47,7 +48,7 @@ class ContextPlus(commands.Context):
 
         if (
             hasattr(self.command, "deletable") and self.command.deletable
-        ) or deletable:
+        ) and deletable:
             message = await super().send(
                 content=content,
                 tts=tts,
