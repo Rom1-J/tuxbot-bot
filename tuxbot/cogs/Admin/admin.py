@@ -68,14 +68,12 @@ class Admin(commands.Cog, name="Admin"):
     # =========================================================================
 
     @command_extra(name="quit", aliases=["shutdown"], deletable=False)
-    @commands.guild_only()
     @checks.is_owner()
     async def _quit(self, ctx: ContextPlus):
         await ctx.send("*quit...*")
         await self.bot.shutdown()
 
     @command_extra(name="restart", deletable=False)
-    @commands.guild_only()
     @checks.is_owner()
     async def _restart(self, ctx: ContextPlus):
         await ctx.send("*restart...*")

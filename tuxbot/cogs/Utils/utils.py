@@ -34,6 +34,8 @@ class Utils(commands.Cog, name="Utils"):
 
         with proc.oneshot():
             mem = proc.memory_full_info()
+            cpu = proc.cpu_percent() / psutil.cpu_count()
+
             e = discord.Embed(
                 title=_("Information about TuxBot", ctx, self.bot.config),
                 color=0x89C4F9,
@@ -58,12 +60,15 @@ class Utils(commands.Cog, name="Utils"):
             e.add_field(
                 name="__:gear: Usage__",
                 value=_(
-                    "**{}** physical memory\n**{}** virtual memory",
+                    "**{}** physical memory\n"
+                    "**{}** virtual memory\n"
+                    "**{:.2f}**% CPU",
                     ctx,
                     self.bot.config,
                 ).format(
                     humanize.naturalsize(mem.rss),
                     humanize.naturalsize(mem.vms),
+                    cpu,
                 ),
                 inline=True,
             )

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2020-11-11 02:44+0100\n"
+"POT-Creation-Date: 2021-01-25 14:36+0100\n"
 "PO-Revision-Date: 2020-06-10 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,83 +18,82 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tuxbot/cogs/Utils/utils.py:38
+#: tuxbot/cogs/Utils/utils.py:40
 msgid "Information about TuxBot"
 msgstr "Information sur TuxBot"
 
-#: tuxbot/cogs/Utils/utils.py:44
+#: tuxbot/cogs/Utils/utils.py:46
 msgid "__:busts_in_silhouette: Development__"
 msgstr "__:busts_in_silhouette: Développement__"
 
-#: tuxbot/cogs/Utils/utils.py:61
+#: tuxbot/cogs/Utils/utils.py:63
 msgid ""
 "**{}** physical memory\n"
-"**{}** virtual memory"
+"**{}** virtual memory\n"
+"**{}**% CPU"
 msgstr ""
-"**{}** mémoire physique\n"
-"**{}** mémoire virtuelle"
 
-#: tuxbot/cogs/Utils/utils.py:72
+#: tuxbot/cogs/Utils/utils.py:77
 msgid "__Servers count__"
 msgstr "__Nombre de serveurs__"
 
-#: tuxbot/cogs/Utils/utils.py:77
+#: tuxbot/cogs/Utils/utils.py:82
 msgid "__Channels count__"
 msgstr "__Nombre de salons__"
 
-#: tuxbot/cogs/Utils/utils.py:82
+#: tuxbot/cogs/Utils/utils.py:87
 msgid "__Members count__"
 msgstr "__Nombre de membres__"
 
-#: tuxbot/cogs/Utils/utils.py:88
+#: tuxbot/cogs/Utils/utils.py:93
 msgid "__:file_folder: Files__"
 msgstr "__:file_folder: Fichiers__"
 
-#: tuxbot/cogs/Utils/utils.py:95
+#: tuxbot/cogs/Utils/utils.py:100
 msgid "__¶ Lines__"
 msgstr "__¶ Lines__"
 
-#: tuxbot/cogs/Utils/utils.py:98
+#: tuxbot/cogs/Utils/utils.py:103
 msgid "class"
 msgstr "classes"
 
-#: tuxbot/cogs/Utils/utils.py:100
+#: tuxbot/cogs/Utils/utils.py:106
 msgid "functions"
 msgstr "fonctions"
 
-#: tuxbot/cogs/Utils/utils.py:102
+#: tuxbot/cogs/Utils/utils.py:109
 msgid "coroutines"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:104
+#: tuxbot/cogs/Utils/utils.py:112
 msgid "comments"
 msgstr "commentaires"
 
-#: tuxbot/cogs/Utils/utils.py:105
+#: tuxbot/cogs/Utils/utils.py:118
 msgid "__Latest changes__"
 msgstr "__Derniers changements__"
 
-#: tuxbot/cogs/Utils/utils.py:111
+#: tuxbot/cogs/Utils/utils.py:124
 msgid "__:link: Links__"
 msgstr "__:link: Liens__"
 
-#: tuxbot/cogs/Utils/utils.py:116
+#: tuxbot/cogs/Utils/utils.py:129
 msgid "| [Invite]"
 msgstr "| [Invitation]"
 
-#: tuxbot/cogs/Utils/utils.py:131
+#: tuxbot/cogs/Utils/utils.py:144
 msgid "Contributors"
 msgstr "Contributeurs"
 
-#: tuxbot/cogs/Utils/utils.py:187
+#: tuxbot/cogs/Utils/utils.py:200
 msgid "Invite"
 msgstr "Invitation"
 
-#: tuxbot/cogs/Utils/utils.py:191
+#: tuxbot/cogs/Utils/utils.py:204
 msgid "Minimal"
 msgstr "Minimale"
 
-#: tuxbot/cogs/Utils/utils.py:193
+#: tuxbot/cogs/Utils/utils.py:206
 msgid ""
 "The minimum permissions include the strict requirements for the proper "
 "functioning of all basics commands.\n"
@@ -102,15 +101,15 @@ msgstr ""
 "Les permissions minimales avec le strict nécessaire pour le bon "
 "fonctionnement des commandes de base\n"
 
-#: tuxbot/cogs/Utils/utils.py:198 tuxbot/cogs/Utils/utils.py:210
+#: tuxbot/cogs/Utils/utils.py:211 tuxbot/cogs/Utils/utils.py:223
 msgid "[Add!]"
 msgstr "[Ajouter !]"
 
-#: tuxbot/cogs/Utils/utils.py:203
+#: tuxbot/cogs/Utils/utils.py:216
 msgid "Admin"
 msgstr "Admin"
 
-#: tuxbot/cogs/Utils/utils.py:205
+#: tuxbot/cogs/Utils/utils.py:218
 msgid ""
 "All minimal permissions + extra permissions for admin commands such as kick "
 "and ban\n"
@@ -118,10 +117,10 @@ msgstr ""
 "Toutes les permissions minimales + les permissions extra pour les commandes "
 "d'administration telles que kick et ban\n"
 
-#: tuxbot/cogs/Utils/utils.py:233
+#: tuxbot/cogs/Utils/utils.py:246
 msgid "Unable to find `{}`"
 msgstr "Impossible de trouver `{}`"
 
-#: tuxbot/cogs/Utils/utils.py:241
+#: tuxbot/cogs/Utils/utils.py:254
 msgid "Unable to fetch lines for `{}`"
 msgstr "Impossible de récuperer les lignes pour `{}`"

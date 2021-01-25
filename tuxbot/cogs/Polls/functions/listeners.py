@@ -67,7 +67,8 @@ async def _suggest_reaction_add(
 
             content["fields"].append(
                 {
-                    "name": f"__{emote} - {upper_first(suggest.proposition)}__",
+                    "name": f"__{emote} "
+                    f"- {upper_first(suggest.proposition)}__",
                     "value": "**0** vote",
                 }
             )
