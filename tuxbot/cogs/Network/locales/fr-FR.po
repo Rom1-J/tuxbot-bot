@@ -18,50 +18,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tuxbot/cogs/Network/functions/converters.py:28
-#: tuxbot/cogs/Network/functions/converters.py:48
+#: tuxbot/cogs/Network/functions/converters.py:32
+#: tuxbot/cogs/Network/functions/converters.py:52
 msgid "Invalid ip or domain"
-msgstr "Nome de domaine ou adresse IP invalide"
+msgstr "Nom de domaine ou adresse IP invalide"
 
-#: tuxbot/cogs/Network/functions/converters.py:59
+#: tuxbot/cogs/Network/functions/converters.py:64
+msgid "Invalid domain"
+msgstr "Domaine invalide"
+
+#: tuxbot/cogs/Network/functions/converters.py:88
+msgid "Supported queries : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX"
+msgstr "Requêtes supportées : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX"
+
+#: tuxbot/cogs/Network/functions/converters.py:101
 msgid "Invalid ip version"
 msgstr "Version d'adresse IP invalide"
 
-#: tuxbot/cogs/Network/functions/utils.py:31
+#: tuxbot/cogs/Network/functions/utils.py:32
 msgid "Impossible to collect information on this in the given version"
 msgstr "Impossible de collecter des informations pour cette IP avec la version donnée"
 
-#: tuxbot/cogs/Network/functions/utils.py:54
+#: tuxbot/cogs/Network/functions/utils.py:55
 #, python-brace-format
 msgid "IP address {ip_address} is already defined as Private-Use Networks via RFC 1918."
 msgstr "L'adresse ip {ip_address} est est reservée à un usage local selon la RFC 1918"
 
-#: tuxbot/cogs/Network/network.py:74
+#: tuxbot/cogs/Network/network.py:89
 msgid "*Retrieving information...*"
 msgstr "*Récupération des informations...*"
 
-#: tuxbot/cogs/Network/network.py:90
+#: tuxbot/cogs/Network/network.py:107
 #, python-brace-format
 msgid "Information for ``{ip} ({ip_address})``"
 msgstr "Informations pour ``{ip} ({ip_address})``"
 
-#: tuxbot/cogs/Network/network.py:100 tuxbot/cogs/Network/network.py:130
+#: tuxbot/cogs/Network/network.py:113
 msgid "Belongs to:"
 msgstr "Appartient à :"
 
-#: tuxbot/cogs/Network/network.py:113 tuxbot/cogs/Network/network.py:142
+#: tuxbot/cogs/Network/network.py:123
 msgid "Region:"
 msgstr "Région :"
 
-#: tuxbot/cogs/Network/network.py:152
+#: tuxbot/cogs/Network/network.py:131
 #, python-brace-format
 msgid "Hostname: {hostname}"
 msgstr "Nom d'hôte : {hostname}"
 
-#: tuxbot/cogs/Network/network.py:182
+#: tuxbot/cogs/Network/network.py:161
 msgid "[show all]({})"
 msgstr "[tout afficher]({})"
 
-#: tuxbot/cogs/Network/network.py:192
+#: tuxbot/cogs/Network/network.py:171
 msgid "Cannot connect to host {}"
 msgstr "Impossible de se connecter à l'hôte {}"
+
+#: tuxbot/cogs/Network/network.py:195
+msgid "No result..."
+msgstr "Aucun résultat..."

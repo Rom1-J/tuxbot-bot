@@ -2,7 +2,11 @@ import re
 
 from discord.ext import commands
 
-from tuxbot.cogs.Network.functions.exceptions import InvalidIp
+from tuxbot.cogs.Network.functions.exceptions import (
+    InvalidIp,
+    InvalidDomain,
+    InvalidQueryType,
+)
 
 
 def _(x):
@@ -30,22 +34,48 @@ class IPConverter(commands.Converter):
 
 class IPCheckerConverter(commands.Converter):
     async def convert(self, ctx, argument):  # skipcq: PYL-W0613
-        argument_back = argument
+        if not argument.startswith("http"):
+            return f"http://{argument}"
+
+        return argument
+
+
+class DomainCheckerConverter(commands.Converter):
+    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
         argument = argument.replace("http://", "").replace("https://", "")
 
         check_domain = re.match(DOMAIN_PATTERN, argument)
-        check_ipv4 = re.match(IPV4_PATTERN, argument)
-        check_ipv6 = re.match(IPV6_PATTERN, argument)
 
-        if check_domain or check_ipv4 or check_ipv6:
-            if argument_back.startswith("https://"):
-                return "https://" + argument
+        if check_domain:
+            return argument
 
-            return "http://" + (
-                argument if not check_ipv6 else f"[{argument}]"
+        raise InvalidDomain(_("Invalid domain"))
+
+
+class QueryTypeConverter(commands.Converter):
+    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
+        argument = argument.lower()
+        query_types = [
+            "a",
+            "aaaa",
+            "cname",
+            "ns",
+            "ds",
+            "dnskey",
+            "soa",
+            "txt",
+            "ptr",
+            "mx",
+        ]
+
+        if argument in query_types:
+            return argument
+
+        raise InvalidQueryType(
+            _(
+                "Supported queries : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX"
             )
-
-        raise InvalidIp(_("Invalid ip or domain"))
+        )
 
 
 class IPVersionConverter(commands.Converter):

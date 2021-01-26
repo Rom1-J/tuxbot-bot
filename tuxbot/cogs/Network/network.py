@@ -1,5 +1,7 @@
 import functools
 import logging
+from typing import Union
+
 import discord
 from aiohttp import ClientConnectorError
 from discord.ext import commands
@@ -9,11 +11,15 @@ from tuxbot.cogs.Network.functions.converters import (
     IPConverter,
     IPVersionConverter,
     IPCheckerConverter,
+    DomainCheckerConverter,
+    QueryTypeConverter,
 )
 from tuxbot.cogs.Network.functions.exceptions import (
     RFC18,
     InvalidIp,
     VersionNotFound,
+    InvalidDomain,
+    InvalidQueryType,
 )
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import (
@@ -32,6 +38,7 @@ from .functions.utils import (
     get_ipinfo_result,
     get_ipwhois_result,
     merge_ipinfo_ipwhois,
+    get_pydig_result,
 )
 
 log = logging.getLogger("tuxbot.cogs.Network")
@@ -54,7 +61,14 @@ class Network(commands.Cog, name="Network"):
     async def cog_command_error(self, ctx, error):
         if isinstance(
             error,
-            (RequestQuotaExceededError, RFC18, InvalidIp, VersionNotFound),
+            (
+                RequestQuotaExceededError,
+                RFC18,
+                InvalidIp,
+                InvalidDomain,
+                InvalidQueryType,
+                VersionNotFound,
+            ),
         ):
             if self._tmp:
                 await self._tmp.delete()
@@ -128,9 +142,19 @@ class Network(commands.Cog, name="Network"):
     ):
         try:
             headers = {"User-Agent": user_agent}
+            colors = {
+                "1": 0x17A2B8,
+                "2": 0x28A745,
+                "3": 0xFFC107,
+                "4": 0xDC3545,
+                "5": 0x343A40,
+            }
 
             async with ctx.session.get(str(ip), headers=headers) as s:
-                e = discord.Embed(title=f"Headers : {ip}", color=0xD75858)
+                e = discord.Embed(
+                    title=f"Headers : {ip}",
+                    color=colors.get(str(s.status)[0], 0x6C757D),
+                )
                 e.add_field(
                     name="Status", value=f"```{s.status}```", inline=True
                 )
@@ -151,8 +175,36 @@ class Network(commands.Cog, name="Network"):
 
                     e.add_field(name=key, value=value, inline=True)
 
-                await ctx.send(embed=e, deletable=False)
+                await ctx.send(embed=e)
         except ClientConnectorError:
             await ctx.send(
                 _("Cannot connect to host {}", ctx, self.bot.config).format(ip)
             )
+
+    @command_extra(name="dig", deletable=True)
+    async def _dig(
+        self,
+        ctx: ContextPlus,
+        domain: DomainCheckerConverter,
+        query_type: QueryTypeConverter,
+        dnssec: Union[str, bool] = False,
+    ):
+        pydig_result = await self.bot.loop.run_in_executor(
+            None,
+            functools.partial(get_pydig_result, domain, query_type, dnssec),
+        )
+
+        e = discord.Embed(title=f"DIG {domain} {query_type}", color=0x5858D7)
+
+        for value in pydig_result:
+            e.add_field(
+                name=f"DIG {domain} IN {query_type}", value=f"```{value}```"
+            )
+
+        if not pydig_result:
+            e.add_field(
+                name=f"DIG {domain} IN {query_type}",
+                value=_("No result...", ctx, self.bot.config),
+            )
+
+        await ctx.send(embed=e)

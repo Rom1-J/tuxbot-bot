@@ -3,6 +3,7 @@ from typing import Union, NoReturn
 
 import ipinfo
 import ipwhois
+import pydig
 from ipinfo.exceptions import RequestQuotaExceededError
 
 from ipwhois import Net
@@ -98,3 +99,19 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
         ] = f"https://www.countryflags.io/{asn_country}/shiny/64.png"
 
     return output
+
+
+def get_pydig_result(
+    domain: str, query_type: str, dnssec: Union[str, bool]
+) -> list:
+    additional_args = [] if dnssec is False else ["+dnssec"]
+
+    resolver = pydig.Resolver(
+        nameservers=[
+            "80.67.169.40",
+            "80.67.169.12",
+        ],
+        additional_args=additional_args,
+    )
+
+    return resolver.query(domain, query_type)
