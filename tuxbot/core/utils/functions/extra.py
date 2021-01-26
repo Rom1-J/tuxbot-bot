@@ -1,6 +1,7 @@
 import asyncio
 import random
 
+import aiohttp
 import discord
 from discord import Embed
 from discord.ext import commands
@@ -96,6 +97,10 @@ class ContextPlus(commands.Context):
             nonce=nonce,
             allowed_mentions=allowed_mentions,
         )
+
+    @property
+    def session(self) -> aiohttp.ClientSession:
+        return self.bot.session
 
 
 class CommandPLus(commands.Command):

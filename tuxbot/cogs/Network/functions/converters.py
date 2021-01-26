@@ -28,6 +28,26 @@ class IPConverter(commands.Converter):
         raise InvalidIp(_("Invalid ip or domain"))
 
 
+class IPCheckerConverter(commands.Converter):
+    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
+        argument_back = argument
+        argument = argument.replace("http://", "").replace("https://", "")
+
+        check_domain = re.match(DOMAIN_PATTERN, argument)
+        check_ipv4 = re.match(IPV4_PATTERN, argument)
+        check_ipv6 = re.match(IPV6_PATTERN, argument)
+
+        if check_domain or check_ipv4 or check_ipv6:
+            if argument_back.startswith("https://"):
+                return "https://" + argument
+
+            return "http://" + (
+                argument if not check_ipv6 else f"[{argument}]"
+            )
+
+        raise InvalidIp(_("Invalid ip or domain"))
+
+
 class IPVersionConverter(commands.Converter):
     async def convert(self, ctx, argument):  # skipcq: PYL-W0613
         if not argument:

@@ -1,17 +1,14 @@
 import functools
 import logging
-
-
 import discord
-
+from aiohttp import ClientConnectorError
 from discord.ext import commands
 from ipinfo.exceptions import RequestQuotaExceededError
-
 from structured_config import ConfigFile
-
 from tuxbot.cogs.Network.functions.converters import (
     IPConverter,
     IPVersionConverter,
+    IPCheckerConverter,
 )
 from tuxbot.cogs.Network.functions.exceptions import (
     RFC18,
@@ -27,6 +24,7 @@ from tuxbot.core.utils.functions.extra import (
     ContextPlus,
     command_extra,
 )
+from tuxbot.core.utils.functions.utils import shorten
 from .config import NetworkConfig
 from .functions.utils import (
     get_ip,
@@ -158,3 +156,38 @@ class Network(commands.Cog, name="Network"):
 
         await self._tmp.delete()
         await ctx.send(embed=e)
+
+    @command_extra(name="getheaders", aliases=["headers"], deletable=True)
+    async def _getheaders(
+        self, ctx: ContextPlus, ip: IPCheckerConverter, *, user_agent: str = ""
+    ):
+        try:
+            headers = {"User-Agent": user_agent}
+
+            async with ctx.session.get(str(ip), headers=headers) as s:
+                e = discord.Embed(title=f"Headers : {ip}", color=0xD75858)
+                e.add_field(
+                    name="Status", value=f"```{s.status}```", inline=True
+                )
+                e.set_thumbnail(url=f"https://http.cat/{s.status}")
+
+                headers = dict(s.headers.items())
+                headers.pop("Set-Cookie", headers)
+
+                for key, value in headers.items():
+                    output = await shorten(ctx, value, 50)
+
+                    if output["link"] is not None:
+                        value = _(
+                            "[show all]({})", ctx, self.bot.config
+                        ).format(output["link"])
+                    else:
+                        value = f"```{output['text']}```"
+
+                    e.add_field(name=key, value=value, inline=True)
+
+                await ctx.send(embed=e, deletable=False)
+        except ClientConnectorError:
+            await ctx.send(
+                _("Cannot connect to host {}", ctx, self.bot.config).format(ip)
+            )

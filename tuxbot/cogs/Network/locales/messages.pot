@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-01-25 16:09+0100\n"
+"POT-Creation-Date: 2021-01-26 15:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,47 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tuxbot/cogs/Network/functions/converters.py:22
+#: tuxbot/cogs/Network/functions/converters.py:28
+#: tuxbot/cogs/Network/functions/converters.py:48
 msgid "Invalid ip or domain"
 msgstr ""
 
-#: tuxbot/cogs/Network/functions/converters.py:35
+#: tuxbot/cogs/Network/functions/converters.py:59
 msgid "Invalid ip version"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:49 tuxbot/cogs/Network/network.py:52
-#, python-brace-format
-msgid "in v{v}"
-msgstr ""
-
-#: tuxbot/cogs/Network/network.py:61
-#, python-brace-format
+#: tuxbot/cogs/Network/functions/utils.py:31
 msgid "Impossible to collect information on this in the given version"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:89
+#: tuxbot/cogs/Network/functions/utils.py:54
 #, python-brace-format
 msgid "IP address {ip_address} is already defined as Private-Use Networks via RFC 1918."
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:109
+#: tuxbot/cogs/Network/network.py:74
 msgid "*Retrieving information...*"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:123
+#: tuxbot/cogs/Network/network.py:90
 #, python-brace-format
 msgid "Information for ``{ip} ({ip_address})``"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:135 tuxbot/cogs/Network/network.py:156
+#: tuxbot/cogs/Network/network.py:100 tuxbot/cogs/Network/network.py:130
 msgid "Belongs to:"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:140 tuxbot/cogs/Network/network.py:161
+#: tuxbot/cogs/Network/network.py:113 tuxbot/cogs/Network/network.py:142
 msgid "Region:"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:174
+#: tuxbot/cogs/Network/network.py:152
 #, python-brace-format
 msgid "Hostname: {hostname}"
+msgstr ""
+
+#: tuxbot/cogs/Network/network.py:182
+msgid "[show all]({})"
+msgstr ""
+
+#: tuxbot/cogs/Network/network.py:192
+msgid "Cannot connect to host {}"
 msgstr ""

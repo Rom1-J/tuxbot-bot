@@ -17,3 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tuxbot/cogs/Logs/logs.py:295
+msgid "Sockets stats"
+msgstr "Statistiques des évenements"
+
+#: tuxbot/cogs/Logs/logs.py:297
+msgid "{} socket events observed ({:.2f}/minute):"
+msgstr "{} evenements ont été observés ({:.2f}/minute)"

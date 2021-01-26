@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2020-10-21 01:15+0200\n"
+"POT-Creation-Date: 2021-01-26 15:18+0100\n"
 "PO-Revision-Date: 2020-10-21 01:15+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,3 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tuxbot/cogs/Logs/logs.py:295
+msgid "Sockets stats"
+msgstr ""
+
+#: tuxbot/cogs/Logs/logs.py:297
+msgid "{} socket events observed ({:.2f}/minute):"
+msgstr ""
