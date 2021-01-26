@@ -100,12 +100,14 @@ class Tux(commands.AutoShardedBot):
         self.uptime = None
         self._app_owners_fetched = False  # to prevent abusive API calls
 
+        self.before_invoke(self._typing)
+
         super().__init__(
             *args, help_command=None, intents=discord.Intents.all(), **kwargs
         )
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-    async def _is_blacklister(self, message: discord.Message) -> bool:
+    async def _is_blacklisted(self, message: discord.Message) -> bool:
         """Check for blacklists."""
         if message.author.bot:
             return True
@@ -120,6 +122,10 @@ class Tux(commands.AutoShardedBot):
             return True
 
         return False
+
+    @staticmethod
+    async def _typing(ctx: ContextPlus) -> None:
+        await ctx.trigger_typing()
 
     async def load_packages(self):
         if packages:
@@ -230,29 +236,29 @@ class Tux(commands.AutoShardedBot):
 
     # pylint: disable=unused-argument
     async def get_context(self, message: discord.Message, *, cls=None):
-        return await super().get_context(message, cls=ContextPlus)
+        ctx: ContextPlus = await super().get_context(message, cls=ContextPlus)
+
+        if (ctx is None or not ctx.valid) and (
+            user_aliases := search_for(
+                self.config.Users, message.author.id, "aliases"
+            )
+        ):
+            # noinspection PyUnboundLocalVariable
+            for alias, command in user_aliases.items():
+                back_content = message.content
+                message.content = message.content.replace(alias, command, 1)
+
+                if (
+                    ctx := await super().get_context(message, cls=ContextPlus)
+                ) is None or not ctx.valid:
+                    message.content = back_content
+                else:
+                    break
+
+        return ctx
 
     async def process_commands(self, message: discord.Message):
         ctx: ContextPlus = await self.get_context(message)
-
-        if ctx is None or not ctx.valid:
-            if user_aliases := search_for(
-                self.config.Users, message.author.id, "aliases"
-            ):
-                for alias, command in user_aliases.items():
-                    back_content = message.content
-                    message.content = message.content.replace(
-                        alias, command, 1
-                    )
-
-                    if (
-                        ctx := await self.get_context(message)
-                    ) is None or not ctx.valid:
-                        message.content = back_content
-                    else:
-                        break
-
-            self.dispatch("message_without_command", message)
 
         if ctx is not None and ctx.valid:
             if ctx.command in search_for(
@@ -264,9 +270,12 @@ class Tux(commands.AutoShardedBot):
                 raise exceptions.DisabledCommandByBotOwner
 
             await self.invoke(ctx)
+        else:
+            self.dispatch("message_without_command", message)
 
     async def on_message(self, message: discord.Message):
-        await self.process_commands(message)
+        if not await self._is_blacklisted(message):
+            await self.process_commands(message)
 
     async def start(self, token, bot):  # pylint: disable=arguments-differ
         """Connect to Discord and start all connections.

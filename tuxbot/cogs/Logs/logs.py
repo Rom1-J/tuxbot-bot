@@ -23,6 +23,7 @@ from tuxbot.core.utils.functions.extra import (
 )
 from tuxbot.core.utils.data_manager import cogs_data_path
 from .config import LogsConfig
+from .functions.utils import sort_by
 
 log = logging.getLogger("tuxbot.cogs.Logs")
 _ = Translator("Logs", __file__)
@@ -279,7 +280,6 @@ class Logs(commands.Cog, name="Logs"):
         await ctx.send(f"```\n{output}\n```")
 
     @command_extra(name="socketstats", hidden=True, deletable=True)
-    @commands.is_owner()
     async def _socketstats(self, ctx: ContextPlus):
         delta = datetime.datetime.now() - self.bot.uptime
         minutes = delta.total_seconds() / 60
@@ -287,18 +287,30 @@ class Logs(commands.Cog, name="Logs"):
         counter = self.bot.stats["socket"]
         if None in counter:
             counter.pop(None)
-        width = len(max(counter, key=len)) + 1
-        common = counter.most_common()
 
         total = sum(self.bot.stats["socket"].values())
         cpm = total / minutes
 
-        output = "\n".join(f"{k:<{width}}: {c}" for k, c in common)
-
-        await ctx.send(
-            f"{total} socket events observed ({cpm:.2f}/minute):"
-            f"```\n{output}\n```"
+        e = discord.Embed(
+            title=_("Sockets stats", ctx, self.bot.config),
+            description=_(
+                "{} socket events observed ({:.2f}/minute):",
+                ctx,
+                self.bot.config,
+            ).format(total, cpm),
+            color=discord.colour.Color.green(),
         )
+
+        for major, events in sort_by(counter.most_common()).items():
+            if events:
+                output = "\n".join(f"{k}: {v}" for k, v in events.items())
+                e.add_field(
+                    name=major.capitalize(),
+                    value=f"```\n{output}\n```",
+                    inline=False,
+                )
+
+        await ctx.send(embed=e)
 
     @command_extra(name="uptime")
     async def _uptime(self, ctx: ContextPlus):
