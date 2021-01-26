@@ -53,7 +53,7 @@ class Logs(commands.Cog, name="Logs"):
         self._gateway_queue = asyncio.Queue(loop=bot.loop)
         self.gateway_worker.start()  # pylint: disable=no-member
 
-        self.config: LogsConfig = ConfigFile(
+        self.__config: LogsConfig = ConfigFile(
             str(
                 cogs_data_path(self.bot.instance_name, "Logs") / "config.yaml"
             ),
@@ -129,7 +129,7 @@ class Logs(commands.Cog, name="Logs"):
 
     def webhook(self, log_type):
         webhook = discord.Webhook.from_url(
-            getattr(self.config, log_type),
+            getattr(self.__config, log_type),
             adapter=discord.AsyncWebhookAdapter(self.bot.session),
         )
         return webhook

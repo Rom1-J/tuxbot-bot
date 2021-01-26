@@ -21,16 +21,16 @@ class Dev(commands.Cog, name="Dev"):
 
     def __init__(self, bot: Tux):
         self.bot = bot
-        self.config: DevConfig = ConfigFile(
+        self.__config: DevConfig = ConfigFile(
             str(cogs_data_path(self.bot.instance_name, "Dev") / "config.yaml"),
             DevConfig,
         ).config
 
         # pylint: disable=invalid-name
         self.yt = YouTrack(
-            self.config.url.rstrip("/") + "/youtrack/",
-            login=self.config.login,
-            password=self.config.password,
+            self.__config.url.rstrip("/") + "/youtrack/",
+            login=self.__config.login,
+            password=self.__config.password,
         )
 
     # =========================================================================

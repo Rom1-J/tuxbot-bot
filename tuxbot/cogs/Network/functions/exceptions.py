@@ -7,3 +7,7 @@ class RFC18(commands.UserNotFound):
 
 class InvalidIp(commands.BadArgument):
     pass
+
+
+class VersionNotFound(commands.BadArgument):
+    pass

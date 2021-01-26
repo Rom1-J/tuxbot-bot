@@ -45,6 +45,7 @@ packages: List[str] = [
     "tuxbot.cogs.Utils",
     "tuxbot.cogs.Polls",
     "tuxbot.cogs.Custom",
+    "tuxbot.cogs.Network",
 ]
 
 

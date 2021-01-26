@@ -33,8 +33,8 @@ msgstr "en v{v}"
 
 #: tuxbot/cogs/Network/network.py:61
 #, python-brace-format
-msgid "Impossible to collect information on this ip {version}"
-msgstr "Impossible de collecter des informations pour cette IP {version}"
+msgid "Impossible to collect information on this in the given version"
+msgstr "Impossible de collecter des informations pour cette IP avec la version donnée"
 
 #: tuxbot/cogs/Network/network.py:89
 #, python-brace-format
