@@ -44,3 +44,35 @@ async def shorten(ctx: ContextPlus, text: str, length: int) -> dict:
             pass
 
     return output
+
+
+def replace_in_dict(value: dict, search: str, replace: str) -> dict:
+    clean = {}
+
+    for k, v in value.items():
+        if isinstance(v, (str, bytes)):
+            v = v.replace(search, replace)
+        elif isinstance(v, list):
+            v = replace_in_list(v, search, replace)
+        elif isinstance(v, dict):
+            v = replace_in_dict(v, search, replace)
+
+        clean[k] = v
+
+    return clean
+
+
+def replace_in_list(value: list, search: str, replace: str) -> list:
+    clean = []
+
+    for v in value:
+        if isinstance(v, (str, bytes)):
+            v = v.replace(search, replace)
+        elif isinstance(v, list):
+            v = replace_in_list(v, search, replace)
+        elif isinstance(v, dict):
+            v = replace_in_dict(v, search, replace)
+
+        clean.append(v)
+
+    return clean

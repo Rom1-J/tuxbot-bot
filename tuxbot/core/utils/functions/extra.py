@@ -10,9 +10,9 @@ from rich.console import Console
 
 console = Console()
 
-TOKEN_REPLACEMENT = "\\*" * random.randint(3, 15)
-PASSWORD_REPLACEMENT = "\\*" * random.randint(3, 15)
-IP_REPLACEMENT = "\\*" * random.randint(3, 15)
+TOKEN_REPLACEMENT = "■" * random.randint(3, 15)
+PASSWORD_REPLACEMENT = "■" * random.randint(3, 15)
+IP_REPLACEMENT = "■" * random.randint(3, 15)
 
 
 class ContextPlus(commands.Context):
@@ -29,6 +29,10 @@ class ContextPlus(commands.Context):
         allowed_mentions=None,
         deletable=True
     ):  # i know *args and **kwargs but, i prefer work with same values
+        from tuxbot.core.utils.functions.utils import (
+            replace_in_dict,
+            replace_in_list,
+        )
 
         if content:
             content = (
@@ -52,6 +56,30 @@ class ContextPlus(commands.Context):
                             PASSWORD_REPLACEMENT,
                         )
                         .replace(self.bot.config.Core.ip, IP_REPLACEMENT)
+                    )
+                elif isinstance(value, list):
+                    e[key] = replace_in_list(
+                        value, self.bot.config.Core.token, TOKEN_REPLACEMENT
+                    )
+                    e[key] = replace_in_list(
+                        e[key],
+                        self.bot.config.Core.Database.password,
+                        PASSWORD_REPLACEMENT,
+                    )
+                    e[key] = replace_in_list(
+                        e[key], self.bot.config.Core.ip, IP_REPLACEMENT
+                    )
+                elif isinstance(value, dict):
+                    e[key] = replace_in_dict(
+                        value, self.bot.config.Core.token, TOKEN_REPLACEMENT
+                    )
+                    e[key] = replace_in_dict(
+                        e[key],
+                        self.bot.config.Core.Database.password,
+                        PASSWORD_REPLACEMENT,
+                    )
+                    e[key] = replace_in_dict(
+                        e[key], self.bot.config.Core.ip, IP_REPLACEMENT
                     )
             embed = Embed.from_dict(e)
 
