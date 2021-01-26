@@ -168,6 +168,35 @@ def get_token() -> str:
     return token
 
 
+def get_ip() -> str:
+    """Get ip via input.
+
+    Returns
+    -------
+    str
+        The ip choose by user.
+    """
+    ip = ""
+
+    # pylint: disable=line-too-long
+    ipv4_pattern = r"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+    ipv6_pattern = r"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"
+
+    while not ip:
+        ip = Prompt.ask(
+            "Please the ip of this machine "
+            "(you can find it with `curl ifconfig.me`)",
+            console=console,
+        )
+        ipv4 = re.match(ipv4_pattern, ip)
+        ipv6 = re.match(ipv6_pattern, ip)
+
+        if not ipv4 and not ipv6:
+            console.print("[prompt.invalid]ERROR: Invalid ip provided")
+            ip = ""
+    return ip
+
+
 def get_multiple(
     question: str, confirmation: str, value_type: type
 ) -> List[Union[str, int]]:
@@ -281,6 +310,8 @@ def finish_setup(data_dir: Path) -> None:
 
     token = get_token()
 
+    ip = get_ip()
+
     console.print()
     prefixes = get_multiple(
         "Choice a (or multiple) prefix for the bot",
@@ -338,6 +369,7 @@ def finish_setup(data_dir: Path) -> None:
     instance_config.config.Core.owners_id = owners_id
     instance_config.config.Core.prefixes = prefixes
     instance_config.config.Core.token = token
+    instance_config.config.Core.ip = ip
     instance_config.config.Core.mentionable = mentionable
     instance_config.config.Core.locale = "en-US"
 

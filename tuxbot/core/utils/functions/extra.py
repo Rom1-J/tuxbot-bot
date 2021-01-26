@@ -11,6 +11,7 @@ console = Console()
 
 TOKEN_REPLACEMENT = "\\*" * random.randint(3, 15)
 PASSWORD_REPLACEMENT = "\\*" * random.randint(3, 15)
+IP_REPLACEMENT = "\\*" * random.randint(3, 15)
 
 
 class ContextPlus(commands.Context):
@@ -29,20 +30,27 @@ class ContextPlus(commands.Context):
     ):  # i know *args and **kwargs but, i prefer work with same values
 
         if content:
-            content = content.replace(
-                self.bot.config.Core.token, TOKEN_REPLACEMENT
-            ).replace(
-                self.bot.config.Core.Database.password, PASSWORD_REPLACEMENT
+            content = (
+                content.replace(self.bot.config.Core.token, TOKEN_REPLACEMENT)
+                .replace(
+                    self.bot.config.Core.Database.password,
+                    PASSWORD_REPLACEMENT,
+                )
+                .replace(self.bot.config.Core.ip, IP_REPLACEMENT)
             )
         if embed:
             e = embed.to_dict()
             for key, value in e.items():
                 if isinstance(value, (str, bytes)):
-                    e[key] = value.replace(
-                        self.bot.config.Core.token, TOKEN_REPLACEMENT
-                    ).replace(
-                        self.bot.config.Core.Database.password,
-                        PASSWORD_REPLACEMENT,
+                    e[key] = (
+                        value.replace(
+                            self.bot.config.Core.token, TOKEN_REPLACEMENT
+                        )
+                        .replace(
+                            self.bot.config.Core.Database.password,
+                            PASSWORD_REPLACEMENT,
+                        )
+                        .replace(self.bot.config.Core.ip, IP_REPLACEMENT)
                     )
             embed = Embed.from_dict(e)
 

@@ -56,6 +56,7 @@ class Config(Structure):
         owners_id: List[int] = []
         prefixes: List[str] = []
         token: str = StrField("")
+        ip: str = StrField("")
         mentionable: bool = BoolField("")
         locale: str = StrField("")
         disabled_command: List[str] = []
