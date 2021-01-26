@@ -19,7 +19,7 @@ msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:40
 msgid "Information about TuxBot"
-msgstr "Information sur TuxBot"
+msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:46
 msgid "__:busts_in_silhouette: Development__"
@@ -28,12 +28,13 @@ msgstr ""
 #: tuxbot/cogs/Utils/utils.py:63
 msgid ""
 "**{}** physical memory\n"
-"**{}** virtual memory"
+"**{}** virtual memory\n"
+"**{:.2f}**% CPU"
 msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:77
 msgid "__Servers count__"
-msgstr "__Nombre de serveurs__"
+msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:82
 msgid "__Channels count__"
@@ -92,9 +93,7 @@ msgid "Minimal"
 msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:206
-msgid ""
-"The minimum permissions include the strict requirements for the proper "
-"functioning of all basics commands.\n"
+msgid "The minimum permissions include the strict requirements for the proper functioning of all basics commands.\n"
 msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:211 tuxbot/cogs/Utils/utils.py:223
@@ -106,9 +105,7 @@ msgid "Admin"
 msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:218
-msgid ""
-"All minimal permissions + extra permissions for admin commands such as kick "
-"and ban\n"
+msgid "All minimal permissions + extra permissions for admin commands such as kick and ban\n"
 msgstr ""
 
 #: tuxbot/cogs/Utils/utils.py:246

@@ -32,6 +32,9 @@ msgid ""
 "**{}** virtual memory\n"
 "**{}**% CPU"
 msgstr ""
+"**{}** mémoire physique\n"
+"**{}** mémoire virtuelle\n"
+"**{}**% CPU"
 
 #: tuxbot/cogs/Utils/utils.py:77
 msgid "__Servers count__"
