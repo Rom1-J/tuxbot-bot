@@ -9,12 +9,12 @@ def _(x):
     return x
 
 
-DOMAIN_PATTERN = "^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$"
-IP_PATTERN = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+DOMAIN_PATTERN = r"^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$"
+IP_PATTERN = r"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 
 
 class IPConverter(commands.Converter):
-    async def convert(self, ctx, argument):
+    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
         argument = argument.replace("http://", "").replace("https://", "")
 
         check_domain = re.match(DOMAIN_PATTERN, argument)
@@ -27,7 +27,7 @@ class IPConverter(commands.Converter):
 
 
 class IPVersionConverter(commands.Converter):
-    async def convert(self, ctx, argument):
+    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
         if not argument:
             return argument
 
