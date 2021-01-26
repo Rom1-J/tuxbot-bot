@@ -65,3 +65,36 @@ async def get_ipinfo_result(
         return (await handler.getDetails(ip_address)).all
     except RequestQuotaExceededError:
         return {}
+
+
+def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
+    output = {"belongs": "N/A", "rir": "N/A", "region": "N/A", "flag": "N/A"}
+
+    if ipinfo_result:
+        org = ipinfo_result.get("org", "")
+        asn = org.split()[0]
+
+        output["belongs"] = f"[{org}](https://bgp.he.net/{asn})"
+        output["rir"] = f"```{ipwhois_result.get('asn_registry', 'N/A')}```"
+        output["region"] = (
+            f"```{ipinfo_result.get('city', 'N/A')} - "
+            f"{ipinfo_result.get('region', 'N/A')} "
+            f"({ipinfo_result.get('country', 'N/A')})```"
+        )
+        output["flag"] = (
+            f"https://www.countryflags.io/{ipinfo_result['country']}"
+            f"/shiny/64.png"
+        )
+    elif ipwhois_result:
+        org = ipwhois_result.get("asn_description", "N/A")
+        asn = ipwhois_result.get("asn", "N/A")
+        asn_country = ipwhois_result.get("asn_country_code", "N/A")
+
+        output["belongs"] = f"{org} ([AS{asn}](https://bgp.he.net/{asn}))"
+        output["rir"] = f"```{ipwhois_result['asn_registry']}```"
+        output["region"] = f"```{asn_country}```"
+        output[
+            "flag"
+        ] = f"https://www.countryflags.io/{asn_country}/shiny/64.png"
+
+    return output

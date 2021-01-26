@@ -31,6 +31,7 @@ from .functions.utils import (
     get_hostname,
     get_ipinfo_result,
     get_ipwhois_result,
+    merge_ipinfo_ipwhois,
 )
 
 log = logging.getLogger("tuxbot.cogs.Network")
@@ -85,6 +86,8 @@ class Network(commands.Cog, name="Network"):
             None, functools.partial(get_ipwhois_result, ip_address)
         )
 
+        merged_results = merge_ipinfo_ipwhois(ipinfo_result, ipwhois_result)
+
         e = discord.Embed(
             title=_(
                 "Information for ``{ip} ({ip_address})``", ctx, self.bot.config
@@ -92,61 +95,23 @@ class Network(commands.Cog, name="Network"):
             color=0x5858D7,
         )
 
-        if ipinfo_result:
-            org = ipinfo_result.get("org", "")
-            asn = org.split()[0]
+        e.add_field(
+            name=_("Belongs to:", ctx, self.bot.config),
+            value=merged_results["belongs"],
+            inline=True,
+        )
+        e.add_field(
+            name="RIR :",
+            value=merged_results["rir"],
+            inline=True,
+        )
+        e.add_field(
+            name=_("Region:", ctx, self.bot.config),
+            value=merged_results["region"],
+            inline=False,
+        )
 
-            e.add_field(
-                name=_("Belongs to:", ctx, self.bot.config),
-                value=f"[{org}](https://bgp.he.net/{asn})",
-                inline=True,
-            )
-
-            if ipwhois_result:
-                e.add_field(
-                    name="RIR :",
-                    value=f"```{ipwhois_result['asn_registry']}```",
-                    inline=True,
-                )
-
-            e.add_field(
-                name=_("Region:", ctx, self.bot.config),
-                value=f"```{ipinfo_result.get('city', 'N/A')} - "
-                f"{ipinfo_result.get('region', 'N/A')} "
-                f"({ipinfo_result.get('country', 'N/A')})```",
-                inline=False,
-            )
-
-            e.set_thumbnail(
-                url=f"https://www.countryflags.io/{ipinfo_result['country']}"
-                f"/shiny/64.png"
-            )
-        elif ipwhois_result:
-            org = ipwhois_result.get("asn_description", "N/A")
-            asn = ipwhois_result.get("asn", "N/A")
-            asn_country = ipwhois_result.get("asn_country_code", "N/A")
-
-            e.add_field(
-                name=_("Belongs to:", ctx, self.bot.config),
-                value=f"{org} ([AS{asn}](https://bgp.he.net/{asn}))",
-                inline=True,
-            )
-
-            e.add_field(
-                name="RIR :",
-                value=f"```{ipwhois_result['asn_registry']}```",
-                inline=True,
-            )
-
-            e.add_field(
-                name=_("Region:", ctx, self.bot.config),
-                value=f"```{asn_country}```",
-                inline=False,
-            )
-
-            e.set_thumbnail(
-                url=f"https://www.countryflags.io/{asn_country}/shiny/64.png"
-            )
+        e.set_thumbnail(url=merged_results["flag"])
 
         e.set_footer(
             text=_("Hostname: {hostname}", ctx, self.bot.config).format(
