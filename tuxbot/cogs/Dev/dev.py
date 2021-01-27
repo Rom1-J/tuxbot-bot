@@ -1,46 +1,30 @@
 import logging
 from discord.ext import commands
-from youtrack.connection import Connection as YouTrack
-from structured_config import ConfigFile
 
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import (
     Translator,
 )
-from tuxbot.core.utils.data_manager import cogs_data_path
-from .config import DevConfig
-from ...core.utils import checks
-from ...core.utils.functions.extra import group_extra, ContextPlus
+from tuxbot.core.utils import checks
+from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 
 log = logging.getLogger("tuxbot.cogs.Dev")
 _ = Translator("Dev", __file__)
 
 
 class Dev(commands.Cog, name="Dev"):
-    yt: YouTrack  # pylint: disable=invalid-name
-
     def __init__(self, bot: Tux):
         self.bot = bot
-        self.__config: DevConfig = ConfigFile(
-            str(cogs_data_path(self.bot.instance_name, "Dev") / "config.yaml"),
-            DevConfig,
-        ).config
-
-        # pylint: disable=invalid-name
-        self.yt = YouTrack(
-            self.__config.url.rstrip("/") + "/youtrack/",
-            login=self.__config.login,
-            password=self.__config.password,
-        )
 
     # =========================================================================
     # =========================================================================
 
-    @group_extra(name="issue", aliases=["issues"], deletable=True)
+    @command_extra(name="crash", deletable=True)
     @checks.is_owner()
-    async def _issue(self, ctx: ContextPlus):
-        """Manage bot issues."""
-
-    @_issue.command(name="list", aliases=["liste", "all", "view"])
-    async def _lang_list(self, ctx: ContextPlus):
-        pass
+    async def _crash(self, ctx: ContextPlus, crash_type: str):
+        if crash_type == "ZeroDivisionError":
+            await ctx.send(str(5 / 0))
+        elif crash_type == "TypeError":
+            await ctx.send(str(int([])))
+        elif crash_type == "IndexError":
+            await ctx.send(str([0][5]))

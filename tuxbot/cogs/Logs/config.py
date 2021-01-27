@@ -9,6 +9,7 @@ class LogsConfig(Structure):
     guilds: str = StrField("")
     errors: str = StrField("")
     gateway: str = StrField("")
+    sentryKey: str = StrField("")
 
 
 extra = {
@@ -34,5 +35,9 @@ extra = {
     "gateway": {
         "type": str,
         "description": "URL of the webhook used for send gateway information",
+    },
+    "sentryKey": {
+        "type": str,
+        "description": "Sentry KEY for error logging (https://sentry.io/)",
     },
 }

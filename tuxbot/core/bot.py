@@ -10,9 +10,8 @@ import discord
 from discord.ext import commands
 from rich import box
 from rich.columns import Columns
-from rich.console import Console
 from rich.panel import Panel
-from rich.progress import Progress, TextColumn, BarColumn
+from rich.progress import Progress
 from rich.table import Table
 from tortoise import Tortoise
 
@@ -22,7 +21,10 @@ from tuxbot.core.utils.data_manager import (
     data_path,
     config_dir,
 )
-from .config import (
+from tuxbot.core.utils.functions.extra import ContextPlus
+from tuxbot.core.utils.functions.prefix import get_prefixes
+from tuxbot.core.utils.console import console
+from tuxbot.core.config import (
     Config,
     ConfigFile,
     search_for,
@@ -31,17 +33,14 @@ from .config import (
 )
 from . import __version__, ExitCodes
 from . import exceptions
-from .utils.functions.extra import ContextPlus
-from .utils.functions.prefix import get_prefixes
 
 log = logging.getLogger("tuxbot")
-console = Console()
 
 packages: List[str] = [
     "jishaku",
     "tuxbot.cogs.Admin",
     "tuxbot.cogs.Logs",
-    # "tuxbot.cogs.Dev",
+    "tuxbot.cogs.Dev",
     "tuxbot.cogs.Utils",
     "tuxbot.cogs.Polls",
     "tuxbot.cogs.Custom",
@@ -51,13 +50,7 @@ packages: List[str] = [
 
 class Tux(commands.AutoShardedBot):
     _loading: asyncio.Task
-    _progress = {
-        "main": Progress(
-            TextColumn("[bold blue]{task.fields[task_name]}", justify="right"),
-            BarColumn(),
-        ),
-        "tasks": {},
-    }
+    _progress = {"tasks": {}, "main": Progress()}
 
     def __init__(self, *args, cli_flags=None, **kwargs):
         # by default, if the bot shutdown without any intervention,
@@ -162,20 +155,19 @@ class Tux(commands.AutoShardedBot):
             last_run=datetime.datetime.timestamp(self.uptime),
         )
 
-        self._progress["main"].stop_task(self._progress["tasks"]["connecting"])
-        self._progress["main"].remove_task(
-            self._progress["tasks"]["connecting"]
-        )
-        self._progress["tasks"].pop("connecting")
-        console.clear()
+        with self._progress["main"] as progress:
+            progress.stop_task(self._progress["tasks"]["discord_connecting"])
+            progress.remove_task(self._progress["tasks"]["discord_connecting"])
+            self._progress["tasks"].pop("discord_connecting")
+            self.console.clear()
 
-        console.print(
+        self.console.print(
             Panel(f"[bold blue]Tuxbot V{version_info.major}", style="blue"),
             justify="center",
         )
-        console.print()
+        self.console.print()
 
-        columns = Columns(expand=True, align="center")
+        columns = Columns(align="center", expand=True)
 
         table = Table(style="dim", border_style="not dim", box=box.HEAVY_HEAD)
         table.add_column(
@@ -204,8 +196,8 @@ class Tux(commands.AutoShardedBot):
             table.add_row(status)
         columns.add_renderable(table)
 
-        console.print(columns)
-        console.print()
+        self.console.print(columns)
+        self.console.print()
 
     async def is_owner(
         self, user: Union[discord.User, discord.Member]
@@ -278,29 +270,24 @@ class Tux(commands.AutoShardedBot):
             await self.process_commands(message)
 
     async def start(self, token, bot):  # pylint: disable=arguments-differ
-        """Connect to Discord and start all connections.
-
-        Todo: add postgresql connect here
-        """
-        with self._progress.get("main") as progress:
-            task_id = self._progress.get("tasks")[
-                "connecting"
-            ] = progress.add_task(
-                "connecting",
-                task_name="Connecting to PostgreSQL...",
-                start=False,
+        """Connect to Discord and start all connections."""
+        with Progress() as progress:
+            task = progress.add_task(
+                "Connecting to PostgreSQL...", total=len(self.extensions)
             )
 
             models = []
 
             for extension, _ in self.extensions.items():
                 if extension == "jishaku":
+                    progress.advance(task)
                     continue
 
                 if importlib.import_module(extension).HAS_MODELS:
                     models.append(f"{extension}.models.__init__")
 
-            progress.update(task_id)
+                progress.advance(task)
+
             await Tortoise.init(
                 db_url="postgres://{}:{}@{}:{}/{}".format(
                     self.config.Core.Database.username,
@@ -313,17 +300,13 @@ class Tux(commands.AutoShardedBot):
             )
             await Tortoise.generate_schemas()
 
-        self._progress["main"].stop_task(self._progress["tasks"]["connecting"])
-        self._progress["main"].remove_task(
-            self._progress["tasks"]["connecting"]
-        )
-        self._progress["tasks"].pop("connecting")
-
-        with self._progress.get("main") as progress:
-            task_id = self._progress.get("tasks")[
-                "connecting"
+        with self._progress["main"] as progress:
+            task_id = self._progress["tasks"][
+                "discord_connecting"
             ] = progress.add_task(
-                "connecting", task_name="Connecting to Discord...", start=False
+                "discord_connecting",
+                task_name="Connecting to Discord...",
+                start=False,
             )
             progress.update(task_id)
             await super().start(token, bot=bot)
@@ -341,21 +324,22 @@ class Tux(commands.AutoShardedBot):
             active=False,
         )
 
-        for task in self._progress["tasks"]:
-            self._progress["main"].log("Shutting down", task)
+        with self._progress["main"] as progress:
+            for task in self._progress["tasks"]:
+                progress.log("Shutting down", task)
 
-            self._progress["main"].stop_task(self._progress["tasks"][task])
-            self._progress["main"].remove_task(
-                self._progress["tasks"]["connecting"]
-            )
-        self._progress["main"].stop()
+                progress.stop_task(self._progress["tasks"][task])
+                progress.remove_task(self._progress["tasks"][task])
+            progress.stop()
 
         pending = [
             t for t in asyncio.all_tasks() if t is not asyncio.current_task()
         ]
 
         for task in pending:
-            console.log("Canceling", task.get_name(), f"({task.get_coro()})")
+            self.console.log(
+                "Canceling", task.get_name(), f"({task.get_coro()})"
+            )
             task.cancel()
         await asyncio.gather(*pending, return_exceptions=False)
 

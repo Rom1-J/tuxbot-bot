@@ -11,9 +11,7 @@ import discord
 import humanize
 import pip
 from rich.columns import Columns
-from rich.console import Console
 from rich.panel import Panel
-from rich.traceback import install
 from rich.table import Table, box
 from rich.text import Text
 from rich import print as rprint
@@ -21,13 +19,11 @@ from rich import print as rprint
 import tuxbot.logging
 from tuxbot.core.bot import Tux
 from tuxbot.core import config
-from .core.utils import data_manager
+from tuxbot.core.utils import data_manager
+from tuxbot.core.utils.console import console
 from . import __version__, version_info, ExitCodes
 
 log = logging.getLogger("tuxbot.main")
-
-console = Console()
-install(console=console, show_locals=True)
 
 BORDER_STYLE = "not dim"
 

@@ -4,7 +4,7 @@ from collections import namedtuple
 from discord.ext import commands
 
 from tuxbot.core.bot import Tux
-from .logs import Logs, on_error, GatewayHandler
+from .logs import Logs, GatewayHandler
 from .config import LogsConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
@@ -24,4 +24,3 @@ def setup(bot: Tux):
 
     handler = GatewayHandler(cog)
     logging.getLogger().addHandler(handler)
-    commands.AutoShardedBot.on_error = on_error

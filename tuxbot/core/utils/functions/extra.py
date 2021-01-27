@@ -6,10 +6,6 @@ import discord
 from discord import Embed
 from discord.ext import commands
 
-from rich.console import Console
-
-console = Console()
-
 TOKEN_REPLACEMENT = "■" * random.randint(3, 15)
 PASSWORD_REPLACEMENT = "■" * random.randint(3, 15)
 IP_REPLACEMENT = "■" * random.randint(3, 15)
@@ -129,6 +125,11 @@ class ContextPlus(commands.Context):
     @property
     def session(self) -> aiohttp.ClientSession:
         return self.bot.session
+
+    def __repr__(self):
+        items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())
+
+        return "<%s: {%s}>" % (self.__class__.__name__, ", ".join(items))
 
 
 class CommandPLus(commands.Command):

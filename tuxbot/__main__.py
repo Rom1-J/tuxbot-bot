@@ -1,9 +1,5 @@
-from rich.console import Console
-from rich.traceback import install
 from tuxbot import ExitCodes
-
-console = Console()
-install(console=console, show_locals=True)
+from tuxbot.core.utils.console import console
 
 
 def main() -> None:

@@ -4,19 +4,12 @@ HAS_MODELS = False
 
 
 class DevConfig(Structure):
-    url: str = StrField("")
-    login: str = StrField("")
-    password: str = StrField("")
+    sentryKey: str = StrField("")
 
 
 extra = {
-    "url": {
+    "sentryKey": {
         "type": str,
-        "description": "URL of the YouTrack instance (without /youtrack/)",
-    },
-    "login": {"type": str, "description": "Login for YouTrack instance"},
-    "password": {
-        "type": str,
-        "description": "Password for YouTrack instance",
+        "description": "Sentry KEY for error logging (https://sentry.io/)",
     },
 }

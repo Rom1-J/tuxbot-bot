@@ -10,6 +10,7 @@ from logging import LogRecord
 import discord
 import humanize
 import psutil
+import sentry_sdk
 from discord.ext import commands, tasks
 from structured_config import ConfigFile
 
@@ -64,7 +65,70 @@ class Logs(commands.Cog, name="Logs"):
         self._resumes = []
         self._identifies = defaultdict(list)
 
-    def _clear_gateway_data(self):
+        self.old_on_error = bot.on_error
+        bot.on_error = self.on_error
+
+        sentry_sdk.init(
+            dsn=self.__config.sentryKey,
+            traces_sample_rate=1.0,
+            environment=self.bot.instance_name,
+            debug=False,
+        )
+
+    def cog_unload(self):
+        self.bot.on_error = self.old_on_error
+
+    async def on_error(self, event):
+        raise event
+
+    # =========================================================================
+    # =========================================================================
+
+    def webhook(self, log_type):
+        webhook = discord.Webhook.from_url(
+            getattr(self.__config, log_type),
+            adapter=discord.AsyncWebhookAdapter(self.bot.session),
+        )
+        return webhook
+
+    async def send_guild_stats(self, e, guild):
+        e.add_field(name="Name", value=guild.name)
+        e.add_field(name="ID", value=guild.id)
+        e.add_field(name="Shard ID", value=guild.shard_id or "N/A")
+        e.add_field(
+            name="Owner", value=f"{guild.owner} (ID: {guild.owner.id})"
+        )
+
+        bots = sum(member.bot for member in guild.members)
+        total = guild.member_count
+        online = sum(
+            member.status is discord.Status.online for member in guild.members
+        )
+
+        e.add_field(name="Members", value=str(total))
+        e.add_field(name="Bots", value=f"{bots} ({bots / total:.2%})")
+        e.add_field(name="Online", value=f"{online} ({online / total:.2%})")
+
+        if guild.icon:
+            e.set_thumbnail(url=guild.icon_url)
+
+        if guild.me:
+            e.timestamp = guild.me.joined_at
+
+        await self.webhook("guilds").send(embed=e)
+
+    def add_record(self, record: LogRecord):
+        self._gateway_queue.put_nowait(record)
+
+    async def notify_gateway_status(self, record: LogRecord):
+        types = {"INFO": ":information_source:", "WARNING": ":warning:"}
+
+        emoji = types.get(record.levelname, ":heavy_multiplication_x:")
+        dt = datetime.datetime.utcfromtimestamp(record.created)
+        msg = f"{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`"
+        await self.webhook("gateway").send(msg)
+
+    def clear_gateway_data(self):
         one_week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
         to_remove = [
             index
@@ -80,11 +144,6 @@ class Logs(commands.Cog, name="Logs"):
             ]
             for index in reversed(to_remove):
                 del dates[index]
-
-    @tasks.loop(seconds=0.0)
-    async def gateway_worker(self):
-        record = await self._gateway_queue.get()
-        await self.notify_gateway_status(record)
 
     async def register_command(self, ctx: ContextPlus):
         if ctx.command is None:
@@ -120,6 +179,14 @@ class Logs(commands.Cog, name="Logs"):
                 }
             )
 
+    # =========================================================================
+    # =========================================================================
+
+    @tasks.loop(seconds=0.0)
+    async def gateway_worker(self):
+        record = await self._gateway_queue.get()
+        await self.notify_gateway_status(record)
+
     @commands.Cog.listener()
     async def on_command_completion(self, ctx: ContextPlus):
         await self.register_command(ctx)
@@ -127,57 +194,6 @@ class Logs(commands.Cog, name="Logs"):
     @commands.Cog.listener()
     async def on_socket_response(self, msg):
         self.bot.stats["socket"][msg.get("t")] += 1
-
-    def webhook(self, log_type):
-        webhook = discord.Webhook.from_url(
-            getattr(self.__config, log_type),
-            adapter=discord.AsyncWebhookAdapter(self.bot.session),
-        )
-        return webhook
-
-    async def log_error(self, *, ctx: ContextPlus = None, extra=None):
-        e = discord.Embed(title="Error", colour=0xDD5F53)
-        e.description = f"```py\n{traceback.format_exc()}\n```"
-        e.add_field(name="Extra", value=extra, inline=False)
-        e.timestamp = datetime.datetime.utcnow()
-
-        if ctx is not None:
-            fmt = "{0} (ID: {0.id})"
-            author = fmt.format(ctx.author)
-            channel = fmt.format(ctx.channel)
-            guild = "None" if ctx.guild is None else fmt.format(ctx.guild)
-
-            e.add_field(name="Author", value=author)
-            e.add_field(name="Channel", value=channel)
-            e.add_field(name="Guild", value=guild)
-
-        await self.webhook("errors").send(embed=e)
-
-    async def send_guild_stats(self, e, guild):
-        e.add_field(name="Name", value=guild.name)
-        e.add_field(name="ID", value=guild.id)
-        e.add_field(name="Shard ID", value=guild.shard_id or "N/A")
-        e.add_field(
-            name="Owner", value=f"{guild.owner} (ID: {guild.owner.id})"
-        )
-
-        bots = sum(member.bot for member in guild.members)
-        total = guild.member_count
-        online = sum(
-            member.status is discord.Status.online for member in guild.members
-        )
-
-        e.add_field(name="Members", value=str(total))
-        e.add_field(name="Bots", value=f"{bots} ({bots / total:.2%})")
-        e.add_field(name="Online", value=f"{online} ({online / total:.2%})")
-
-        if guild.icon:
-            e.set_thumbnail(url=guild.icon_url)
-
-        if guild.me:
-            e.timestamp = guild.me.joined_at
-
-        await self.webhook("guilds").send(embed=e)
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.guild):
@@ -204,7 +220,9 @@ class Logs(commands.Cog, name="Logs"):
             await self.webhook("dm").send(embed=e)
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: ContextPlus, error):
+    async def on_command_error(
+        self, ctx: ContextPlus, error: commands.CommandError
+    ):
         await self.register_command(ctx)
         if not isinstance(
             error, (commands.CommandInvokeError, commands.ConversionError)
@@ -214,6 +232,11 @@ class Logs(commands.Cog, name="Logs"):
         error = error.original
         if isinstance(error, (discord.Forbidden, discord.NotFound)):
             return
+
+        sentry_sdk.capture_exception(error)
+        self.bot.console.log(
+            "Command Error, check sentry or discord error channel"
+        )
 
         e = discord.Embed(title="Command Error", colour=0xCC3366)
         e.add_field(name="Name", value=ctx.command.qualified_name)
@@ -251,18 +274,10 @@ class Logs(commands.Cog, name="Logs"):
         else:
             self._resumes.append(datetime.datetime.utcnow())
 
-        self._clear_gateway_data()
+        self.clear_gateway_data()
 
-    def add_record(self, record: LogRecord):
-        self._gateway_queue.put_nowait(record)
-
-    async def notify_gateway_status(self, record: LogRecord):
-        types = {"INFO": ":information_source:", "WARNING": ":warning:"}
-
-        emoji = types.get(record.levelname, ":heavy_multiplication_x:")
-        dt = datetime.datetime.utcfromtimestamp(record.created)
-        msg = f"{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {record.message}`"
-        await self.webhook("gateway").send(msg)
+    # =========================================================================
+    # =========================================================================
 
     @command_extra(name="commandstats", hidden=True, deletable=True)
     @commands.is_owner()
@@ -318,27 +333,3 @@ class Logs(commands.Cog, name="Logs"):
             datetime.datetime.now() - self.bot.uptime
         )
         await ctx.send(f"Uptime: **{uptime}**")
-
-
-async def on_error(self, event, *args):
-    e = discord.Embed(title="Event Error", colour=0xA32952)
-    e.add_field(name="Event", value=event)
-    e.description = f"```py\n{traceback.format_exc()}\n```"
-    e.timestamp = datetime.datetime.utcnow()
-
-    args_str = ["```py"]
-    for index, arg in enumerate(args):
-        args_str.append(f"[{index}]: {arg!r}")
-    args_str.append("```")
-    e.add_field(name="Args", value="\n".join(args_str), inline=False)
-
-    hook = self.get_cog("Logs").webhook("errors")
-    try:
-        await hook.send(embed=e)
-    except (
-        discord.HTTPException,
-        discord.NotFound,
-        discord.Forbidden,
-        discord.InvalidArgument,
-    ):
-        pass
