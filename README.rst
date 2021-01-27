@@ -1,4 +1,7 @@
-|image0| |image1| |image2| |image3|
+|image0| |image1| |image2|
+
+..
+   |image3|
 
 .. role:: bash(code)
    :language: bash
@@ -26,9 +29,9 @@ Arch Linux
 
 .. code-block:: bash
 
-    $ sudo pacman -Syu python python-pip python-virtualenv git
+    $ sudo pacman -Syu python python-pip python-virtualenv git make gcc postgresql
 
-Continue to `create the venv <#creating-the-virtual-environment>`__.
+Continue to `configure postgresql <#configure-postgresql>`__.
 
 --------------
 
@@ -38,9 +41,9 @@ Debian
 .. code-block:: bash
 
     $ sudo apt update
-    $ sudo apt -y install python3 python3-dev python3-pip python3-venv git
+    $ sudo apt -y install python3 python3-dev python3-pip python3-venv git make gcc postgresql postgresql-client
 
-Continue to `create the venv <#creating-the-virtual-environment>`__.
+Continue to `configure postgresql <#configure-postgresql>`__.
 
 --------------
 
@@ -48,6 +51,29 @@ Windows
 ^^^^^^^
 
 *not for now and not for the future*
+
+Configure PostgreSQL
+--------------------
+
+Now, you need to setup PostgreSQL
+
+Operating systems
+~~~~~~~~~~~~~~~~~
+
+Arch Linux
+^^^^^^^^^^
+
+https://wiki.archlinux.org/index.php/PostgreSQL
+
+Continue to `create the venv <#creating-the-virtual-environment>`__.
+
+
+Debian
+^^^^^^
+
+https://wiki.debian.org/PostgreSql
+
+Continue to `create the venv <#creating-the-virtual-environment>`__.
 
 Creating the Virtual Environment
 --------------------------------
