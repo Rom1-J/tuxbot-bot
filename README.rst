@@ -44,6 +44,18 @@ Continue to `configure postgresql <#configure-postgresql>`__.
 
 --------------
 
+RHEL and derivatives (CentOS, Fedora...)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+    $ sudo dnf update
+    $ sudo dnf install python3 python3-devel python3-pip python3-virtualenv git make gcc postgresql-server postgresql-contrib
+
+Continue to `configure postgresql <#configure-postgresql>`__.
+
+--------------
+
 Windows
 ^^^^^^^
 
@@ -64,11 +76,17 @@ https://wiki.archlinux.org/index.php/PostgreSQL
 
 Continue to `create the venv <#creating-the-virtual-environment>`__.
 
-
 Debian
 ^^^^^^
 
 https://wiki.debian.org/PostgreSql
+
+Continue to `create the venv <#creating-the-virtual-environment>`__.
+
+RHEL and derivatives (CentOS, Fedora...)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+https://fedoraproject.org/wiki/PostgreSQL
 
 Continue to `create the venv <#creating-the-virtual-environment>`__.
 
