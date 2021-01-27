@@ -1,7 +1,9 @@
+import asyncio
 import functools
 import logging
 from typing import Union
 
+import aiohttp
 import discord
 from aiohttp import ClientConnectorError
 from discord.ext import commands
@@ -150,7 +152,11 @@ class Network(commands.Cog, name="Network"):
                 "5": 0x343A40,
             }
 
-            async with ctx.session.get(str(ip), headers=headers) as s:
+            async with ctx.session.get(
+                str(ip),
+                headers=headers,
+                timeout=aiohttp.ClientTimeout(total=4),
+            ) as s:
                 e = discord.Embed(
                     title=f"Headers : {ip}",
                     color=colors.get(str(s.status)[0], 0x6C757D),
@@ -171,12 +177,12 @@ class Network(commands.Cog, name="Network"):
                             "[show all]({})", ctx, self.bot.config
                         ).format(output["link"])
                     else:
-                        value = f"```{output['text']}```"
+                        value = f"```\n{output['text']}```"
 
                     e.add_field(name=key, value=value, inline=True)
 
                 await ctx.send(embed=e)
-        except ClientConnectorError:
+        except (ClientConnectorError, asyncio.exceptions.TimeoutError):
             await ctx.send(
                 _("Cannot connect to host {}", ctx, self.bot.config).format(ip)
             )
