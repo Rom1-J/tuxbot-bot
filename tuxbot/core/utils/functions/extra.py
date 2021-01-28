@@ -127,9 +127,17 @@ class ContextPlus(commands.Context):
         return self.bot.session
 
     def __repr__(self):
-        items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())
+        items = (
+            "message=%s" % self.message,
+            "channel=%s" % self.channel,
+            "guild=%s" % self.guild,
+            "author=%s" % self.author,
+            "prefix=%s" % self.prefix,
+            "args=%s" % self.args,
+            "kwargs=%s" % self.kwargs,
+        )
 
-        return "<%s: {%s}>" % (self.__class__.__name__, ", ".join(items))
+        return "<%s %s>" % (self.__class__.__name__, ", ".join(items))
 
 
 class CommandPLus(commands.Command):

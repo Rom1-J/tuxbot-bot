@@ -73,12 +73,16 @@ class Logs(commands.Cog, name="Logs"):
             traces_sample_rate=1.0,
             environment=self.bot.instance_name,
             debug=False,
+            attach_stacktrace=True,
         )
 
     def cog_unload(self):
         self.bot.on_error = self.old_on_error
 
-    async def on_error(self, event):
+    async def on_error(self, event, *args, **kwargs):
+        self.bot.console.log("Error!")
+        self.bot.console.log(args)
+        self.bot.console.log(kwargs)
         raise event
 
     # =========================================================================
