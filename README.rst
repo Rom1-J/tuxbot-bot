@@ -61,6 +61,8 @@ Windows
 
 *not for now and not for the future*
 
+--------------
+
 Configure PostgreSQL
 --------------------
 
@@ -76,6 +78,8 @@ https://wiki.archlinux.org/index.php/PostgreSQL
 
 Continue to `create the venv <#creating-the-virtual-environment>`__.
 
+--------------
+
 Debian
 ^^^^^^
 
@@ -83,12 +87,16 @@ https://wiki.debian.org/PostgreSql
 
 Continue to `create the venv <#creating-the-virtual-environment>`__.
 
+--------------
+
 RHEL and derivatives (CentOS, Fedora...)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 https://fedoraproject.org/wiki/PostgreSQL
 
 Continue to `create the venv <#creating-the-virtual-environment>`__.
+
+--------------
 
 Creating the Virtual Environment
 --------------------------------

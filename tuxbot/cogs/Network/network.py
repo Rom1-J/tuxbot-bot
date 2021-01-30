@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import logging
+import time
 from typing import Union
 
 import aiohttp
@@ -213,4 +214,18 @@ class Network(commands.Cog, name="Network"):
                 value=_("No result...", ctx, self.bot.config),
             )
 
+        await ctx.send(embed=e)
+
+    @command_extra(name="ping", deletable=True)
+    async def _ping(self, ctx: ContextPlus):
+        start = time.perf_counter()
+        await ctx.trigger_typing()
+        end = time.perf_counter()
+
+        latency = round(self.bot.latency * 1000, 2)
+        typing = round((end - start) * 1000, 2)
+
+        e = discord.Embed(title="Ping", color=discord.Color.teal())
+        e.add_field(name="Websocket", value=f"{latency}ms")
+        e.add_field(name="Typing", value=f"{typing}ms")
         await ctx.send(embed=e)
