@@ -80,10 +80,7 @@ class Logs(commands.Cog, name="Logs"):
         self.bot.on_error = self.old_on_error
 
     async def on_error(self, event, *args, **kwargs):
-        self.bot.console.log("Error!")
-        self.bot.console.log(args)
-        self.bot.console.log(kwargs)
-        raise event
+        raise  # pylint: disable=misplaced-bare-raise
 
     # =========================================================================
     # =========================================================================
