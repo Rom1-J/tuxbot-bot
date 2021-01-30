@@ -253,7 +253,7 @@ class Tux(commands.AutoShardedBot):
         ctx: ContextPlus = await self.get_context(message)
 
         if ctx is not None and ctx.valid:
-            if ctx.command in search_for(
+            if message.guild and ctx.command in search_for(
                 self.config.Servers, message.guild.id, "disabled_command", []
             ):
                 raise exceptions.DisabledCommandByServerOwner
