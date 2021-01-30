@@ -83,7 +83,7 @@ class IPVersionConverter(commands.Converter):
         if not argument:
             return argument
 
-        argument = argument.replace("-", "").replace("p", "").replace("v", "")
+        argument = argument.replace("-", "").replace("ip", "").replace("v", "")
 
         if argument not in ["4", "6"]:
             raise InvalidIp(_("Invalid ip version"))
