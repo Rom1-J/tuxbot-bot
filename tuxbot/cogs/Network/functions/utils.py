@@ -73,7 +73,7 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
 
     if ipinfo_result:
         org = ipinfo_result.get("org", "")
-        asn = org.split()[0]
+        asn = org.split()[0] if len(org.split()) > 1 else 'N/A'
 
         output["belongs"] = f"[{org}](https://bgp.he.net/{asn})"
         output["rir"] = f"```{ipwhois_result.get('asn_registry', 'N/A')}```"
