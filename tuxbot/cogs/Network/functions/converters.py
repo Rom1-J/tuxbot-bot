@@ -21,6 +21,7 @@ IPV6_PATTERN = r"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){
 class IPConverter(commands.Converter):
     async def convert(self, ctx, argument):  # skipcq: PYL-W0613
         argument = argument.replace("http://", "").replace("https://", "")
+        argument = argument.rstrip("/")
 
         check_domain = re.match(DOMAIN_PATTERN, argument)
         check_ipv4 = re.match(IPV4_PATTERN, argument)
