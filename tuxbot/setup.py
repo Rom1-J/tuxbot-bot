@@ -4,10 +4,11 @@ import logging
 import os
 import re
 import sys
+import json
 from argparse import Namespace
 from pathlib import Path
 from typing import Union, List
-import requests
+from urllib import request
 
 from rich.prompt import Prompt, IntPrompt
 from rich.console import Console
@@ -432,9 +433,7 @@ def basic_setup() -> None:
 
 
 def update() -> None:
-    response = requests.get(
-        "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
-    ).json()
+    response = json.load(request.urlopen("https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"))
 
     if response.get("sha")[:6] == version_info.build:
         print(
