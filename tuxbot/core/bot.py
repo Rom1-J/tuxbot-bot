@@ -91,6 +91,7 @@ class Tux(commands.AutoShardedBot):
         self.max_messages = message_cache_size
 
         self.uptime = None
+        self.last_on_ready = None
         self._app_owners_fetched = False  # to prevent abusive API calls
 
         self.before_invoke(self._typing)
@@ -145,7 +146,12 @@ class Tux(commands.AutoShardedBot):
                     progress.advance(task)
 
     async def on_ready(self):
+        if self.uptime is not None:
+            self.last_on_ready = datetime.datetime.now()
+            return
+
         self.uptime = datetime.datetime.now()
+        self.last_on_ready = self.uptime
         app_config = ConfigFile(config_dir / "config.yaml", AppConfig).config
         set_for_key(
             app_config.Instances,

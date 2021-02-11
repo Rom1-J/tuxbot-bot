@@ -16,11 +16,11 @@ update:
 update_soft:
 	$(VENV)/bin/pip install --upgrade .
 
-dev: reformat update_soft
+dev: black update_soft
 	tuxbot dev
 
 # Blackify code
-reformat:
+black:
 	$(PYTHON) -m black `git ls-files "*.py"` --line-length=79 && $(PYTHON) -m pylint tuxbot
 
 # Translations

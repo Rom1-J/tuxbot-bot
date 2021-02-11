@@ -252,6 +252,10 @@ class Logs(commands.Cog, name="Logs"):
             name="Content",
             value=textwrap.shorten(ctx.message.content, width=512),
         )
+        e.add_field(
+            name="Bot Instance",
+            value=self.bot.instance_name,
+        )
 
         exc = "".join(
             traceback.format_exception(
