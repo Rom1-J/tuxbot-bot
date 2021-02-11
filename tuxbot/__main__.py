@@ -1,3 +1,4 @@
+import sys
 from tuxbot import ExitCodes
 from tuxbot.core.utils.console import console
 
@@ -9,10 +10,7 @@ def main() -> None:
         run()
     except SystemExit as exc:
         if exc.code == ExitCodes.RESTART:
-            # reimport to load changes
-            from .__run__ import run  # pylint: disable=import-outside-toplevel
-
-            run()
+            sys.exit(exc.code)
         else:
             raise exc
     except Exception:

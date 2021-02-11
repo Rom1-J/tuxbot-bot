@@ -366,10 +366,10 @@ class Tux(commands.AutoShardedBot):
             and reboot.
 
         """
-        if not restart:
-            self.shutdown_code = ExitCodes.SHUTDOWN
-        else:
-            self.shutdown_code = ExitCodes.RESTART
+
+        self.shutdown_code = (
+            ExitCodes.RESTART if restart else ExitCodes.SHUTDOWN
+        )
 
         await self.logout()
 

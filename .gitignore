@@ -37,3 +37,9 @@ dist
 build
 *.egg
 *.egg-info
+
+
+.ipython/
+.env
+.envs/*
+!.envs/.local/
