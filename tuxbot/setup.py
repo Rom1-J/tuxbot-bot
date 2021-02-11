@@ -436,8 +436,8 @@ def update() -> None:
     response = json.load(
         request.urlopen(
             "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
-        )
-    )  # skipcq:  BAN-B310
+        )  # skipcq:  BAN-B310
+    )
 
     if response.get("sha")[:6] == version_info.build:
         print(
