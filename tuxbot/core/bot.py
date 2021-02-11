@@ -107,11 +107,16 @@ class Tux(commands.AutoShardedBot):
             return True
 
         if (
-            search_for(self.config.Servers, message.guild.id, "blacklisted")
+            search_for(self.config.Users, message.author.id, "blacklisted")
             or search_for(
                 self.config.Channels, message.channel.id, "blacklisted"
             )
-            or search_for(self.config.Users, message.author.id, "blacklisted")
+            or (
+                message.guild
+                and search_for(
+                    self.config.Servers, message.guild.id, "blacklisted"
+                )
+            )
         ):
             return True
 
