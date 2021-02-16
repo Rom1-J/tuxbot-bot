@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from tuxbot.cogs.Custom.functions.converters import AliasConvertor
 from tuxbot.core.bot import Tux
-from tuxbot.core.config import set_for_key, search_for
+from tuxbot.core.config import set_for_key, search_for, set_if_none
 from tuxbot.core.config import Config
 from tuxbot.core.i18n import (
     Translator,
@@ -33,13 +33,13 @@ class Custom(commands.Cog, name="Custom"):
     # =========================================================================
     # =========================================================================
 
+    async def _get_aliases(self, ctx: ContextPlus) -> dict:
+        return search_for(self.bot.config.Users, ctx.author.id, "aliases")
+
     async def _save_lang(self, ctx: ContextPlus, lang: str) -> None:
         set_for_key(
             self.bot.config.Users, ctx.author.id, Config.User, locale=lang
         )
-
-    async def _get_aliases(self, ctx: ContextPlus) -> dict:
-        return search_for(self.bot.config.Users, ctx.author.id, "aliases")
 
     async def _save_alias(self, ctx: ContextPlus, alias: dict) -> None:
         set_for_key(
@@ -76,12 +76,16 @@ class Custom(commands.Cog, name="Custom"):
 
     @_custom.command(name="alias", aliases=["aliases"])
     async def _custom_alias(self, ctx: ContextPlus, *, alias: AliasConvertor):
-        args = alias.split(" | ")
+        args = str(alias).split(" | ")
 
         command = args[0]
         alias = args[1]
 
         user_aliases = await self._get_aliases(ctx)
+
+        if not user_aliases:
+            set_if_none(self.bot.config.Users, ctx.author.id, Config.User)
+            user_aliases = await self._get_aliases(ctx)
 
         if alias in user_aliases.keys():
             return await ctx.send(

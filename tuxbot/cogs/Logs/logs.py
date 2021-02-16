@@ -56,9 +56,7 @@ class Logs(commands.Cog, name="Logs"):
         self.gateway_worker.start()  # pylint: disable=no-member
 
         self.__config: LogsConfig = ConfigFile(
-            str(
-                cogs_data_path(self.bot.instance_name, "Logs") / "config.yaml"
-            ),
+            str(cogs_data_path("Logs") / "config.yaml"),
             LogsConfig,
         ).config
 
@@ -265,6 +263,19 @@ class Logs(commands.Cog, name="Logs"):
         e.description = f"```py\n{exc}\n```"
         e.timestamp = datetime.datetime.utcnow()
         await self.webhook("errors").send(embed=e)
+
+        e.description = _(
+            "```An error occurred, the bot owner has been advertised...```",
+            ctx,
+            self.bot.config,
+        )
+        e.remove_field(0)
+        e.remove_field(1)
+        e.remove_field(1)
+
+        e.set_footer(text=sentry_sdk.last_event_id())
+
+        await ctx.send(embed=e)
 
     @commands.Cog.listener()
     async def on_socket_raw_send(self, data):

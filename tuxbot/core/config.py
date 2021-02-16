@@ -11,7 +11,6 @@ from structured_config import (
 __all__ = [
     "Config",
     "ConfigFile",
-    "AppConfig",
     "search_for",
     "set_for_key",
     "set_for",
@@ -60,20 +59,7 @@ class Config(Structure):
         mentionable: bool = BoolField("")
         locale: str = StrField("")
         disabled_command: List[str] = []
-
-
-# =============================================================================
-# Configuration of Tuxbot Application (not the bot)
-# =============================================================================
-
-
-class AppConfig(Structure):
-    class Instance(Structure):
-        path: str = StrField("")
-        active: bool = BoolField(False)
-        last_run: int = IntField(0)
-
-    Instances: Dict[str, Instance] = {}
+        instance_name: str = StrField("")
 
 
 # =============================================================================
@@ -85,6 +71,11 @@ def search_for(config, key, value, default=False) -> Any:
     if key in config:
         return getattr(config[key], value)
     return default
+
+
+def set_if_none(config, key, ctype) -> None:
+    if key not in config:
+        config[key] = ctype()
 
 
 def set_for_key(config, key, ctype, **values) -> None:
@@ -105,8 +96,7 @@ def set_for_key(config, key, ctype, **values) -> None:
                rip roxy        .*' /  .*' ; .*`- +'  `*'
            201?-2020 :,(       `*-*   `*-*  `*-*'
     """
-    if key not in config:
-        config[key] = ctype()
+    set_if_none(config, key, ctype)
 
     for k, v in values.items():
         setattr(config[key], k, v)

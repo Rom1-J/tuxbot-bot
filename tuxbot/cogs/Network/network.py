@@ -54,10 +54,7 @@ class Network(commands.Cog, name="Network"):
     def __init__(self, bot: Tux):
         self.bot = bot
         self.__config: NetworkConfig = ConfigFile(
-            str(
-                cogs_data_path(self.bot.instance_name, "Network")
-                / "config.yaml"
-            ),
+            str(cogs_data_path("Network") / "config.yaml"),
             NetworkConfig,
         ).config
 

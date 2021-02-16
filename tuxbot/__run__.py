@@ -5,20 +5,16 @@ import signal
 import sys
 import os
 from argparse import Namespace
-from datetime import datetime
 
 import discord
-import humanize
 import pip
 from rich.columns import Columns
 from rich.panel import Panel
 from rich.table import Table, box
-from rich.text import Text
 from rich import print as rprint
 
 import tuxbot.logging
 from tuxbot.core.bot import Tux
-from tuxbot.core import config
 from tuxbot.core.utils import data_manager
 from tuxbot.core.utils.console import console
 from . import __version__, version_info, ExitCodes
@@ -26,41 +22,6 @@ from . import __version__, version_info, ExitCodes
 log = logging.getLogger("tuxbot.main")
 
 BORDER_STYLE = "not dim"
-
-
-def list_instances() -> None:
-    """List all available instances"""
-    app_config = config.ConfigFile(
-        data_manager.config_dir / "config.yaml", config.AppConfig
-    ).config
-
-    console.print(
-        Panel("[bold green]Instances", style="green"), justify="center"
-    )
-    console.print()
-
-    columns = Columns(expand=True, padding=2, align="center")
-    for instance, details in app_config.Instances.items():
-        active = details["active"]
-        last_run = (
-            humanize.naturaltime(
-                datetime.now() - datetime.fromtimestamp(details["last_run"])
-            )
-            or "[i]unknown"
-        )
-
-        table = Table(
-            style="dim", border_style=BORDER_STYLE, box=box.HEAVY_HEAD
-        )
-        table.add_column("Name")
-        table.add_column(("Running since" if active else "Last run"))
-        table.add_row(instance, last_run)
-        table.title = Text(instance, style="green" if active else "red")
-        columns.add_renderable(table)
-    console.print(columns)
-    console.print()
-
-    sys.exit(os.EX_OK)
 
 
 def debug_info() -> None:
@@ -134,7 +95,7 @@ def parse_cli_flags(args: list) -> Namespace:
     """
     parser = argparse.ArgumentParser(
         description="Tuxbot - OpenSource bot",
-        usage="tuxbot <instance_name> [arguments]",
+        usage="tuxbot [arguments]",
     )
     parser.add_argument(
         "--version",
@@ -146,18 +107,7 @@ def parse_cli_flags(args: list) -> Namespace:
         "--debug", action="store_true", help="Show debug information."
     )
     parser.add_argument(
-        "--list-instances",
-        "-L",
-        action="store_true",
-        help="List all instance names",
-    )
-    parser.add_argument(
         "--token", "-T", type=str, help="Run Tuxbot with passed token"
-    )
-    parser.add_argument(
-        "instance_name",
-        nargs="?",
-        help="Name of the bot instance created during `tuxbot-setup`.",
     )
 
     args = parser.parse_args(args)
@@ -206,7 +156,7 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     None
         When exiting, this function return None.
     """
-    data_path = data_manager.data_path(tux.instance_name)
+    data_path = data_manager.data_path
 
     tuxbot.logging.init_logging(10, location=data_path / "logs")
 
@@ -245,9 +195,7 @@ def run() -> None:
     tux = None
     cli_flags = parse_cli_flags(sys.argv[1:])
 
-    if cli_flags.list_instances:
-        list_instances()
-    elif cli_flags.debug:
+    if cli_flags.debug:
         debug_info()
     elif cli_flags.version:
         rprint(f"Tuxbot V{version_info.major}")
@@ -259,13 +207,6 @@ def run() -> None:
     asyncio.set_event_loop(loop)
 
     try:
-        if not cli_flags.instance_name:
-            console.print(
-                "[red]No instance provided ! "
-                "You can use 'tuxbot -L' to list all available instances"
-            )
-            sys.exit(ExitCodes.CRITICAL)
-
         tux = Tux(
             cli_flags=cli_flags,
             description="Tuxbot, made from and for OpenSource",

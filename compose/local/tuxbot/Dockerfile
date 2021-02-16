@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-buster
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -19,6 +19,7 @@ RUN apt-get update \
 # Requirements are installed here to ensure they will be cached.
 COPY ./dev.requirements.txt /app/dev.requirements.txt
 COPY ./tuxbot /app/tuxbot
+COPY ./data /app/data
 COPY ./setup.cfg /app/setup.cfg
 COPY ./setup.py /app/setup.py
 RUN pip install -r /app/dev.requirements.txt

@@ -43,3 +43,6 @@ build
 .env
 .envs/*
 !.envs/.local/
+
+
+data/settings/

@@ -18,8 +18,7 @@ from tortoise import Tortoise
 from tuxbot import version_info
 from tuxbot.core.utils.data_manager import (
     logs_data_path,
-    data_path,
-    config_dir,
+    config_file,
 )
 from tuxbot.core.utils.functions.extra import ContextPlus
 from tuxbot.core.utils.functions.prefix import get_prefixes
@@ -28,8 +27,6 @@ from tuxbot.core.config import (
     Config,
     ConfigFile,
     search_for,
-    AppConfig,
-    set_for_key,
 )
 from . import __version__, ExitCodes
 from . import exceptions
@@ -57,17 +54,15 @@ class Tux(commands.AutoShardedBot):
         # it's a crash
         self.shutdown_code = ExitCodes.CRITICAL
         self.cli_flags = cli_flags
-        self.instance_name = self.cli_flags.instance_name
         self.last_exception = None
-        self.logs = logs_data_path(self.instance_name)
+        self.logs = logs_data_path()
 
         self.console = console
 
         self.stats = {"commands": Counter(), "socket": Counter()}
 
-        self.config: Config = ConfigFile(
-            str(data_path(self.instance_name) / "config.yaml"), Config
-        ).config
+        self.config: Config = ConfigFile(config_file, Config).config
+        self.instance_name = self.config.Core.instance_name
 
         async def _prefixes(bot, message) -> List[str]:
             prefixes = self.config.Core.prefixes
@@ -157,14 +152,6 @@ class Tux(commands.AutoShardedBot):
 
         self.uptime = datetime.datetime.now()
         self.last_on_ready = self.uptime
-        app_config = ConfigFile(config_dir / "config.yaml", AppConfig).config
-        set_for_key(
-            app_config.Instances,
-            self.instance_name,
-            AppConfig.Instance,
-            active=True,
-            last_run=datetime.datetime.timestamp(self.uptime),
-        )
 
         with self._progress["main"] as progress:
             progress.stop_task(self._progress["tasks"]["discord_connecting"])
@@ -189,6 +176,7 @@ class Tux(commands.AutoShardedBot):
         table.add_row(f"Language: {self.config.Core.locale}")
         table.add_row(f"Tuxbot Version: {__version__}")
         table.add_row(f"Discord.py Version: {discord.__version__}")
+        table.add_row(f"Instance name: {self.instance_name}")
         table.add_row(f"Shards: {self.shard_count}")
         table.add_row(f"Servers: {len(self.guilds)}")
         table.add_row(f"Users: {len(self.users)}")
@@ -315,8 +303,8 @@ class Tux(commands.AutoShardedBot):
             task_id = self._progress["tasks"][
                 "discord_connecting"
             ] = progress.add_task(
-                "discord_connecting",
-                task_name="Connecting to Discord...",
+                "Connecting to Discord...",
+                task_name="discord_connecting",
                 start=False,
             )
             progress.update(task_id)
@@ -327,14 +315,6 @@ class Tux(commands.AutoShardedBot):
 
         Todo: add postgresql logout here
         """
-        app_config = ConfigFile(config_dir / "config.yaml", AppConfig).config
-        set_for_key(
-            app_config.Instances,
-            self.instance_name,
-            AppConfig.Instance,
-            active=False,
-        )
-
         with self._progress["main"] as progress:
             for task in self._progress["tasks"]:
                 progress.log("Shutting down", task)

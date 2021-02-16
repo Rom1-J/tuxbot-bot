@@ -1,15 +1,10 @@
-from structured_config import Structure, StrField
+from structured_config import Structure
 
 HAS_MODELS = False
 
 
 class DevConfig(Structure):
-    sentryKey: str = StrField("")
+    pass
 
 
-extra = {
-    "sentryKey": {
-        "type": str,
-        "description": "Sentry KEY for error logging (https://sentry.io/)",
-    },
-}
+extra = {}

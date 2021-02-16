@@ -9,6 +9,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/tuxbot/Dockerfile
+    restart: always
     image: tuxbot_bot_local_tuxbot
     container_name: tuxbot
     depends_on:
