@@ -1,5 +1,6 @@
 import asyncio
 import random
+from io import BytesIO
 
 import aiohttp
 import discord
@@ -23,7 +24,7 @@ class ContextPlus(commands.Context):
         delete_after=None,
         nonce=None,
         allowed_mentions=None,
-        deletable=True
+        deletable=True,
     ):  # i know *args and **kwargs but, i prefer work with same values
         from tuxbot.core.utils.functions.utils import (
             replace_in_dict,
@@ -39,6 +40,10 @@ class ContextPlus(commands.Context):
                 )
                 .replace(self.bot.config.Core.ip, IP_REPLACEMENT)
             )
+
+            if len(content) > 1800:
+                file = discord.File(BytesIO(content.encode()), "output.txt")
+                content = "output too long..."
         if embed:
             e = embed.to_dict()
             for key, value in e.items():

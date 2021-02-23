@@ -66,13 +66,14 @@ class Logs(commands.Cog, name="Logs"):
         self.old_on_error = bot.on_error
         bot.on_error = self.on_error
 
-        sentry_sdk.init(
-            dsn=self.__config.sentryKey,
-            traces_sample_rate=1.0,
-            environment=self.bot.instance_name,
-            debug=False,
-            attach_stacktrace=True,
-        )
+        if self.bot.instance_name != "dev":
+            sentry_sdk.init(
+                dsn=self.__config.sentryKey,
+                traces_sample_rate=1.0,
+                environment=self.bot.instance_name,
+                debug=False,
+                attach_stacktrace=True,
+            )
 
     def cog_unload(self):
         self.bot.on_error = self.old_on_error
@@ -232,7 +233,8 @@ class Logs(commands.Cog, name="Logs"):
         if isinstance(error, (discord.Forbidden, discord.NotFound)):
             return
 
-        sentry_sdk.capture_exception(error)
+        if self.bot.instance_name != "dev":
+            sentry_sdk.capture_exception(error)
         self.bot.console.log(
             "Command Error, check sentry or discord error channel"
         )
@@ -273,7 +275,8 @@ class Logs(commands.Cog, name="Logs"):
         e.remove_field(1)
         e.remove_field(1)
 
-        e.set_footer(text=sentry_sdk.last_event_id())
+        if self.bot.instance_name != "dev":
+            e.set_footer(text=sentry_sdk.last_event_id())
 
         await ctx.send(embed=e)
 
