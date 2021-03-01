@@ -26,13 +26,13 @@ def typing(func):
     return wrapped
 
 
-async def shorten(ctx: ContextPlus, text: str, length: int) -> dict:
+async def shorten(session, text: str, length: int) -> dict:
     output = {"text": text[:length], "link": None}
 
     if len(text) > length:
         output["text"] += "[...]"
         try:
-            async with ctx.session.post(
+            async with session.post(
                 "https://paste.ramle.be/documents",
                 data=text.encode(),
                 timeout=aiohttp.ClientTimeout(total=2),

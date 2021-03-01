@@ -56,6 +56,7 @@ class Config(Structure):
         prefixes: List[str] = []
         token: str = StrField("")
         ip: str = StrField("")
+        ip6: str = StrField("")
         mentionable: bool = BoolField("")
         locale: str = StrField("")
         disabled_command: List[str] = []

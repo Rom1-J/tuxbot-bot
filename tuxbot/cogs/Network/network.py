@@ -168,7 +168,7 @@ class Network(commands.Cog, name="Network"):
                 headers.pop("Set-Cookie", headers)
 
                 for key, value in headers.items():
-                    output = await shorten(ctx, value, 50)
+                    output = await shorten(ctx.session, value, 50)
 
                     if output["link"] is not None:
                         value = _(

@@ -1,12 +1,10 @@
+import functools
 import logging
-from io import BytesIO
-
 import discord
 from discord.ext import commands
-from ralgo.ralgo import Ralgo
 
 from tuxbot.cogs.Crypto.functions.extractor import extract
-from tuxbot.cogs.Crypto.functions.file import find_ext
+from tuxbot.cogs.Crypto.functions.sync import encode
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import (
     Translator,
@@ -30,50 +28,33 @@ class Crypto(commands.Cog, name="Crypto"):
     @_ralgo.command(name="encode")
     async def _ralgo_encode(self, ctx: ContextPlus, *, data: str = None):
         try:
-            params = await extract(ctx.message.attachments, data, 100000)
+            params = await extract(ctx.message.attachments, data, 10000)
         except ValueError:
             return await ctx.send("Invalid data provided")
 
-        statement = Ralgo(params["message"])
-        params = params["params"]
-        encoded = statement.encode(chars=params["chars"])
+        async with ctx.typing():
+            output = await self.bot.loop.run_in_executor(
+                None, functools.partial(encode, params)
+            )
 
-        if params["compressed"]:
-            return await ctx.send(str(encoded.compress()))
         if params["graphical"]:
-            output = encoded.graphical().encode()
-            file = discord.File(BytesIO(output.to_bytes()), "output.png")
+            return await ctx.send(file=output)
 
-            return await ctx.send(file=file)
-
-        await ctx.send(str(encoded))
+        await ctx.send(output)
 
     @_ralgo.command(name="decode")
     async def _ralgo_decode(self, ctx: ContextPlus, *, data: str = None):
         try:
-            params = await extract(ctx.message.attachments, data, 5000000)
+            params = await extract(ctx.message.attachments, data, 100000)
         except ValueError:
             return await ctx.send("Invalid data provided")
 
-        statement = Ralgo(params["message"])
-        params = params["params"]
+        async with ctx.typing():
+            output = await self.bot.loop.run_in_executor(
+                None, functools.partial(encode, params)
+            )
 
-        if params["graphical"]:
-            output = Ralgo(statement.graphical().decode()).decode()
+        if isinstance(output, discord.File):
+            return await ctx.send(file=output)
 
-            output = discord.utils.escape_markdown(str(output))
-            output = discord.utils.escape_mentions(output)
-        elif params["compressed"]:
-            output = Ralgo(statement.decompress()).decode()
-        else:
-            output = statement.decode(chars=params["chars"])
-
-        if isinstance(output, bytes):
-            file = discord.File(BytesIO(output), f"output.{find_ext(output)}")
-
-            return await ctx.send(file=file)
-
-        output = discord.utils.escape_markdown(str(output))
-        output = discord.utils.escape_mentions(output)
-
-        await ctx.send(output if len(output) > 0 else "no content...")
+        await ctx.send(output)

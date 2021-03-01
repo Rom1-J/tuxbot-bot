@@ -39,6 +39,7 @@ class ContextPlus(commands.Context):
                     PASSWORD_REPLACEMENT,
                 )
                 .replace(self.bot.config.Core.ip, IP_REPLACEMENT)
+                .replace(self.bot.config.Core.ip6, IP_REPLACEMENT)
             )
 
             if len(content) > 1800:
@@ -57,6 +58,7 @@ class ContextPlus(commands.Context):
                             PASSWORD_REPLACEMENT,
                         )
                         .replace(self.bot.config.Core.ip, IP_REPLACEMENT)
+                        .replace(self.bot.config.Core.ip6, IP_REPLACEMENT)
                     )
                 elif isinstance(value, list):
                     e[key] = replace_in_list(
@@ -70,6 +72,9 @@ class ContextPlus(commands.Context):
                     e[key] = replace_in_list(
                         e[key], self.bot.config.Core.ip, IP_REPLACEMENT
                     )
+                    e[key] = replace_in_list(
+                        e[key], self.bot.config.Core.ip6, IP_REPLACEMENT
+                    )
                 elif isinstance(value, dict):
                     e[key] = replace_in_dict(
                         value, self.bot.config.Core.token, TOKEN_REPLACEMENT
@@ -81,6 +86,9 @@ class ContextPlus(commands.Context):
                     )
                     e[key] = replace_in_dict(
                         e[key], self.bot.config.Core.ip, IP_REPLACEMENT
+                    )
+                    e[key] = replace_in_dict(
+                        e[key], self.bot.config.Core.ip6, IP_REPLACEMENT
                     )
             embed = Embed.from_dict(e)
 
