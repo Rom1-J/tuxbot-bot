@@ -126,7 +126,10 @@ class Logs(commands.Cog, name="Logs"):
 
         emoji = types.get(record.levelname, ":heavy_multiplication_x:")
         dt = datetime.datetime.utcfromtimestamp(record.created)
-        msg = f"{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] {await shorten(self.bot.session, record.msg, 1500)}`"
+        msg = (
+            f"{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] "
+            f"{await shorten(self.bot.session, record.msg, 1500)}`"
+        )
         await self.webhook("gateway").send(msg)
 
     def clear_gateway_data(self):

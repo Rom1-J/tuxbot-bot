@@ -1,21 +1,25 @@
 from discord.ext import commands
 
 
-class RFC18(commands.UserNotFound):
+class NetworkException(commands.BadArgument):
     pass
 
 
-class InvalidIp(commands.BadArgument):
+class RFC18(NetworkException):
     pass
 
 
-class InvalidDomain(commands.BadArgument):
+class InvalidIp(NetworkException):
     pass
 
 
-class InvalidQueryType(commands.BadArgument):
+class InvalidDomain(NetworkException):
     pass
 
 
-class VersionNotFound(commands.BadArgument):
+class InvalidQueryType(NetworkException):
+    pass
+
+
+class VersionNotFound(NetworkException):
     pass

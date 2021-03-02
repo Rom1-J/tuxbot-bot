@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-01-26 16:12+0100\n"
+"POT-Creation-Date: 2021-03-01 14:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tuxbot/cogs/Logs/logs.py:295
+#: tuxbot/cogs/Logs/logs.py:274
+msgid "```An error occurred, the bot owner has been advertised...```"
+msgstr ""
+
+#: tuxbot/cogs/Logs/logs.py:333
 msgid "Sockets stats"
 msgstr ""
 
-#: tuxbot/cogs/Logs/logs.py:297
+#: tuxbot/cogs/Logs/logs.py:335
 msgid "{} socket events observed ({:.2f}/minute):"
 msgstr ""

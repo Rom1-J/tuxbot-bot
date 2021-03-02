@@ -1,6 +1,8 @@
+import re
 import socket
 from typing import Union, NoReturn
 
+import discord
 import ipinfo
 import ipwhois
 import pydig
@@ -8,15 +10,22 @@ from ipinfo.exceptions import RequestQuotaExceededError
 
 from ipwhois import Net
 from ipwhois.asn import IPASN
+from tuxbot.cogs.Network.functions.consts import DOMAIN_PATTERN, IPV4_PATTERN, \
+    IPV6_PATTERN
 
-from tuxbot.cogs.Network.functions.exceptions import VersionNotFound, RFC18
+from tuxbot.cogs.Network.functions.exceptions import (
+    VersionNotFound,
+    RFC18,
+    InvalidIp,
+    InvalidQueryType,
+)
 
 
 def _(x):
     return x
 
 
-async def get_ip(ip: str, inet: str = "") -> str:
+async def get_ip(ip: str, inet: str = "", tmp: discord.Message = None) -> str:
     if inet == "6":
         inet = socket.AF_INET6
     elif inet == "4":
@@ -27,6 +36,9 @@ async def get_ip(ip: str, inet: str = "") -> str:
     try:
         return socket.getaddrinfo(str(ip), None, inet)[1][4][0]
     except socket.gaierror as e:
+        if tmp:
+            await tmp.delete()
+
         raise VersionNotFound(
             _(
                 "Impossible to collect information on this in the given "
@@ -35,14 +47,14 @@ async def get_ip(ip: str, inet: str = "") -> str:
         ) from e
 
 
-def get_hostname(ip: str) -> str:
+async def get_hostname(ip: str) -> str:
     try:
         return socket.gethostbyaddr(ip)[0]
     except socket.herror:
         return "N/A"
 
 
-def get_ipwhois_result(ip_address: str) -> Union[NoReturn, dict]:
+async def get_ipwhois_result(ip_address: str, tmp: discord.Message = None) -> Union[NoReturn, dict]:
     try:
         net = Net(ip_address)
         obj = IPASN(net)
@@ -50,6 +62,9 @@ def get_ipwhois_result(ip_address: str) -> Union[NoReturn, dict]:
     except ipwhois.exceptions.ASNRegistryError:
         return {}
     except ipwhois.exceptions.IPDefinedError as e:
+        if tmp:
+            await tmp.delete()
+
         raise RFC18(
             _(
                 "IP address {ip_address} is already defined as Private-Use"
@@ -101,7 +116,7 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
     return output
 
 
-def get_pydig_result(
+async def get_pydig_result(
     domain: str, query_type: str, dnssec: Union[str, bool]
 ) -> list:
     additional_args = [] if dnssec is False else ["+dnssec"]
@@ -115,3 +130,45 @@ def get_pydig_result(
     )
 
     return resolver.query(domain, query_type)
+
+
+def check_ip_or_raise(ip: str) -> Union[bool, NoReturn]:
+    check_domain = re.match(DOMAIN_PATTERN, ip)
+    check_ipv4 = re.match(IPV4_PATTERN, ip)
+    check_ipv6 = re.match(IPV6_PATTERN, ip)
+
+    if check_domain or check_ipv4 or check_ipv6:
+        return True
+
+    raise InvalidIp(_("Invalid ip or domain"))
+
+
+def check_ip_version_or_raise(version: str) -> Union[bool, NoReturn]:
+    if version in ["4", "6", ""]:
+        return True
+
+    raise InvalidIp(_("Invalid ip version"))
+
+
+def check_query_type_or_raise(query_type: str) -> Union[bool, NoReturn]:
+    query_types = [
+        "a",
+        "aaaa",
+        "cname",
+        "ns",
+        "ds",
+        "dnskey",
+        "soa",
+        "txt",
+        "ptr",
+        "mx",
+    ]
+
+    if query_type in query_types:
+        return True
+
+    raise InvalidQueryType(
+        _(
+            "Supported queries : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX"
+        )
+    )

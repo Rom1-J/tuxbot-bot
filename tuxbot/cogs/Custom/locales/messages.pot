@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-01-26 16:12+0100\n"
+"POT-Creation-Date: 2021-03-01 14:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,12 +26,12 @@ msgstr ""
 msgid "List of available locales: "
 msgstr ""
 
-#: tuxbot/cogs/Custom/custom.py:89
+#: tuxbot/cogs/Custom/custom.py:93
 #, python-brace-format
 msgid "The alias `{alias}` is already defined for the command `{command}`"
 msgstr ""
 
-#: tuxbot/cogs/Custom/custom.py:102
+#: tuxbot/cogs/Custom/custom.py:106
 #, python-brace-format
 msgid "The alias `{alias}` for the command `{command}` was successfully created"
 msgstr ""

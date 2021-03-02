@@ -13,8 +13,7 @@ from structured_config import ConfigFile
 from tuxbot.cogs.Network.functions.converters import (
     IPConverter,
     IPVersionConverter,
-    IPCheckerConverter,
-    DomainCheckerConverter,
+    DomainConverter,
     QueryTypeConverter,
 )
 from tuxbot.cogs.Network.functions.exceptions import (
@@ -42,6 +41,9 @@ from .functions.utils import (
     get_ipwhois_result,
     merge_ipinfo_ipwhois,
     get_pydig_result,
+    check_ip_or_raise,
+    check_query_type_or_raise,
+    check_ip_version_or_raise,
 )
 
 log = logging.getLogger("tuxbot.cogs.Network")
@@ -49,8 +51,6 @@ _ = Translator("Network", __file__)
 
 
 class Network(commands.Cog, name="Network"):
-    _tmp: discord.Message
-
     def __init__(self, bot: Tux):
         self.bot = bot
         self.__config: NetworkConfig = ConfigFile(
@@ -59,6 +59,9 @@ class Network(commands.Cog, name="Network"):
         ).config
 
     async def cog_command_error(self, ctx, error):
+        self.bot.console.log("Pass here")
+        self.bot.console.log(error)
+        self.bot.console.log(type(error))
         if isinstance(
             error,
             (
@@ -70,8 +73,7 @@ class Network(commands.Cog, name="Network"):
                 VersionNotFound,
             ),
         ):
-            if self._tmp:
-                await self._tmp.delete()
+            self.bot.console.log("Pass there")
 
             await ctx.send(_(str(error), ctx, self.bot.config))
 
@@ -85,20 +87,21 @@ class Network(commands.Cog, name="Network"):
         ip: IPConverter,
         version: IPVersionConverter = "",
     ):
-        self._tmp = await ctx.send(
+        check_ip_or_raise(str(ip))
+        check_ip_version_or_raise(str(version))
+
+        tmp = await ctx.send(
             _("*Retrieving information...*", ctx, self.bot.config),
             deletable=False,
         )
 
-        ip_address = await get_ip(str(ip), str(version))
-        ip_hostname = get_hostname(ip_address)
+        ip_address = await get_ip(str(ip), str(version), tmp)
+        ip_hostname = await get_hostname(ip_address)
 
         ipinfo_result = await get_ipinfo_result(
             self.__config.ipinfoKey, ip_address
         )
-        ipwhois_result = await self.bot.loop.run_in_executor(
-            None, functools.partial(get_ipwhois_result, ip_address)
-        )
+        ipwhois_result = await get_ipwhois_result(ip_address, tmp)
 
         merged_results = merge_ipinfo_ipwhois(ipinfo_result, ipwhois_result)
 
@@ -133,12 +136,12 @@ class Network(commands.Cog, name="Network"):
             ),
         )
 
-        await self._tmp.delete()
+        await tmp.delete()
         await ctx.send(embed=e)
 
     @command_extra(name="getheaders", aliases=["headers"], deletable=True)
     async def _getheaders(
-        self, ctx: ContextPlus, ip: IPCheckerConverter, *, user_agent: str = ""
+        self, ctx: ContextPlus, ip: DomainConverter, *, user_agent: str = ""
     ):
         try:
             headers = {"User-Agent": user_agent}
@@ -189,10 +192,12 @@ class Network(commands.Cog, name="Network"):
     async def _dig(
         self,
         ctx: ContextPlus,
-        domain: DomainCheckerConverter,
+        domain: IPConverter,
         query_type: QueryTypeConverter,
         dnssec: Union[str, bool] = False,
     ):
+        check_query_type_or_raise(str(query_type))
+
         pydig_result = await self.bot.loop.run_in_executor(
             None,
             functools.partial(get_pydig_result, domain, query_type, dnssec),
@@ -200,9 +205,9 @@ class Network(commands.Cog, name="Network"):
 
         e = discord.Embed(title=f"DIG {domain} {query_type}", color=0x5858D7)
 
-        for value in pydig_result:
+        for i, value in enumerate(pydig_result):
             e.add_field(
-                name=f"DIG {domain} IN {query_type}", value=f"```{value}```"
+                name=f"#{i}", value=f"```{value}```"
             )
 
         if not pydig_result:
