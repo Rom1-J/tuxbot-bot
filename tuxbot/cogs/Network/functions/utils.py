@@ -10,8 +10,11 @@ from ipinfo.exceptions import RequestQuotaExceededError
 
 from ipwhois import Net
 from ipwhois.asn import IPASN
-from tuxbot.cogs.Network.functions.consts import DOMAIN_PATTERN, IPV4_PATTERN, \
-    IPV6_PATTERN
+from tuxbot.cogs.Network.functions.consts import (
+    DOMAIN_PATTERN,
+    IPV4_PATTERN,
+    IPV6_PATTERN,
+)
 
 from tuxbot.cogs.Network.functions.exceptions import (
     VersionNotFound,
@@ -54,7 +57,9 @@ async def get_hostname(ip: str) -> str:
         return "N/A"
 
 
-async def get_ipwhois_result(ip_address: str, tmp: discord.Message = None) -> Union[NoReturn, dict]:
+async def get_ipwhois_result(
+    ip_address: str, tmp: discord.Message = None
+) -> Union[NoReturn, dict]:
     try:
         net = Net(ip_address)
         obj = IPASN(net)

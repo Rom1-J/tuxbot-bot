@@ -206,9 +206,7 @@ class Network(commands.Cog, name="Network"):
         e = discord.Embed(title=f"DIG {domain} {query_type}", color=0x5858D7)
 
         for i, value in enumerate(pydig_result):
-            e.add_field(
-                name=f"#{i}", value=f"```{value}```"
-            )
+            e.add_field(name=f"#{i}", value=f"```{value}```")
 
         if not pydig_result:
             e.add_field(
