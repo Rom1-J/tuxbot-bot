@@ -1,4 +1,3 @@
-import re
 import socket
 from typing import Union, NoReturn
 
@@ -10,11 +9,6 @@ from ipinfo.exceptions import RequestQuotaExceededError
 
 from ipwhois import Net
 from ipwhois.asn import IPASN
-from tuxbot.cogs.Network.functions.consts import (
-    DOMAIN_PATTERN,
-    IPV4_PATTERN,
-    IPV6_PATTERN,
-)
 
 from tuxbot.cogs.Network.functions.exceptions import (
     VersionNotFound,
@@ -44,7 +38,7 @@ async def get_ip(ip: str, inet: str = "", tmp: discord.Message = None) -> str:
 
         raise VersionNotFound(
             _(
-                "Impossible to collect information on this in the given "
+                "Unable to collect information on this in the given "
                 "version",
             )
         ) from e
@@ -135,17 +129,6 @@ async def get_pydig_result(
     )
 
     return resolver.query(domain, query_type)
-
-
-def check_ip_or_raise(ip: str) -> Union[bool, NoReturn]:
-    check_domain = re.match(DOMAIN_PATTERN, ip)
-    check_ipv4 = re.match(IPV4_PATTERN, ip)
-    check_ipv6 = re.match(IPV6_PATTERN, ip)
-
-    if check_domain or check_ipv4 or check_ipv6:
-        return True
-
-    raise InvalidIp(_("Invalid ip or domain"))
 
 
 def check_ip_version_or_raise(version: str) -> Union[bool, NoReturn]:

@@ -41,7 +41,6 @@ from .functions.utils import (
     get_ipwhois_result,
     merge_ipinfo_ipwhois,
     get_pydig_result,
-    check_ip_or_raise,
     check_query_type_or_raise,
     check_ip_version_or_raise,
 )
@@ -59,9 +58,6 @@ class Network(commands.Cog, name="Network"):
         ).config
 
     async def cog_command_error(self, ctx, error):
-        self.bot.console.log("Pass here")
-        self.bot.console.log(error)
-        self.bot.console.log(type(error))
         if isinstance(
             error,
             (
@@ -73,8 +69,6 @@ class Network(commands.Cog, name="Network"):
                 VersionNotFound,
             ),
         ):
-            self.bot.console.log("Pass there")
-
             await ctx.send(_(str(error), ctx, self.bot.config))
 
     # =========================================================================
@@ -87,7 +81,6 @@ class Network(commands.Cog, name="Network"):
         ip: IPConverter,
         version: IPVersionConverter = "",
     ):
-        check_ip_or_raise(str(ip))
         check_ip_version_or_raise(str(version))
 
         tmp = await ctx.send(
