@@ -13,7 +13,9 @@ disable=
 	C0115,  # missing-class-docstring
 	C0116,  # missing-function-docstring
 	W0703,  # broad-except
+	W0707,  # raise-missing-from
 	R0801,  # duplicate-code
+	R0901,  # too-many-ancestors
 	R0902,  # too-many-instance-attributes
 	R0903,  # too-few-public-methods
 	E1136,  # unsubscriptable-object (false positive with python 3.9)

@@ -1,4 +1,5 @@
 from collections import Counter
+from typing import Dict
 
 
 def sort_by(_events: Counter) -> dict[str, dict]:
@@ -12,7 +13,7 @@ def sort_by(_events: Counter) -> dict[str, dict]:
         "voice",
         "other",
     ]
-    sorted_events = {m: {} for m in majors}
+    sorted_events: Dict[str, Dict] = {m: {} for m in majors}
 
     for event, count in _events:
         done = False

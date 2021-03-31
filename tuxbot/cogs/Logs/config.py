@@ -1,3 +1,5 @@
+from typing import Dict
+
 from structured_config import Structure, StrField
 
 HAS_MODELS = False
@@ -12,7 +14,7 @@ class LogsConfig(Structure):
     sentryKey: str = StrField("")
 
 
-extra = {
+extra: Dict[str, Dict] = {
     "dm": {
         "type": str,
         "description": "URL of the webhook used for send DMs "

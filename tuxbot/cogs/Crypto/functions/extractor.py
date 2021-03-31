@@ -12,8 +12,8 @@ async def extract(
 
     kwargs = data_parser(data)
 
-    if len(attachments) > 0:
-        file = attachments[0]
+    if attachments and attachments[0]:
+        file: Attachment = attachments[0]
         if file.size > max_size:
             raise ValueError
 

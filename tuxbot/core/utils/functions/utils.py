@@ -1,5 +1,6 @@
 import asyncio
 import functools
+from typing import Dict
 
 import aiohttp
 from discord.ext import commands
@@ -27,7 +28,7 @@ def typing(func):
 
 
 async def shorten(session, text: str, length: int) -> dict:
-    output = {"text": text[:length], "link": None}
+    output: Dict[str, str] = {"text": text[:length], "link": ""}
 
     if len(text) > length:
         output["text"] += "[...]"
@@ -51,7 +52,7 @@ def replace_in_dict(value: dict, search: str, replace: str) -> dict:
 
     for k, v in value.items():
         if isinstance(v, (str, bytes)):
-            v = v.replace(search, replace)
+            v = v.replace(search, replace)  # type: ignore
         elif isinstance(v, list):
             v = replace_in_list(v, search, replace)
         elif isinstance(v, dict):
@@ -67,7 +68,7 @@ def replace_in_list(value: list, search: str, replace: str) -> list:
 
     for v in value:
         if isinstance(v, (str, bytes)):
-            v = v.replace(search, replace)
+            v = v.replace(search, replace)  # type: ignore
         elif isinstance(v, list):
             v = replace_in_list(v, search, replace)
         elif isinstance(v, dict):

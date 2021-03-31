@@ -138,7 +138,9 @@ def get_multiple(
     List[Union[str, int]]
         List containing user filled values.
     """
-    prompt = IntPrompt if value_type is int else Prompt
+    prompt: Union[IntPrompt, Prompt] = (
+        IntPrompt() if value_type is int else Prompt()
+    )
 
     user_input = prompt.ask(question, console=console)
 
@@ -167,11 +169,13 @@ def get_multiple(
 
 
 def get_extra(question: str, value_type: type) -> Union[str, int]:
-    prompt = IntPrompt if value_type is int else Prompt
+    prompt: Union[IntPrompt, Prompt] = (
+        IntPrompt() if value_type is int else Prompt()
+    )
     return prompt.ask(question, console=console)
 
 
-def additional_config(cogs: str = "**"):
+def additional_config(cogs: Union[str, list] = "**"):
     """Asking for additional configs in cogs.
 
     Returns
@@ -185,7 +189,7 @@ def additional_config(cogs: str = "**"):
         cogs = sum(cogs, [])
 
     if len(cogs) == 0:
-        paths = Path("tuxbot/cogs").glob("**/config.py")
+        paths = list(Path("tuxbot/cogs").glob("**/config.py"))
     else:
         paths = [Path(f"tuxbot/cogs/{cog}/config.py") for cog in cogs]
 
@@ -195,7 +199,7 @@ def additional_config(cogs: str = "**"):
             console.print(Rule(f"\nConfiguration for `{cog_name}` module"))
             mod = importlib.import_module(str(path).replace("/", ".")[:-3])
             mod_config_type = getattr(mod, cog_name.capitalize() + "Config")
-            mod_extra = mod.extra
+            mod_extra = getattr(mod, "extra")
 
             mod_config = config.ConfigFile(
                 str(cogs_data_path(cog_name) / "config.yaml"),
@@ -362,9 +366,7 @@ def parse_cli_flags(args: list) -> Namespace:
         help="Check for update",
     )
 
-    args = parser.parse_args(args)
-
-    return args
+    return parser.parse_args(args)
 
 
 def setup() -> None:

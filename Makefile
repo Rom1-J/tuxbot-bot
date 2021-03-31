@@ -52,7 +52,18 @@ docker-start:
 # Blackify code
 .PHONY: black
 black:
-	$(PYTHON_PATH) -m black `git ls-files "*.py"` --line-length=79 && $(PYTHON_PATH) -m pylint tuxbot
+	$(PYTHON_PATH) -m black `git ls-files "*.py"` --line-length=79
+
+.PHONY: lint
+lint:
+	$(PYTHON_PATH) -m pylint tuxbot
+
+.PHONY: type
+type:
+	$(PYTHON_PATH) -m mypy tuxbot
+
+.PHONY: style
+style: black lint type
 
 # Translations
 .PHONY: xgettext

@@ -3,7 +3,10 @@ import re
 
 def data_parser(data: str) -> dict:
     output = {
-        "message": None,
+        "message": "",
+        "compressed": False,
+        "graphical": False,
+        "chars": tuple(),
     }
 
     if not data:
@@ -22,10 +25,10 @@ def data_parser(data: str) -> dict:
 
     if "--chars" in data:
         regex = r"--chars=(\S\S)"
-        match = re.search(regex, data)
 
-        output["chars"] = tuple(match.group()[-2:])
-        data = "".join(data.rsplit(match.group(), 1))
+        if match := re.search(regex, data):
+            output["chars"] = tuple(match.group()[-2:])
+            data = "".join(data.rsplit(match.group(), 1))
 
     output["message"] = data.strip()
 

@@ -49,8 +49,10 @@ async def _suggest_reaction_add(
         or (await self.bot.is_owner(discord.Object(pld.user_id)))
         or (
             (channel := await self.bot.fetch_channel(pld.channel_id))
-            .permissions_for(await channel.guild.fetch_member(pld.user_id))
-            .administrator
+            # pylint: disable=used-before-assignment
+            .permissions_for(
+                await channel.guild.fetch_member(pld.user_id)
+            ).administrator
         )
     ):
 

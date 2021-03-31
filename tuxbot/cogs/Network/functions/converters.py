@@ -1,12 +1,4 @@
-import re
-
 from discord.ext import commands
-
-from tuxbot.cogs.Network.functions.exceptions import (
-    InvalidIp,
-    InvalidDomain,
-    InvalidQueryType,
-)
 
 
 def _(x):

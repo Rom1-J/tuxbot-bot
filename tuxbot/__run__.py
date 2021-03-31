@@ -110,9 +110,7 @@ def parse_cli_flags(args: list) -> Namespace:
         "--token", "-T", type=str, help="Run Tuxbot with passed token"
     )
 
-    args = parser.parse_args(args)
-
-    return args
+    return parser.parse_args(args)
 
 
 async def shutdown_handler(tux: Tux, signal_type, exit_code=None) -> None:

@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Callable, Union, Dict, List
+from typing import Union, Dict, List, NoReturn, Any
 
 from babel.messages.pofile import read_po
 
@@ -19,7 +19,7 @@ available_locales: Dict[str, List[str]] = {
 }
 
 
-def find_locale(locale: str) -> str:
+def find_locale(locale: str) -> Union[str, NoReturn]:
     """We suppose `locale` is in `_available_locales.values()`"""
 
     for key, val in available_locales.items():
@@ -40,10 +40,10 @@ def list_locales() -> str:
 
 def get_locale_name(locale: str) -> str:
     """Return the name of this `locale`"""
-    return available_locales.get(find_locale(locale))[0]
+    return available_locales[find_locale(locale)][0]
 
 
-class Translator(Callable[[str], str]):
+class Translator:
     """Class to load texts at init."""
 
     def __init__(self, name: str, file_location: Union[Path, os.PathLike]):
@@ -59,7 +59,7 @@ class Translator(Callable[[str], str]):
         """
         self.cog_folder = Path(file_location).resolve().parent
         self.cog_name = name
-        self.translations = {}
+        self.translations: Dict[str, Any] = {}
 
         _translators.append(self)
 

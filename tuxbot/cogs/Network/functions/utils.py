@@ -23,15 +23,15 @@ def _(x):
 
 
 async def get_ip(ip: str, inet: str = "", tmp: discord.Message = None) -> str:
+    _inet: Union[socket.AddressFamily, int] = 0  # pylint: disable=no-member
+
     if inet == "6":
-        inet = socket.AF_INET6
+        _inet = socket.AF_INET6
     elif inet == "4":
-        inet = socket.AF_INET
-    else:
-        inet = 0
+        _inet = socket.AF_INET
 
     try:
-        return socket.getaddrinfo(str(ip), None, inet)[1][4][0]
+        return socket.getaddrinfo(str(ip), None, _inet)[1][4][0]
     except socket.gaierror as e:
         if tmp:
             await tmp.delete()

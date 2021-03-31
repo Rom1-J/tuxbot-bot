@@ -13,7 +13,8 @@ class Poll(tortoise.Model):
 
     available_choices = fields.IntField()
 
-    choices: fields.ManyToManyRelation["Response"] = fields.ManyToManyField(
+    # noinspection PyUnresolvedReferences
+    choices: fields.ManyToManyRelation["Response"] = fields.ManyToManyField(  # type: ignore
         "models.Response", related_name="choices"
     )
 
