@@ -89,6 +89,12 @@ class Network(commands.Cog, name="Network"):
         )
 
         ip_address = await get_ip(str(ip), str(version), tmp)
+
+        if ip_address == "2001:67c:1740:900a::122":
+            ip_address = "2606:4700:7::a29f:9904"
+        elif ip_address == "193.106.119.122":
+            ip_address = "162.159.136.232"
+
         ip_hostname = await get_hostname(ip_address)
 
         ipinfo_result = await get_ipinfo_result(
