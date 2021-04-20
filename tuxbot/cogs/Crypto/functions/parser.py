@@ -6,7 +6,7 @@ def data_parser(data: str) -> dict:
         "message": "",
         "compressed": False,
         "graphical": False,
-        "chars": tuple(),
+        "chars": tuple,
     }
 
     if not data:

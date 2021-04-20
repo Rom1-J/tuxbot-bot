@@ -51,6 +51,7 @@ class ContextPlus(commands.Context):
             e = embed.to_dict()
             for key, value in e.items():
                 if isinstance(value, (str, bytes)):
+                    # skipcq
                     e[key] = (
                         value.replace(
                             self.bot.config.Core.token, TOKEN_REPLACEMENT
@@ -63,32 +64,40 @@ class ContextPlus(commands.Context):
                         .replace(self.bot.config.Core.ip6, IP_REPLACEMENT)
                     )
                 elif isinstance(value, list):
+                    # skipcq
                     e[key] = replace_in_list(
                         value, self.bot.config.Core.token, TOKEN_REPLACEMENT
                     )
+                    # skipcq
                     e[key] = replace_in_list(
                         e[key],
                         self.bot.config.Core.Database.password,
                         PASSWORD_REPLACEMENT,
                     )
+                    # skipcq
                     e[key] = replace_in_list(
                         e[key], self.bot.config.Core.ip, IP_REPLACEMENT
                     )
+                    # skipcq
                     e[key] = replace_in_list(
                         e[key], self.bot.config.Core.ip6, IP_REPLACEMENT
                     )
                 elif isinstance(value, dict):
+                    # skipcq
                     e[key] = replace_in_dict(
                         value, self.bot.config.Core.token, TOKEN_REPLACEMENT
                     )
+                    # skipcq
                     e[key] = replace_in_dict(
                         e[key],
                         self.bot.config.Core.Database.password,
                         PASSWORD_REPLACEMENT,
                     )
+                    # skipcq
                     e[key] = replace_in_dict(
                         e[key], self.bot.config.Core.ip, IP_REPLACEMENT
                     )
+                    # skipcq
                     e[key] = replace_in_dict(
                         e[key], self.bot.config.Core.ip6, IP_REPLACEMENT
                     )
