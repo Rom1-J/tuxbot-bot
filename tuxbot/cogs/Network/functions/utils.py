@@ -76,7 +76,9 @@ async def get_ipinfo_result(
     apikey: str, ip_address: str
 ) -> Union[NoReturn, dict]:
     try:
-        handler = ipinfo.getHandlerAsync(apikey)
+        handler = ipinfo.getHandlerAsync(
+            apikey, request_options={"timeout": 7}
+        )
         return (await handler.getDetails(ip_address)).all
     except RequestQuotaExceededError:
         return {}
