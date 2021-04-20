@@ -5,8 +5,8 @@ from tuxbot.cogs.Crypto.functions.parser import data_parser
 
 
 async def extract(
-    attachments: list[Optional[Attachment]], data: str, max_size: int
-) -> Union[dict, NoReturn]:
+    attachments: list[Optional[Attachment]], data: Optional[str], max_size: int
+) -> dict:
     if not data and len(attachments) == 0:
         raise ValueError
 

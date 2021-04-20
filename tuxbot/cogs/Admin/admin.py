@@ -23,7 +23,7 @@ log = logging.getLogger("tuxbot.cogs.Admin")
 _ = Translator("Admin", __file__)
 
 
-class Admin(commands.Cog, name="Admin"):
+class Admin(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
 

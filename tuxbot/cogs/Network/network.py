@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import time
-from typing import Union
+from typing import Union, Optional
 
 import aiohttp
 import discord
@@ -48,7 +48,7 @@ log = logging.getLogger("tuxbot.cogs.Network")
 _ = Translator("Network", __file__)
 
 
-class Network(commands.Cog, name="Network"):
+class Network(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
         self.__config: NetworkConfig = ConfigFile(
@@ -78,7 +78,7 @@ class Network(commands.Cog, name="Network"):
         self,
         ctx: ContextPlus,
         ip: IPConverter,
-        version: IPVersionConverter = "",
+        version: Optional[IPVersionConverter] = None,
     ):
         check_ip_version_or_raise(str(version))
 

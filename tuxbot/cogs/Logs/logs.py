@@ -6,6 +6,7 @@ import textwrap
 import traceback
 from collections import defaultdict
 from logging import LogRecord
+from typing import Any, Dict
 
 import discord
 import humanize
@@ -47,13 +48,13 @@ class GatewayHandler(logging.Handler):
         self.cog.add_record(record)
 
 
-class Logs(commands.Cog, name="Logs"):
+class Logs(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
         self.process = psutil.Process()
         self._batch_lock = asyncio.Lock()
-        self._data_batch = []
-        self._gateway_queue = asyncio.Queue()
+        self._data_batch: list[Dict[str, Any]] = []
+        self._gateway_queue: asyncio.Queue = asyncio.Queue()
         self.gateway_worker.start()  # pylint: disable=no-member
 
         self.__config: LogsConfig = ConfigFile(
@@ -61,8 +62,8 @@ class Logs(commands.Cog, name="Logs"):
             LogsConfig,
         ).config
 
-        self._resumes = []
-        self._identifies = defaultdict(list)
+        self._resumes: list[datetime.datetime] = []
+        self._identifies: defaultdict[Any, list] = defaultdict(list)
 
         self.old_on_error = bot.on_error
         bot.on_error = self.on_error
@@ -215,7 +216,7 @@ class Logs(commands.Cog, name="Logs"):
             e = discord.Embed(colour=0x0A97F5, title="New DM")  # blue colour
             e.set_author(
                 name=message.author,
-                icon_url=message.author.avatar_url_as(format="png"),
+                icon_url=message.author.avatar.url,
             )
             e.description = message.content
             if len(message.attachments) > 0:

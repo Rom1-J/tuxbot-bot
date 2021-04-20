@@ -16,7 +16,7 @@ log = logging.getLogger("tuxbot.cogs.Crypto")
 _ = Translator("Crypto", __file__)
 
 
-class Crypto(commands.Cog, name="Crypto"):
+class Crypto(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
 

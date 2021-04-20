@@ -20,7 +20,7 @@ log = logging.getLogger("tuxbot.cogs.Utils")
 _ = Translator("Utils", __file__)
 
 
-class Utils(commands.Cog, name="Utils"):
+class Utils(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
 

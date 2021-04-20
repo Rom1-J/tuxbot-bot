@@ -22,7 +22,7 @@ log = logging.getLogger("tuxbot.cogs.Custom")
 _ = Translator("Custom", __file__)
 
 
-class Custom(commands.Cog, name="Custom"):
+class Custom(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
 
@@ -76,10 +76,10 @@ class Custom(commands.Cog, name="Custom"):
 
     @_custom.command(name="alias", aliases=["aliases"])
     async def _custom_alias(self, ctx: ContextPlus, *, alias: AliasConvertor):
-        args = str(alias).split(" | ")
+        args: list[str] = str(alias).split(" | ")
 
         command = args[0]
-        alias = args[1]
+        custom = args[1]
 
         user_aliases = await self._get_aliases(ctx)
 
@@ -87,17 +87,17 @@ class Custom(commands.Cog, name="Custom"):
             set_if_none(self.bot.config.Users, ctx.author.id, Config.User)
             user_aliases = await self._get_aliases(ctx)
 
-        if alias in user_aliases.keys():
+        if custom in user_aliases.keys():
             return await ctx.send(
                 _(
                     "The alias `{alias}` is already defined "
                     "for the command `{command}`",
                     ctx,
                     self.bot.config,
-                ).format(alias=alias, command=user_aliases.get(alias))
+                ).format(alias=custom, command=user_aliases.get(custom))
             )
 
-        user_aliases[alias] = command
+        user_aliases[custom] = command
 
         await self._save_alias(ctx, user_aliases)
 
@@ -107,5 +107,5 @@ class Custom(commands.Cog, name="Custom"):
                 "was successfully created",
                 ctx,
                 self.bot.config,
-            ).format(alias=alias, command=command)
+            ).format(alias=custom, command=command)
         )

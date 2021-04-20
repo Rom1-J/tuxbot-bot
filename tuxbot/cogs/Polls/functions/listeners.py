@@ -2,7 +2,6 @@ import json
 from os.path import dirname
 
 import discord
-from tuxbot.cogs import Polls
 
 from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.utils import upper_first
@@ -14,7 +13,7 @@ _ = Translator("Polls", dirname(__file__))
 
 
 async def _poll_reaction_add(
-    self: Polls, pld: discord.RawReactionActionEvent, poll: Poll
+    self, pld: discord.RawReactionActionEvent, poll: Poll
 ):
     if poll.is_anonymous:
         try:
@@ -40,7 +39,7 @@ async def _poll_reaction_add(
 
 
 async def _suggest_reaction_add(
-    self: Polls, pld: discord.RawReactionActionEvent, suggest: Suggest
+    self, pld: discord.RawReactionActionEvent, suggest: Suggest
 ):
     poll = await suggest.poll
 
@@ -48,10 +47,10 @@ async def _suggest_reaction_add(
         poll.author_id == pld.user_id
         or (await self.bot.is_owner(discord.Object(pld.user_id)))
         or (
-            (channel := await self.bot.fetch_channel(pld.channel_id))
+            (_channel := await self.bot.fetch_channel(pld.channel_id))
             # pylint: disable=used-before-assignment
             .permissions_for(
-                await channel.guild.fetch_member(pld.user_id)
+                await _channel.guild.fetch_member(pld.user_id)
             ).administrator
         )
     ):
@@ -77,19 +76,19 @@ async def _suggest_reaction_add(
 
             await poll.save()
 
-            channel: discord.TextChannel = await self.bot.fetch_channel(
+            poll_channel: discord.TextChannel = await self.bot.fetch_channel(
                 poll.channel_id
             )
-            message = await channel.fetch_message(poll.message_id)
+            message = await poll_channel.fetch_message(poll.message_id)
 
             await message.add_reaction(emote)
 
             await self.update_poll(poll)
 
-        channel: discord.TextChannel = await self.bot.fetch_channel(
+        suggest_channel: discord.TextChannel = await self.bot.fetch_channel(
             suggest.channel_id
         )
-        message = await channel.fetch_message(suggest.message_id)
+        message = await suggest_channel.fetch_message(suggest.message_id)
 
         await message.delete()
 
@@ -102,20 +101,18 @@ async def _suggest_reaction_add(
             pass
 
 
-async def cog_command_error(self: Polls, ctx, error):
+async def cog_command_error(self, ctx, error):
     if isinstance(error, (InvalidChannel, BadPoll, TooLongProposition)):
         await ctx.send(_(str(error), ctx, self.bot.config))
 
 
-async def on_raw_reaction_add(
-    self: Polls, pld: discord.RawReactionActionEvent
-):
+async def on_raw_reaction_add(self, pld: discord.RawReactionActionEvent):
     poll = await self.get_poll(pld)
 
-    if poll:
+    if isinstance(poll, Poll):
         await _poll_reaction_add(self, pld, poll)
 
-    elif suggest := await self.get_suggest(pld):
+    elif isinstance(suggest := await self.get_suggest(pld), Suggest):
         await _suggest_reaction_add(self, pld, suggest)
 
 

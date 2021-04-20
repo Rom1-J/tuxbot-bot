@@ -34,7 +34,7 @@ update-all:
 	$(VIRTUAL_ENV)/bin/pip install --upgrade --force-reinstall .
 
 .PHONY: dev
-dev: black update
+dev: black type update
 	tuxbot
 
 # Docker

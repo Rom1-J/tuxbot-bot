@@ -12,7 +12,7 @@ log = logging.getLogger("tuxbot.cogs.Dev")
 _ = Translator("Dev", __file__)
 
 
-class Dev(commands.Cog, name="Dev"):
+class Dev(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
 
@@ -26,6 +26,6 @@ class Dev(commands.Cog, name="Dev"):
             await ctx.send(str(5 / 0))
         elif crash_type == "TypeError":
             # noinspection PyTypeChecker
-            await ctx.send(str(int([])))
+            await ctx.send(str(int([])))  # type: ignore
         elif crash_type == "IndexError":
             await ctx.send(str([0][5]))

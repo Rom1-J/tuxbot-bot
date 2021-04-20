@@ -134,7 +134,7 @@ async def get_pydig_result(
 
 
 def check_ip_version_or_raise(version: str) -> Union[bool, NoReturn]:
-    if version in ["4", "6", ""]:
+    if version in ["4", "6", "None"]:
         return True
 
     raise InvalidIp(_("Invalid ip version"))

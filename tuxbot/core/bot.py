@@ -205,7 +205,7 @@ class Tux(commands.AutoShardedBot):
         self.console.print()
 
     async def is_owner(
-        self, user: Union[discord.User, discord.Member]
+        self, user: Union[discord.User, discord.Member, discord.Object]
     ) -> bool:
         """Determines if the user is a bot owner.
 

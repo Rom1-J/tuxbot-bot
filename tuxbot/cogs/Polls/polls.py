@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Union
+from typing import Union, Dict, Iterable, Any
 
 import discord
 from discord.ext import commands
@@ -21,7 +21,7 @@ log = logging.getLogger("tuxbot.cogs.Polls")
 _ = Translator("Polls", __file__)
 
 
-class Polls(commands.Cog, name="Polls"):
+class Polls(commands.Cog):
     def __init__(self, bot: Tux):
         self.bot = bot
 
@@ -63,9 +63,9 @@ class Polls(commands.Cog, name="Polls"):
         poll_row.channel_id = stmt.channel.id
         poll_row.message_id = stmt.id
         poll_row.author_id = ctx.author.id
-        poll_row.content = {}
+        poll_row.content = {}  # type: ignore
         poll_row.is_anonymous = anonymous
-        poll_row.available_choices = len(answers)
+        poll_row.available_choices = len(answers)  # type: ignore
 
         await poll_row.save()
 
@@ -113,12 +113,12 @@ class Polls(commands.Cog, name="Polls"):
         }
 
         content = (
-            json.loads(poll.content)
+            json.loads(poll.content)  # type: ignore
             if isinstance(poll.content, str)
             else poll.content
         )
 
-        responses = {}
+        responses: Dict[int, int] = {}
 
         async for response in poll.choices:
             if responses.get(response.choice):
@@ -126,14 +126,14 @@ class Polls(commands.Cog, name="Polls"):
             else:
                 responses[response.choice] = 1
 
-        for i, field in enumerate(content.get("fields")):
+        for i, field in enumerate(content.get("fields")):  # type: ignore
             responders = responses.get(i, 0)
 
-            chart_options["data"]["labels"].append(
+            chart_options["data"]["labels"].append(  # type: ignore
                 field["name"][6:].replace("__", "")
             )
 
-            chart_options["data"]["datasets"][0]["data"].append(responders)
+            chart_options["data"]["datasets"][0]["data"].append(responders)  # type: ignore
 
             if responders <= 1:
                 field["value"] = f"**{responders}** vote"
@@ -142,22 +142,22 @@ class Polls(commands.Cog, name="Polls"):
 
         e = discord.Embed(description=content.get("description"))
         e.set_author(
-            name=content.get("author").get("name"),
-            icon_url=content.get("author").get("icon_url"),
+            name=content.get("author").get("name"),  # type: ignore
+            icon_url=content.get("author").get("icon_url"),  # type: ignore
         )
         chart_url = URL(chart_base_url + json.dumps(chart_options))
         e.set_thumbnail(url=str(chart_url))
 
-        for field in content.get("fields"):
+        for field in content.get("fields"):  # type: ignore
             e.add_field(
                 name=field.get("name"), value=field.get("value"), inline=True
             )
 
-        e.set_footer(text=content.get("footer").get("text"))
+        e.set_footer(text=content.get("footer").get("text"))  # type: ignore
 
         await message.edit(embed=e)
 
-        poll.content = json.dumps(content)
+        poll.content = json.dumps(content)  # type: ignore
 
         await poll.save()
 
@@ -190,7 +190,7 @@ class Polls(commands.Cog, name="Polls"):
             """Just to change type for PyCharm"""
 
         suggest_row.poll = poll
-        suggest_row.proposition = new
+        suggest_row.proposition = new  # type: ignore
 
         await suggest_row.save()
 
@@ -215,7 +215,7 @@ class Polls(commands.Cog, name="Polls"):
             text=_("Requested by {author}", ctx, self.bot.config).format(
                 author=ctx.author.name
             ),
-            icon_url=ctx.author.avatar_url_as(format="png"),
+            icon_url=ctx.author.avatar.url,
         )
 
         await stmt.edit(content="", embed=e)

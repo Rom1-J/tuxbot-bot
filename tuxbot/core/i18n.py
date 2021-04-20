@@ -46,14 +46,16 @@ def get_locale_name(locale: str) -> str:
 class Translator:
     """Class to load texts at init."""
 
-    def __init__(self, name: str, file_location: Union[Path, os.PathLike]):
+    def __init__(
+        self, name: str, file_location: Union[Path, os.PathLike, str]
+    ):
         """Initializes the Translator object.
 
         Parameters
         ----------
         name : str
             The cog name.
-        file_location:Path|os.PathLike
+        file_location:Path|os.PathLike|str
             File path for the required extension.
 
         """

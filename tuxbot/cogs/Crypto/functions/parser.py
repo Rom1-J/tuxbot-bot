@@ -1,7 +1,8 @@
 import re
+from typing import Optional
 
 
-def data_parser(data: str) -> dict:
+def data_parser(data: Optional[str]) -> dict:
     output = {
         "message": "",
         "compressed": False,
