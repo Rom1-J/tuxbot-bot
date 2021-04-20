@@ -3,4 +3,4 @@ from rich.traceback import install
 
 
 console = Console()
-install(console=console, show_locals=True)
+install(console=console, show_locals=True, width=console.width)

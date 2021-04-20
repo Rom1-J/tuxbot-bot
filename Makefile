@@ -15,7 +15,6 @@ XGETTEXT_FLAGS := --no-wrap --language='python' --keyword=_ --from-code='UTF-8' 
 # Init
 .PHONY: main
 main:
-	$(PYTHON_PATH) -m venv --clear $(VENV)
 	$(VIRTUAL_ENV)/bin/pip install -U pip setuptools
 
 .PHONY: install

@@ -14,11 +14,15 @@ def main() -> None:
         else:
             raise exc
     except Exception:
-        console.print_exception(show_locals=True)
+        console.print_exception(
+            show_locals=True, word_wrap=True, extra_lines=5
+        )
 
 
 if __name__ == "__main__":
     try:
         main()
     except Exception:
-        console.print_exception(show_locals=True)
+        console.print_exception(
+            show_locals=True, word_wrap=True, extra_lines=5
+        )

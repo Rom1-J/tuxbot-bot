@@ -51,9 +51,9 @@ class Logs(commands.Cog, name="Logs"):
     def __init__(self, bot: Tux):
         self.bot = bot
         self.process = psutil.Process()
-        self._batch_lock = asyncio.Lock(loop=bot.loop)
+        self._batch_lock = asyncio.Lock()
         self._data_batch = []
-        self._gateway_queue = asyncio.Queue(loop=bot.loop)
+        self._gateway_queue = asyncio.Queue()
         self.gateway_worker.start()  # pylint: disable=no-member
 
         self.__config: LogsConfig = ConfigFile(
@@ -88,7 +88,7 @@ class Logs(commands.Cog, name="Logs"):
     def webhook(self, log_type):
         webhook = discord.Webhook.from_url(
             getattr(self.__config, log_type),
-            adapter=discord.AsyncWebhookAdapter(self.bot.session),
+            session=self.bot.session,
         )
         return webhook
 

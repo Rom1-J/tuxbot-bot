@@ -173,9 +173,9 @@ async def run_bot(tux: Tux, cli_flags: Namespace) -> None:
     try:
         await tux.load_packages()
         console.print()
-        await tux.start(token=token, bot=True)
+        await tux.start(token=token)
     except discord.LoginFailure:
-        log.critical("This token appears to be valid.")
+        log.critical("This token appears to be invalid.")
         console.print()
         console.print(
             "[prompt.invalid]This token appears to be valid. [i]exiting...[/i]"

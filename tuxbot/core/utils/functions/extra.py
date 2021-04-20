@@ -13,6 +13,7 @@ IP_REPLACEMENT = "■" * random.randint(3, 15)
 
 
 class ContextPlus(commands.Context):
+    # noinspection PyTypedDict
     async def send(
         self,
         content=None,
@@ -31,6 +32,7 @@ class ContextPlus(commands.Context):
             replace_in_list,
         )
 
+        # todo: rewrite replacements
         if content:
             content = (
                 content.replace(self.bot.config.Core.token, TOKEN_REPLACEMENT)

@@ -1,6 +1,8 @@
 <component name="ProjectDictionaryState">
   <dictionary name="romain">
     <words>
+      <w>aaaa</w>
+      <w>ajout</w>
       <w>anglais</w>
       <w>anonyme</w>
       <w>appdirs</w>
@@ -9,7 +11,9 @@
       <w>commandstats</w>
       <w>ctype</w>
       <w>debian</w>
+      <w>dnskey</w>
       <w>découverte</w>
+      <w>ffff</w>
       <w>fonction</w>
       <w>francais</w>
       <w>français</w>
@@ -29,6 +33,7 @@
       <w>outoutxyz</w>
       <w>outouxyz</w>
       <w>pacman</w>
+      <w>perso</w>
       <w>postgre</w>
       <w>postgresql</w>
       <w>pred</w>
@@ -36,6 +41,7 @@
       <w>pylint</w>
       <w>releaselevel</w>
       <w>rprint</w>
+      <w>skipcq</w>
       <w>socketstats</w>
       <w>soit</w>
       <w>sondage</w>

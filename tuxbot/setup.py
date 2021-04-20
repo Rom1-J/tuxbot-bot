@@ -328,7 +328,7 @@ def update() -> None:
     )
 
     if response.get("sha")[:6] == version_info.build:
-        print("Nothing to update, you can run `tuxbot` " "to start the bot")
+        print("Nothing to update, you can run `tuxbot` to start the bot")
     else:
         print(f"Updating to {response.get('sha')[:6]}...")
 

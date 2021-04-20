@@ -25,6 +25,7 @@ class Dev(commands.Cog, name="Dev"):
         if crash_type == "ZeroDivisionError":
             await ctx.send(str(5 / 0))
         elif crash_type == "TypeError":
+            # noinspection PyTypeChecker
             await ctx.send(str(int([])))
         elif crash_type == "IndexError":
             await ctx.send(str([0][5]))

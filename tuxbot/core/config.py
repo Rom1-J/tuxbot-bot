@@ -14,6 +14,7 @@ __all__ = [
     "search_for",
     "set_for_key",
     "set_for",
+    "set_if_none",
 ]
 
 log = logging.getLogger("tuxbot.core.config")

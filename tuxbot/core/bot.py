@@ -89,11 +89,16 @@ class Tux(commands.AutoShardedBot):
         self.uptime = None
         self.last_on_ready = None
         self._app_owners_fetched = False  # to prevent abusive API calls
+        self.loop = asyncio.get_event_loop()
 
         self.before_invoke(self._typing)
 
         super().__init__(
-            *args, help_command=None, intents=discord.Intents.all(), **kwargs
+            *args,
+            # help_command=None,
+            intents=discord.Intents.all(),
+            loop=self.loop,
+            **kwargs,
         )
         self.session = aiohttp.ClientSession(loop=self.loop)
 
@@ -269,7 +274,7 @@ class Tux(commands.AutoShardedBot):
         if not await self._is_blacklisted(message):
             await self.process_commands(message)
 
-    async def start(self, token, bot):  # pylint: disable=arguments-differ
+    async def start(self, token):  # pylint: disable=arguments-differ
         """Connect to Discord and start all connections."""
         with Progress() as progress:
             task = progress.add_task(
@@ -309,7 +314,7 @@ class Tux(commands.AutoShardedBot):
                 start=False,
             )
             progress.update(task_id)
-            await super().start(token, bot=bot)
+            await super().start(token)
 
     async def logout(self):
         """Disconnect from Discord and closes all actives connections.
@@ -335,7 +340,7 @@ class Tux(commands.AutoShardedBot):
             task.cancel()
         await asyncio.gather(*pending, return_exceptions=False)
 
-        await super().logout()
+        await super().close()
 
     async def shutdown(self, *, restart: bool = False):
         """Gracefully quit.
