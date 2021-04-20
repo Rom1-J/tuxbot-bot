@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Union, Dict, Iterable, Any
+from typing import Union, Dict
 
 import discord
 from discord.ext import commands

@@ -69,6 +69,7 @@ class Logs(commands.Cog):
         bot.on_error = self.on_error
 
         if self.bot.instance_name != "dev":
+            # pylint: disable=abstract-class-instantiated
             sentry_sdk.init(
                 dsn=self.__config.sentryKey,
                 traces_sample_rate=1.0,
