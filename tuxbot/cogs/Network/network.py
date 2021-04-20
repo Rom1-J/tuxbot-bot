@@ -148,7 +148,7 @@ class Network(commands.Cog):
             async with ctx.session.get(
                 str(ip),
                 headers=headers,
-                timeout=aiohttp.ClientTimeout(total=4),
+                timeout=aiohttp.ClientTimeout(total=8),
             ) as s:
                 e = discord.Embed(
                     title=f"Headers : {ip}",
