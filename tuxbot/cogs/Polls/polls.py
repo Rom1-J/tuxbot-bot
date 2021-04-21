@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Union, Dict
+from typing import Dict
 
 import discord
 from discord.ext import commands
@@ -90,7 +90,7 @@ class Polls(commands.Cog):
 
     async def get_poll(
         self, pld: discord.RawReactionActionEvent
-    ) -> Union[bool, Poll]:
+    ) -> bool | Poll:
         if pld.user_id != self.bot.user.id:
             poll = await Poll.get_or_none(message_id=pld.message_id)
 
@@ -225,7 +225,7 @@ class Polls(commands.Cog):
 
     async def get_suggest(
         self, pld: discord.RawReactionActionEvent
-    ) -> Union[bool, Suggest]:
+    ) -> bool | Suggest:
         if pld.user_id != self.bot.user.id:
             suggest = await Suggest.get_or_none(message_id=pld.message_id)
 

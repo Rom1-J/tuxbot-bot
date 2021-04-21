@@ -1,5 +1,5 @@
 import socket
-from typing import Union, NoReturn, Optional
+from typing import NoReturn, Optional
 
 import asyncio
 import re
@@ -25,8 +25,8 @@ def _(x):
     return x
 
 
-async def get_ip(ip: str, inet: str = "") -> str:
-    _inet: Union[socket.AddressFamily, int] = 0  # pylint: disable=no-member
+def get_ip(ip: str, inet: str = "") -> str:
+    _inet: socket.AddressFamily | int = 0  # pylint: disable=no-member
 
     if inet == "6":
         _inet = socket.AF_INET6
@@ -44,27 +44,47 @@ async def get_ip(ip: str, inet: str = "") -> str:
         ) from e
 
 
-async def get_hostname(ip: str) -> str:
+async def get_hostname(loop, ip: str) -> str:
+    def _get_hostname(_ip: str):
+        try:
+            return socket.gethostbyaddr(ip)[0]
+        except socket.herror:
+            return "N/A"
+
     try:
-        return socket.gethostbyaddr(ip)[0]
-    except socket.herror:
+        return await asyncio.wait_for(
+            loop.run_in_executor(None, _get_hostname, str(ip)),
+            timeout=0.200,
+        )
+    # assuming that if the hostname isn't retrieved in first .3sec,
+    # it doesn't exists
+    except asyncio.exceptions.TimeoutError:
         return "N/A"
 
 
-async def get_ipwhois_result(ip_address: str) -> Union[NoReturn, dict]:
+async def get_ipwhois_result(loop, ip_address: str) -> NoReturn | dict:
+    def _get_ipwhois_result(_ip_address: str) -> NoReturn | dict:
+        try:
+            net = Net(ip_address)
+            obj = IPASN(net)
+            return obj.lookup()
+        except ipwhois.exceptions.ASNRegistryError:
+            return {}
+        except ipwhois.exceptions.IPDefinedError as e:
+            raise RFC18(
+                _(
+                    "IP address {ip_address} is already defined as Private-Use"
+                    " Networks via RFC 1918."
+                )
+            ) from e
+
     try:
-        net = Net(ip_address)
-        obj = IPASN(net)
-        return obj.lookup()
-    except ipwhois.exceptions.ASNRegistryError:
+        return await asyncio.wait_for(
+            loop.run_in_executor(None, _get_ipwhois_result, str(ip_address)),
+            timeout=0.200,
+        )
+    except asyncio.exceptions.TimeoutError:
         return {}
-    except ipwhois.exceptions.IPDefinedError as e:
-        raise RFC18(
-            _(
-                "IP address {ip_address} is already defined as Private-Use"
-                " Networks via RFC 1918."
-            )
-        ) from e
 
 
 async def get_ipinfo_result(apikey: str, ip_address: str) -> dict:
@@ -130,7 +150,7 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
 
 
 async def get_pydig_result(
-    domain: str, query_type: str, dnssec: Union[str, bool]
+    domain: str, query_type: str, dnssec: str | bool
 ) -> list:
     additional_args = [] if dnssec is False else ["+dnssec"]
 
@@ -145,14 +165,14 @@ async def get_pydig_result(
     return resolver.query(domain, query_type)
 
 
-def check_ip_version_or_raise(version: str) -> Union[bool, NoReturn]:
+def check_ip_version_or_raise(version: str) -> bool | NoReturn:
     if version in ("4", "6", "None"):
         return True
 
     raise InvalidIp(_("Invalid ip version"))
 
 
-def check_query_type_or_raise(query_type: str) -> Union[bool, NoReturn]:
+def check_query_type_or_raise(query_type: str) -> bool | NoReturn:
     query_types = (
         "a",
         "aaaa",

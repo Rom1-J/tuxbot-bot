@@ -27,24 +27,28 @@ def typing(func):
     return wrapped
 
 
-async def shorten(session, text: str, length: int) -> dict:
+async def shorten(
+    session, text: str, length: int, fail: bool = False
+) -> tuple[bool, dict]:
     output: Dict[str, str] = {"text": text[:length], "link": ""}
 
     if len(text) > length:
         output["text"] += "[...]"
-        try:
-            async with session.post(
-                "https://paste.ramle.be/documents",
-                data=text.encode(),
-                timeout=aiohttp.ClientTimeout(total=2),
-            ) as r:
-                output[
-                    "link"
-                ] = f"https://paste.ramle.be/{(await r.json())['key']}"
-        except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
-            pass
 
-    return output
+        if not fail:
+            try:
+                async with session.post(
+                    "https://paste.ramle.be/documents",
+                    data=text.encode(),
+                    timeout=aiohttp.ClientTimeout(total=0.300),
+                ) as r:
+                    output[
+                        "link"
+                    ] = f"https://paste.ramle.be/{(await r.json())['key']}"
+            except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
+                fail = True
+
+    return fail, output
 
 
 def replace_in_dict(value: dict, search: str, replace: str) -> dict:

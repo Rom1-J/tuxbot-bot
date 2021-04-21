@@ -1,18 +1,18 @@
-from typing import List, Union
+from typing import List, Optional
 
 import discord
 
 from tuxbot.core.config import search_for
 
 
-def get_prefixes(tux, guild: Union[discord.Guild, None]) -> List[str]:
+def get_prefixes(tux, guild: Optional[discord.Guild]) -> List[str]:
     """Get custom  prefixes for one guild.
     Parameters
     ----------
     tux:Tux
         The bot instance.
 
-    guild:Union[discord.Guild, None]
+    guild:Optional[discord.Guild]
         The required guild prefixes.
     Returns
     -------

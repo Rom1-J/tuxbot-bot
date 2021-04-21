@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import time
-from typing import Union, Optional
+from typing import Optional
 
 import aiohttp
 import discord
@@ -87,13 +87,15 @@ class Network(commands.Cog):
     ):
         check_ip_version_or_raise(str(version))
 
-        ip_address = await get_ip(str(ip), str(version))
-        ip_hostname = await get_hostname(ip_address)
+        ip_address = await self.bot.loop.run_in_executor(
+            None, get_ip, str(ip), str(version)
+        )
+        ip_hostname = await get_hostname(self.bot.loop, str(ip_address))
 
         ipinfo_result = await get_ipinfo_result(
             self.__config.ipinfoKey, ip_address
         )
-        ipwhois_result = await get_ipwhois_result(ip_address)
+        ipwhois_result = await get_ipwhois_result(self.bot.loop, ip_address)
 
         merged_results = merge_ipinfo_ipwhois(ipinfo_result, ipwhois_result)
 
@@ -185,8 +187,10 @@ class Network(commands.Cog):
                 headers = dict(s.headers.items())
                 headers.pop("Set-Cookie", headers)
 
+                fail = False
+
                 for key, value in headers.items():
-                    output = await shorten(ctx.session, value, 50)
+                    fail, output = await shorten(ctx.session, value, 50, fail)
 
                     if output["link"]:
                         value = _(
@@ -209,7 +213,7 @@ class Network(commands.Cog):
         ctx: ContextPlus,
         domain: IPConverter,
         query_type: QueryTypeConverter,
-        dnssec: Union[str, bool] = False,
+        dnssec: str | bool = False,
     ):
         check_query_type_or_raise(str(query_type))
 

@@ -3,7 +3,7 @@ import datetime
 import importlib
 import logging
 from collections import Counter
-from typing import List, Union, Tuple
+from typing import List, Tuple
 
 import aiohttp
 import discord
@@ -94,7 +94,6 @@ class Tux(commands.AutoShardedBot):
 
         super().__init__(
             *args,
-            # help_command=None,
             intents=discord.Intents.all(),
             loop=self.loop,
             **kwargs,
@@ -204,13 +203,13 @@ class Tux(commands.AutoShardedBot):
         self.console.print()
 
     async def is_owner(
-        self, user: Union[discord.User, discord.Member, discord.Object]
+        self, user: discord.User | discord.Member | discord.Object
     ) -> bool:
         """Determines if the user is a bot owner.
 
         Parameters
         ----------
-        user: Union[discord.User, discord.Member]
+        user: discord.User | discord.Member
 
         Returns
         -------
