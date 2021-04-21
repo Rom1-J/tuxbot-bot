@@ -6,6 +6,7 @@ from typing import Union, Optional
 import aiohttp
 import discord
 from aiohttp import ClientConnectorError
+from jishaku.models import copy_context_with
 from discord.ext import commands
 from ipinfo.exceptions import RequestQuotaExceededError
 from structured_config import ConfigFile
@@ -42,6 +43,7 @@ from .functions.utils import (
     get_pydig_result,
     check_query_type_or_raise,
     check_ip_version_or_raise,
+    get_crimeflare_result,
 )
 
 log = logging.getLogger("tuxbot.cogs.Network")
@@ -56,7 +58,7 @@ class Network(commands.Cog):
             NetworkConfig,
         ).config
 
-    async def cog_command_error(self, ctx, error):
+    async def cog_command_error(self, ctx: ContextPlus, error):
         if isinstance(
             error,
             (
@@ -70,6 +72,9 @@ class Network(commands.Cog):
         ):
             await ctx.send(_(str(error), ctx, self.bot.config))
 
+    async def cog_before_invoke(self, ctx: ContextPlus):
+        await ctx.trigger_typing()
+
     # =========================================================================
     # =========================================================================
 
@@ -82,18 +87,13 @@ class Network(commands.Cog):
     ):
         check_ip_version_or_raise(str(version))
 
-        tmp = await ctx.send(
-            _("*Retrieving information...*", ctx, self.bot.config),
-            deletable=False,
-        )
-
-        ip_address = await get_ip(str(ip), str(version), tmp)
+        ip_address = await get_ip(str(ip), str(version))
         ip_hostname = await get_hostname(ip_address)
 
         ipinfo_result = await get_ipinfo_result(
             self.__config.ipinfoKey, ip_address
         )
-        ipwhois_result = await get_ipwhois_result(ip_address, tmp)
+        ipwhois_result = await get_ipwhois_result(ip_address)
 
         merged_results = merge_ipinfo_ipwhois(ipinfo_result, ipwhois_result)
 
@@ -128,8 +128,31 @@ class Network(commands.Cog):
             ),
         )
 
-        await tmp.delete()
         await ctx.send(embed=e)
+
+    @command_extra(name="cloudflare", deletable=True)
+    async def _cloudflare(
+        self,
+        ctx: ContextPlus,
+        ip: DomainConverter,
+    ):
+        crimeflare_result = await get_crimeflare_result(
+            self.bot.session, str(ip)
+        )
+
+        if crimeflare_result:
+            alt_ctx = await copy_context_with(
+                ctx, content=f"{ctx.prefix}iplocalise {crimeflare_result}"
+            )
+            return await alt_ctx.command.reinvoke(alt_ctx)
+
+        await ctx.send(
+            _(
+                "Unable to collect information through CloudFlare",
+                ctx,
+                self.bot.config,
+            ).format()
+        )
 
     @command_extra(name="getheaders", aliases=["headers"], deletable=True)
     async def _getheaders(

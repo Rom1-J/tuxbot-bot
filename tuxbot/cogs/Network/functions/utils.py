@@ -1,10 +1,13 @@
 import socket
-from typing import Union, NoReturn
+from typing import Union, NoReturn, Optional
 
-import discord
+import asyncio
+import re
 import ipinfo
 import ipwhois
 import pydig
+import aiohttp
+
 from ipinfo.exceptions import RequestQuotaExceededError
 
 from ipwhois import Net
@@ -22,7 +25,7 @@ def _(x):
     return x
 
 
-async def get_ip(ip: str, inet: str = "", tmp: discord.Message = None) -> str:
+async def get_ip(ip: str, inet: str = "") -> str:
     _inet: Union[socket.AddressFamily, int] = 0  # pylint: disable=no-member
 
     if inet == "6":
@@ -33,9 +36,6 @@ async def get_ip(ip: str, inet: str = "", tmp: discord.Message = None) -> str:
     try:
         return socket.getaddrinfo(str(ip), None, _inet)[1][4][0]
     except socket.gaierror as e:
-        if tmp:
-            await tmp.delete()
-
         raise VersionNotFound(
             _(
                 "Unable to collect information on this in the given "
@@ -51,9 +51,7 @@ async def get_hostname(ip: str) -> str:
         return "N/A"
 
 
-async def get_ipwhois_result(
-    ip_address: str, tmp: discord.Message = None
-) -> Union[NoReturn, dict]:
+async def get_ipwhois_result(ip_address: str) -> Union[NoReturn, dict]:
     try:
         net = Net(ip_address)
         obj = IPASN(net)
@@ -61,9 +59,6 @@ async def get_ipwhois_result(
     except ipwhois.exceptions.ASNRegistryError:
         return {}
     except ipwhois.exceptions.IPDefinedError as e:
-        if tmp:
-            await tmp.delete()
-
         raise RFC18(
             _(
                 "IP address {ip_address} is already defined as Private-Use"
@@ -72,9 +67,7 @@ async def get_ipwhois_result(
         ) from e
 
 
-async def get_ipinfo_result(
-    apikey: str, ip_address: str
-) -> Union[NoReturn, dict]:
+async def get_ipinfo_result(apikey: str, ip_address: str) -> dict:
     try:
         handler = ipinfo.getHandlerAsync(
             apikey, request_options={"timeout": 7}
@@ -82,6 +75,25 @@ async def get_ipinfo_result(
         return (await handler.getDetails(ip_address)).all
     except RequestQuotaExceededError:
         return {}
+
+
+async def get_crimeflare_result(
+    session: aiohttp.ClientSession, ip_address: str
+) -> Optional[str]:
+    try:
+        async with session.post(
+            "http://www.crimeflare.org:82/cgi-bin/cfsearch.cgi",
+            data=f"cfS={ip_address}",
+            timeout=aiohttp.ClientTimeout(total=15),
+        ) as s:
+            ip = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
+
+            if ip:
+                return ip.group()
+    except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
+        pass
+
+    return None
 
 
 def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
