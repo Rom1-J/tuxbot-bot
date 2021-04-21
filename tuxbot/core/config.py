@@ -8,14 +8,14 @@ from structured_config import (
     ConfigFile,
 )
 
-__all__ = [
+__all__ = (
     "Config",
     "ConfigFile",
     "search_for",
     "set_for_key",
     "set_for",
     "set_if_none",
-]
+)
 
 log = logging.getLogger("tuxbot.core.config")
 

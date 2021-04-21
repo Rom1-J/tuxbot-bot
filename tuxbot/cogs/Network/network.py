@@ -151,7 +151,7 @@ class Network(commands.Cog):
                 "Unable to collect information through CloudFlare",
                 ctx,
                 self.bot.config,
-            ).format()
+            )
         )
 
     @command_extra(name="getheaders", aliases=["headers"], deletable=True)

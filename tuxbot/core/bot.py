@@ -3,7 +3,7 @@ import datetime
 import importlib
 import logging
 from collections import Counter
-from typing import List, Union
+from typing import List, Union, Tuple
 
 import aiohttp
 import discord
@@ -33,7 +33,7 @@ from . import exceptions
 
 log = logging.getLogger("tuxbot")
 
-packages: List[str] = [
+packages: Tuple = (
     "jishaku",
     "tuxbot.cogs.Admin",
     "tuxbot.cogs.Logs",
@@ -42,7 +42,7 @@ packages: List[str] = [
     "tuxbot.cogs.Polls",
     "tuxbot.cogs.Custom",
     "tuxbot.cogs.Network",
-]
+)
 
 
 class Tux(commands.AutoShardedBot):
@@ -81,7 +81,7 @@ class Tux(commands.AutoShardedBot):
         else:
             kwargs["owner_ids"] = self.config.Core.owners_id
 
-        message_cache_size = 100_000
+        message_cache_size = 10_000
         kwargs["max_messages"] = message_cache_size
         self.max_messages = message_cache_size
 
@@ -258,7 +258,7 @@ class Tux(commands.AutoShardedBot):
 
         if ctx is not None and ctx.valid:
             if message.guild and ctx.command in search_for(
-                self.config.Servers, message.guild.id, "disabled_command", []
+                self.config.Servers, message.guild.id, "disabled_command", ()
             ):
                 raise exceptions.DisabledCommandByServerOwner
 

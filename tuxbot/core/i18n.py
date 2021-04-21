@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Union, Dict, List, NoReturn, Any
+from typing import Union, Dict, NoReturn, Any, Tuple
 
 from babel.messages.pofile import read_po
 
@@ -13,9 +13,9 @@ log = logging.getLogger("tuxbot.core.i18n")
 
 _translators = []
 
-available_locales: Dict[str, List[str]] = {
-    "en-US": ["english", "anglais", "en", "us", "en-us"],
-    "fr-FR": ["français", "francais", "french", "fr", "be", "fr-fr"],
+available_locales: Dict[str, Tuple] = {
+    "en-US": ("english", "anglais", "en", "us", "en-us"),
+    "fr-FR": ("français", "francais", "french", "fr", "be", "fr-fr"),
 }
 
 

@@ -3,7 +3,7 @@ from typing import Dict
 
 
 def sort_by(_events: Counter) -> dict[str, dict]:
-    majors = [
+    majors = (
         "guild",
         "channel",
         "message",
@@ -12,7 +12,7 @@ def sort_by(_events: Counter) -> dict[str, dict]:
         "presence",
         "voice",
         "other",
-    ]
+    )
     sorted_events: Dict[str, Dict] = {m: {} for m in majors}
 
     for event, count in _events:

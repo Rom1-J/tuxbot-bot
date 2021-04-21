@@ -10,7 +10,7 @@ from discord.ext.commands import (
 
 from tuxbot.core.utils.functions.extra import ContextPlus
 
-__all__ = [
+__all__ = (
     "bot_has_permissions",
     "has_permissions",
     "is_owner",
@@ -18,7 +18,7 @@ __all__ = [
     "is_admin",
     "check_permissions",
     "guild_owner_or_permissions",
-]
+)
 
 
 def is_mod():

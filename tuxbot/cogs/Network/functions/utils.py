@@ -146,14 +146,14 @@ async def get_pydig_result(
 
 
 def check_ip_version_or_raise(version: str) -> Union[bool, NoReturn]:
-    if version in ["4", "6", "None"]:
+    if version in ("4", "6", "None"):
         return True
 
     raise InvalidIp(_("Invalid ip version"))
 
 
 def check_query_type_or_raise(query_type: str) -> Union[bool, NoReturn]:
-    query_types = [
+    query_types = (
         "a",
         "aaaa",
         "cname",
@@ -164,7 +164,7 @@ def check_query_type_or_raise(query_type: str) -> Union[bool, NoReturn]:
         "txt",
         "ptr",
         "mx",
-    ]
+    )
 
     if query_type in query_types:
         return True
