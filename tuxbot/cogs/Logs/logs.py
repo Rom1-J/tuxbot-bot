@@ -239,8 +239,6 @@ class Logs(commands.Cog):
         if isinstance(error, (discord.Forbidden, discord.NotFound)):
             return
 
-        if self.bot.instance_name != "dev":
-            sentry_sdk.capture_exception(error)
         self.bot.console.log(
             "Command Error, check sentry or discord error channel"
         )
@@ -282,6 +280,7 @@ class Logs(commands.Cog):
         e.remove_field(1)
 
         if self.bot.instance_name != "dev":
+            sentry_sdk.capture_exception(error)
             e.set_footer(text=sentry_sdk.last_event_id())
 
         await ctx.send(embed=e)

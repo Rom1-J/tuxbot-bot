@@ -5,7 +5,7 @@ from typing import Optional
 
 import aiohttp
 import discord
-from aiohttp import ClientConnectorError
+from aiohttp import ClientConnectorError, InvalidURL
 from jishaku.models import copy_context_with
 from discord.ext import commands
 from ipinfo.exceptions import RequestQuotaExceededError
@@ -170,7 +170,7 @@ class Network(commands.Cog):
                 "5": 0x343A40,
             }
 
-            async with ctx.session.get(
+            async with self.bot.session.get(
                 str(ip),
                 headers=headers,
                 timeout=aiohttp.ClientTimeout(total=8),
@@ -202,7 +202,11 @@ class Network(commands.Cog):
                     e.add_field(name=key, value=value, inline=True)
 
                 await ctx.send(embed=e)
-        except (ClientConnectorError, asyncio.exceptions.TimeoutError):
+        except (
+            ClientConnectorError,
+            InvalidURL,
+            asyncio.exceptions.TimeoutError,
+        ):
             await ctx.send(
                 _("Cannot connect to host {}", ctx, self.bot.config).format(ip)
             )

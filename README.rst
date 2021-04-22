@@ -14,7 +14,7 @@ Installing the pre-requirements
 
 -  The pre-requirements are:
 
-   -  Python 3.9 or greater
+   -  Python 3.10 or greater
    -  Pip
    -  Git
 
@@ -118,12 +118,12 @@ Configuration
 It's time to set up your first instance, to do this, you can simply
 execute this command:
 
-:bash:`tuxbot-setup [your instance name]`
+:bash:`tuxbot-setup`
 
 After following the instructions, you can run your instance by executing
 this command:
 
-:bash:`tuxbot [your instance name]`
+:bash:`tuxbot`
 
 Update
 ------
