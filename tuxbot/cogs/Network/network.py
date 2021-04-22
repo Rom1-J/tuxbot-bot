@@ -143,9 +143,7 @@ class Network(commands.Cog):
         ctx: ContextPlus,
         ip: DomainConverter,
     ):
-        crimeflare_result = await get_crimeflare_result(
-            self.bot.session, str(ip)
-        )
+        crimeflare_result = await get_crimeflare_result(str(ip))
 
         if crimeflare_result:
             alt_ctx = await copy_context_with(
@@ -175,38 +173,39 @@ class Network(commands.Cog):
                 "5": 0x343A40,
             }
 
-            async with self.bot.session.get(
-                str(ip),
-                headers=headers,
-                timeout=aiohttp.ClientTimeout(total=8),
-            ) as s:
-                e = discord.Embed(
-                    title=f"Headers : {ip}",
-                    color=colors.get(str(s.status)[0], 0x6C757D),
-                )
-                e.add_field(
-                    name="Status", value=f"```{s.status}```", inline=True
-                )
-                e.set_thumbnail(url=f"https://http.cat/{s.status}")
+            async with aiohttp.ClientSession() as cs:
+                async with cs.get(
+                    str(ip),
+                    headers=headers,
+                    timeout=aiohttp.ClientTimeout(total=8),
+                ) as s:
+                    e = discord.Embed(
+                        title=f"Headers : {ip}",
+                        color=colors.get(str(s.status)[0], 0x6C757D),
+                    )
+                    e.add_field(
+                        name="Status", value=f"```{s.status}```", inline=True
+                    )
+                    e.set_thumbnail(url=f"https://http.cat/{s.status}")
 
-                headers = dict(s.headers.items())
-                headers.pop("Set-Cookie", headers)
+                    headers = dict(s.headers.items())
+                    headers.pop("Set-Cookie", headers)
 
-                fail = False
+                    fail = False
 
-                for key, value in headers.items():
-                    fail, output = await shorten(ctx.session, value, 50, fail)
+                    for key, value in headers.items():
+                        fail, output = await shorten(value, 50, fail)
 
-                    if output["link"]:
-                        value = _(
-                            "[show all]({})", ctx, self.bot.config
-                        ).format(output["link"])
-                    else:
-                        value = f"```\n{output['text']}```"
+                        if output["link"]:
+                            value = _(
+                                "[show all]({})", ctx, self.bot.config
+                            ).format(output["link"])
+                        else:
+                            value = f"```\n{output['text']}```"
 
-                    e.add_field(name=key, value=value, inline=True)
+                        e.add_field(name=key, value=value, inline=True)
 
-                await ctx.send(embed=e)
+                    await ctx.send(embed=e)
         except (
             ClientConnectorError,
             InvalidURL,
@@ -260,25 +259,26 @@ class Network(commands.Cog):
     @command_extra(name="isdown", aliases=["is_down", "down?"], deletable=True)
     async def _isdown(self, ctx: ContextPlus, domain: IPConverter):
         try:
-            async with self.bot.session.get(
-                f"https://isitdown.site/api/v3/{domain}",
-                timeout=aiohttp.ClientTimeout(total=8),
-            ) as s:
-                json = await s.json()
+            async with aiohttp.ClientSession() as cs:
+                async with cs.get(
+                    f"https://isitdown.site/api/v3/{domain}",
+                    timeout=aiohttp.ClientTimeout(total=8),
+                ) as s:
+                    json = await s.json()
 
-                if json["isitdown"]:
-                    title = _("Down...", ctx, self.bot.config)
-                    color = 0xDC3545
-                else:
-                    title = _("Up!", ctx, self.bot.config)
-                    color = 0x28A745
+                    if json["isitdown"]:
+                        title = _("Down...", ctx, self.bot.config)
+                        color = 0xDC3545
+                    else:
+                        title = _("Up!", ctx, self.bot.config)
+                        color = 0x28A745
 
-                e = discord.Embed(title=title, color=color)
-                e.set_thumbnail(
-                    url=f"https://http.cat/{json['response_code']}"
-                )
+                    e = discord.Embed(title=title, color=color)
+                    e.set_thumbnail(
+                        url=f"https://http.cat/{json['response_code']}"
+                    )
 
-                await ctx.send(embed=e)
+                    await ctx.send(embed=e)
 
         except (
             ClientConnectorError,
@@ -297,9 +297,7 @@ class Network(commands.Cog):
     async def _peeringdb(self, ctx: ContextPlus, asn: ASConverter):
         check_asn_or_raise(str(asn))
 
-        data: dict = (
-            await get_peeringdb_net_result(self.bot.session, str(asn))
-        )["data"]
+        data: dict = (await get_peeringdb_net_result(str(asn)))["data"]
 
         if not data:
             return await ctx.send(
@@ -344,7 +342,7 @@ class Network(commands.Cog):
                 )
 
         if data["notes"]:
-            output = (await shorten(self.bot.session, data["notes"], 550))[1]
+            output = (await shorten(data["notes"], 550))[1]
             e.description = output["text"]
         if data["created"]:
             e.timestamp = datetime.strptime(

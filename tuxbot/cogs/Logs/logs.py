@@ -130,7 +130,7 @@ class Logs(commands.Cog):
         dt = datetime.datetime.utcfromtimestamp(record.created)
         msg = (
             f"{emoji} `[{dt:%Y-%m-%d %H:%M:%S}] "
-            f"{await shorten(self.bot.session, record.msg, 1500)}`"
+            f"{await shorten(record.msg, 1500)}`"
         )
         await self.webhook("gateway").send(msg)
 

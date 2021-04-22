@@ -134,19 +134,18 @@ async def get_ipinfo_result(apikey: str, ip: str) -> dict:
     cache=Cache.MEMORY,
     namespace="network",
 )
-async def get_crimeflare_result(
-    session: aiohttp.ClientSession, ip: str
-) -> Optional[str]:
+async def get_crimeflare_result(ip: str) -> Optional[str]:
     try:
-        async with session.post(
-            "http://www.crimeflare.org:82/cgi-bin/cfsearch.cgi",
-            data=f"cfS={ip}",
-            timeout=aiohttp.ClientTimeout(total=15),
-        ) as s:
-            result = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
+        async with aiohttp.ClientSession() as cs:
+            async with cs.post(
+                "http://www.crimeflare.org:82/cgi-bin/cfsearch.cgi",
+                data=f"cfS={ip}",
+                timeout=aiohttp.ClientTimeout(total=21),
+            ) as s:
+                result = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
 
-            if result:
-                return result.group()
+                if result:
+                    return result.group()
     except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
         pass
 
@@ -223,15 +222,14 @@ async def get_pydig_result(
     cache=Cache.MEMORY,
     namespace="network",
 )
-async def get_peeringdb_net_result(
-    session: aiohttp.ClientSession, asn: str
-) -> dict:
+async def get_peeringdb_net_result(asn: str) -> dict:
     try:
-        async with session.get(
-            f"https://peeringdb.com/api/net?asn={asn}",
-            timeout=aiohttp.ClientTimeout(total=8),
-        ) as s:
-            return await s.json()
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get(
+                f"https://peeringdb.com/api/net?asn={asn}",
+                timeout=aiohttp.ClientTimeout(total=21),
+            ) as s:
+                return await s.json()
     except (asyncio.exceptions.TimeoutError,):
         pass
 

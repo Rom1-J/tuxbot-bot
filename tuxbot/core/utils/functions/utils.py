@@ -28,7 +28,7 @@ def typing(func):
 
 
 async def shorten(
-    session, text: str, length: int, fail: bool = False
+    text: str, length: int, fail: bool = False
 ) -> tuple[bool, dict]:
     output: Dict[str, str] = {"text": text[:length], "link": ""}
 
@@ -37,14 +37,15 @@ async def shorten(
 
         if not fail:
             try:
-                async with session.post(
-                    "https://paste.ramle.be/documents",
-                    data=text.encode(),
-                    timeout=aiohttp.ClientTimeout(total=0.300),
-                ) as r:
-                    output[
-                        "link"
-                    ] = f"https://paste.ramle.be/{(await r.json())['key']}"
+                async with aiohttp.ClientSession() as cs:
+                    async with cs.post(
+                        "https://paste.ramle.be/documents",
+                        data=text.encode(),
+                        timeout=aiohttp.ClientTimeout(total=0.300),
+                    ) as r:
+                        output[
+                            "link"
+                        ] = f"https://paste.ramle.be/{(await r.json())['key']}"
             except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
                 fail = True
 
