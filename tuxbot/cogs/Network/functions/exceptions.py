@@ -23,3 +23,7 @@ class InvalidQueryType(NetworkException):
 
 class VersionNotFound(NetworkException):
     pass
+
+
+class InvalidAsn(NetworkException):
+    pass

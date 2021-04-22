@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands import Context
 
 
 def _(x):
@@ -6,7 +7,7 @@ def _(x):
 
 
 class IPConverter(commands.Converter):
-    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         argument = argument.replace("http://", "").replace("https://", "")
         argument = argument.rstrip("/")
 
@@ -17,7 +18,7 @@ class IPConverter(commands.Converter):
 
 
 class DomainConverter(commands.Converter):
-    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         if not argument.startswith("http"):
             return f"http://{argument}"
 
@@ -25,13 +26,18 @@ class DomainConverter(commands.Converter):
 
 
 class QueryTypeConverter(commands.Converter):
-    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         return argument.lower()
 
 
 class IPVersionConverter(commands.Converter):
-    async def convert(self, ctx, argument):  # skipcq: PYL-W0613
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         if not argument:
             return argument
 
         return argument.replace("-", "").replace("ip", "").replace("v", "")
+
+
+class ASConverter(commands.Converter):
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        return argument.lower().lstrip("as")

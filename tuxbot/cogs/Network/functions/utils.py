@@ -13,11 +13,15 @@ from ipinfo.exceptions import RequestQuotaExceededError
 from ipwhois import Net
 from ipwhois.asn import IPASN
 
+from aiocache import cached
+from aiocache.serializers import PickleSerializer
+
 from tuxbot.cogs.Network.functions.exceptions import (
     VersionNotFound,
     RFC18,
     InvalidIp,
     InvalidQueryType,
+    InvalidAsn,
 )
 
 
@@ -25,7 +29,8 @@ def _(x):
     return x
 
 
-def get_ip(ip: str, inet: str = "") -> str:
+@cached(ttl=15 * 60, serializer=PickleSerializer())
+async def get_ip(loop, ip: str, inet: str = "") -> str:
     _inet: socket.AddressFamily | int = 0  # pylint: disable=no-member
 
     if inet == "6":
@@ -33,17 +38,21 @@ def get_ip(ip: str, inet: str = "") -> str:
     elif inet == "4":
         _inet = socket.AF_INET
 
-    try:
-        return socket.getaddrinfo(str(ip), None, _inet)[1][4][0]
-    except socket.gaierror as e:
-        raise VersionNotFound(
-            _(
-                "Unable to collect information on this in the given "
-                "version",
-            )
-        ) from e
+    def _get_ip(_ip: str):
+        try:
+            return socket.getaddrinfo(_ip, None, _inet)[1][4][0]
+        except socket.gaierror as e:
+            raise VersionNotFound(
+                _(
+                    "Unable to collect information on this in the given "
+                    "version",
+                )
+            ) from e
+
+    return await loop.run_in_executor(None, _get_ip, str(ip))
 
 
+@cached(ttl=15 * 60, serializer=PickleSerializer())
 async def get_hostname(loop, ip: str) -> str:
     def _get_hostname(_ip: str):
         try:
@@ -62,6 +71,7 @@ async def get_hostname(loop, ip: str) -> str:
         return "N/A"
 
 
+@cached(ttl=15 * 60, serializer=PickleSerializer())
 async def get_ipwhois_result(loop, ip_address: str) -> NoReturn | dict:
     def _get_ipwhois_result(_ip_address: str) -> NoReturn | dict:
         try:
@@ -87,6 +97,7 @@ async def get_ipwhois_result(loop, ip_address: str) -> NoReturn | dict:
         return {}
 
 
+@cached(ttl=15 * 60, serializer=PickleSerializer())
 async def get_ipinfo_result(apikey: str, ip_address: str) -> dict:
     try:
         handler = ipinfo.getHandlerAsync(
@@ -97,6 +108,7 @@ async def get_ipinfo_result(apikey: str, ip_address: str) -> dict:
         return {}
 
 
+@cached(ttl=15 * 60, serializer=PickleSerializer())
 async def get_crimeflare_result(
     session: aiohttp.ClientSession, ip_address: str
 ) -> Optional[str]:
@@ -149,20 +161,74 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
     return output
 
 
+@cached(ttl=15 * 60, serializer=PickleSerializer())
 async def get_pydig_result(
-    domain: str, query_type: str, dnssec: str | bool
+    loop, domain: str, query_type: str, dnssec: str | bool
 ) -> list:
     additional_args = [] if dnssec is False else ["+dnssec"]
 
-    resolver = pydig.Resolver(
-        nameservers=[
-            "80.67.169.40",
-            "80.67.169.12",
-        ],
-        additional_args=additional_args,
-    )
+    def _get_pydig_result(_domain: str) -> NoReturn | dict:
+        resolver = pydig.Resolver(
+            nameservers=[
+                "80.67.169.40",
+                "80.67.169.12",
+            ],
+            additional_args=additional_args,
+        )
 
-    return resolver.query(domain, query_type)
+        return resolver.query(_domain, query_type)
+
+    try:
+        return await asyncio.wait_for(
+            loop.run_in_executor(None, _get_pydig_result, str(domain)),
+            timeout=0.500,
+        )
+    except asyncio.exceptions.TimeoutError:
+        return []
+
+
+@cached(ttl=15 * 60, serializer=PickleSerializer())
+async def get_peeringdb_as_set_result(
+    session: aiohttp.ClientSession, asn: str
+) -> Optional[dict]:
+    try:
+        async with session.get(
+            f"https://www.peeringdb.com/api/as_set/{asn}",
+            timeout=aiohttp.ClientTimeout(total=5),
+        ) as s:
+            return await s.json()
+    except (
+        aiohttp.ClientError,
+        aiohttp.ContentTypeError,
+        asyncio.exceptions.TimeoutError,
+    ):
+        pass
+
+    return None
+
+
+@cached(ttl=15 * 60, serializer=PickleSerializer())
+async def get_peeringdb_net_irr_as_set_result(
+    session: aiohttp.ClientSession, asn: str
+) -> Optional[dict]:
+    try:
+        async with session.get(
+            f"https://www.peeringdb.com/api/net?irr_as_set={asn}",
+            timeout=aiohttp.ClientTimeout(total=10),
+        ) as s:
+            json = await s.json()
+
+            for data in json:
+                if data["asn"] == int(asn):
+                    return data
+    except (
+        aiohttp.ClientError,
+        aiohttp.ContentTypeError,
+        asyncio.exceptions.TimeoutError,
+    ):
+        pass
+
+    return None
 
 
 def check_ip_version_or_raise(version: str) -> bool | NoReturn:
@@ -194,3 +260,10 @@ def check_query_type_or_raise(query_type: str) -> bool | NoReturn:
             "Supported queries : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX"
         )
     )
+
+
+def check_asn_or_raise(asn: str) -> bool | NoReturn:
+    if asn.isdigit() and int(asn) < 4_294_967_295:
+        return True
+
+    raise InvalidAsn(_("Invalid ASN provided"))

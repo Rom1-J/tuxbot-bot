@@ -90,8 +90,6 @@ class Tux(commands.AutoShardedBot):
         self._app_owners_fetched = False  # to prevent abusive API calls
         self.loop = asyncio.get_event_loop()
 
-        self.before_invoke(self._typing)
-
         super().__init__(
             *args,
             intents=discord.Intents.all(),
@@ -120,10 +118,6 @@ class Tux(commands.AutoShardedBot):
             return True
 
         return False
-
-    @staticmethod
-    async def _typing(ctx: ContextPlus) -> None:
-        await ctx.trigger_typing()
 
     async def load_packages(self):
         if packages:

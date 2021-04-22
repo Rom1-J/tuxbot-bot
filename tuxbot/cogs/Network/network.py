@@ -15,6 +15,7 @@ from tuxbot.cogs.Network.functions.converters import (
     IPVersionConverter,
     DomainConverter,
     QueryTypeConverter,
+    ASConverter,
 )
 from tuxbot.cogs.Network.functions.exceptions import (
     RFC18,
@@ -22,6 +23,7 @@ from tuxbot.cogs.Network.functions.exceptions import (
     VersionNotFound,
     InvalidDomain,
     InvalidQueryType,
+    InvalidAsn,
 )
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import (
@@ -37,13 +39,16 @@ from .config import NetworkConfig
 from .functions.utils import (
     get_ip,
     get_hostname,
+    get_crimeflare_result,
     get_ipinfo_result,
     get_ipwhois_result,
-    merge_ipinfo_ipwhois,
     get_pydig_result,
+    # get_peeringdb_as_set_result,
+    # get_peeringdb_net_irr_as_set_result,
+    merge_ipinfo_ipwhois,
     check_query_type_or_raise,
     check_ip_version_or_raise,
-    get_crimeflare_result,
+    check_asn_or_raise,
 )
 
 log = logging.getLogger("tuxbot.cogs.Network")
@@ -68,6 +73,7 @@ class Network(commands.Cog):
                 InvalidDomain,
                 InvalidQueryType,
                 VersionNotFound,
+                InvalidAsn,
             ),
         ):
             await ctx.send(_(str(error), ctx, self.bot.config))
@@ -87,9 +93,8 @@ class Network(commands.Cog):
     ):
         check_ip_version_or_raise(str(version))
 
-        ip_address = await self.bot.loop.run_in_executor(
-            None, get_ip, str(ip), str(version)
-        )
+        ip_address = await get_ip(self.bot.loop, str(ip), str(version))
+
         ip_hostname = await get_hostname(self.bot.loop, str(ip_address))
 
         ipinfo_result = await get_ipinfo_result(
@@ -222,7 +227,7 @@ class Network(commands.Cog):
         check_query_type_or_raise(str(query_type))
 
         pydig_result = await get_pydig_result(
-            str(domain), str(query_type), dnssec
+            self.bot.loop, str(domain), str(query_type), dnssec
         )
 
         e = discord.Embed(title=f"DIG {domain} {query_type}", color=0x5858D7)
@@ -285,3 +290,26 @@ class Network(commands.Cog):
                     domain
                 )
             )
+
+    @command_extra(
+        name="peeringdb", aliases=["peer", "peering"], deletable=True
+    )
+    async def _peeringdb(self, ctx: ContextPlus, asn: ASConverter):
+        check_asn_or_raise(str(asn))
+
+        return await ctx.send("Not implemented yet")
+
+        # peeringdb_as_set_result = await get_peeringdb_as_set_result(
+        #     self.bot.session, str(asn)
+        # )
+        # peeringdb_net_irr_as_set_result = (
+        #     await get_peeringdb_net_irr_as_set_result(
+        #         self.bot.session, peeringdb_as_set_result["data"][0][asn]
+        #     )
+        # )["data"]
+        #
+        # data = peeringdb_net_irr_as_set_result
+        #
+        # self.bot.console.log(data)
+        #
+        # await ctx.send("done")
