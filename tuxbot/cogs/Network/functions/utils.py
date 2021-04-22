@@ -13,7 +13,7 @@ from ipinfo.exceptions import RequestQuotaExceededError
 from ipwhois import Net
 from ipwhois.asn import IPASN
 
-from aiocache import cached
+from aiocache import cached, Cache
 from aiocache.serializers import PickleSerializer
 
 from tuxbot.cogs.Network.functions.exceptions import (
@@ -29,7 +29,12 @@ def _(x):
     return x
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
 async def get_ip(loop, ip: str, inet: str = "") -> str:
     _inet: socket.AddressFamily | int = 0  # pylint: disable=no-member
 
@@ -52,7 +57,12 @@ async def get_ip(loop, ip: str, inet: str = "") -> str:
     return await loop.run_in_executor(None, _get_ip, str(ip))
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
 async def get_hostname(loop, ip: str) -> str:
     def _get_hostname(_ip: str):
         try:
@@ -71,11 +81,16 @@ async def get_hostname(loop, ip: str) -> str:
         return "N/A"
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
-async def get_ipwhois_result(loop, ip_address: str) -> NoReturn | dict:
-    def _get_ipwhois_result(_ip_address: str) -> NoReturn | dict:
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
+async def get_ipwhois_result(loop, ip: str) -> NoReturn | dict:
+    def _get_ipwhois_result(_ip: str) -> NoReturn | dict:
         try:
-            net = Net(ip_address)
+            net = Net(ip)
             obj = IPASN(net)
             return obj.lookup()
         except ipwhois.exceptions.ASNRegistryError:
@@ -90,38 +105,48 @@ async def get_ipwhois_result(loop, ip_address: str) -> NoReturn | dict:
 
     try:
         return await asyncio.wait_for(
-            loop.run_in_executor(None, _get_ipwhois_result, str(ip_address)),
+            loop.run_in_executor(None, _get_ipwhois_result, str(ip)),
             timeout=0.200,
         )
     except asyncio.exceptions.TimeoutError:
         return {}
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
-async def get_ipinfo_result(apikey: str, ip_address: str) -> dict:
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
+async def get_ipinfo_result(apikey: str, ip: str) -> dict:
     try:
         handler = ipinfo.getHandlerAsync(
             apikey, request_options={"timeout": 7}
         )
-        return (await handler.getDetails(ip_address)).all
+        return (await handler.getDetails(ip)).all
     except RequestQuotaExceededError:
         return {}
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
 async def get_crimeflare_result(
-    session: aiohttp.ClientSession, ip_address: str
+    session: aiohttp.ClientSession, ip: str
 ) -> Optional[str]:
     try:
         async with session.post(
             "http://www.crimeflare.org:82/cgi-bin/cfsearch.cgi",
-            data=f"cfS={ip_address}",
+            data=f"cfS={ip}",
             timeout=aiohttp.ClientTimeout(total=15),
         ) as s:
-            ip = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
+            result = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
 
-            if ip:
-                return ip.group()
+            if result:
+                return result.group()
     except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
         pass
 
@@ -161,7 +186,12 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
     return output
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
 async def get_pydig_result(
     loop, domain: str, query_type: str, dnssec: str | bool
 ) -> list:
@@ -187,48 +217,25 @@ async def get_pydig_result(
         return []
 
 
-@cached(ttl=15 * 60, serializer=PickleSerializer())
-async def get_peeringdb_as_set_result(
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
+async def get_peeringdb_net_result(
     session: aiohttp.ClientSession, asn: str
-) -> Optional[dict]:
+) -> dict:
     try:
         async with session.get(
-            f"https://www.peeringdb.com/api/as_set/{asn}",
-            timeout=aiohttp.ClientTimeout(total=5),
+            f"https://peeringdb.com/api/net?asn={asn}",
+            timeout=aiohttp.ClientTimeout(total=8),
         ) as s:
             return await s.json()
-    except (
-        aiohttp.ClientError,
-        aiohttp.ContentTypeError,
-        asyncio.exceptions.TimeoutError,
-    ):
+    except (asyncio.exceptions.TimeoutError,):
         pass
 
-    return None
-
-
-@cached(ttl=15 * 60, serializer=PickleSerializer())
-async def get_peeringdb_net_irr_as_set_result(
-    session: aiohttp.ClientSession, asn: str
-) -> Optional[dict]:
-    try:
-        async with session.get(
-            f"https://www.peeringdb.com/api/net?irr_as_set={asn}",
-            timeout=aiohttp.ClientTimeout(total=10),
-        ) as s:
-            json = await s.json()
-
-            for data in json:
-                if data["asn"] == int(asn):
-                    return data
-    except (
-        aiohttp.ClientError,
-        aiohttp.ContentTypeError,
-        asyncio.exceptions.TimeoutError,
-    ):
-        pass
-
-    return None
+    return {"data": []}
 
 
 def check_ip_version_or_raise(version: str) -> bool | NoReturn:

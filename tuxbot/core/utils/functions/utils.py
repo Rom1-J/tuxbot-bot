@@ -1,6 +1,6 @@
 import asyncio
 import functools
-from typing import Dict
+from typing import Dict, Optional
 
 import aiohttp
 from discord.ext import commands
@@ -81,3 +81,7 @@ def replace_in_list(value: list, search: str, replace: str) -> list:
         clean.append(v)
 
     return clean
+
+
+def str_if_empty(value: Optional[str], replacement: str) -> str:
+    return value if value else replacement

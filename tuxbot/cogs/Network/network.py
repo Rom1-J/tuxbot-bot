@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import time
+from datetime import datetime
 from typing import Optional
 
 import aiohttp
@@ -34,7 +35,7 @@ from tuxbot.core.utils.functions.extra import (
     ContextPlus,
     command_extra,
 )
-from tuxbot.core.utils.functions.utils import shorten
+from tuxbot.core.utils.functions.utils import shorten, str_if_empty
 from .config import NetworkConfig
 from .functions.utils import (
     get_ip,
@@ -43,8 +44,7 @@ from .functions.utils import (
     get_ipinfo_result,
     get_ipwhois_result,
     get_pydig_result,
-    # get_peeringdb_as_set_result,
-    # get_peeringdb_net_irr_as_set_result,
+    get_peeringdb_net_result,
     merge_ipinfo_ipwhois,
     check_query_type_or_raise,
     check_ip_version_or_raise,
@@ -297,19 +297,58 @@ class Network(commands.Cog):
     async def _peeringdb(self, ctx: ContextPlus, asn: ASConverter):
         check_asn_or_raise(str(asn))
 
-        return await ctx.send("Not implemented yet")
+        data: dict = (
+            await get_peeringdb_net_result(self.bot.session, str(asn))
+        )["data"]
 
-        # peeringdb_as_set_result = await get_peeringdb_as_set_result(
-        #     self.bot.session, str(asn)
-        # )
-        # peeringdb_net_irr_as_set_result = (
-        #     await get_peeringdb_net_irr_as_set_result(
-        #         self.bot.session, peeringdb_as_set_result["data"][0][asn]
-        #     )
-        # )["data"]
-        #
-        # data = peeringdb_net_irr_as_set_result
-        #
-        # self.bot.console.log(data)
-        #
-        # await ctx.send("done")
+        if not data:
+            return await ctx.send(
+                _(
+                    "AS{asn} could not be found in PeeringDB's database.",
+                    ctx,
+                    self.bot.config,
+                ).format(asn=asn)
+            )
+
+        data = data[0]
+
+        filtered = {
+            "info_type": "Type",
+            "info_traffic": "Traffic",
+            "info_ratio": "Ratio",
+            "info_prefixes4": "Prefixes IPv4",
+            "info_prefixes6": "Prefixes IPv6",
+        }
+        filtered_link = {
+            "website": ("Site", "website"),
+            "looking_glass": ("Looking Glass", "looking_glass"),
+            "policy_general": ("Peering", "policy_url"),
+        }
+
+        e = discord.Embed(
+            title=f"{data['name']} ({str_if_empty(data['aka'], f'AS{asn}')})",
+            color=0x5858D7,
+        )
+
+        for key, name in filtered.items():
+            e.add_field(
+                name=name, value=f"```{str_if_empty(data.get(key), 'N/A')}```"
+            )
+
+        for key, names in filtered_link.items():
+            if data.get(key):
+                e.add_field(
+                    name=names[0],
+                    value=f"[{str_if_empty(data.get(key), 'N/A')}]"
+                    f"({str_if_empty(data.get(names[1]), 'N/A')})",
+                )
+
+        if data["notes"]:
+            output = (await shorten(self.bot.session, data["notes"], 550))[1]
+            e.description = output["text"]
+        if data["created"]:
+            e.timestamp = datetime.strptime(
+                data["created"], "%Y-%m-%dT%H:%M:%SZ"
+            )
+
+        await ctx.send(embed=e)
