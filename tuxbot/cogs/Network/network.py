@@ -251,3 +251,37 @@ class Network(commands.Cog):
         e.add_field(name="Websocket", value=f"{latency}ms")
         e.add_field(name="Typing", value=f"{typing}ms")
         await ctx.send(embed=e)
+
+    @command_extra(name="isdown", aliases=["is_down", "down?"], deletable=True)
+    async def _isdown(self, ctx: ContextPlus, domain: IPConverter):
+        try:
+            async with self.bot.session.get(
+                f"https://isitdown.site/api/v3/{domain}",
+                timeout=aiohttp.ClientTimeout(total=8),
+            ) as s:
+                json = await s.json()
+
+                if json["isitdown"]:
+                    title = _("Down...", ctx, self.bot.config)
+                    color = 0xDC3545
+                else:
+                    title = _("Up!", ctx, self.bot.config)
+                    color = 0x28A745
+
+                e = discord.Embed(title=title, color=color)
+                e.set_thumbnail(
+                    url=f"https://http.cat/{json['response_code']}"
+                )
+
+                await ctx.send(embed=e)
+
+        except (
+            ClientConnectorError,
+            InvalidURL,
+            asyncio.exceptions.TimeoutError,
+        ):
+            await ctx.send(
+                _("Cannot connect to host {}", ctx, self.bot.config).format(
+                    domain
+                )
+            )
