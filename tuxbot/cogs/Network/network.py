@@ -8,7 +8,7 @@ import aiohttp
 import discord
 from aiohttp import ClientConnectorError, InvalidURL
 from jishaku.models import copy_context_with
-from discord.ext import commands
+from discord.ext import commands, tasks
 from ipinfo.exceptions import RequestQuotaExceededError
 from structured_config import ConfigFile
 from tuxbot.cogs.Network.functions.converters import (
@@ -62,6 +62,7 @@ class Network(commands.Cog):
             str(cogs_data_path("Network") / "config.yaml"),
             NetworkConfig,
         ).config
+        self._update_peering_db.start()  # pylint: disable=no-member
 
     async def cog_command_error(self, ctx: ContextPlus, error):
         if isinstance(
@@ -80,6 +81,16 @@ class Network(commands.Cog):
 
     async def cog_before_invoke(self, ctx: ContextPlus):
         await ctx.trigger_typing()
+
+    def cog_unload(self):
+        self._update_peering_db.cancel()  # pylint: disable=no-member
+
+    @tasks.loop(hours=24.0)
+    async def _update_peering_db(self):
+        await get_peeringdb_net_result(str(1))
+
+        logging.log(logging.INFO, "_update_peering_db")
+        self.bot.console.log("[Network]: _update_peering_db")
 
     # =========================================================================
     # =========================================================================
@@ -349,4 +360,4 @@ class Network(commands.Cog):
                 data["created"], "%Y-%m-%dT%H:%M:%SZ"
             )
 
-        await ctx.send(embed=e)
+        await ctx.send(f"https://www.peeringdb.com/net/{data['id']}", embed=e)

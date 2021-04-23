@@ -223,15 +223,36 @@ async def get_pydig_result(
     namespace="network",
 )
 async def get_peeringdb_net_result(asn: str) -> dict:
-    try:
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get(
-                f"https://peeringdb.com/api/net?asn={asn}",
-                timeout=aiohttp.ClientTimeout(total=21),
-            ) as s:
-                return await s.json()
-    except (asyncio.exceptions.TimeoutError,):
-        pass
+    # Q. why this and not ?asn=
+    # A. better do one request and save in cache than execute new
+    # request every time
+    @cached(
+        ttl=24 * 3600,
+        serializer=PickleSerializer(),
+        cache=Cache.MEMORY,
+        namespace="network",
+    )
+    async def _local_cache() -> dict:
+        try:
+            async with aiohttp.ClientSession() as cs:
+                async with cs.get(
+                    "https://peeringdb.com/api/net",
+                    timeout=aiohttp.ClientTimeout(total=21),
+                ) as s:
+                    return await s.json()
+        except asyncio.exceptions.TimeoutError:
+            pass
+
+        return {"data": []}
+
+    result = await _local_cache()
+
+    if not result["data"]:
+        return result
+
+    for data in result["data"]:
+        if data.get("asn", None) == int(asn):
+            return {"data": [data]}
 
     return {"data": []}
 
