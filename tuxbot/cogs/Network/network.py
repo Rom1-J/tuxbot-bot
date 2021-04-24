@@ -99,7 +99,6 @@ class Network(commands.Cog):
                     timeout=aiohttp.ClientTimeout(total=60),
                 ) as s:
                     self._peeringdb_net = await s.json()
-                    logging.getLogger("dis")
         except asyncio.exceptions.TimeoutError:
             pass
 
