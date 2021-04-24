@@ -45,7 +45,6 @@ from .functions.utils import (
     get_ipwhois_result,
     get_map_bytes,
     get_pydig_result,
-    get_peeringdb_net_result,
     merge_ipinfo_ipwhois,
     check_query_type_or_raise,
     check_ip_version_or_raise,
@@ -57,12 +56,17 @@ _ = Translator("Network", __file__)
 
 
 class Network(commands.Cog):
+    _peeringdb_net: Optional[dict]
+
     def __init__(self, bot: Tux):
         self.bot = bot
         self.__config: NetworkConfig = ConfigFile(
             str(cogs_data_path("Network") / "config.yaml"),
             NetworkConfig,
         ).config
+
+        self._peeringdb_net = None
+
         self._update_peering_db.start()  # pylint: disable=no-member
 
     async def cog_command_error(self, ctx: ContextPlus, error):
@@ -86,12 +90,18 @@ class Network(commands.Cog):
     def cog_unload(self):
         self._update_peering_db.cancel()  # pylint: disable=no-member
 
-    @tasks.loop(minutes=5.0)
+    @tasks.loop(hours=1.0)
     async def _update_peering_db(self):
-        await get_peeringdb_net_result(str(1))
-
-        log.log(logging.INFO, "_update_peering_db")
-        self.bot.console.log("[Network]: _update_peering_db")
+        try:
+            async with aiohttp.ClientSession() as cs:
+                async with cs.get(
+                    "https://peeringdb.com/api/net",
+                    timeout=aiohttp.ClientTimeout(total=60),
+                ) as s:
+                    self._peeringdb_net = await s.json()
+                    logging.getLogger("dis")
+        except asyncio.exceptions.TimeoutError:
+            pass
 
     # =========================================================================
     # =========================================================================
@@ -335,7 +345,21 @@ class Network(commands.Cog):
     async def _peeringdb(self, ctx: ContextPlus, asn: ASConverter):
         check_asn_or_raise(str(asn))
 
-        data: dict = (await get_peeringdb_net_result(str(asn)))["data"]
+        data = {}
+
+        if self._peeringdb_net is None:
+            return await ctx.send(
+                _(
+                    "Please retry in few minutes",
+                    ctx,
+                    self.bot.config,
+                ).format(asn=asn)
+            )
+
+        for _data in self._peeringdb_net["data"]:
+            if _data.get("asn", None) == int(str(asn)):
+                data = _data
+                break
 
         if not data:
             return await ctx.send(
@@ -345,8 +369,6 @@ class Network(commands.Cog):
                     self.bot.config,
                 ).format(asn=asn)
             )
-
-        data = data[0]
 
         filtered = {
             "info_type": "Type",

@@ -258,47 +258,6 @@ async def get_pydig_result(
         return []
 
 
-@cached(
-    ttl=5 * 60,
-    serializer=PickleSerializer(),
-    cache=Cache.MEMORY,
-    namespace="network",
-)
-async def get_peeringdb_net_result(asn: str) -> dict:
-    # Q. why this and not ?asn=
-    # A. better do one request and save in cache than execute new
-    # request every time
-    @cached(
-        ttl=5 * 60,
-        serializer=PickleSerializer(),
-        cache=Cache.MEMORY,
-        namespace="network",
-    )
-    async def _local_cache() -> dict:
-        try:
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get(
-                    "https://peeringdb.com/api/net",
-                    timeout=aiohttp.ClientTimeout(total=21),
-                ) as s:
-                    return await s.json()
-        except asyncio.exceptions.TimeoutError:
-            pass
-
-        return await _local_cache()
-
-    result = await _local_cache()
-
-    if not result["data"]:
-        return result
-
-    for data in result["data"]:
-        if data.get("asn", None) == int(asn):
-            return {"data": [data]}
-
-    return {"data": []}
-
-
 def check_ip_version_or_raise(version: Optional[dict]) -> bool | NoReturn:
     if version is None or version["inet"] in ("4", "6", ""):
         return True

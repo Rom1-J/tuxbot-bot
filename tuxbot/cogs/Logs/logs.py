@@ -188,7 +188,7 @@ class Logs(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    @tasks.loop(seconds=0.0)
+    @tasks.loop()
     async def gateway_worker(self):
         record = await self._gateway_queue.get()
         await self.notify_gateway_status(record)
