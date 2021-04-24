@@ -259,7 +259,7 @@ async def get_pydig_result(
 
 
 @cached(
-    ttl=24 * 3600,
+    ttl=5 * 60,
     serializer=PickleSerializer(),
     cache=Cache.MEMORY,
     namespace="network",
@@ -269,7 +269,7 @@ async def get_peeringdb_net_result(asn: str) -> dict:
     # A. better do one request and save in cache than execute new
     # request every time
     @cached(
-        ttl=24 * 3600,
+        ttl=5 * 60,
         serializer=PickleSerializer(),
         cache=Cache.MEMORY,
         namespace="network",
@@ -285,7 +285,7 @@ async def get_peeringdb_net_result(asn: str) -> dict:
         except asyncio.exceptions.TimeoutError:
             pass
 
-        return {"data": []}
+        return await _local_cache()
 
     result = await _local_cache()
 

@@ -86,7 +86,7 @@ class Network(commands.Cog):
     def cog_unload(self):
         self._update_peering_db.cancel()  # pylint: disable=no-member
 
-    @tasks.loop(hours=24.0)
+    @tasks.loop(minutes=5.0)
     async def _update_peering_db(self):
         await get_peeringdb_net_result(str(1))
 
