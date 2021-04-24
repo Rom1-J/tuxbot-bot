@@ -171,7 +171,7 @@ class Network(commands.Cog):
 
         kwargs["embed"] = e
 
-        return await ctx.send(f"https://ipinfo.io/{ip_address}", **kwargs)
+        return await ctx.send(f"https://ipinfo.io/[{ip_address}]", **kwargs)
 
     @command_extra(
         name="cloudflare", aliases=["cf", "crimeflare"], deletable=True
