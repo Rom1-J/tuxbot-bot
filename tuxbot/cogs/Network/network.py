@@ -6,7 +6,7 @@ from typing import Optional
 
 import aiohttp
 import discord
-from aiohttp import ClientConnectorError, InvalidURL
+from aiohttp import ClientConnectorError, InvalidURL, TCPConnector
 from jishaku.models import copy_context_with
 from discord.ext import commands, tasks
 from ipinfo.exceptions import RequestQuotaExceededError
@@ -93,9 +93,9 @@ class Network(commands.Cog):
     @tasks.loop(hours=1.0)
     async def _update_peering_db(self):
         try:
-            async with aiohttp.ClientSession() as cs:
+            async with aiohttp.ClientSession(connector=TCPConnector(verify_ssl=False)) as cs:
                 async with cs.get(
-                    "https://peeringdb.com/api/net",
+                    "https://3.233.208.117/api/net",
                     timeout=aiohttp.ClientTimeout(total=60),
                 ) as s:
                     self._peeringdb_net = await s.json()
