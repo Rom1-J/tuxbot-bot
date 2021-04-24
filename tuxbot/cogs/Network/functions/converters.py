@@ -30,12 +30,24 @@ class QueryTypeConverter(commands.Converter):
         return argument.lower()
 
 
-class IPVersionConverter(commands.Converter):
+class IPParamsConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         if not argument:
-            return argument
+            return None
 
-        return argument.replace("-", "").replace("ip", "").replace("v", "")
+        params = {
+            "inet": "",
+            "map": "map" in argument.lower(),
+        }
+
+        if "4" in argument:
+            params["inet"] = "4"
+        elif "6" in argument:
+            params["inet"] = "6"
+        elif len(arg := argument.split(" ")) >= 2:
+            params["inet"] = arg[0]
+
+        return params
 
 
 class ASConverter(commands.Converter):

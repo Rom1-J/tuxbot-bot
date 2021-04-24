@@ -13,7 +13,7 @@ from ipinfo.exceptions import RequestQuotaExceededError
 from structured_config import ConfigFile
 from tuxbot.cogs.Network.functions.converters import (
     IPConverter,
-    IPVersionConverter,
+    IPParamsConverter,
     DomainConverter,
     QueryTypeConverter,
     ASConverter,
@@ -43,6 +43,7 @@ from .functions.utils import (
     get_crimeflare_result,
     get_ipinfo_result,
     get_ipwhois_result,
+    get_map_bytes,
     get_pydig_result,
     get_peeringdb_net_result,
     merge_ipinfo_ipwhois,
@@ -89,7 +90,7 @@ class Network(commands.Cog):
     async def _update_peering_db(self):
         await get_peeringdb_net_result(str(1))
 
-        logging.log(logging.INFO, "_update_peering_db")
+        log.log(logging.INFO, "_update_peering_db")
         self.bot.console.log("[Network]: _update_peering_db")
 
     # =========================================================================
@@ -100,11 +101,16 @@ class Network(commands.Cog):
         self,
         ctx: ContextPlus,
         ip: IPConverter,
-        version: Optional[IPVersionConverter] = None,
+        *,
+        params: Optional[IPParamsConverter] = None,
     ):
-        check_ip_version_or_raise(str(version))
+        # noinspection PyUnresolvedReferences
+        check_ip_version_or_raise(params)  # type: ignore
 
-        ip_address = await get_ip(self.bot.loop, str(ip), str(version))
+        # noinspection PyUnresolvedReferences
+        ip_address = await get_ip(
+            self.bot.loop, str(ip), params  # type: ignore
+        )
 
         ip_hostname = await get_hostname(self.bot.loop, str(ip_address))
 
@@ -146,9 +152,30 @@ class Network(commands.Cog):
             ),
         )
 
-        await ctx.send(embed=e)
+        kwargs: dict = {}
 
-    @command_extra(name="cloudflare", deletable=True)
+        # noinspection PyUnresolvedReferences
+        if (
+            params is not None
+            and params["map"]
+            and (  # type: ignore
+                map_bytes := await get_map_bytes(
+                    self.__config.geoapifyKey, merged_results["map"]
+                )
+            )
+        ):
+            file = discord.File(map_bytes, "map.png")
+            e.set_image(url="attachment://map.png")
+
+            kwargs["file"] = file
+
+        kwargs["embed"] = e
+
+        return await ctx.send(f"https://ipinfo.io/{ip_address}", **kwargs)
+
+    @command_extra(
+        name="cloudflare", aliases=["cf", "crimeflare"], deletable=True
+    )
     async def _cloudflare(
         self,
         ctx: ContextPlus,

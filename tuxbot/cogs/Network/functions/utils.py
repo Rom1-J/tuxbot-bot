@@ -1,3 +1,4 @@
+import io
 import socket
 from typing import NoReturn, Optional
 
@@ -35,13 +36,14 @@ def _(x):
     cache=Cache.MEMORY,
     namespace="network",
 )
-async def get_ip(loop, ip: str, inet: str = "") -> str:
+async def get_ip(loop, ip: str, inet: Optional[dict]) -> str:
     _inet: socket.AddressFamily | int = 0  # pylint: disable=no-member
 
-    if inet == "6":
-        _inet = socket.AF_INET6
-    elif inet == "4":
-        _inet = socket.AF_INET
+    if inet:
+        if inet["inet"] == "6":
+            _inet = socket.AF_INET6
+        elif inet["inet"] == "4":
+            _inet = socket.AF_INET
 
     def _get_ip(_ip: str):
         try:
@@ -153,7 +155,13 @@ async def get_crimeflare_result(ip: str) -> Optional[str]:
 
 
 def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
-    output = {"belongs": "N/A", "rir": "N/A", "region": "N/A", "flag": "N/A"}
+    output = {
+        "belongs": "N/A",
+        "rir": "N/A",
+        "region": "N/A",
+        "flag": "N/A",
+        "map": "N/A",
+    }
 
     if ipinfo_result:
         org = ipinfo_result.get("org", "N/A")
@@ -166,10 +174,10 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
             f"{ipinfo_result.get('region', 'N/A')} "
             f"({ipinfo_result.get('country', 'N/A')})```"
         )
-        output["flag"] = (
-            f"https://www.countryflags.io/{ipinfo_result['country']}"
-            f"/shiny/64.png"
-        )
+        output[
+            "flag"
+        ] = f"https://flagcdn.com/144x108/{ipinfo_result['country'].lower()}.png"
+        output["map"] = ipinfo_result["loc"]
     elif ipwhois_result:
         org = ipwhois_result.get("asn_description", "N/A")
         asn = ipwhois_result.get("asn", "N/A")
@@ -180,9 +188,43 @@ def merge_ipinfo_ipwhois(ipinfo_result: dict, ipwhois_result: dict) -> dict:
         output["region"] = f"```{asn_country}```"
         output[
             "flag"
-        ] = f"https://www.countryflags.io/{asn_country}/shiny/64.png"
+        ] = f"https://flagcdn.com/144x108/{asn_country.lower()}.png"
 
     return output
+
+
+@cached(
+    ttl=24 * 3600,
+    serializer=PickleSerializer(),
+    cache=Cache.MEMORY,
+    namespace="network",
+)
+async def get_map_bytes(apikey: str, latlon: str) -> Optional[io.BytesIO]:
+    if latlon == "N/A":
+        return None
+
+    url = (
+        "https://maps.geoapify.com/v1/staticmap"
+        "?style=osm-carto"
+        "&width=400"
+        "&height=300"
+        "&center=lonlat:{lonlat}"
+        "&zoom=12"
+        "&marker=lonlat:{lonlat};color:%23ff0000;size:small"
+        "&pitch=42"
+        "&apiKey={apikey}"
+    )
+
+    lonlat = ",".join(latlon.split(",")[::-1])
+
+    url = url.format(lonlat=lonlat, apikey=apikey)
+
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get(url) as s:
+            if s.status != 200:
+                return None
+
+            return io.BytesIO(await s.read())
 
 
 @cached(
@@ -257,8 +299,8 @@ async def get_peeringdb_net_result(asn: str) -> dict:
     return {"data": []}
 
 
-def check_ip_version_or_raise(version: str) -> bool | NoReturn:
-    if version in ("4", "6", "None"):
+def check_ip_version_or_raise(version: Optional[dict]) -> bool | NoReturn:
+    if version is None or version["inet"] in ("4", "6", ""):
         return True
 
     raise InvalidIp(_("Invalid ip version"))
