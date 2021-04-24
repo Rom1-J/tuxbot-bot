@@ -13,7 +13,7 @@ def fetch_info():
     file_amount = 0
     python_file_amount = 0
 
-    for path, _, files in os.walk("."):
+    for path, _, files in os.walk("./tuxbot"):
         for name in files:
             file_dir = str(pathlib.PurePath(path, name))
             if (
