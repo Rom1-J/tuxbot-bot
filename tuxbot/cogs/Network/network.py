@@ -93,7 +93,9 @@ class Network(commands.Cog):
     @tasks.loop(hours=1.0)
     async def _update_peering_db(self):
         try:
-            async with aiohttp.ClientSession(connector=TCPConnector(verify_ssl=False)) as cs:
+            async with aiohttp.ClientSession(
+                connector=TCPConnector(verify_ssl=False)
+            ) as cs:
                 async with cs.get(
                     "https://3.233.208.117/api/net",
                     timeout=aiohttp.ClientTimeout(total=60),
@@ -306,26 +308,25 @@ class Network(commands.Cog):
     @command_extra(name="isdown", aliases=["is_down", "down?"], deletable=True)
     async def _isdown(self, ctx: ContextPlus, domain: IPConverter):
         try:
+            url = f"https://www.isthissitedown.org/site/{domain}"
+
             async with aiohttp.ClientSession() as cs:
                 async with cs.get(
-                    f"https://isitdown.site/api/v3/{domain}",
+                    url,
                     timeout=aiohttp.ClientTimeout(total=8),
                 ) as s:
-                    json = await s.json()
+                    text = await s.text()
 
-                    if json["isitdown"]:
-                        title = _("Down...", ctx, self.bot.config)
-                        color = 0xDC3545
-                    else:
+                    if "is up!" in text:
                         title = _("Up!", ctx, self.bot.config)
                         color = 0x28A745
+                    else:
+                        title = _("Down...", ctx, self.bot.config)
+                        color = 0xDC3545
 
                     e = discord.Embed(title=title, color=color)
-                    e.set_thumbnail(
-                        url=f"https://http.cat/{json['response_code']}"
-                    )
 
-                    await ctx.send(embed=e)
+                    await ctx.send(url, embed=e)
 
         except (
             ClientConnectorError,
