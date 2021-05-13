@@ -15,7 +15,7 @@ async def get_server_rules(guild_id: int) -> list[Rule]:
 
 
 def get_most_recent_server_rules(rules: list[Rule]) -> Rule:
-    return sorted(rules, key=lambda r: r.updated_at)[0]
+    return sorted(rules, key=lambda r: r.updated_at, reverse=True)[0]
 
 
 def paginate_server_rules(rules: list[Rule]) -> list[str]:

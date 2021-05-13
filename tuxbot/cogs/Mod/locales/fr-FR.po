@@ -18,11 +18,64 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tuxbot/cogs/Admin/admin.py:50
-#, fuzzy, python-brace-format
+#: tuxbot/cogs/Mod/mod.py:67
+#, python-brace-format
 msgid "Locale changed to {lang} successfully"
 msgstr "Langue changée pour {lang} avec succès"
 
-#: tuxbot/cogs/Admin/admin.py:61
+#: tuxbot/cogs/Mod/mod.py:78
 msgid "List of available locales: "
 msgstr "Liste des langues disponibles : "
+
+#: tuxbot/cogs/Mod/mod.py:103
+msgid ""
+"{}please read the following rule: \n"
+"{}"
+msgstr ""
+"{}merci de lire la règle suivante : \n"
+"{}"
+
+#: tuxbot/cogs/Mod/mod.py:120
+msgid "Rules for {}"
+msgstr "Règles pour {}"
+
+#: tuxbot/cogs/Mod/mod.py:126
+msgid "Latest change: {}"
+msgstr "Dernières modifications : {}"
+
+#: tuxbot/cogs/Mod/mod.py:140
+msgid "Rules for {} ({}/{})"
+msgstr "Règles pour {} ({}/{})"
+
+#: tuxbot/cogs/Mod/mod.py:159
+msgid ""
+"Following rule added: \n"
+"{}"
+msgstr ""
+"La règles suivante a été ajoutée: \n"
+"{}"
+
+#: tuxbot/cogs/Mod/mod.py:182
+msgid ""
+"Following rule updated: \n"
+"{}"
+msgstr ""
+"La règles suivante a été modifiée: \n"
+"{}"
+
+#: tuxbot/cogs/Mod/mod.py:200
+msgid ""
+"Following rule deleted: \n"
+"{}"
+msgstr ""
+"La règles suivante a été supprimée: \n"
+"{}"
+
+#: tuxbot/cogs/Mod/functions/converters.py:22
+msgid "Unknown rule"
+msgstr "Règle inconnue"
+
+#: tuxbot/cogs/Mod/functions/converters.py:31
+msgid "Rule length must be 300 characters or lower."
+msgstr "La règles doit faire 300 characters ou moins"
+

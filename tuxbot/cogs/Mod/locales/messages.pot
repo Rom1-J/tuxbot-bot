@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-03-01 14:59+0100\n"
+"POT-Creation-Date: 2021-05-13 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,55 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tuxbot/cogs/Admin/admin.py:50
+#: tuxbot/cogs/Mod/mod.py:67
 #, python-brace-format
 msgid "Locale changed to {lang} successfully"
 msgstr ""
 
-#: tuxbot/cogs/Admin/admin.py:61
+#: tuxbot/cogs/Mod/mod.py:78
 msgid "List of available locales: "
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:103
+msgid ""
+"{}please read the following rule: \n"
+"{}"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:120
+msgid "Rules for {}"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:126
+msgid "Latest change: {}"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:140
+msgid "Rules for {} ({}/{})"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:159
+msgid ""
+"Following rule added: \n"
+"{}"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:182
+msgid ""
+"Following rule updated: \n"
+"{}"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:200
+msgid ""
+"Following rule deleted: \n"
+"{}"
+msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:22
+msgid "Unknown rule"
+msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:31
+msgid "Rule length must be 300 characters or lower."
 msgstr ""

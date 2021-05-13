@@ -124,7 +124,7 @@ class Mod(commands.Cog):
         )
         embed.set_footer(
             text=_("Latest change: {}", ctx, self.bot.config).format(
-                get_most_recent_server_rules(rules).created_at
+                get_most_recent_server_rules(rules).updated_at.ctime()
             )
         )
 

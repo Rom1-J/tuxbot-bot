@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-03-01 14:59+0100\n"
+"POT-Creation-Date: 2021-05-13 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,10 +108,10 @@ msgstr ""
 msgid "All minimal permissions + extra permissions for admin commands such as kick and ban\n"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:246
+#: tuxbot/cogs/Utils/utils.py:247
 msgid "Unable to find `{}`"
 msgstr ""
 
-#: tuxbot/cogs/Utils/utils.py:254
+#: tuxbot/cogs/Utils/utils.py:255
 msgid "Unable to fetch lines for `{}`"
 msgstr ""
