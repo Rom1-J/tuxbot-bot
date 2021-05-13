@@ -75,9 +75,12 @@ class Translator:
             if user_locale:
                 return self.translations[user_locale][untranslated]
 
-            guild_locale = search_for(
-                config.Servers, ctx.guild.id, "locale", None
+            guild_locale = (
+                search_for(config.Servers, ctx.guild.id, "locale", None)
+                if ctx.guild
+                else None
             )
+
             if guild_locale:
                 return self.translations[guild_locale][untranslated]
 
