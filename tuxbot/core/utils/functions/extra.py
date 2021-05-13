@@ -15,17 +15,7 @@ IP_REPLACEMENT = "■" * random.randint(3, 15)
 class ContextPlus(commands.Context):
     # noinspection PyTypedDict
     async def send(
-        self,
-        content=None,
-        *,
-        tts=False,
-        embed=None,
-        file=None,
-        files=None,
-        delete_after=None,
-        nonce=None,
-        allowed_mentions=None,
-        deletable=True,
+        self, content=None, *, embed=None, deletable=True, **kwargs
     ):  # i know *args and **kwargs but, i prefer work with same values
         from tuxbot.core.utils.functions.utils import (
             replace_in_dict,
@@ -45,7 +35,6 @@ class ContextPlus(commands.Context):
             )
 
             if len(content) > 1800:
-                file = discord.File(BytesIO(content.encode()), "output.txt")
                 content = "output too long..."
         if embed:
             e = embed.to_dict()
@@ -107,14 +96,7 @@ class ContextPlus(commands.Context):
             hasattr(self.command, "deletable") and self.command.deletable
         ) and deletable:
             message = await super().send(
-                content=content,
-                tts=tts,
-                embed=embed,
-                file=file,
-                files=files,
-                delete_after=delete_after,
-                nonce=nonce,
-                allowed_mentions=allowed_mentions,
+                content=content, embed=embed, **kwargs
             )
             await message.add_reaction("🗑")
 
@@ -135,16 +117,7 @@ class ContextPlus(commands.Context):
                 await message.delete()
             return message
 
-        return await super().send(
-            content=content,
-            tts=tts,
-            embed=embed,
-            file=file,
-            files=files,
-            delete_after=delete_after,
-            nonce=nonce,
-            allowed_mentions=allowed_mentions,
-        )
+        return await super().send(content=content, embed=embed, **kwargs)
 
     @property
     def session(self) -> aiohttp.ClientSession:
