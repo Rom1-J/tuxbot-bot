@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-05-13 22:20+0200\n"
+"POT-Creation-Date: 2021-05-13 23:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,31 +32,35 @@ msgid ""
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:120
+#: tuxbot/cogs/Mod/mod.py:121
+msgid "No rules found for this server"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:125
 msgid "Rules for {}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:126
+#: tuxbot/cogs/Mod/mod.py:131
 msgid "Latest change: {}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:140
+#: tuxbot/cogs/Mod/mod.py:145
 msgid "Rules for {} ({}/{})"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:159
+#: tuxbot/cogs/Mod/mod.py:164
 msgid ""
 "Following rule added: \n"
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:182
+#: tuxbot/cogs/Mod/mod.py:187
 msgid ""
 "Following rule updated: \n"
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:200
+#: tuxbot/cogs/Mod/mod.py:205
 msgid ""
 "Following rule deleted: \n"
 "{}"

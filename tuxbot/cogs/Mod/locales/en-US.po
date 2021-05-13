@@ -32,6 +32,10 @@ msgid ""
 "{}"
 msgstr ""
 
+#: tuxbot/cogs/Mod/mod.py:121
+msgid "No rules found for this server"
+msgstr ""
+
 #: tuxbot/cogs/Mod/mod.py:120
 msgid "Rules for {}"
 msgstr ""

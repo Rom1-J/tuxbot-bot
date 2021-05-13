@@ -35,6 +35,10 @@ msgstr ""
 "{}merci de lire la règle suivante : \n"
 "{}"
 
+#: tuxbot/cogs/Mod/mod.py:121
+msgid "No rules found for this server"
+msgstr "Aucune règle trouvée pour ce serveur"
+
 #: tuxbot/cogs/Mod/mod.py:120
 msgid "Rules for {}"
 msgstr "Règles pour {}"

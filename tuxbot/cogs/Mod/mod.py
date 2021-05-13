@@ -116,6 +116,11 @@ class Mod(commands.Cog):
     async def _rule_list(self, ctx: ContextPlus):
         rules = await get_server_rules(ctx.guild.id)
 
+        if not rules:
+            return await ctx.send(
+                _("No rules found for this server", ctx, self.bot.config)
+            )
+
         embed = discord.Embed(
             title=_("Rules for {}", ctx, self.bot.config).format(
                 ctx.guild.name
