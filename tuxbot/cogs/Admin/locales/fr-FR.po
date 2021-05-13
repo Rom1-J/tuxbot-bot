@@ -17,12 +17,3 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: tuxbot/cogs/Admin/admin.py:50
-#, fuzzy, python-brace-format
-msgid "Locale changed to {lang} successfully"
-msgstr "Langue changée pour {lang} avec succès"
-
-#: tuxbot/cogs/Admin/admin.py:61
-msgid "List of available locales: "
-msgstr "Liste des langues disponibles : "

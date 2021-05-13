@@ -16,3 +16,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: tuxbot/cogs/Admin/admin.py:50
+#, python-brace-format
+msgid "Locale changed to {lang} successfully"
+msgstr ""
+
+#: tuxbot/cogs/Admin/admin.py:61
+msgid "List of available locales: "
+msgstr ""

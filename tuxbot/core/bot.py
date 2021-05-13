@@ -43,6 +43,7 @@ packages: Tuple = (
     "tuxbot.cogs.Custom",
     "tuxbot.cogs.Network",
     "tuxbot.cogs.Linux",
+    "tuxbot.cogs.Mod",
 )
 
 

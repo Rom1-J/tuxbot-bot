@@ -1,6 +1,5 @@
 import logging
 
-import discord
 from discord.ext import commands
 
 from tuxbot.core.utils import checks
@@ -9,12 +8,8 @@ from tuxbot.core.config import set_for_key
 from tuxbot.core.config import Config
 from tuxbot.core.i18n import (
     Translator,
-    find_locale,
-    get_locale_name,
-    list_locales,
 )
 from tuxbot.core.utils.functions.extra import (
-    group_extra,
     command_extra,
     ContextPlus,
 )
@@ -33,38 +28,6 @@ class Admin(commands.Cog):
         )
 
     # =========================================================================
-    # =========================================================================
-
-    @group_extra(name="lang", aliases=["locale", "langue"], deletable=True)
-    @commands.guild_only()
-    @checks.is_admin()
-    async def _lang(self, ctx: ContextPlus):
-        """Manage lang settings."""
-
-    @_lang.command(name="set", aliases=["define", "choice"])
-    async def _lang_set(self, ctx: ContextPlus, lang: str):
-        try:
-            await self._save_lang(ctx, find_locale(lang.lower()))
-            await ctx.send(
-                _(
-                    "Locale changed to {lang} successfully",
-                    ctx,
-                    self.bot.config,
-                ).format(lang=f"`{get_locale_name(lang).lower()}`")
-            )
-        except NotImplementedError:
-            await self._lang_list(ctx)
-
-    @_lang.command(name="list", aliases=["liste", "all", "view"])
-    async def _lang_list(self, ctx: ContextPlus):
-        e = discord.Embed(
-            title=_("List of available locales: ", ctx, self.bot.config),
-            description=list_locales,
-            color=0x36393E,
-        )
-
-        await ctx.send(embed=e)
-
     # =========================================================================
 
     @command_extra(name="quit", aliases=["shutdown"], deletable=False)
