@@ -14,6 +14,9 @@ def _(x):
 
 class RuleIDConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        if not argument.isdigit():
+            raise UnknownRuleException(_("Unknown rule"))
+
         arg = int(argument)
 
         rule_row = await Rule.get_or_none(server_id=ctx.guild.id, rule_id=arg)

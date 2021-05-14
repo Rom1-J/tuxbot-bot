@@ -11,7 +11,7 @@ async def save_lang(bot: Tux, ctx: ContextPlus, lang: str) -> None:
 
 
 async def get_server_rules(guild_id: int) -> list[Rule]:
-    return await Rule.filter(server_id=guild_id).all()
+    return await Rule.filter(server_id=guild_id).all().order_by("rule_id")
 
 
 def get_most_recent_server_rules(rules: list[Rule]) -> Rule:
