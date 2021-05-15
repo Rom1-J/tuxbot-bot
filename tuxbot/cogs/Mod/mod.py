@@ -4,10 +4,16 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
-from tuxbot.cogs.Mod.functions.converters import RuleConverter, RuleIDConverter
+from tuxbot.cogs.Mod.functions.converters import (
+    RuleConverter,
+    RuleIDConverter,
+    BotMessageConverter,
+)
 from tuxbot.cogs.Mod.functions.exceptions import (
     RuleTooLongException,
     UnknownRuleException,
+    NonMessageException,
+    NonBotMessageException,
 )
 from tuxbot.cogs.Mod.functions.utils import (
     save_lang,
@@ -45,6 +51,8 @@ class Mod(commands.Cog):
             (
                 RuleTooLongException,
                 UnknownRuleException,
+                NonMessageException,
+                NonBotMessageException,
             ),
         ):
             await ctx.send(_(str(error), ctx, self.bot.config))
@@ -206,3 +214,44 @@ class Mod(commands.Cog):
                 format_rule(rule_row)
             )
         )
+
+    @checks.is_admin()
+    @_rule.command(name="update")
+    async def _rule_update(
+        self,
+        ctx: ContextPlus,
+        message: BotMessageConverter,
+    ):
+        rules = await get_server_rules(ctx.guild.id)
+
+        if not rules:
+            return await ctx.send(
+                _("No rules found for this server", ctx, self.bot.config)
+            )
+
+        embed = discord.Embed(
+            title=_("Rules for {}", ctx, self.bot.config).format(
+                ctx.guild.name
+            ),
+            color=discord.Color.blue(),
+        )
+        embed.set_footer(
+            text=_("Latest change: {}", ctx, self.bot.config).format(
+                get_most_recent_server_rules(rules).updated_at.ctime()
+            )
+        )
+
+        pages = paginate_server_rules(rules)
+
+        if len(pages) == 1:
+            embed.description = pages[0]
+
+            await message.edit(content="", embed=embed)
+        else:
+            for i, page in enumerate(pages):
+                embed.title = _(
+                    "Rules for {} ({}/{})", ctx, self.bot.config
+                ).format(ctx.guild.name, str(i + 1), str(len(pages)))
+                embed.description = page
+
+                await message.edit(content="", embed=embed)

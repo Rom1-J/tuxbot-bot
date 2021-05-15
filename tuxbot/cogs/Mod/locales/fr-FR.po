@@ -83,3 +83,10 @@ msgstr "Règle inconnue"
 msgid "Rule length must be 300 characters or lower."
 msgstr "La règles doit faire 300 characters ou moins"
 
+#: tuxbot/cogs/Mod/functions/converters.py:50
+msgid "Please provide one of my message"
+msgstr "Merci de donner un de mes messages"
+
+#: tuxbot/cogs/Mod/functions/converters.py:53
+msgid "Please provide a message in this guild"
+msgstr "Merci de donner un message dans ce serveur"

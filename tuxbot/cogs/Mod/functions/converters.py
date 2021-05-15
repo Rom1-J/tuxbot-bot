@@ -4,6 +4,8 @@ from discord.ext.commands import Context
 from tuxbot.cogs.Mod.functions.exceptions import (
     RuleTooLongException,
     UnknownRuleException,
+    NonMessageException,
+    NonBotMessageException,
 )
 from tuxbot.cogs.Mod.models import Rule
 
@@ -35,3 +37,18 @@ class RuleConverter(commands.Converter):
             )
 
         return argument
+
+
+class BotMessageConverter(commands.Converter):
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        try:
+            m = await commands.MessageConverter().convert(ctx, argument)
+
+            if m.author == ctx.me:
+                return m
+
+            raise NonBotMessageException(_("Please provide one of my message"))
+        except commands.BadArgument:
+            raise NonMessageException(
+                _("Please provide a message in this guild")
+            )

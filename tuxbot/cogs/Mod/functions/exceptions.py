@@ -11,3 +11,11 @@ class RuleTooLongException(ModException):
 
 class UnknownRuleException(ModException):
     pass
+
+
+class NonMessageException(ModException):
+    pass
+
+
+class NonBotMessageException(ModException):
+    pass

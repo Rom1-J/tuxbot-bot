@@ -73,3 +73,11 @@ msgstr ""
 #: tuxbot/cogs/Mod/functions/converters.py:31
 msgid "Rule length must be 300 characters or lower."
 msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:50
+msgid "Please provide one of my message"
+msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:53
+msgid "Please provide a message in this guild"
+msgstr ""
