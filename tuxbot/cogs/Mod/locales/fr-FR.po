@@ -56,7 +56,7 @@ msgid ""
 "Following rule added: \n"
 "{}"
 msgstr ""
-"La règles suivante a été ajoutée: \n"
+"La règle suivante a été ajoutée: \n"
 "{}"
 
 #: tuxbot/cogs/Mod/mod.py:182
@@ -64,7 +64,7 @@ msgid ""
 "Following rule updated: \n"
 "{}"
 msgstr ""
-"La règles suivante a été modifiée: \n"
+"La règle suivante a été modifiée: \n"
 "{}"
 
 #: tuxbot/cogs/Mod/mod.py:200
@@ -72,7 +72,7 @@ msgid ""
 "Following rule deleted: \n"
 "{}"
 msgstr ""
-"La règles suivante a été supprimée: \n"
+"La règle suivante a été supprimée: \n"
 "{}"
 
 #: tuxbot/cogs/Mod/functions/converters.py:22
@@ -81,7 +81,7 @@ msgstr "Règle inconnue"
 
 #: tuxbot/cogs/Mod/functions/converters.py:31
 msgid "Rule length must be 300 characters or lower."
-msgstr "La règles doit faire 300 characters ou moins"
+msgstr "La règle doit faire 300 characters ou moins"
 
 #: tuxbot/cogs/Mod/functions/converters.py:50
 msgid "Please provide one of my message"
