@@ -44,6 +44,7 @@ packages: Tuple = (
     "tuxbot.cogs.Network",
     "tuxbot.cogs.Linux",
     "tuxbot.cogs.Mod",
+    "tuxbot.cogs.Tags",
 )
 
 
