@@ -4,6 +4,8 @@ from discord.ext.commands import Context
 from tuxbot.cogs.Tags.functions.exceptions import (
     UnknownTagException,
     ExistingTagException,
+    TooLongTagException,
+    ReservedTagException,
 )
 from tuxbot.cogs.Tags.models import Tag
 
@@ -27,6 +29,16 @@ class TagConverter(commands.Converter):
 class NewTagConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         arg = argument.lower()
+
+        if len(arg) > 50:
+            raise TooLongTagException(
+                _("Tag must be lower than 50 characters")
+            )
+
+        if arg.split(" ")[0] in ctx.bot.get_command("tag").all_commands:
+            raise ReservedTagException(
+                _("This tag name starts with a tag subcommand name")
+            )
 
         tag_row = await Tag.get_or_none(server_id=ctx.guild.id, name=arg)
 

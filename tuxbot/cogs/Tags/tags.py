@@ -8,6 +8,8 @@ from tuxbot.cogs.Tags.functions.converters import TagConverter, NewTagConverter
 from tuxbot.cogs.Tags.functions.exceptions import (
     UnknownTagException,
     ExistingTagException,
+    TooLongTagException,
+    ReservedTagException,
 )
 from tuxbot.cogs.Tags.functions.paginator import TagPages
 from tuxbot.cogs.Tags.functions.utils import (
@@ -38,7 +40,12 @@ class Tags(commands.Cog):
     async def cog_command_error(self, ctx: ContextPlus, error):
         if isinstance(
             error,
-            (UnknownTagException, ExistingTagException),
+            (
+                UnknownTagException,
+                ExistingTagException,
+                TooLongTagException,
+                ReservedTagException,
+            ),
         ):
             await ctx.send(_(str(error), ctx, self.bot.config))
 
@@ -169,6 +176,23 @@ class Tags(commands.Cog):
         else:
             await ctx.send(
                 _("No tags found for {}", ctx, self.bot.config).format(author)
+            )
+
+    @_tag.command(name="all")
+    async def _tag_all(self, ctx: ContextPlus):
+        tags = await get_all_tags(ctx.guild.id)
+
+        if tags:
+            try:
+                p = TagPages(entries=tags)
+                await p.start(ctx)
+            except menus.MenuError as e:
+                await ctx.send(e)
+        else:
+            await ctx.send(
+                _("No tags found for {}", ctx, self.bot.config).format(
+                    ctx.guild.name
+                )
             )
 
     @_tag.command(name="claim")

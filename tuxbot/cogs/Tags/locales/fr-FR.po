@@ -22,6 +22,14 @@ msgstr ""
 msgid "Unknown tag"
 msgstr "Tag inconnu"
 
+#: tuxbot/cogs/Tags/functions/converters.py:35
+msgid "Tag must be lower than 50 characters"
+msgstr "Le nom du tag doit faire moins de 50 caracteres"
+
+#: tuxbot/cogs/Tags/functions/converters.py:40
+msgid "This tag name starts with a tag subcommand name"
+msgstr "Le nom du tag est reservé"
+
 #: tuxbot/cogs/Tags/functions/converters.py:34
 msgid "Tag already exists"
 msgstr "Tag déjà existant"

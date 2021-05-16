@@ -112,7 +112,10 @@ class ContextPlus(commands.Context):
                     "reaction_add", timeout=42.0, check=check
                 )
             except asyncio.TimeoutError:
-                await message.remove_reaction("🗑", self.bot.user)
+                try:
+                    await message.remove_reaction("🗑", self.bot.user)
+                except discord.HTTPException:
+                    return None
             else:
                 await message.delete()
             return message

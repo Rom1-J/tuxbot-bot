@@ -24,7 +24,11 @@ async def get_all_tags(
 
 
 async def search_tags(guild_id: int, q: str) -> list[Tag]:
-    return await Tag.filter(server_id=guild_id, name__icontains=q).all().order_by("-uses")
+    return (
+        await Tag.filter(server_id=guild_id, name__icontains=q)
+        .all()
+        .order_by("-uses")
+    )
 
 
 async def create_tag(ctx: ContextPlus, name: str, content: str):

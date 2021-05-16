@@ -11,3 +11,11 @@ class UnknownTagException(TagsException):
 
 class ExistingTagException(TagsException):
     pass
+
+
+class TooLongTagException(TagsException):
+    pass
+
+
+class ReservedTagException(TagsException):
+    pass
