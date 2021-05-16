@@ -229,12 +229,17 @@ async def get_map_bytes(apikey: str, latlon: str) -> Optional[io.BytesIO]:
 
     url = url.format(lonlat=lonlat, apikey=apikey)
 
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(url) as s:
-            if s.status != 200:
-                return None
+    try:
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get(url) as s:
+                if s.status != 200:
+                    return None
 
-            return io.BytesIO(await s.read())
+                return io.BytesIO(await s.read())
+    except asyncio.exceptions.TimeoutError:
+        from ..images.load_fail import value
+
+        return io.BytesIO(value)
 
 
 @cached(
