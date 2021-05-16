@@ -47,7 +47,7 @@ class Utils(commands.Cog):
                     ctx,
                     self.bot.config,
                 ),
-                value="**Romain#5117:** [git](https://git.gnous.eu/Romain)\n"
+                value="**Romain#5117:** [git](https://github.com/Rom1-J)\n"
                 "**Outout#4039:** [git](https://git.gnous.eu/mael)\n",
                 inline=True,
             )
