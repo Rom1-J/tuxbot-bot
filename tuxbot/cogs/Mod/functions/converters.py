@@ -57,6 +57,9 @@ class BotMessageConverter(commands.Converter):
 
 class ReasonConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        if argument is None:
+            return f"{ctx.author.display_name} (ID: {ctx.author.id})"
+
         if len(argument) > 300:
             raise ReasonTooLongException(
                 _("Reason length must be 300 characters or lower.")

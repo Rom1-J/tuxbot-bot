@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -281,7 +282,7 @@ class Mod(commands.Cog):
         ctx: ContextPlus,
         members: commands.Greedy[discord.Member],
         *,
-        reason: ReasonConverter,
+        reason: Optional[ReasonConverter],
     ):
         if not members:
             return await ctx.send(_("Missing members", ctx, self.bot.config))
@@ -355,14 +356,14 @@ class Mod(commands.Cog):
     @commands.guild_only()
     @checks.is_admin()
     async def _tempmute(
-            self,
-            ctx: ContextPlus,
-            time,
-            members: discord.Member,
-            *,
-            reason: ReasonConverter,
+        self,
+        ctx: ContextPlus,
+        time,
+        members: discord.Member,
+        *,
+        reason: Optional[ReasonConverter],
     ):
-        ...
+        _, _, _, _ = ctx, time, members, reason
 
     # =========================================================================
 
@@ -377,7 +378,7 @@ class Mod(commands.Cog):
         ctx: ContextPlus,
         members: commands.Greedy[discord.Member],
         *,
-        reason: ReasonConverter,
+        reason: Optional[ReasonConverter],
     ):
         if not members:
             return await ctx.send(_("Missing members", ctx, self.bot.config))
