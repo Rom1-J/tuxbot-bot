@@ -6,7 +6,7 @@ import textwrap
 import traceback
 from collections import defaultdict
 from logging import LogRecord
-from typing import Any, Dict
+from typing import Any, Dict, List, DefaultDict
 
 import discord
 import humanize
@@ -53,7 +53,7 @@ class Logs(commands.Cog):
         self.bot = bot
         self.process = psutil.Process()
         self._batch_lock = asyncio.Lock()
-        self._data_batch: list[Dict[str, Any]] = []
+        self._data_batch: List[Dict[str, Any]] = []
         self._gateway_queue: asyncio.Queue = asyncio.Queue()
         self.gateway_worker.start()  # pylint: disable=no-member
 
@@ -62,8 +62,8 @@ class Logs(commands.Cog):
             LogsConfig,
         ).config
 
-        self._resumes: list[datetime.datetime] = []
-        self._identifies: defaultdict[Any, list] = defaultdict(list)
+        self._resumes: List[datetime.datetime] = []
+        self._identifies: DefaultDict[Any, list] = defaultdict(list)
 
         self.old_on_error = bot.on_error
         bot.on_error = self.on_error

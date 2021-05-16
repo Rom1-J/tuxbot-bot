@@ -2,7 +2,7 @@ from collections import Counter
 from typing import Dict
 
 
-def sort_by(_events: Counter) -> dict[str, dict]:
+def sort_by(_events: Counter) -> Dict[str, dict]:
     majors = (
         "guild",
         "channel",

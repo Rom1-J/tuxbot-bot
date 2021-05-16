@@ -1,6 +1,6 @@
 import io
 import socket
-from typing import NoReturn, Optional
+from typing import NoReturn, Optional, Union
 
 import asyncio
 import re
@@ -37,7 +37,7 @@ def _(x):
     namespace="network",
 )
 async def get_ip(loop, ip: str, inet: Optional[dict]) -> str:
-    _inet: socket.AddressFamily | int = 0  # pylint: disable=no-member
+    _inet: Union[socket.AddressFamily, int] = 0  # pylint: disable=no-member
 
     if inet:
         if inet["inet"] == "6":
@@ -89,8 +89,8 @@ async def get_hostname(loop, ip: str) -> str:
     cache=Cache.MEMORY,
     namespace="network",
 )
-async def get_ipwhois_result(loop, ip: str) -> NoReturn | dict:
-    def _get_ipwhois_result(_ip: str) -> NoReturn | dict:
+async def get_ipwhois_result(loop, ip: str) -> Union[NoReturn, dict]:
+    def _get_ipwhois_result(_ip: str) -> Union[NoReturn, dict]:
         try:
             net = Net(ip)
             obj = IPASN(net)
@@ -121,7 +121,7 @@ async def get_ipwhois_result(loop, ip: str) -> NoReturn | dict:
     namespace="network",
 )
 async def get_ipinfo_result(loop, apikey: str, ip: str) -> dict:
-    def _get_ipinfo_result(_ip: str) -> NoReturn | dict:
+    def _get_ipinfo_result(_ip: str) -> Union[NoReturn, dict]:
         """
         Q. Why no getHandlerAsync ?
         A. Use of this return "Unclosed client session" and "Unclosed connector"
@@ -251,11 +251,11 @@ async def get_map_bytes(apikey: str, latlon: str) -> Optional[io.BytesIO]:
     namespace="network",
 )
 async def get_pydig_result(
-    loop, domain: str, query_type: str, dnssec: str | bool
+    loop, domain: str, query_type: str, dnssec: Union[str, bool]
 ) -> list:
     additional_args = [] if dnssec is False else ["+dnssec"]
 
-    def _get_pydig_result(_domain: str) -> NoReturn | dict:
+    def _get_pydig_result(_domain: str) -> Union[NoReturn, dict]:
         resolver = pydig.Resolver(
             nameservers=[
                 "80.67.169.40",
@@ -275,14 +275,16 @@ async def get_pydig_result(
         return []
 
 
-def check_ip_version_or_raise(version: Optional[dict]) -> bool | NoReturn:
+def check_ip_version_or_raise(
+    version: Optional[dict],
+) -> Union[bool, NoReturn]:
     if version is None or version["inet"] in ("4", "6", ""):
         return True
 
     raise InvalidIp(_("Invalid ip version"))
 
 
-def check_query_type_or_raise(query_type: str) -> bool | NoReturn:
+def check_query_type_or_raise(query_type: str) -> Union[bool, NoReturn]:
     query_types = (
         "a",
         "aaaa",
@@ -306,7 +308,7 @@ def check_query_type_or_raise(query_type: str) -> bool | NoReturn:
     )
 
 
-def check_asn_or_raise(asn: str) -> bool | NoReturn:
+def check_asn_or_raise(asn: str) -> Union[bool, NoReturn]:
     if asn.isdigit() and int(asn) < 4_294_967_295:
         return True
 

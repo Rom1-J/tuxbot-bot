@@ -33,6 +33,9 @@ __pycache__/
 __pypackages__/
 
 venv
+venv3.8
+venv3.9
+venv3.11
 dist
 build
 *.egg

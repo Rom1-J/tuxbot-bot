@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 import discord
 from discord.ext import commands
@@ -76,7 +77,7 @@ class Custom(commands.Cog):
 
     @_custom.command(name="alias", aliases=["aliases"])
     async def _custom_alias(self, ctx: ContextPlus, *, alias: AliasConvertor):
-        args: list[str] = str(alias).split(" | ")
+        args: List[str] = str(alias).split(" | ")
 
         command = args[0]
         custom = args[1]

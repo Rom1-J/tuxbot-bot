@@ -1,6 +1,6 @@
 import asyncio
 import functools
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import aiohttp
 from discord.ext import commands
@@ -29,7 +29,7 @@ def typing(func):
 
 async def shorten(
     text: str, length: int, fail: bool = False
-) -> tuple[bool, dict]:
+) -> Tuple[bool, dict]:
     output: Dict[str, str] = {"text": text[:length], "link": ""}
 
     if len(text) > length:

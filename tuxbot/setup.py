@@ -7,7 +7,7 @@ import sys
 import json
 from argparse import Namespace
 from pathlib import Path
-from typing import List
+from typing import List, Union
 from urllib import request
 
 from rich.prompt import Prompt, IntPrompt
@@ -121,7 +121,7 @@ def get_ip() -> str:
 
 def get_multiple(
     question: str, confirmation: str, value_type: type
-) -> List[str | int]:
+) -> List[Union[str, int]]:
     """Give possibility to user to fill multiple value.
 
     Parameters
@@ -135,10 +135,12 @@ def get_multiple(
 
     Returns
     -------
-    List[str | int]
+    List[Union[str, int]]
         List containing user filled values.
     """
-    prompt: IntPrompt | Prompt = IntPrompt() if value_type is int else Prompt()
+    prompt: Union[IntPrompt, Prompt] = (
+        IntPrompt() if value_type is int else Prompt()
+    )
 
     user_input = prompt.ask(question, console=console)
 
@@ -166,12 +168,14 @@ def get_multiple(
     return values
 
 
-def get_extra(question: str, value_type: type) -> str | int:
-    prompt: IntPrompt | Prompt = IntPrompt() if value_type is int else Prompt()
+def get_extra(question: str, value_type: type) -> Union[str, int]:
+    prompt: Union[IntPrompt, Prompt] = (
+        IntPrompt() if value_type is int else Prompt()
+    )
     return prompt.ask(question, console=console)
 
 
-def additional_config(cogs: str | list = "**"):
+def additional_config(cogs: Union[str, list] = "**"):
     """Asking for additional configs in cogs.
 
     Returns

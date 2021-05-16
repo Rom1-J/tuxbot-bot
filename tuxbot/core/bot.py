@@ -2,8 +2,9 @@ import asyncio
 import datetime
 import importlib
 import logging
+import sys
 from collections import Counter
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import aiohttp
 import discord
@@ -177,6 +178,7 @@ class Tux(commands.AutoShardedBot):
         table.add_row(f"Language: {self.config.Core.locale}")
         table.add_row(f"Tuxbot Version: {__version__}")
         table.add_row(f"Discord.py Version: {discord.__version__}")
+        table.add_row(f"Python Version: {sys.version.split(' ')[0]}")
         table.add_row(f"Instance name: {self.instance_name}")
         table.add_row(f"Shards: {self.shard_count}")
         table.add_row(f"Servers: {len(self.guilds)}")
@@ -200,13 +202,13 @@ class Tux(commands.AutoShardedBot):
         self.console.print()
 
     async def is_owner(
-        self, user: discord.User | discord.Member | discord.Object
+        self, user: Union[discord.User, discord.Member, discord.Object]
     ) -> bool:
         """Determines if the user is a bot owner.
 
         Parameters
         ----------
-        user: discord.User | discord.Member
+        user: Union[discord.User, discord.Member]
 
         Returns
         -------

@@ -6,6 +6,7 @@ from tuxbot.cogs.Mod.functions.exceptions import (
     UnknownRuleException,
     NonMessageException,
     NonBotMessageException,
+    ReasonTooLongException,
 )
 from tuxbot.cogs.Mod.models import Rule
 
@@ -52,3 +53,13 @@ class BotMessageConverter(commands.Converter):
             raise NonMessageException(
                 _("Please provide a message in this guild")
             )
+
+
+class ReasonConverter(commands.Converter):
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        if len(argument) > 300:
+            raise ReasonTooLongException(
+                _("Reason length must be 300 characters or lower.")
+            )
+
+        return argument

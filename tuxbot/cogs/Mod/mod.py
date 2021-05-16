@@ -8,12 +8,14 @@ from tuxbot.cogs.Mod.functions.converters import (
     RuleConverter,
     RuleIDConverter,
     BotMessageConverter,
+    ReasonConverter,
 )
 from tuxbot.cogs.Mod.functions.exceptions import (
     RuleTooLongException,
     UnknownRuleException,
     NonMessageException,
     NonBotMessageException,
+    ReasonTooLongException,
 )
 from tuxbot.cogs.Mod.functions.utils import (
     save_lang,
@@ -21,6 +23,8 @@ from tuxbot.cogs.Mod.functions.utils import (
     format_rule,
     get_most_recent_server_rules,
     paginate_server_rules,
+    get_mute_role,
+    create_mute_role,
 )
 from tuxbot.cogs.Mod.models.rules import Rule
 from tuxbot.core.utils import checks
@@ -35,6 +39,7 @@ from tuxbot.core.i18n import (
 from tuxbot.core.utils.functions.extra import (
     group_extra,
     ContextPlus,
+    command_extra,
 )
 
 log = logging.getLogger("tuxbot.cogs.Mod")
@@ -53,9 +58,10 @@ class Mod(commands.Cog):
                 UnknownRuleException,
                 NonMessageException,
                 NonBotMessageException,
+                ReasonTooLongException,
             ),
         ):
-            await ctx.send(_(str(error), ctx, self.bot.config))
+            return await ctx.send(_(str(error), ctx, self.bot.config))
 
     # =========================================================================
     # =========================================================================
@@ -163,7 +169,9 @@ class Mod(commands.Cog):
         rule_row.server_id = ctx.guild.id
         rule_row.author_id = ctx.message.author.id
 
-        rule_row.rule_id = len(await get_server_rules(ctx.guild.id)) + 1  # type: ignore
+        rule_row.rule_id = (
+            len(await get_server_rules(ctx.guild.id)) + 1  # type: ignore
+        )
         rule_row.content = str(rule)  # type: ignore
 
         await rule_row.save()
@@ -243,10 +251,13 @@ class Mod(commands.Cog):
 
         pages = paginate_server_rules(rules)
 
+        # noinspection PyTypeChecker
+        to_edit: discord.Message = message
+
         if len(pages) == 1:
             embed.description = pages[0]
 
-            await message.edit(content="", embed=embed)
+            await to_edit.edit(content="", embed=embed)
         else:
             for i, page in enumerate(pages):
                 embed.title = _(
@@ -254,4 +265,117 @@ class Mod(commands.Cog):
                 ).format(ctx.guild.name, str(i + 1), str(len(pages)))
                 embed.description = page
 
-                await message.edit(content="", embed=embed)
+                await to_edit.edit(content="", embed=embed)
+
+    # =========================================================================
+
+    @group_extra(
+        name="mute",
+        deletable=True,
+        invoke_without_command=True,
+    )
+    @commands.guild_only()
+    @checks.is_admin()
+    async def _mute(
+        self,
+        ctx: ContextPlus,
+        members: commands.Greedy[discord.Member],
+        *,
+        reason: ReasonConverter,
+    ):
+        if not members:
+            return await ctx.send(_("Missing members", ctx, self.bot.config))
+
+        role_row = await get_mute_role(ctx.guild.id)
+
+        if role_row is None:
+            return await ctx.send(
+                _(
+                    "No mute role has been specified for this guild",
+                    ctx,
+                    self.bot.config,
+                )
+            )
+
+        for member in members:
+            await member.add_roles(
+                discord.Object(id=int(role_row.role_id)), reason=reason
+            )
+
+        await ctx.send("\N{THUMBS UP SIGN}")
+
+    @_mute.command(name="show", aliases=["role"])
+    async def _mute_show(
+        self,
+        ctx: ContextPlus,
+    ):
+        role_row = await get_mute_role(ctx.guild.id)
+
+        if (
+            role_row is None
+            or (role := ctx.guild.get_role(int(role_row.role_id))) is None
+        ):
+            return await ctx.send(
+                _(
+                    "No mute role has been specified for this guild",
+                    ctx,
+                    self.bot.config,
+                )
+            )
+
+        muted_members = [m for m in ctx.guild.members if role in m.roles]
+
+        e = discord.Embed(
+            title=f"Role: {role.name} (ID: {role.id})", color=role.color
+        )
+        e.add_field(name="Total mute:", value=len(muted_members))
+
+        await ctx.send(embed=e)
+
+    @_mute.command(name="set", aliases=["define"])
+    async def _mute_set(self, ctx: ContextPlus, role: discord.Role):
+        role_row = await get_mute_role(ctx.guild.id)
+
+        if role_row is None:
+            await create_mute_role(ctx.guild.id, role.id)
+        else:
+            role_row.role_id = role.id  # type: ignore
+            await role_row.save()
+
+        await ctx.send(
+            _("Mute role successfully defined", ctx, self.bot.config)
+        )
+
+    @command_extra(
+        name="unmute",
+        deletable=True,
+    )
+    @commands.guild_only()
+    @checks.is_admin()
+    async def _unmute(
+        self,
+        ctx: ContextPlus,
+        members: commands.Greedy[discord.Member],
+        *,
+        reason: ReasonConverter,
+    ):
+        if not members:
+            return await ctx.send(_("Missing members", ctx, self.bot.config))
+
+        role_row = await get_mute_role(ctx.guild.id)
+
+        if role_row is None:
+            return await ctx.send(
+                _(
+                    "No mute role has been specified for this guild",
+                    ctx,
+                    self.bot.config,
+                )
+            )
+
+        for member in members:
+            await member.remove_roles(
+                discord.Object(id=int(role_row.role_id)), reason=reason
+            )
+
+        await ctx.send("\N{THUMBS UP SIGN}")

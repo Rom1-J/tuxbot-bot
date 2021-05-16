@@ -35,7 +35,7 @@ update-all:
 
 .PHONY: dev
 dev: style update
-	tuxbot
+	$(VIRTUAL_ENV)/bin/tuxbot
 
 # Docker
 .PHONY: docker

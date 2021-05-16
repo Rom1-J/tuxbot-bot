@@ -19,3 +19,7 @@ class NonMessageException(ModException):
 
 class NonBotMessageException(ModException):
     pass
+
+
+class ReasonTooLongException(ModException):
+    pass

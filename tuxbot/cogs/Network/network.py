@@ -2,7 +2,7 @@ import asyncio
 import logging
 import time
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 import aiohttp
 import discord
@@ -272,7 +272,7 @@ class Network(commands.Cog):
         ctx: ContextPlus,
         domain: IPConverter,
         query_type: QueryTypeConverter,
-        dnssec: str | bool = False,
+        dnssec: Union[str, bool] = False,
     ):
         check_query_type_or_raise(str(query_type))
 

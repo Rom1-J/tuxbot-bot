@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import discord
 
@@ -12,7 +12,7 @@ async def get_tag(guild_id: int, name: str) -> Tag:
 
 async def get_all_tags(
     guild_id: int, author: Optional[discord.Member] = None
-) -> list[Tag]:
+) -> List[Tag]:
     if author is not None:
         return (
             await Tag.filter(server_id=guild_id, author_id=author.id)
@@ -23,7 +23,7 @@ async def get_all_tags(
     return await Tag.filter(server_id=guild_id).all().order_by("-uses")
 
 
-async def search_tags(guild_id: int, q: str) -> list[Tag]:
+async def search_tags(guild_id: int, q: str) -> List[Tag]:
     return (
         await Tag.filter(server_id=guild_id, name__icontains=q)
         .all()

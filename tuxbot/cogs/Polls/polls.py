@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Dict
+from typing import Dict, Union, List
 
 import discord
 from discord.ext import commands
@@ -45,7 +45,7 @@ class Polls(commands.Cog):
         self,
         ctx: ContextPlus,
         question: str,
-        answers: list[str],
+        answers: List[str],
         anonymous=False,
     ):
         emotes = utils_emotes.get(len(answers))
@@ -90,7 +90,7 @@ class Polls(commands.Cog):
 
     async def get_poll(
         self, pld: discord.RawReactionActionEvent
-    ) -> bool | Poll:
+    ) -> Union[bool, Poll]:
         if pld.user_id != self.bot.user.id:
             poll = await Poll.get_or_none(message_id=pld.message_id)
 
@@ -225,7 +225,7 @@ class Polls(commands.Cog):
 
     async def get_suggest(
         self, pld: discord.RawReactionActionEvent
-    ) -> bool | Suggest:
+    ) -> Union[bool, Suggest]:
         if pld.user_id != self.bot.user.id:
             suggest = await Suggest.get_or_none(message_id=pld.message_id)
 

@@ -7,6 +7,9 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/data" />
       <excludeFolder url="file://$MODULE_DIR$/.mypy_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/venv3.8" />
+      <excludeFolder url="file://$MODULE_DIR$/venv3.9" />
+      <excludeFolder url="file://$MODULE_DIR$/venv3.11" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (tuxbot_bot)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

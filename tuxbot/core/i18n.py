@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Dict, NoReturn, Any, Tuple
+from typing import Dict, NoReturn, Any, Tuple, Union
 
 from babel.messages.pofile import read_po
 
@@ -19,7 +19,7 @@ available_locales: Dict[str, Tuple] = {
 }
 
 
-def find_locale(locale: str) -> str | NoReturn:
+def find_locale(locale: str) -> Union[str, NoReturn]:
     """We suppose `locale` is in `_available_locales.values()`"""
 
     for key, val in available_locales.items():
@@ -46,7 +46,9 @@ def get_locale_name(locale: str) -> str:
 class Translator:
     """Class to load texts at init."""
 
-    def __init__(self, name: str, file_location: Path | os.PathLike | str):
+    def __init__(
+        self, name: str, file_location: Union[Path, os.PathLike, str]
+    ):
         """Initializes the Translator object.
 
         Parameters
