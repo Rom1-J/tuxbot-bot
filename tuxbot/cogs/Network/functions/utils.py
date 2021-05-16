@@ -206,12 +206,11 @@ async def get_map_bytes(apikey: str, latlon: str) -> Optional[io.BytesIO]:
     url = (
         "https://maps.geoapify.com/v1/staticmap"
         "?style=osm-carto"
-        "&width=400"
-        "&height=300"
+        "&width=333"
+        "&height=250"
         "&center=lonlat:{lonlat}"
         "&zoom=12"
         "&marker=lonlat:{lonlat};color:%23ff0000;size:small"
-        "&pitch=42"
         "&apiKey={apikey}"
     )
 
