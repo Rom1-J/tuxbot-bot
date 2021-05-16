@@ -230,7 +230,9 @@ async def get_map_bytes(apikey: str, latlon: str) -> Optional[io.BytesIO]:
     url = url.format(lonlat=lonlat, apikey=apikey)
 
     try:
-        async with aiohttp.ClientSession() as cs:
+        async with aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=5)
+        ) as cs:
             async with cs.get(url) as s:
                 if s.status != 200:
                     return None
