@@ -66,6 +66,19 @@ msgid ""
 "{}"
 msgstr ""
 
+#: tuxbot/cogs/Mod/mod.py:287 tuxbot/cogs/Mod/mod.py:383
+msgid "Missing members"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:294 tuxbot/cogs/Mod/mod.py:320
+#: tuxbot/cogs/Mod/mod.py:390
+msgid "No mute role has been specified for this guild"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:346
+msgid "Mute role successfully defined"
+msgstr ""
+
 #: tuxbot/cogs/Mod/functions/converters.py:22
 msgid "Unknown rule"
 msgstr ""
@@ -80,4 +93,8 @@ msgstr ""
 
 #: tuxbot/cogs/Mod/functions/converters.py:53
 msgid "Please provide a message in this guild"
+msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:62
+msgid "Reason length must be 300 characters or lower."
 msgstr ""

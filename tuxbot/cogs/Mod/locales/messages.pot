@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-05-16 15:11+0200\n"
+"POT-Creation-Date: 2021-05-17 00:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,68 +17,85 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tuxbot/cogs/Mod/mod.py:75
+#: tuxbot/cogs/Mod/mod.py:81
 #, python-brace-format
 msgid "Locale changed to {lang} successfully"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:86
+#: tuxbot/cogs/Mod/mod.py:92
 msgid "List of available locales: "
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:111
+#: tuxbot/cogs/Mod/mod.py:117
 msgid ""
 "{}please read the following rule: \n"
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:129 tuxbot/cogs/Mod/mod.py:229
+#: tuxbot/cogs/Mod/mod.py:135 tuxbot/cogs/Mod/mod.py:237
 msgid "No rules found for this server"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:133 tuxbot/cogs/Mod/mod.py:233
+#: tuxbot/cogs/Mod/mod.py:139 tuxbot/cogs/Mod/mod.py:241
 msgid "Rules for {}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:139 tuxbot/cogs/Mod/mod.py:239
+#: tuxbot/cogs/Mod/mod.py:145 tuxbot/cogs/Mod/mod.py:247
 msgid "Latest change: {}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:153 tuxbot/cogs/Mod/mod.py:253
+#: tuxbot/cogs/Mod/mod.py:159 tuxbot/cogs/Mod/mod.py:264
 msgid "Rules for {} ({}/{})"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:172
+#: tuxbot/cogs/Mod/mod.py:180
 msgid ""
 "Following rule added: \n"
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:195
+#: tuxbot/cogs/Mod/mod.py:203
 msgid ""
 "Following rule updated: \n"
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/mod.py:213
+#: tuxbot/cogs/Mod/mod.py:221
 msgid ""
 "Following rule deleted: \n"
 "{}"
 msgstr ""
 
-#: tuxbot/cogs/Mod/functions/converters.py:20
-#: tuxbot/cogs/Mod/functions/converters.py:27
+#: tuxbot/cogs/Mod/mod.py:287 tuxbot/cogs/Mod/mod.py:383
+msgid "Missing members"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:294 tuxbot/cogs/Mod/mod.py:320
+#: tuxbot/cogs/Mod/mod.py:390
+msgid "No mute role has been specified for this guild"
+msgstr ""
+
+#: tuxbot/cogs/Mod/mod.py:346
+msgid "Mute role successfully defined"
+msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:21
+#: tuxbot/cogs/Mod/functions/converters.py:28
 msgid "Unknown rule"
 msgstr ""
 
-#: tuxbot/cogs/Mod/functions/converters.py:36
+#: tuxbot/cogs/Mod/functions/converters.py:37
 msgid "Rule length must be 300 characters or lower."
 msgstr ""
 
-#: tuxbot/cogs/Mod/functions/converters.py:50
+#: tuxbot/cogs/Mod/functions/converters.py:51
 msgid "Please provide one of my message"
 msgstr ""
 
-#: tuxbot/cogs/Mod/functions/converters.py:53
+#: tuxbot/cogs/Mod/functions/converters.py:54
 msgid "Please provide a message in this guild"
+msgstr ""
+
+#: tuxbot/cogs/Mod/functions/converters.py:62
+msgid "Reason length must be 300 characters or lower."
 msgstr ""

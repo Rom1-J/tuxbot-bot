@@ -346,6 +346,26 @@ class Mod(commands.Cog):
             _("Mute role successfully defined", ctx, self.bot.config)
         )
 
+    # =========================================================================
+
+    @command_extra(
+        name="tempmute",
+        deletable=True,
+    )
+    @commands.guild_only()
+    @checks.is_admin()
+    async def _tempmute(
+            self,
+            ctx: ContextPlus,
+            time,
+            members: discord.Member,
+            *,
+            reason: ReasonConverter,
+    ):
+        ...
+
+    # =========================================================================
+
     @command_extra(
         name="unmute",
         deletable=True,

@@ -75,6 +75,19 @@ msgstr ""
 "La règle suivante a été supprimée: \n"
 "{}"
 
+#: tuxbot/cogs/Mod/mod.py:287 tuxbot/cogs/Mod/mod.py:383
+msgid "Missing members"
+msgstr "Membres inexistants"
+
+#: tuxbot/cogs/Mod/mod.py:294 tuxbot/cogs/Mod/mod.py:320
+#: tuxbot/cogs/Mod/mod.py:390
+msgid "No mute role has been specified for this guild"
+msgstr "Aucun rôle mute n'a été spécifié pour ce serveur"
+
+#: tuxbot/cogs/Mod/mod.py:346
+msgid "Mute role successfully defined"
+msgstr "Rôle mute défini avec succès"
+
 #: tuxbot/cogs/Mod/functions/converters.py:22
 msgid "Unknown rule"
 msgstr "Règle inconnue"
@@ -90,3 +103,7 @@ msgstr "Merci de donner un de mes messages"
 #: tuxbot/cogs/Mod/functions/converters.py:53
 msgid "Please provide a message in this guild"
 msgstr "Merci de donner un message dans ce serveur"
+
+#: tuxbot/cogs/Mod/functions/converters.py:62
+msgid "Reason length must be 300 characters or lower."
+msgstr "La raison doit faire 300 characters ou moins"

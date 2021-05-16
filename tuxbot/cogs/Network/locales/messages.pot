@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tuxbot-bot\n"
 "Report-Msgid-Bugs-To: rick@gnous.eu\n"
-"POT-Creation-Date: 2021-05-16 15:11+0200\n"
+"POT-Creation-Date: 2021-05-17 00:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,65 +26,65 @@ msgstr ""
 msgid "IP address {ip_address} is already defined as Private-Use Networks via RFC 1918."
 msgstr ""
 
-#: tuxbot/cogs/Network/functions/utils.py:265
+#: tuxbot/cogs/Network/functions/utils.py:284
 msgid "Invalid ip version"
 msgstr ""
 
-#: tuxbot/cogs/Network/functions/utils.py:287
+#: tuxbot/cogs/Network/functions/utils.py:306
 msgid "Supported queries : A, AAAA, CNAME, NS, DS, DNSKEY, SOA, TXT, PTR, MX"
 msgstr ""
 
-#: tuxbot/cogs/Network/functions/utils.py:296
+#: tuxbot/cogs/Network/functions/utils.py:315
 msgid "Invalid ASN provided"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:137
+#: tuxbot/cogs/Network/network.py:139
 #, python-brace-format
 msgid "Information for ``{ip} ({ip_address})``"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:143
+#: tuxbot/cogs/Network/network.py:145
 msgid "Belongs to:"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:153
+#: tuxbot/cogs/Network/network.py:155
 msgid "Region:"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:161
+#: tuxbot/cogs/Network/network.py:163
 #, python-brace-format
 msgid "Hostname: {hostname}"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:205
+#: tuxbot/cogs/Network/network.py:207
 msgid "Unable to collect information through CloudFlare"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:250
+#: tuxbot/cogs/Network/network.py:252
 msgid "[show all]({})"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:264 tuxbot/cogs/Network/network.py:337
+#: tuxbot/cogs/Network/network.py:266 tuxbot/cogs/Network/network.py:339
 msgid "Cannot connect to host {}"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:289
+#: tuxbot/cogs/Network/network.py:291
 msgid "No result..."
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:321
+#: tuxbot/cogs/Network/network.py:323
 msgid "Up!"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:324
+#: tuxbot/cogs/Network/network.py:326
 msgid "Down..."
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:353
+#: tuxbot/cogs/Network/network.py:355
 msgid "Please retry in few minutes"
 msgstr ""
 
-#: tuxbot/cogs/Network/network.py:367
+#: tuxbot/cogs/Network/network.py:369
 #, python-brace-format
 msgid "AS{asn} could not be found in PeeringDB's database."
 msgstr ""
