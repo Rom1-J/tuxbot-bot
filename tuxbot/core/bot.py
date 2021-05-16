@@ -332,7 +332,10 @@ class Tux(commands.AutoShardedBot):
             self.console.log(
                 "Canceling", task.get_name(), f"({task.get_coro()})"
             )
-            task.cancel()
+            try:
+                task.cancel()
+            except Exception as e:
+                self.console.log(e)
         await asyncio.gather(*pending, return_exceptions=False)
 
         await super().close()

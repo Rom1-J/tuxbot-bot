@@ -103,6 +103,8 @@ class Network(commands.Cog):
                     self._peeringdb_net = await s.json()
         except asyncio.exceptions.TimeoutError:
             pass
+        else:
+            log.log(logging.INFO, "_update_peering_db")
 
     # =========================================================================
     # =========================================================================
@@ -126,7 +128,7 @@ class Network(commands.Cog):
         ip_hostname = await get_hostname(self.bot.loop, str(ip_address))
 
         ipinfo_result = await get_ipinfo_result(
-            self.__config.ipinfoKey, ip_address
+            self.bot.loop, self.__config.ipinfoKey, ip_address
         )
         ipwhois_result = await get_ipwhois_result(self.bot.loop, ip_address)
 

@@ -120,13 +120,24 @@ async def get_ipwhois_result(loop, ip: str) -> NoReturn | dict:
     cache=Cache.MEMORY,
     namespace="network",
 )
-async def get_ipinfo_result(apikey: str, ip: str) -> dict:
+async def get_ipinfo_result(loop, apikey: str, ip: str) -> dict:
+    def _get_ipinfo_result(_ip: str) -> NoReturn | dict:
+        """
+        Q. Why no getHandlerAsync ?
+        A. Use of this return "Unclosed client session" and "Unclosed connector"
+        """
+        try:
+            handler = ipinfo.getHandler(apikey, request_options={"timeout": 7})
+            return (handler.getDetails(ip)).all
+        except RequestQuotaExceededError:
+            return {}
+
     try:
-        handler = ipinfo.getHandlerAsync(
-            apikey, request_options={"timeout": 7}
+        return await asyncio.wait_for(
+            loop.run_in_executor(None, _get_ipinfo_result, str(ip)),
+            timeout=8,
         )
-        return (await handler.getDetails(ip)).all
-    except RequestQuotaExceededError:
+    except asyncio.exceptions.TimeoutError:
         return {}
 
 
