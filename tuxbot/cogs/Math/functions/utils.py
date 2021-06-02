@@ -8,8 +8,13 @@ async def get_latex_bytes(loop, latex: str) -> Optional[io.BytesIO]:
     def _get_latex_bytes(_latex: str):
         buff = io.BytesIO()
 
-        preview(_latex, viewer='BytesIO', outputbuffer=buff, euler=False,
-                dvioptions=['-D', '1200'])
+        preview(
+            _latex,
+            viewer="BytesIO",
+            outputbuffer=buff,
+            euler=False,
+            dvioptions=["-D", "1200"],
+        )
 
         return io.BytesIO(buff.getvalue())
 

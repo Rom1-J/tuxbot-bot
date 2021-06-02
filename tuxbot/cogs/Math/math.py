@@ -35,8 +35,7 @@ class Math(commands.Cog):
 
     @command_extra(name="wolf", aliases=["wolfram"], deletable=True)
     async def _wolf(self, ctx: ContextPlus):
-        # api = wolfapi.Client(self.__config.WolframAlphaKey)
-        _ = ctx
+        _ = ctx, self.__config.WolframAlphaKey
 
     # =========================================================================
 
