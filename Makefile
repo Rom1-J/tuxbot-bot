@@ -41,6 +41,10 @@ update-all:
 dev: style update
 	$(VIRTUAL_ENV)/bin/tuxbot
 
+.PHONY: speed_dev
+speed_dev: update
+	$(VIRTUAL_ENV)/bin/tuxbot
+
 
 ########################################################################################################################
 # Docker

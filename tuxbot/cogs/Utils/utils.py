@@ -30,7 +30,7 @@ class Utils(commands.Cog):
     @command_extra(name="info", aliases=["about"])
     async def _info(self, ctx: ContextPlus):
         proc = psutil.Process()
-        infos = fetch_info()
+        infos = await fetch_info()
 
         with proc.oneshot():
             mem = proc.memory_full_info()

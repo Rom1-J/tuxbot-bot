@@ -46,6 +46,7 @@ packages: Tuple = (
     "tuxbot.cogs.Linux",
     "tuxbot.cogs.Mod",
     "tuxbot.cogs.Tags",
+    "tuxbot.cogs.Math",
 )
 
 

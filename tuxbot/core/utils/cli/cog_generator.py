@@ -147,14 +147,14 @@ def generate(name: str, has_models: bool) -> None:
     functions_path = path / "functions"
     functions_path.mkdir()
 
-    write(functions_path / "__init__.py", "\n")
+    write(functions_path / "__init__.py", "")
 
     # =========================================================================
 
     models_path = path / "models"
     models_path.mkdir()
 
-    write(models_path / "__init__.py", "\n")
+    write(models_path / "__init__.py", "")
 
     # =========================================================================
 

@@ -97,7 +97,7 @@ class Network(commands.Cog):
                 connector=TCPConnector(verify_ssl=False)
             ) as cs:
                 async with cs.get(
-                    "https://3.233.208.117/api/net",
+                    "https://peeringdb.com/api/net",
                     timeout=aiohttp.ClientTimeout(total=60),
                 ) as s:
                     self._peeringdb_net = await s.json()

@@ -3,23 +3,41 @@
     <words>
       <w>aaaa</w>
       <w>ajout</w>
+      <w>aleph</w>
+      <w>amsfonts</w>
+      <w>amssymb</w>
       <w>anglais</w>
       <w>anonyme</w>
       <w>appdirs</w>
       <w>apres</w>
       <w>asctime</w>
+      <w>ayin</w>
+      <w>bipoles</w>
+      <w>chemfig</w>
+      <w>circuitikz</w>
       <w>commandstats</w>
       <w>crimeflare</w>
+      <w>ctikzset</w>
       <w>ctype</w>
+      <w>dalet</w>
+      <w>daleth</w>
       <w>debian</w>
+      <w>definecolor</w>
+      <w>divisionsymbol</w>
       <w>dnskey</w>
+      <w>documentclass</w>
+      <w>dsfont</w>
       <w>découverte</w>
+      <w>esint</w>
       <w>ffff</w>
       <w>fonction</w>
       <w>francais</w>
       <w>français</w>
+      <w>gimel</w>
       <w>gitea</w>
       <w>gnous</w>
+      <w>hebrewletters</w>
+      <w>inputenc</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
       <w>ipwhois</w>
@@ -30,11 +48,20 @@
       <w>liste</w>
       <w>localiseip</w>
       <w>lundi</w>
+      <w>mathbb</w>
+      <w>mathcal</w>
+      <w>mathord</w>
+      <w>mathrsfs</w>
+      <w>mathtools</w>
+      <w>mhchem</w>
+      <w>newcommand</w>
+      <w>nicefrac</w>
       <w>octobre</w>
       <w>outout</w>
       <w>outoutxyz</w>
       <w>outouxyz</w>
       <w>pacman</w>
+      <w>pagenumbering</w>
       <w>peeringdb</w>
       <w>perso</w>
       <w>postgre</w>
@@ -42,10 +69,14 @@
       <w>pred</w>
       <w>pydig</w>
       <w>pylint</w>
+      <w>rcjhbltx</w>
       <w>regle</w>
       <w>regles</w>
       <w>releaselevel</w>
+      <w>renewcommand</w>
+      <w>rightarrow</w>
       <w>rprint</w>
+      <w>siunitx</w>
       <w>skipcq</w>
       <w>socketstats</w>
       <w>soit</w>
@@ -57,13 +88,16 @@
       <w>tablename</w>
       <w>tempmute</w>
       <w>tldr</w>
+      <w>tsadi</w>
       <w>tutux</w>
       <w>tuxbot</w>
       <w>tuxbot's</w>
       <w>tuxvenv</w>
+      <w>usepackage</w>
       <w>venv</w>
       <w>webhook</w>
       <w>webhooks</w>
+      <w>xcolor</w>
       <w>youtrack</w>
       <w>écrite</w>
     </words>
