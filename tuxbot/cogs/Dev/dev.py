@@ -9,9 +9,7 @@ from discord.ext import commands
 
 from tuxbot.cogs.Dev.functions.utils import TicTacToe
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 from tuxbot.core.utils import checks
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 

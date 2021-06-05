@@ -5,7 +5,7 @@ import discord
 
 from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.utils import upper_first
-from . import emotes as utils_emotes
+from tuxbot.core.utils import emotes as utils_emotes
 from .exceptions import InvalidChannel, BadPoll, TooLongProposition
 from ..models import Response, Poll, Suggest
 

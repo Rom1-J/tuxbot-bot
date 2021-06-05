@@ -6,9 +6,7 @@ from discord.ext import commands
 from tuxbot.cogs.Linux.functions.utils import get_from_cnf
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 
 log = logging.getLogger("tuxbot.cogs.Linux")
 _ = Translator("Linux", __file__)

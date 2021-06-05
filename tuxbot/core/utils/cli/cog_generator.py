@@ -49,9 +49,7 @@ MODULE_TEMPLATE = """import logging
 from discord.ext import commands
 
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 
 log = logging.getLogger("tuxbot.cogs.{name}")

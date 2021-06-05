@@ -21,9 +21,7 @@ from tuxbot.cogs.Tags.functions.utils import (
 )
 from tuxbot.core.bot import Tux
 
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.extra import (
     group_extra,
     ContextPlus,

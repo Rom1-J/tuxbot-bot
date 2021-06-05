@@ -11,9 +11,7 @@ from tuxbot import version_info, __version__
 
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 from .functions.info import fetch_info
 
 log = logging.getLogger("tuxbot.cogs.Utils")

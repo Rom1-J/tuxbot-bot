@@ -16,7 +16,7 @@ class ContextPlus(commands.Context):
     # noinspection PyTypedDict
     async def send(
         self, content=None, *, embed=None, deletable=True, **kwargs
-    ):  # i know *args and **kwargs but, i prefer work with same values
+    ):
         from tuxbot.core.utils.functions.utils import (
             replace_in_dict,
             replace_in_list,
@@ -121,6 +121,11 @@ class ContextPlus(commands.Context):
             return message
 
         return await super().send(content=content, embed=embed, **kwargs)
+
+    async def ask(
+        self, content=None, *, embed=None, emotes=None, timeout=None
+    ):
+        ...
 
     @property
     def session(self) -> aiohttp.ClientSession:

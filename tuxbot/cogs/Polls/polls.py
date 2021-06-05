@@ -9,10 +9,9 @@ from yarl import URL
 from tuxbot.core.utils.functions.extra import ContextPlus, group_extra
 from tuxbot.core.utils.functions.utils import upper_first
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
-from .functions import emotes as utils_emotes, listeners
+from tuxbot.core.i18n import Translator
+from tuxbot.core.utils import emotes as utils_emotes
+from .functions import listeners
 from .functions.converters import NewPropositionConvertor, PollConverter
 from .models import Poll
 from .models.suggests import Suggest

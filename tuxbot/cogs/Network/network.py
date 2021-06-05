@@ -27,9 +27,7 @@ from tuxbot.cogs.Network.functions.exceptions import (
     InvalidAsn,
 )
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.data_manager import cogs_data_path
 from tuxbot.core.utils.functions.extra import (
     ContextPlus,
@@ -130,7 +128,9 @@ class Network(commands.Cog):
         ipinfo_result = await get_ipinfo_result(
             self.bot.loop, self.__config.ipinfoKey, ip_address
         )
+        self.bot.console.log(ipinfo_result)
         ipwhois_result = await get_ipwhois_result(self.bot.loop, ip_address)
+        self.bot.console.log(ipwhois_result)
 
         merged_results = merge_ipinfo_ipwhois(ipinfo_result, ipwhois_result)
 

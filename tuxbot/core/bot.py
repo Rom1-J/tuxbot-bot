@@ -21,18 +21,22 @@ from tuxbot.core.utils.data_manager import (
     logs_data_path,
     config_file,
 )
-from tuxbot.core.utils.functions.extra import ContextPlus
+from tuxbot.core.utils.functions.extra import ContextPlus, CommandPLus
 from tuxbot.core.utils.functions.prefix import get_prefixes
+from tuxbot.core.utils.functions.levenshtein import levenshtein
 from tuxbot.core.utils.console import console
+from tuxbot.core.utils import emotes as utils_emotes
 from tuxbot.core.config import (
     Config,
     ConfigFile,
     search_for,
 )
+from tuxbot.core.i18n import Translator
 from . import __version__, ExitCodes
 from . import exceptions
 
 log = logging.getLogger("tuxbot")
+_ = Translator("core", __file__)
 
 packages: Tuple = (
     "jishaku",
@@ -65,6 +69,7 @@ class Tux(commands.AutoShardedBot):
         self.console = console
 
         self.stats = {"commands": Counter(), "socket": Counter()}
+        self.all_subcommands = ["help"]
 
         self.config: Config = ConfigFile(config_file, Config).config
         self.instance_name = self.config.Core.instance_name
@@ -155,6 +160,19 @@ class Tux(commands.AutoShardedBot):
 
         self.uptime = datetime.datetime.now()
         self.last_on_ready = self.uptime
+
+        for command in self.commands:
+            if isinstance(command, CommandPLus):
+                self.all_subcommands.append(command.name)
+                self.all_subcommands += command.aliases
+            elif hasattr(command, "walk_commands"):
+                subs = [s.name for s in command.walk_commands()]
+
+                for sub in subs:
+                    self.all_subcommands.append(f"{command.name} {sub}")
+                    self.all_subcommands += [
+                        f"{alias} {sub}" for alias in command.aliases
+                    ]
 
         with self._progress["main"] as progress:
             progress.stop_task(self._progress["tasks"]["discord_connecting"])
@@ -265,6 +283,38 @@ class Tux(commands.AutoShardedBot):
                 raise exceptions.DisabledCommandByBotOwner
 
             await self.invoke(ctx)
+
+        if ctx is not None and ctx.prefix:
+            hits = levenshtein(
+                " ".join(message.content.lstrip(ctx.prefix).split(" ")[:2]),
+                self.all_subcommands,
+            )
+
+            if hits:
+                possibilities = [
+                    "{command} {args}".format(
+                        command=command,
+                        args=" ".join(
+                            message.content.lstrip(ctx.prefix).split(" ")[2:]
+                        ),
+                    )
+                    for command in sorted(hits, key=hits.get, reverse=True)
+                ][:3]
+
+                e = discord.Embed(title=_("Did you mean?", ctx, self.config))
+                emotes = []
+
+                for i, command in enumerate(possibilities):
+                    emotes.append(utils_emotes.emotes[i])
+
+                    e.add_field(
+                        name=utils_emotes.emotes[i],
+                        value=f"```{command}```",
+                        inline=False,
+                    )
+
+                await ctx.ask(embed=e, emotes=emotes, timeout=10)
+
         else:
             self.dispatch("message_without_command", message)
 

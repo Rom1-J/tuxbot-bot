@@ -5,9 +5,7 @@ from discord.ext import commands
 from structured_config import ConfigFile
 
 from tuxbot.core.bot import Tux
-from tuxbot.core.i18n import (
-    Translator,
-)
+from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.data_manager import cogs_data_path
 from tuxbot.core.utils.functions.extra import (
     ContextPlus,
