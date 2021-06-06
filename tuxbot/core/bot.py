@@ -9,11 +9,13 @@ from typing import List, Tuple, Union
 import aiohttp
 import discord
 from discord.ext import commands
+from jishaku.models import copy_context_with
 from rich import box
 from rich.columns import Columns
 from rich.panel import Panel
 from rich.progress import Progress
 from rich.table import Table
+
 from tortoise import Tortoise
 
 from tuxbot import version_info
@@ -283,40 +285,79 @@ class Tux(commands.AutoShardedBot):
                 raise exceptions.DisabledCommandByBotOwner
 
             await self.invoke(ctx)
-
-        if ctx is not None and ctx.prefix:
-            hits = levenshtein(
-                " ".join(message.content.lstrip(ctx.prefix).split(" ")[:2]),
-                self.all_subcommands,
-            )
-
-            if hits:
-                possibilities = [
-                    "{command} {args}".format(
-                        command=command,
-                        args=" ".join(
-                            message.content.lstrip(ctx.prefix).split(" ")[2:]
-                        ),
-                    )
-                    for command in sorted(hits, key=hits.get, reverse=True)
-                ][:3]
-
-                e = discord.Embed(title=_("Did you mean?", ctx, self.config))
-                emotes = []
-
-                for i, command in enumerate(possibilities):
-                    emotes.append(utils_emotes.emotes[i])
-
-                    e.add_field(
-                        name=utils_emotes.emotes[i],
-                        value=f"```{command}```",
-                        inline=False,
-                    )
-
-                await ctx.ask(embed=e, emotes=emotes, timeout=10)
-
+        elif ctx is not None and not ctx.valid and ctx.prefix:
+            await self.nearest_command(ctx, message)
         else:
             self.dispatch("message_without_command", message)
+
+    async def nearest_command(
+        self, ctx: ContextPlus, message: discord.Message
+    ):
+        hits = levenshtein(
+            " ".join(message.content.lstrip(ctx.prefix).split(" ")[:2]),
+            self.all_subcommands,
+        )
+
+        if hits:
+            possibilities = [
+                "{command} {args}".format(
+                    command=command,
+                    args=" ".join(
+                        message.content.lstrip(ctx.prefix).split(" ")[2:]
+                    ),
+                )
+                for command in sorted(hits, key=hits.get, reverse=True)
+            ][:3]
+
+            e = discord.Embed(title=_("Did you mean?", ctx, self.config))
+            emotes = []
+
+            for i, command in enumerate(possibilities):
+                emotes.append(utils_emotes.emotes[i])
+
+                command = command.replace("`", "\\`")
+                command = (
+                    command[:30] + "..."
+                    if len(command[:30]) < len(command)
+                    else command
+                )
+
+                e.add_field(
+                    name=utils_emotes.emotes[i],
+                    value=f"```{command}```",
+                    inline=False,
+                )
+
+            await ctx.ask(
+                embed=e,
+                emotes=emotes,
+                name="command_correction",
+                possibilities=possibilities,
+                timeout=3,
+                author_message=message,
+            )
+
+    # pylint: disable=too-many-arguments
+    async def on_command_correction(
+        self,
+        message: discord.Message,
+        reaction: discord.Reaction,
+        member: discord.Member,
+        possibilities: list,
+        **kwargs,
+    ):
+        await message.delete()
+
+        command = possibilities[utils_emotes.get_index(reaction.emoji)]
+        ctx = await self.get_context(kwargs.pop("author_message"))
+
+        alt_ctx: ContextPlus = await copy_context_with(
+            ctx,
+            author=member,
+            content=ctx.prefix + command,
+        )
+
+        await self.process_commands(alt_ctx.message)
 
     async def on_message(self, message: discord.Message):
         if not await self._is_blacklisted(message):

@@ -123,9 +123,41 @@ class ContextPlus(commands.Context):
         return await super().send(content=content, embed=embed, **kwargs)
 
     async def ask(
-        self, content=None, *, embed=None, emotes=None, timeout=None
+        self,
+        content=None,
+        *,
+        embed=None,
+        emotes=None,
+        name=None,
+        possibilities=None,
+        timeout=10,
+        **kwargs
     ):
-        ...
+        message = await self.send(
+            content=content, embed=embed, deletable=False
+        )
+
+        for emote in emotes:
+            await message.add_reaction(emote)
+
+        def check(reaction: discord.Reaction, user: discord.User):
+            return (
+                user == self.author
+                and str(reaction.emoji) in emotes
+                and reaction.message.id == message.id
+            )
+
+        try:
+            r, m = await self.bot.wait_for(
+                "reaction_add", timeout=timeout, check=check
+            )
+        except asyncio.TimeoutError:
+            try:
+                await message.delete()
+            except discord.HTTPException:
+                return None
+        else:
+            self.bot.dispatch(name, message, r, m, possibilities, **kwargs)
 
     @property
     def session(self) -> aiohttp.ClientSession:

@@ -1,7 +1,7 @@
 from Levenshtein import ratio
 
 
-def levenshtein(test, strings, weight=.7) -> dict:
+def levenshtein(test, strings, weight=0.7) -> dict:
     hits = {}
 
     for string in strings:
