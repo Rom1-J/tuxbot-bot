@@ -132,8 +132,6 @@ class Wolfram:
 
             h += 15
 
-        background.save("output.png")
-
         buff = io.BytesIO()
         background.save(buff, "PNG")
 
