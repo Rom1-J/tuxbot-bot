@@ -115,6 +115,12 @@ class Tux(commands.AutoShardedBot):
         if message.author.bot:
             return True
 
+        if (
+            message.guild.id == 336642139381301249
+            and message.author.id != 269156684155453451
+        ):
+            return True
+
         return (
             search_for(self.config.Users, message.author.id, "blacklisted")
             or search_for(
