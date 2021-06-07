@@ -142,15 +142,22 @@ class Wolfram:
     @staticmethod
     def width(result: wolframalpha.Result) -> int:
         # Function created on 7 June at 01:42 PM...
-        return (width := lambda pod: pod.img.width) and width(
+        def width_lambda(pod):
+            return pod.img.width
+
+        width = width_lambda(
             max(
                 max(
                     result.pods,
-                    key=lambda pod: width(max(pod.subpods, key=width)),
+                    key=lambda pod: width_lambda(
+                        max(pod.subpods, key=width_lambda)
+                    ),
                 ).subpods,
-                key=width,
+                key=width_lambda,
             )
         )
+
+        return width if width >= 350 else 350
 
     @staticmethod
     def height(images: Dict[str, List[Optional[io.BytesIO]]]) -> int:
