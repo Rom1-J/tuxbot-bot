@@ -12,7 +12,7 @@ from aiocache import cached, Cache
 from aiocache.serializers import PickleSerializer
 
 
-FONT = ImageFont.truetype("/usr/share/fonts/TTF/DejaVuSans.ttf", size=16)
+FONT = ImageFont.truetype("./tuxbot/cogs/Math/fonts/DejaVuSans.ttf", size=16)
 
 
 class Wolfram:
