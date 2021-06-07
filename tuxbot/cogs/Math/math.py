@@ -73,7 +73,9 @@ class Math(commands.Cog):
 
         file = discord.File(image, "output.png")
 
-        await ctx.send(embed=e, file=file)
+        await ctx.send(
+            embed=e, file=file, reference=ctx.message, mention_author=False
+        )
 
     # =========================================================================
 
