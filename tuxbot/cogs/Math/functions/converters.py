@@ -4,7 +4,7 @@ from discord.ext.commands import Context
 
 class LatexConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
-        latex = argument
+        latex = argument.rstrip("`").lstrip("`")
 
         if not argument.startswith("$$"):
             latex = "$$" + latex

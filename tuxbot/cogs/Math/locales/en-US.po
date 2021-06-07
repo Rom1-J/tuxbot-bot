@@ -16,3 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: tuxbot/cogs/Math/math.py:47
+msgid "No results found..."
+msgstr ""
+
+#: tuxbot/cogs/Math/math.py:57
+msgid "Using closest Wolfram|Alpha interpretation: {}"
+msgstr ""

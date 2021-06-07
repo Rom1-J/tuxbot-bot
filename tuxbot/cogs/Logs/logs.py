@@ -264,9 +264,11 @@ class Logs(commands.Cog):
                 type(error), error, error.__traceback__, chain=False
             )
         )
-        e.description = f"```py\n{exc}\n```"
+        e.description = f"```py\n{textwrap.shorten(exc, width=2035)}\n```"
         e.timestamp = datetime.datetime.utcnow()
         await self.webhook("errors").send(embed=e)
+
+        log.error(exc)
 
         e.description = _(
             "```An error occurred, the bot owner has been advertised...```",

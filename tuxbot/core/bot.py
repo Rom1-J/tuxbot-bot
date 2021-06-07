@@ -115,7 +115,7 @@ class Tux(commands.AutoShardedBot):
         if message.author.bot:
             return True
 
-        if (
+        return (
             search_for(self.config.Users, message.author.id, "blacklisted")
             or search_for(
                 self.config.Channels, message.channel.id, "blacklisted"
@@ -126,10 +126,7 @@ class Tux(commands.AutoShardedBot):
                     self.config.Servers, message.guild.id, "blacklisted"
                 )
             )
-        ):
-            return True
-
-        return False
+        )
 
     async def load_packages(self):
         if packages:
