@@ -25,10 +25,16 @@ class ExprConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         argument = argument.rstrip("`").lstrip("`")
 
-        return argument, parse_expr(
-            argument,
-            transformations=(
-                standard_transformations
-                + (implicit_multiplication_application,)
-            ),
-        )
+        def _parse_expr():
+            return parse_expr(
+                argument,
+                transformations=(
+                    standard_transformations
+                    + (implicit_multiplication_application,)
+                ),
+                evaluate=False,
+            )
+
+        parsed_arg = await ctx.bot.loop.run_in_executor(None, _parse_expr)
+
+        return argument, parsed_arg
