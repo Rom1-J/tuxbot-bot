@@ -108,12 +108,6 @@ async def get_ipwhois_result(loop, ip: str) -> Union[NoReturn, dict]:
         return {}
 
 
-@cached(
-    ttl=24 * 3600,
-    serializer=PickleSerializer(),
-    cache=Cache.MEMORY,
-    namespace="network",
-)
 async def get_ipinfo_result(loop, apikey: str, ip: str) -> dict:
     def _get_ipinfo_result(_ip: str) -> Union[NoReturn, dict]:
         """
