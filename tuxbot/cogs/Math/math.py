@@ -13,8 +13,13 @@ from tuxbot.core.utils.functions.extra import (
 )
 
 from .config import MathConfig
-from .functions.converters import LatexConverter
-from .functions.utils import get_latex_bytes, Wolfram, clean_query
+from .functions.converters import LatexConverter, ExprConverter
+from .functions.utils import (
+    get_latex_bytes,
+    Wolfram,
+    clean_query,
+    get_graph_bytes,
+)
 
 log = logging.getLogger("tuxbot.cogs.Math")
 _ = Translator("Math", __file__)
@@ -88,5 +93,20 @@ class Math(commands.Cog):
 
         e = discord.Embed(description=f"```{latex_clean}```")
         e.set_image(url="attachment://output.png")
+
+        await ctx.send(embed=e, file=file)
+
+    # =========================================================================
+
+    @command_extra(name="graph", deletable=True)
+    async def _graph(self, ctx: ContextPlus, *, expr: ExprConverter):
+        expr, parsed_expr = expr
+
+        graph_bytes = await get_graph_bytes(self.bot.loop, parsed_expr)
+        file = discord.File(graph_bytes, "output.png")
+
+        e = discord.Embed(title=expr)
+        e.set_image(url="attachment://output.png")
+        e.set_footer(text=ctx.author, icon_url=ctx.author.avatar.url)
 
         await ctx.send(embed=e, file=file)

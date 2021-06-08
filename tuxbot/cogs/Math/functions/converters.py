@@ -1,6 +1,8 @@
 from discord.ext import commands
 from discord.ext.commands import Context
 
+from sympy import parse_expr
+
 
 class LatexConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
@@ -13,3 +15,8 @@ class LatexConverter(commands.Converter):
             latex = latex + "$$"
 
         return latex
+
+
+class ExprConverter(commands.Converter):
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        return argument, parse_expr(argument)

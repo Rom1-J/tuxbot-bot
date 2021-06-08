@@ -6,6 +6,8 @@ import aiohttp
 import wolframalpha
 
 from sympy import preview
+from sympy.printing.dot import dotprint
+from graphviz import Source
 from PIL import Image, ImageDraw, ImageFont
 
 from aiocache import cached, Cache
@@ -197,3 +199,13 @@ def clean_query(query: str) -> str:
     query = query.replace(" ", "+")
 
     return query
+
+
+async def get_graph_bytes(loop, expr) -> io.BytesIO:
+    def _get_graph_bytes(_expr):
+        digraph = dotprint(expr)
+        raw_bytes = Source(digraph).pipe(format="png")
+
+        return io.BytesIO(raw_bytes)
+
+    return await loop.run_in_executor(None, _get_graph_bytes, expr)
