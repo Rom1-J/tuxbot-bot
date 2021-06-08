@@ -3,6 +3,7 @@ import logging
 import discord
 from discord.ext import commands
 from structured_config import ConfigFile
+from sympy import pretty
 
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
@@ -105,8 +106,10 @@ class Math(commands.Cog):
         graph_bytes = await get_graph_bytes(self.bot.loop, parsed_expr)
         file = discord.File(graph_bytes, "output.png")
 
-        e = discord.Embed(title=expr)
+        text = pretty(parsed_expr, use_unicode=True)
+
+        e = discord.Embed(title=discord.utils.escape_markdown(expr))
         e.set_image(url="attachment://output.png")
         e.set_footer(text=ctx.author, icon_url=ctx.author.avatar.url)
 
-        await ctx.send(embed=e, file=file)
+        await ctx.send(f"```\n{text}```", embed=e, file=file)

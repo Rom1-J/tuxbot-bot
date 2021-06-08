@@ -1,7 +1,11 @@
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from sympy import parse_expr
+from sympy.parsing.sympy_parser import (
+    parse_expr,
+    standard_transformations,
+    implicit_multiplication_application,
+)
 
 
 class LatexConverter(commands.Converter):
@@ -19,4 +23,12 @@ class LatexConverter(commands.Converter):
 
 class ExprConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
-        return argument, parse_expr(argument)
+        argument = argument.rstrip("`").lstrip("`")
+
+        return argument, parse_expr(
+            argument,
+            transformations=(
+                standard_transformations
+                + (implicit_multiplication_application,)
+            ),
+        )
