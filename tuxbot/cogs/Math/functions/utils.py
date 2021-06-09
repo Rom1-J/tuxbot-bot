@@ -113,31 +113,34 @@ class Wolfram:
     async def merge_images(
         self, images: Dict[str, List[Optional[io.BytesIO]]], width: int
     ) -> io.BytesIO:
-        height = self.height(images)
+        def _merge_images():
+            height = self.height(images)
 
-        background = Image.new(
-            "RGBA", (width + 30, height + 15), (255, 255, 255, 255)
-        )
-        background_editable = ImageDraw.Draw(background)
+            background = Image.new(
+                "RGBA", (width + 30, height + 15), (255, 255, 255, 255)
+            )
+            background_editable = ImageDraw.Draw(background)
 
-        w, h = 15, 15
+            w, h = 15, 15
 
-        for k, v in images.items():
-            background_editable.text((w, h), k, (103, 142, 156), font=FONT)
-            h += FONT.getsize(k)[1] + 10
+            for k, v in images.items():
+                background_editable.text((w, h), k, (103, 142, 156), font=FONT)
+                h += FONT.getsize(k)[1] + 10
 
-            for image in v:
-                im = Image.open(image)
-                background.paste(im, (w, h))
+                for image in v:
+                    im = Image.open(image)
+                    background.paste(im, (w, h))
 
-                h += im.size[1]
+                    h += im.size[1]
 
-            h += 15
+                h += 15
 
-        buff = io.BytesIO()
-        background.save(buff, "PNG")
+            buff = io.BytesIO()
+            background.save(buff, "PNG")
 
-        return io.BytesIO(buff.getvalue())
+            return io.BytesIO(buff.getvalue())
+
+        return await self.loop.run_in_executor(None, _merge_images)
 
     @staticmethod
     def width(result: wolframalpha.Result) -> int:

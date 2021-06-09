@@ -7,11 +7,14 @@ import discord
 import humanize
 import psutil
 from discord.ext import commands
+from tuxbot.cogs.Utils.functions.quote import Quote
+
 from tuxbot import version_info, __version__
 
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
+from .functions.converters import QuoteConverter
 from .functions.info import fetch_info
 
 log = logging.getLogger("tuxbot.cogs.Utils")
@@ -139,21 +142,21 @@ class Utils(commands.Cog):
     @command_extra(name="credits", aliases=["contributors", "authors"])
     async def _credits(self, ctx: ContextPlus):
         e = discord.Embed(
-            title=_("Contributors", ctx, self.bot.config), color=0x36393F
+            title=_("Contributors", ctx, self.bot.config), color=0x2F3136
         )
 
         e.add_field(
             name="**Romain#5117** ",
-            value="• [github](https://github.com/Rom1-J)\n"
-            "• [gitea](https://git.gnous.eu/Romain)\n"
-            "• romain@gnous.eu",
+            value="> • [github](https://github.com/Rom1-J)\n"
+            "> • [gitlab](https://gitlab.gnous.eu/Romain)\n"
+            "> • romain@gnous.eu",
             inline=True,
         )
         e.add_field(
             name="**Outout#4039** ",
-            value="• [gitea](https://git.gnous.eu/mael)\n"
-            "• [@outoutxyz](https://twitter.com/outouxyz)\n"
-            "• mael@gnous.eu",
+            value="> • [gitea](https://git.gnous.eu/mael)\n"
+            "> • [@outoutxyz](https://twitter.com/outouxyz)\n"
+            "> • mael@gnous.eu",
             inline=True,
         )
 
@@ -195,7 +198,7 @@ class Utils(commands.Cog):
         )
 
         e = discord.Embed(
-            title=_("Invite", ctx, self.bot.config), color=0x36393F
+            title=_("Invite", ctx, self.bot.config), color=0x2F3136
         )
 
         e.add_field(
@@ -265,3 +268,16 @@ class Utils(commands.Cog):
             f"-L{start_line + len(lines) - 1}>"
         )
         await ctx.send(final_url)
+
+    # =========================================================================
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @command_extra(name="quote")
+    async def _quote(self, ctx: ContextPlus, *, message: QuoteConverter):
+        # noinspection PyUnresolvedReferences
+        quote = Quote(self.bot.loop, message.content, str(message.author))
+
+        quote_bytes = await quote.generate()
+        file = discord.File(quote_bytes, "map.png")
+
+        await ctx.send(file=file)
