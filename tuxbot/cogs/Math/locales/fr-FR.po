@@ -25,3 +25,7 @@ msgstr "Aucun résultat trouvé..."
 #: tuxbot/cogs/Math/math.py:57
 msgid "Using closest Wolfram|Alpha interpretation: {}"
 msgstr "En utilisant l'interprétation Wolfram|Alpha la plus proche : {}"
+
+#: tuxbot/cogs/Math/math.py:106
+msgid "Unable to parse this expression"
+msgstr "Impossible de traiter cette expression"

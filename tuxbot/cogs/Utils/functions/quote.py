@@ -52,7 +52,7 @@ class Quote:
         if (
             author_width := AUTHOR_FONT.getsize(self.author)[0]
         ) > self.text_width:
-            self.text_width = author_width + 12
+            self.text_width = author_width + PADDING[0]
 
     async def generate(self) -> io.BytesIO:
         def _generate() -> io.BytesIO:

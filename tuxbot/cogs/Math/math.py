@@ -103,6 +103,11 @@ class Math(commands.Cog):
     async def _graph(self, ctx: ContextPlus, *, expr: ExprConverter):
         expr, parsed_expr = expr
 
+        if parsed_expr is None:
+            return await ctx.send(
+                _("Unable to parse this expression", ctx, self.bot.config)
+            )
+
         graph_bytes = await get_graph_bytes(self.bot.loop, parsed_expr)
         file = discord.File(graph_bytes, "output.png")
 
