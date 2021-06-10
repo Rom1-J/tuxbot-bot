@@ -116,7 +116,8 @@ class Tux(commands.AutoShardedBot):
             return True
 
         if (
-            message.guild.id == 336642139381301249
+            message.guild
+            and message.guild.id == 336642139381301249
             and message.author.id != 269156684155453451
         ):
             return True

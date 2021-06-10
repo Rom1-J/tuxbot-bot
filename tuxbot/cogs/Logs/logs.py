@@ -92,7 +92,7 @@ class Logs(commands.Cog):
         )
         return webhook
 
-    async def send_guild_stats(self, e, guild):
+    async def send_guild_stats(self, e, guild: discord.Guild):
         e.add_field(name="Name", value=guild.name)
         e.add_field(name="ID", value=guild.id)
         e.add_field(name="Shard ID", value=guild.shard_id or "N/A")
@@ -111,7 +111,7 @@ class Logs(commands.Cog):
         e.add_field(name="Online", value=f"{online} ({online / total:.2%})")
 
         if guild.icon:
-            e.set_thumbnail(url=guild.icon_url)
+            e.set_thumbnail(url=guild.icon.url)
 
         if guild.me:
             e.timestamp = guild.me.joined_at
