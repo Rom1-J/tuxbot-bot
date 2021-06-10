@@ -2,11 +2,12 @@ import inspect
 import logging
 import os
 import platform
+from typing import Union
 
 import discord
 import humanize
 import psutil
-from discord.ext import commands
+from discord.ext import commands, menus
 from tuxbot.cogs.Utils.functions.quote import Quote
 
 from tuxbot import version_info, __version__
@@ -16,6 +17,7 @@ from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 from .functions.converters import QuoteConverter
 from .functions.info import fetch_info
+from .functions.pages import UserPageSource
 
 log = logging.getLogger("tuxbot.cogs.Utils")
 _ = Translator("Utils", __file__)
@@ -281,3 +283,49 @@ class Utils(commands.Cog):
         file = discord.File(quote_bytes, "quote.png")
 
         await ctx.send(file=file)
+
+    # =========================================================================
+
+    @command_extra(name="ui", aliases=["user_info", "userinfo"])
+    async def _ui(
+        self,
+        ctx: ContextPlus,
+        user_ids: commands.Greedy[
+            Union[commands.MemberConverter, commands.UserConverter]
+        ],
+    ):
+        embeds = []
+
+        for user_id in set(user_ids):
+            e = discord.Embed(color=0x2F3136)
+
+            if isinstance(user_id, (discord.User, discord.Member)):
+                e.set_author(name=user_id, icon_url=user_id.avatar.url)
+                e.set_thumbnail(url=user_id.avatar.url)
+                e.set_footer(text=f"ID: {user_id.id}")
+
+                created_at = user_id.created_at.replace(tzinfo=None)
+                e.add_field(
+                    name=_("Created at:", ctx, self.bot.config),
+                    value=f"> {humanize.time.naturaldate(created_at)} "
+                    f"({humanize.time.naturaltime(created_at)})",
+                    inline=False,
+                )
+
+            if isinstance(user_id, discord.Member):
+                joined_at = user_id.joined_at.replace(tzinfo=None)
+                e.add_field(
+                    name=_("Joined at:", ctx, self.bot.config),
+                    value=f"> {humanize.time.naturaldate(joined_at)} "
+                    f"({humanize.time.naturaltime(joined_at)})",
+                )
+
+            embeds.append(e)
+
+        pages = menus.MenuPages(
+            UserPageSource(embeds), delete_message_after=False
+        )
+        try:
+            await pages.start(ctx)
+        except menus.MenuError:
+            await pages.stop()

@@ -115,3 +115,11 @@ msgstr ""
 #: tuxbot/cogs/Utils/utils.py:254
 msgid "Unable to fetch lines for `{}`"
 msgstr ""
+
+#: tuxbot/cogs/Utils/utils.py:309
+msgid "Created at:"
+msgstr ""
+
+#: tuxbot/cogs/Utils/utils.py:318
+msgid "Joined at:"
+msgstr ""

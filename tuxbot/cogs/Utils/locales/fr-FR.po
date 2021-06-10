@@ -54,7 +54,7 @@ msgstr "__:file_folder: Fichiers__"
 
 #: tuxbot/cogs/Utils/utils.py:100
 msgid "__¶ Lines__"
-msgstr "__¶ Lines__"
+msgstr "__¶ Lignes__"
 
 #: tuxbot/cogs/Utils/utils.py:103
 msgid "class"
@@ -127,3 +127,11 @@ msgstr "Impossible de trouver `{}`"
 #: tuxbot/cogs/Utils/utils.py:254
 msgid "Unable to fetch lines for `{}`"
 msgstr "Impossible de récuperer les lignes pour `{}`"
+
+#: tuxbot/cogs/Utils/utils.py:309
+msgid "Created at:"
+msgstr "Créé le :"
+
+#: tuxbot/cogs/Utils/utils.py:318
+msgid "Joined at:"
+msgstr "Rejoint le :"
