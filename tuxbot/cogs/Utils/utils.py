@@ -278,6 +278,6 @@ class Utils(commands.Cog):
         quote = Quote(self.bot.loop, message.content, str(message.author))
 
         quote_bytes = await quote.generate()
-        file = discord.File(quote_bytes, "map.png")
+        file = discord.File(quote_bytes, "quote.png")
 
         await ctx.send(file=file)

@@ -1,9 +1,7 @@
-import json
 import logging
 
 import discord
 from discord.ext import commands
-from rich import inspect
 
 from tuxbot.cogs.Linux.functions.utils import get_from_cnf
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
