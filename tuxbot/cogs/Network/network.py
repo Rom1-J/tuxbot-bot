@@ -93,12 +93,11 @@ class Network(commands.Cog):
         try:
             async with aiohttp.ClientSession(
                 connector=TCPConnector(verify_ssl=False)
-            ) as cs:
-                async with cs.get(
-                    "https://peeringdb.com/api/net",
-                    timeout=aiohttp.ClientTimeout(total=60),
-                ) as s:
-                    self._peeringdb_net = await s.json()
+            ) as cs, cs.get(
+                "https://peeringdb.com/api/net",
+                timeout=aiohttp.ClientTimeout(total=60),
+            ) as s:
+                self._peeringdb_net = await s.json()
         except asyncio.exceptions.TimeoutError:
             pass
         else:
@@ -222,39 +221,38 @@ class Network(commands.Cog):
                 "5": 0x343A40,
             }
 
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get(
-                    str(ip),
-                    headers=headers,
-                    timeout=aiohttp.ClientTimeout(total=8),
-                ) as s:
-                    e = discord.Embed(
-                        title=f"Headers : {ip}",
-                        color=colors.get(str(s.status)[0], 0x6C757D),
-                    )
-                    e.add_field(
-                        name="Status", value=f"```{s.status}```", inline=True
-                    )
-                    e.set_thumbnail(url=f"https://http.cat/{s.status}")
+            async with aiohttp.ClientSession() as cs, cs.get(
+                str(ip),
+                headers=headers,
+                timeout=aiohttp.ClientTimeout(total=8),
+            ) as s:
+                e = discord.Embed(
+                    title=f"Headers : {ip}",
+                    color=colors.get(str(s.status)[0], 0x6C757D),
+                )
+                e.add_field(
+                    name="Status", value=f"```{s.status}```", inline=True
+                )
+                e.set_thumbnail(url=f"https://http.cat/{s.status}")
 
-                    headers = dict(s.headers.items())
-                    headers.pop("Set-Cookie", headers)
+                headers = dict(s.headers.items())
+                headers.pop("Set-Cookie", headers)
 
-                    fail = False
+                fail = False
 
-                    for key, value in headers.items():
-                        fail, output = await shorten(value, 50, fail)
+                for key, value in headers.items():
+                    fail, output = await shorten(value, 50, fail)
 
-                        if output["link"]:
-                            value = _(
-                                "[show all]({})", ctx, self.bot.config
-                            ).format(output["link"])
-                        else:
-                            value = f"```\n{output['text']}```"
+                    if output["link"]:
+                        value = _(
+                            "[show all]({})", ctx, self.bot.config
+                        ).format(output["link"])
+                    else:
+                        value = f"```\n{output['text']}```"
 
-                        e.add_field(name=key, value=value, inline=True)
+                    e.add_field(name=key, value=value, inline=True)
 
-                    await ctx.send(embed=e)
+                await ctx.send(embed=e)
         except (
             ClientConnectorError,
             InvalidURL,
@@ -310,23 +308,22 @@ class Network(commands.Cog):
         try:
             url = f"https://www.isthissitedown.org/site/{domain}"
 
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get(
-                    url,
-                    timeout=aiohttp.ClientTimeout(total=8),
-                ) as s:
-                    text = await s.text()
+            async with aiohttp.ClientSession() as cs, cs.get(
+                url,
+                timeout=aiohttp.ClientTimeout(total=8),
+            ) as s:
+                text = await s.text()
 
-                    if "is up!" in text:
-                        title = _("Up!", ctx, self.bot.config)
-                        color = 0x28A745
-                    else:
-                        title = _("Down...", ctx, self.bot.config)
-                        color = 0xDC3545
+                if "is up!" in text:
+                    title = _("Up!", ctx, self.bot.config)
+                    color = 0x28A745
+                else:
+                    title = _("Down...", ctx, self.bot.config)
+                    color = 0xDC3545
 
-                    e = discord.Embed(title=title, color=color)
+                e = discord.Embed(title=title, color=color)
 
-                    await ctx.send(url, embed=e)
+                await ctx.send(url, embed=e)
 
         except (
             ClientConnectorError,

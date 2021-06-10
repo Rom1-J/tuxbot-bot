@@ -84,7 +84,7 @@ class Polls(commands.Cog):
         await poll_row.save()
 
         await stmt.edit(content="", embed=e)
-        for emote in range(len(answers)):
+        for emote, answer in enumerate(answers):
             await stmt.add_reaction(emotes[emote])
 
     async def get_poll(

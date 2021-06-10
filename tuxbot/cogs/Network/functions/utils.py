@@ -137,16 +137,15 @@ async def get_ipinfo_result(loop, apikey: str, ip: str) -> dict:
 )
 async def get_crimeflare_result(ip: str) -> Optional[str]:
     try:
-        async with aiohttp.ClientSession() as cs:
-            async with cs.post(
-                "http://www.crimeflare.org:82/cgi-bin/cfsearch.cgi",
-                data=f"cfS={ip}",
-                timeout=aiohttp.ClientTimeout(total=21),
-            ) as s:
-                result = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
+        async with aiohttp.ClientSession() as cs, cs.post(
+            "http://www.crimeflare.org:82/cgi-bin/cfsearch.cgi",
+            data=f"cfS={ip}",
+            timeout=aiohttp.ClientTimeout(total=21),
+        ) as s:
+            result = re.search(r"(\d*\.\d*\.\d*\.\d*)", await s.text())
 
-                if result:
-                    return result.group()
+            if result:
+                return result.group()
     except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
         pass
 
@@ -220,12 +219,11 @@ async def get_map_bytes(apikey: str, latlon: str) -> Optional[io.BytesIO]:
     try:
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=5)
-        ) as cs:
-            async with cs.get(url) as s:
-                if s.status != 200:
-                    return None
+        ) as cs, cs.get(url) as s:
+            if s.status != 200:
+                return None
 
-                return io.BytesIO(await s.read())
+            return io.BytesIO(await s.read())
     except asyncio.exceptions.TimeoutError:
         from ..images.load_fail import value
 

@@ -27,19 +27,27 @@ class CNF:
     # =========================================================================
 
     async def fetch(self):
+        self.erase()
+
         try:
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get(self._url.format(self.command)) as s:
-                    if s.status == 200:
-                        self._content = BeautifulSoup(
-                            await s.text(), "html.parser"
-                        )
-                        return self.parse()
+            async with aiohttp.ClientSession() as cs, cs.get(
+                self._url.format(self.command)
+            ) as s:
+                if s.status == 200:
+                    self._content = BeautifulSoup(
+                        await s.text(), "html.parser"
+                    )
+                    return self.parse()
 
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
         raise CNFException(_("Something went wrong ..."))
+
+    def erase(self):
+        self.description = ""
+        self.meta = {}
+        self.distro = {}
 
     def parse(self):
         info = self._content.find("div", class_="row-command-info")
