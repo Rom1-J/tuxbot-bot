@@ -296,6 +296,9 @@ class Utils(commands.Cog):
     ):
         embeds = []
 
+        if not user_ids:
+            user_ids.append(ctx.author)
+
         for user_id in set(user_ids):
             e = discord.Embed(color=0x2F3136)
 

@@ -18,7 +18,9 @@ async def on_member_join(self, member: discord.Member):
 
             if autoban.log_channel:
                 try:
-                    channel = await member.guild.fetch_channel(autoban.log_channel)
+                    channel = await member.guild.fetch_channel(
+                        autoban.log_channel
+                    )
 
                     await channel.send(
                         f"Autoban: {member}\n"
