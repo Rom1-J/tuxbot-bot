@@ -117,6 +117,7 @@ class ContextPlus(commands.Context):
                 except discord.HTTPException:
                     return None
             else:
+                await self.message.add_reaction("✅")
                 await message.delete()
             return message
 
