@@ -1,3 +1,5 @@
+import shlex
+
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -8,6 +10,7 @@ from tuxbot.cogs.Mod.functions.exceptions import (
     NonBotMessageException,
     ReasonTooLongException,
 )
+from tuxbot.cogs.Mod.functions.parser import AutoBanParser
 from tuxbot.cogs.Mod.models import Rule
 
 
@@ -66,3 +69,19 @@ class ReasonConverter(commands.Converter):
             )
 
         return argument
+
+
+class AutoBanConverter(commands.Converter):
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        parser = AutoBanParser(add_help=False, allow_abbrev=False)
+        parser.add_argument(
+            "-r", "--reason", type=str, default="Auto ban from bot"
+        )
+        parser.add_argument("-m", "--match", type=str)
+        parser.add_argument("-l", "--log_channel", type=int, default=None)
+        parser.add_argument("--delete", action="store_true")
+
+        try:
+            return parser.parse_args(shlex.split(argument))
+        except Exception:
+            return None

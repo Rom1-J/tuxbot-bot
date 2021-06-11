@@ -5,11 +5,13 @@ from typing import Optional
 import discord
 from discord.ext import commands
 
+from tuxbot.cogs.Mod.functions import listeners
 from tuxbot.cogs.Mod.functions.converters import (
     RuleConverter,
     RuleIDConverter,
     BotMessageConverter,
     ReasonConverter,
+    AutoBanConverter,
 )
 from tuxbot.cogs.Mod.functions.exceptions import (
     RuleTooLongException,
@@ -27,6 +29,7 @@ from tuxbot.cogs.Mod.functions.utils import (
     get_mute_role,
     create_mute_role,
 )
+from tuxbot.cogs.Mod.models import AutoBan
 from tuxbot.cogs.Mod.models.rules import Rule
 from tuxbot.core.utils import checks
 from tuxbot.core.bot import Tux
@@ -63,6 +66,10 @@ class Mod(commands.Cog):
             ),
         ):
             return await ctx.send(_(str(error), ctx, self.bot.config))
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member: discord.Member):
+        await listeners.on_member_join(self, member)
 
     # =========================================================================
     # =========================================================================
@@ -402,3 +409,44 @@ class Mod(commands.Cog):
         await ctx.send("\N{THUMBS UP SIGN}")
 
     # =========================================================================
+
+    # noinspection PyUnresolvedReferences
+    @command_extra(
+        name="autoban",
+        deletable=True,
+    )
+    @commands.guild_only()
+    @checks.is_admin()
+    async def _autoban(
+        self,
+        ctx: ContextPlus,
+        *,
+        args: AutoBanConverter,
+    ):
+        if args is None:
+            return await ctx.send(
+                _("Unable to parse arguments", ctx, self.bot.config)
+            )
+
+        if args.delete:
+            autoban_row = await AutoBan.get_or_none(
+                server_id=ctx.guild.id, match=args.match
+            )
+
+            if autoban_row is None:
+                return await ctx.send(
+                    _("Unable to find this match", ctx, self.bot.config)
+                )
+
+            await autoban_row.delete()
+        else:
+            autoban_row = await AutoBan()
+
+            autoban_row.server_id = ctx.guild.id
+            autoban_row.match = args.match
+            autoban_row.reason = args.reason
+            autoban_row.log_channel = args.log_channel
+
+            await autoban_row.save()
+
+        await ctx.send("\N{THUMBS UP SIGN}")
