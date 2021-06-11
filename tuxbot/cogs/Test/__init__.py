@@ -1,11 +1,11 @@
 from collections import namedtuple
 
 from tuxbot.core.bot import Tux
-from .dev import Dev
-from .config import DevConfig, HAS_MODELS
+from .test import Test
+from .config import TestConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=0, release_level="alpha")
+version_info = VersionInfo(major=0, minor=1, micro=0, release_level="alpha")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -16,4 +16,5 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 def setup(bot: Tux):
-    bot.add_cog(Dev(bot))
+    cog = Test(bot)
+    bot.add_cog(cog)

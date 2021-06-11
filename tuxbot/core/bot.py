@@ -53,6 +53,7 @@ packages: Tuple = (
     "tuxbot.cogs.Mod",
     "tuxbot.cogs.Tags",
     "tuxbot.cogs.Math",
+    "tuxbot.cogs.Test",
 )
 
 
