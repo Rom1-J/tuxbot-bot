@@ -1,4 +1,5 @@
 import logging
+from textwrap import shorten
 
 import discord
 from discord.ext import commands
@@ -113,7 +114,9 @@ class Math(commands.Cog):
 
         text = pretty(parsed_expr, use_unicode=True)
 
-        e = discord.Embed(title=discord.utils.escape_markdown(expr))
+        e = discord.Embed(
+            title=shorten(discord.utils.escape_markdown(expr), 255)
+        )
         e.set_image(url="attachment://output.png")
         e.set_footer(text=ctx.author, icon_url=ctx.author.avatar.url)
 
