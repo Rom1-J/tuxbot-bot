@@ -10,7 +10,7 @@ import psutil
 from discord.ext import commands, menus
 from tuxbot.cogs.Utils.functions.quote import Quote
 
-from tuxbot import version_info, __version__
+from tuxbot import version_info as tuxbot_version_info, __version__
 
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 from tuxbot.core.bot import Tux
@@ -24,8 +24,9 @@ _ = Translator("Utils", __file__)
 
 
 class Utils(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
 
     # =========================================================================
     # =========================================================================
@@ -119,7 +120,7 @@ class Utils(commands.Cog):
 
             e.add_field(
                 name=_("__Latest changes__", ctx, self.bot.config),
-                value=version_info.info,
+                value=tuxbot_version_info.info,
                 inline=False,
             )
 
@@ -273,7 +274,6 @@ class Utils(commands.Cog):
 
     # =========================================================================
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
     @command_extra(name="quote")
     async def _quote(self, ctx: ContextPlus, *, message: QuoteConverter):
         # noinspection PyUnresolvedReferences
@@ -299,7 +299,7 @@ class Utils(commands.Cog):
         if not user_ids:
             user_ids.append(ctx.author)
 
-        for user_id in set(user_ids):
+        for user_id in user_ids:
             e = discord.Embed(color=0x2F3136)
 
             if isinstance(user_id, (discord.User, discord.Member)):

@@ -32,8 +32,9 @@ _ = Translator("Tags", __file__)
 
 
 class Tags(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
 
     async def cog_command_error(self, ctx: ContextPlus, error):
         if isinstance(

@@ -24,8 +24,9 @@ _ = Translator("Custom", __file__)
 
 
 class Custom(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
@@ -69,7 +70,7 @@ class Custom(commands.Cog):
         except NotImplementedError:
             e = discord.Embed(
                 title=_("List of available locales: ", ctx, self.bot.config),
-                description=list_locales,
+                description=list_locales(),
                 color=0x36393E,
             )
 

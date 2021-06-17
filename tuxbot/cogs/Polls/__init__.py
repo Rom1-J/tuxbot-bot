@@ -5,7 +5,7 @@ from .polls import Polls
 from .config import PollsConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")
+version_info = VersionInfo(major=2, minor=0, micro=1, release_level="alpha")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -16,4 +16,4 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 def setup(bot: Tux):
-    bot.add_cog(Polls(bot))
+    bot.add_cog(Polls(bot, version_info))

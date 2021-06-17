@@ -28,8 +28,10 @@ _ = Translator("Math", __file__)
 
 
 class Math(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
+
         self.__config: MathConfig = ConfigFile(
             str(cogs_data_path("Math") / "config.yaml"),
             MathConfig,

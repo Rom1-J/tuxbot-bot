@@ -5,7 +5,7 @@ from .math import Math
 from .config import MathConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=1, release_level="stable")
+version_info = VersionInfo(major=1, minor=0, micro=2, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -16,4 +16,4 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 def setup(bot: Tux):
-    bot.add_cog(Math(bot))
+    bot.add_cog(Math(bot, version_info))

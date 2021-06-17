@@ -24,7 +24,7 @@ __version__ = "v{{}}.{{}}.{{}}-{{}}".format(
 
 
 def setup(bot: Tux):
-    bot.add_cog({name}(bot))
+    bot.add_cog({name}(bot, version_info))
 
 """
 
@@ -57,8 +57,9 @@ _ = Translator("{name}", __file__)
 
 
 class {name}(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
 
     # =========================================================================
     # =========================================================================
@@ -89,6 +90,51 @@ msgstr ""
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=CHARSET\\n"
 "Content-Transfer-Encoding: 8bit\\n"
+
+"""
+
+FR_PO_TEMPLATE = """
+# French translations for Tuxbot-bot package
+# Traductions françaises du paquet Tuxbot-bot.
+# Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tuxbot-bot package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tuxbot-bot\\n"
+"Report-Msgid-Bugs-To: rick@gnous.eu\\n"
+"POT-Creation-Date: 2021-06-14 17:42+0200\\n"
+"PO-Revision-Date: 2021-06-14 17:42+0200\\n"
+"Last-Translator: Automatically generated\\n"
+"Language-Team: none\\n"
+"Language: fr\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+"""
+
+EN_PO_TEMPLATE = """
+# English translations for Tuxbot-bot package.
+# Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tuxbot-bot package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tuxbot-bot\\n"
+"Report-Msgid-Bugs-To: rick@gnous.eu\\n"
+"POT-Creation-Date: 2021-06-14 17:42+0200\\n"
+"PO-Revision-Date: 2021-06-14 17:42+0200\\n"
+"Last-Translator: Automatically generated\\n"
+"Language-Team: none\\n"
+"Language: en_US\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
 
 """
 
@@ -160,6 +206,10 @@ def generate(name: str, has_models: bool) -> None:
     locales_path.mkdir()
 
     write(locales_path / "messages.pot", MESSAGES_TEMPLATE)
+    write(locales_path / "fr-FR.po", FR_PO_TEMPLATE)
+    write(locales_path / "en-US.po", EN_PO_TEMPLATE)
+
+    # =========================================================================
 
 
 def main():

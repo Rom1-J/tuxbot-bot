@@ -4,9 +4,14 @@ import discord
 from discord.ext import commands
 from tuxbot.cogs.Dev.functions.HTTPs import HttpCode
 
-from tuxbot.cogs.Dev.functions.exceptions import UnknownHttpCode
+from tuxbot.cogs.Dev.functions.exceptions import (
+    UnknownHttpCode,
+    TioUnknownLang,
+)
 
-from tuxbot.cogs.Dev.functions.converters import HttpCodeConverter
+from tuxbot.cogs.Dev.functions.converters import (
+    HttpCodeConverter,
+)
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
@@ -16,11 +21,12 @@ _ = Translator("Dev", __file__)
 
 
 class Dev(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
 
     async def cog_command_error(self, ctx: ContextPlus, error):
-        if isinstance(error, (UnknownHttpCode,)):
+        if isinstance(error, (UnknownHttpCode, TioUnknownLang)):
             await ctx.send(_(str(error), ctx, self.bot.config))
 
     # =========================================================================

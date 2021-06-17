@@ -8,7 +8,7 @@ from .logs import Logs, GatewayHandler
 from .config import LogsConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=0, release_level="alpha")
+version_info = VersionInfo(major=1, minor=0, micro=1, release_level="alpha")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -19,7 +19,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 def setup(bot: Tux):
-    cog = Logs(bot)
+    cog = Logs(bot, version_info)
     bot.add_cog(cog)
 
     handler = GatewayHandler(cog)

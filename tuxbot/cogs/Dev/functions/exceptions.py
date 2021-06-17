@@ -7,3 +7,7 @@ class DevException(commands.BadArgument):
 
 class UnknownHttpCode(DevException):
     pass
+
+
+class TioUnknownLang(DevException):
+    pass

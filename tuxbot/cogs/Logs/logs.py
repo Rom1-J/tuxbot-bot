@@ -10,7 +10,6 @@ from typing import Any, Dict, List, DefaultDict
 
 import discord
 import humanize
-import psutil
 import sentry_sdk
 from discord.ext import commands, tasks
 from structured_config import ConfigFile
@@ -47,9 +46,10 @@ class GatewayHandler(logging.Handler):
 
 
 class Logs(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
-        self.process = psutil.Process()
+        self.version_info = version_info
+
         self._batch_lock = asyncio.Lock()
         self._data_batch: List[Dict[str, Any]] = []
         self._gateway_queue: asyncio.Queue = asyncio.Queue()

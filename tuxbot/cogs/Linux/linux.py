@@ -13,8 +13,9 @@ _ = Translator("Linux", __file__)
 
 
 class Linux(commands.Cog):
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
 
     async def cog_before_invoke(self, ctx: ContextPlus):
         await ctx.trigger_typing()

@@ -56,8 +56,10 @@ _ = Translator("Network", __file__)
 class Network(commands.Cog):
     _peeringdb_net: Optional[dict]
 
-    def __init__(self, bot: Tux):
+    def __init__(self, bot: Tux, version_info):
         self.bot = bot
+        self.version_info = version_info
+
         self.__config: NetworkConfig = ConfigFile(
             str(cogs_data_path("Network") / "config.yaml"),
             NetworkConfig,
