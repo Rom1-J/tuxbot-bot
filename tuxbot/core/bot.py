@@ -339,7 +339,7 @@ class Tux(commands.AutoShardedBot):
                 emotes=emotes,
                 name="command_correction",
                 possibilities=possibilities,
-                timeout=3,
+                timeout=10,
                 author_message=message,
             )
 
