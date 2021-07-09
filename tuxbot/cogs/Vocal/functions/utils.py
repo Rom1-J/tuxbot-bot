@@ -1,6 +1,8 @@
 import asyncio
 import datetime
-from typing import Optional
+import textwrap
+
+from typing import Optional, List
 
 import async_timeout
 import discord
@@ -173,6 +175,49 @@ class Player(wavelink.Player):
             await self.destroy()
         except KeyError:
             pass
+
+
+def generate_playlist_options(
+    playlist: List[Track],
+) -> List[List[discord.SelectOption]]:
+    # noinspection PyTypeChecker
+    parts: List[List[Track]] = [
+        playlist[x : x + 23] for x in range(0, len(playlist), 23)
+    ]
+    out: List[List[discord.SelectOption]] = [[]]
+    pages = 0
+    i = 0
+
+    for part_id, part in enumerate(parts, start=1):
+        for song in part:
+            out[pages].append(
+                discord.SelectOption(
+                    value=str(i),
+                    label=textwrap.shorten(song.author, width=25),
+                    description=textwrap.shorten(song.title, width=50),
+                    emoji=song.emoji,
+                )
+            )
+
+            i += 1
+
+        if pages > 0:
+            out[pages].append(
+                discord.SelectOption(value="less", label="Prev...", emoji="➖")
+            )
+
+        if part_id < len(parts):
+            out[pages].append(
+                discord.SelectOption(value="more", label="Next...", emoji="➕")
+            )
+
+        pages += 1
+        out.append([])
+
+    if not out[-1]:
+        del out[-1]
+
+    return out
 
 
 def check_track_or_raise(track: Track):

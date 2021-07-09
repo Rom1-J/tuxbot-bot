@@ -14,8 +14,13 @@ from tuxbot.core.utils.functions.extra import ContextPlus, command_extra
 from .converters import QueryConverter
 from .functions import listeners
 from .functions.exceptions import EmptyChannelException, NoDMException
-from .functions.ui import generate_playlist_options, PlaylistSelect
-from .functions.utils import Player, Track, check_track_or_raise
+from .functions.ui import PlaylistSelect
+from .functions.utils import (
+    Player,
+    Track,
+    check_track_or_raise,
+    generate_playlist_options,
+)
 
 log = logging.getLogger("tuxbot.cogs.Vocal")
 _ = Translator("Vocal", __file__)

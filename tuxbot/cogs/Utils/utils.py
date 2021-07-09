@@ -128,7 +128,7 @@ class Utils(commands.Cog):
                 name=_("__:link: Links__", ctx, self.bot.config),
                 value="[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                 "| [gnous.eu](https://gnous.eu/) "
-                "| [git](https://git.gnous.eu/gnouseu/tuxbot-bot) "
+                "| [git](https://gitlab.gnous.eu/gnouseu/tuxbot-bot) "
                 "| [status](https://status.gnous.eu/check/154250) "
                 + _("| [Invite]", ctx, self.bot.config)
                 + "(https://discordapp.com/oauth2/authorize?client_id="

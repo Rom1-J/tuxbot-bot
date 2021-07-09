@@ -62,8 +62,9 @@ async def on_node_ready(self, node: wavelink.Node):
 
 
 # pylint: disable=unused-argument
-async def on_player_stop(self, node: wavelink.Node, payload):
-    print(type(payload))
+async def on_player_stop(
+    self, node: wavelink.Node, payload: wavelink.TrackEnd
+):
     await payload.player.do_next()
 
 
