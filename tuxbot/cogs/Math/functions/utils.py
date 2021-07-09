@@ -198,6 +198,8 @@ async def get_latex_bytes(loop, latex: str) -> Optional[io.BytesIO]:
 
 def clean_query(query: str) -> str:
     query = query.replace("%", "%25")
+    query = query.replace("(", "%28")
+    query = query.replace(")", "%29")
     query = query.replace("+", "%2B")
     query = query.replace(" ", "+")
 

@@ -5,7 +5,7 @@ from .math import Math
 from .config import MathConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=2, release_level="stable")
+version_info = VersionInfo(major=1, minor=0, micro=3, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
