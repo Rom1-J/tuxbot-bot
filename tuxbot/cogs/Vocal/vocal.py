@@ -14,7 +14,7 @@ from tuxbot.core.utils.functions.extra import ContextPlus, command_extra
 from .converters import QueryConverter
 from .functions import listeners
 from .functions.exceptions import EmptyChannelException, NoDMException
-from .functions.ui import PlaylistSelect
+from .functions.ui import PlaylistSelect, ControllerView
 from .functions.utils import (
     Player,
     Track,
@@ -324,3 +324,16 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             f"Server Uptime: `{datetime.timedelta(milliseconds=node.stats.uptime)}`"
         )
         await ctx.send(fmt)
+
+    @commands.command(name="test_player", deletable=False)
+    async def _test_player(self, ctx: ContextPlus):
+        # noinspection PyTypeChecker
+        player: Player = self.bot.wavelink.get_player(
+            guild_id=ctx.guild.id, cls=Player, context=ctx
+        )
+        view = ControllerView(author=ctx.author, player=player)
+
+        await ctx.send(
+            embed=view.build_embed(),
+            view=view
+        )

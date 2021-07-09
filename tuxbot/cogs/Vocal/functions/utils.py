@@ -37,6 +37,8 @@ class Track(wavelink.Track):
             "ytsearch": "<:youtube:862463749273026561>",
             "spotify": "<:spotify:862463903959351309>",
             "soundcloud": "<:soundcloud:862464041121087518>",
+            "vimeo": "<:vimeo:863181307424407552>",
+            "bandcamp": "<:bandcamp:863182155084464138>",
         }
 
         for key, value in transform.items():
