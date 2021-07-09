@@ -200,18 +200,18 @@ class Logs(commands.Cog):
         self.bot.stats["socket"][msg.get("t")] += 1
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild: discord.guild):
+    async def on_guild_join(self, guild: discord.Guild):
         e = discord.Embed(colour=0x53DDA4, title="New Guild")  # green colour
         await self.send_guild_stats(e, guild)
 
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild: discord.guild):
+    async def on_guild_remove(self, guild: discord.Guild):
         e = discord.Embed(colour=0xDD5F53, title="Left Guild")  # red colour
         await self.send_guild_stats(e, guild)
 
     @commands.Cog.listener()
-    async def on_message(self, message: discord.message):
-        if message.guild is None:
+    async def on_message(self, message: discord.Message):
+        if message.guild is None and message.author.id != self.bot.user.id:
             e = discord.Embed(colour=0x0A97F5, title="New DM")  # blue colour
             e.set_author(
                 name=message.author,

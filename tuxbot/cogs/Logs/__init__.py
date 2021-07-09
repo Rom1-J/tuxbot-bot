@@ -1,14 +1,12 @@
 import logging
 from collections import namedtuple
 
-from discord.ext import commands
-
 from tuxbot.core.bot import Tux
 from .logs import Logs, GatewayHandler
 from .config import LogsConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=1, release_level="alpha")
+version_info = VersionInfo(major=1, minor=0, micro=2, release_level="beta")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
