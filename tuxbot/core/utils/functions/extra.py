@@ -1,21 +1,24 @@
 import asyncio
-import random
-from io import BytesIO
 
 import aiohttp
 import discord
 from discord import Embed
 from discord.ext import commands
 
-TOKEN_REPLACEMENT = "■" * random.randint(3, 15)
-PASSWORD_REPLACEMENT = "■" * random.randint(3, 15)
-IP_REPLACEMENT = "■" * random.randint(3, 15)
+TOKEN_REPLACEMENT = "■" * 13
+PASSWORD_REPLACEMENT = "■" * 13
+IP_REPLACEMENT = "■" * 13
 
 
 class ContextPlus(commands.Context):
     # noinspection PyTypedDict
     async def send(
-        self, content=None, *, embed=None, deletable=True, **kwargs
+        self,
+        content: str = None,
+        *,
+        embed: discord.Embed = None,
+        deletable=True,
+        **kwargs
     ):
         from tuxbot.core.utils.functions.utils import (
             replace_in_dict,
@@ -39,7 +42,7 @@ class ContextPlus(commands.Context):
         if embed:
             e = embed.to_dict()
             for key, value in e.items():
-                if isinstance(value, (str, bytes)):
+                if isinstance(value, str):
                     # skipcq
                     e[key] = (
                         value.replace(
@@ -96,7 +99,11 @@ class ContextPlus(commands.Context):
             hasattr(self.command, "deletable") and self.command.deletable
         ) and deletable:
             message = await super().send(
-                content=content, embed=embed, **kwargs
+                content=content,
+                embed=embed,
+                reference=self.message,
+                mention_author=False,
+                **kwargs,
             )
             await message.add_reaction("🗑")
 
@@ -121,7 +128,13 @@ class ContextPlus(commands.Context):
                 await message.delete()
             return message
 
-        return await super().send(content=content, embed=embed, **kwargs)
+        return await super().send(
+            content=content,
+            embed=embed,
+            reference=self.message,
+            mention_author=False,
+            **kwargs,
+        )
 
     async def ask(
         self,

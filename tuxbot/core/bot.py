@@ -6,6 +6,7 @@ import sys
 from collections import Counter
 from typing import List, Tuple, Union
 
+import wavelink
 import aiohttp
 import discord
 from discord.ext import commands
@@ -42,25 +43,28 @@ _ = Translator("core", __file__)
 
 packages: Tuple = (
     "jishaku",
-    "tuxbot.cogs.Admin",
-    "tuxbot.cogs.Logs",
-    "tuxbot.cogs.Dev",
-    "tuxbot.cogs.Utils",
-    "tuxbot.cogs.Polls",
-    "tuxbot.cogs.Custom",
-    "tuxbot.cogs.Network",
-    "tuxbot.cogs.Linux",
-    "tuxbot.cogs.Mod",
-    "tuxbot.cogs.Tags",
-    "tuxbot.cogs.Math",
-    "tuxbot.cogs.Test",
-    "tuxbot.cogs.Help",
+    # "tuxbot.cogs.Admin",
+    # "tuxbot.cogs.Logs",
+    # "tuxbot.cogs.Dev",
+    # "tuxbot.cogs.Utils",
+    # "tuxbot.cogs.Polls",
+    # "tuxbot.cogs.Custom",
+    # "tuxbot.cogs.Network",
+    # "tuxbot.cogs.Linux",
+    # "tuxbot.cogs.Mod",
+    # "tuxbot.cogs.Tags",
+    # "tuxbot.cogs.Math",
+    # "tuxbot.cogs.Test",
+    # "tuxbot.cogs.Help",
+    "tuxbot.cogs.Vocal",
 )
 
 
 class Tux(commands.AutoShardedBot):
     _loading: asyncio.Task
     _progress = {"tasks": {}, "main": Progress()}
+
+    wavelink: wavelink.Client
 
     def __init__(self, *args, cli_flags=None, **kwargs):
         # by default, if the bot shutdown without any intervention,

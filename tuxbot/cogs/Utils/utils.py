@@ -17,7 +17,7 @@ from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 from .functions.converters import QuoteConverter
 from .functions.info import fetch_info
-from .functions.pages import UserPageSource
+from .functions.menus import UserPageSource
 
 log = logging.getLogger("tuxbot.cogs.Utils")
 _ = Translator("Utils", __file__)

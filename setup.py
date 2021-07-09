@@ -24,6 +24,7 @@ setup(
         "structured_config>=4.12",
         "sympy>=1.8",
         "tortoise-orm>=0.16.17",
+        "Wavelink>=0.9.9",
         "wolframalpha>=5.0.0",
     ],
 )
