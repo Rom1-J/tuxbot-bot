@@ -176,5 +176,5 @@ class Player(wavelink.Player):
 
 
 def check_track_or_raise(track: Track):
-    if track.length > 3600 * 2:
+    if track.length > 3600 * 2 * 1000:
         raise TrackTooLong(_("The music should not exceed 2 hours"))

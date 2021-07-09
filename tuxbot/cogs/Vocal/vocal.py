@@ -129,8 +129,8 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
     # =========================================================================
     # =========================================================================
 
-    @command_extra(name="play")
-    async def connect(
+    @command_extra(name="connect", deletable=False)
+    async def _connect(
         self,
         ctx: ContextPlus,
         *,
@@ -153,7 +153,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
 
         await player.connect(channel.id)
 
-    @command_extra(name="play")
+    @command_extra(name="play", deletable=False)
     async def _play(self, ctx: ContextPlus, *, query: QueryConverter):
         # noinspection PyTypeChecker
         player: Player = self.bot.wavelink.get_player(
@@ -161,7 +161,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
         )
 
         if not player.is_connected:
-            await ctx.invoke(self.connect)
+            await ctx.invoke(self._connect)
 
         tracks = await self.bot.wavelink.get_tracks(str(query))
 
@@ -175,27 +175,30 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             )
 
         if isinstance(tracks, wavelink.TrackPlaylist):
+            count = 0
+
             for track in tracks.tracks:
                 track = Track(
                     track.id, track.info, requester=ctx.author, query=query
                 )
 
-                if track.length < 3600 * 2:
+                if track.length < 3600 * 2 * 1000:
+                    count += 1
                     await player.queue.put(track)
 
             e = discord.Embed(
                 color=0x2F3136,
                 description=_(
-                    "> +{count} new tracks added from the playlist {name}",
+                    "> **+{count}** new tracks added from the playlist __{name}__",
                     ctx,
                     self.bot.config,
                 ).format(
-                    count=len(tracks.tracks),
+                    count=count,
                     name=tracks.data["playlistInfo"]["name"],
                 ),
             )
 
-            await ctx.send(embed=e)
+            await ctx.send(embed=e, delete_after=15)
         else:
             track = Track(
                 tracks[0].id, tracks[0].info, requester=ctx.author, query=query
@@ -205,17 +208,17 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             e = discord.Embed(
                 color=0x2F3136,
                 description=_(
-                    "> Added {name} to the Queue", ctx, self.bot.config
+                    "> Added __{name}__ to the Queue", ctx, self.bot.config
                 ).format(name=track.title),
             )
 
-            await ctx.send(embed=e)
+            await ctx.send(embed=e, delete_after=15)
             await player.queue.put(track)
 
         if not player.is_playing:
             await player.do_next()
 
-    @command_extra(name="skip")
+    @command_extra(name="skip", deletable=False)
     async def _skip(self, ctx: ContextPlus):
         # noinspection PyTypeChecker
         player: Player = self.bot.wavelink.get_player(
@@ -256,7 +259,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
                 delete_after=15,
             )
 
-    @command_extra(name="queue", aliases=["q"])
+    @command_extra(name="queue", aliases=["q"], deletable=False)
     async def _queue(self, ctx: ContextPlus):
         # noinspection PyTypeChecker
         player: Player = self.bot.wavelink.get_player(
@@ -281,7 +284,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
 
         await ctx.send("Music on hold:", view=view)
 
-    @command_extra(name="now_playing", aliases=["np"])
+    @command_extra(name="now_playing", aliases=["np"], deletable=False)
     async def _now_playing(self, ctx: ContextPlus):
         # noinspection PyTypeChecker
         player: Player = self.bot.wavelink.get_player(
@@ -293,7 +296,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
 
         await player.invoke_controller()
 
-    @commands.command(name="player_info")
+    @commands.command(name="player_info", deletable=False)
     async def _player_info(self, ctx):
         """Retrieve various Node/Server/Player information."""
         player = self.bot.wavelink.get_player(ctx.guild.id)
