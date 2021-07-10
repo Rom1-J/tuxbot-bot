@@ -30,7 +30,7 @@ async def cog_before_invoke(self, ctx: ContextPlus):
 
     if (
         (ctx.command.name == "connect" and not player.context)
-        or self.is_privileged(ctx)
+        or player.is_privileged(ctx)
         or not player.channel_id
     ):
         return

@@ -14,7 +14,7 @@ from tuxbot.core.utils.functions.extra import ContextPlus, command_extra
 from .converters import QueryConverter
 from .functions import listeners
 from .functions.exceptions import EmptyChannelException, NoDMException
-from .functions.ui import PlaylistSelect, ControllerView
+from .functions.ui import PlaylistSelect
 from .functions.utils import (
     Player,
     Track,
@@ -101,37 +101,6 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
         await listeners.on_voice_state_update(self, member, before, after)
 
     # =========================================================================
-
-    def required(self, ctx: ContextPlus):
-        # noinspection PyTypeChecker
-        player: Player = self.bot.wavelink.get_player(
-            guild_id=ctx.guild.id, cls=Player, context=ctx
-        )
-        channel = self.bot.get_channel(int(player.channel_id))
-        if not isinstance(
-            channel, (discord.VoiceChannel, discord.StageChannel)
-        ):
-            return None
-
-        required = math.ceil((len(channel.members) - 1) / 2.5)
-
-        if ctx.command.name == "stop" and len(channel.members) == 3:
-            required = 2
-
-        return required
-
-    def is_privileged(self, ctx: ContextPlus):
-        # noinspection PyTypeChecker
-        player: Player = self.bot.wavelink.get_player(
-            guild_id=ctx.guild.id, cls=Player, context=ctx
-        )
-
-        return (
-            player.dj == ctx.author
-            or ctx.author.guild_permissions.kick_members
-        )
-
-    # =========================================================================
     # =========================================================================
 
     @command_extra(name="connect", deletable=False)
@@ -182,14 +151,29 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
         if isinstance(tracks, wavelink.TrackPlaylist):
             count = 0
 
-            for track in tracks.tracks:
+            for i, track in enumerate(tracks.tracks):
+                if i > 0:
+                    prev_track = tracks.tracks[i - 1]
+                else:
+                    prev_track = None
+
+                if i < len(tracks.tracks) - 1:
+                    next_track = tracks.tracks[i + 1]
+                else:
+                    next_track = None
+
                 track = Track(
-                    track.id, track.info, requester=ctx.author, query=query
+                    track.id,
+                    track.info,
+                    requester=ctx.author,
+                    query=query,
+                    previous=prev_track,
+                    next=next_track,
                 )
 
                 if track.length < 3600 * 2 * 1000:
                     count += 1
-                    await player.queue.put(track)
+                    player.queue.append(track)
 
             e = discord.Embed(
                 color=0x2F3136,
@@ -205,8 +189,18 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
 
             await ctx.send(embed=e, delete_after=15)
         else:
+            if len(player.queue) > 1:
+                prev_track = player.queue[-2]
+            else:
+                prev_track = None
+
             track = Track(
-                tracks[0].id, tracks[0].info, requester=ctx.author, query=query
+                tracks[0].id,
+                tracks[0].info,
+                requester=ctx.author,
+                query=query,
+                previous=prev_track,
+                next=None,
             )
             check_track_or_raise(track)
 
@@ -218,7 +212,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             )
 
             await ctx.send(embed=e, delete_after=15)
-            await player.queue.put(track)
+            player.queue.append(track)
 
         if not player.is_playing:
             await player.do_next()
@@ -230,39 +224,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             guild_id=ctx.guild.id, cls=Player, context=ctx
         )
 
-        if not player.is_connected:
-            return
-
-        if self.is_privileged(ctx):
-            await ctx.send(
-                "An admin or DJ has skipped the song.", delete_after=10
-            )
-            player.skip_votes.clear()
-
-            return await player.stop()
-
-        if ctx.author == player.current.requester:
-            await ctx.send(
-                "The song requester has skipped the song.", delete_after=10
-            )
-            player.skip_votes.clear()
-
-            return await player.stop()
-
-        required = self.required(ctx)
-        player.skip_votes.add(ctx.author)
-
-        if len(player.skip_votes) >= required:
-            await ctx.send(
-                "Vote to skip passed. Skipping song.", delete_after=10
-            )
-            player.skip_votes.clear()
-            await player.stop()
-        else:
-            await ctx.send(
-                f"{ctx.author.mention} has voted to skip the song.",
-                delete_after=15,
-            )
+        await player.skip(ctx)
 
     @command_extra(name="queue", aliases=["q"], deletable=False)
     async def _queue(self, ctx: ContextPlus):
@@ -274,17 +236,14 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
         if not player.is_connected:
             return
 
-        if player.queue.qsize() == 0:
+        if not player.queue:
             return await ctx.send(
                 "There are no more songs in the queue.", delete_after=15
             )
 
-        # noinspection PyProtectedMember
-        entries = list(player.queue._queue)  # pylint: disable=protected-access
-
         view = discord.ui.View()
         view.add_item(
-            PlaylistSelect(generate_playlist_options(entries), ctx.author)
+            PlaylistSelect(generate_playlist_options(player.queue), ctx.author)
         )
 
         await ctx.send("Music on hold:", view=view)
@@ -324,16 +283,3 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             f"Server Uptime: `{datetime.timedelta(milliseconds=node.stats.uptime)}`"
         )
         await ctx.send(fmt)
-
-    @commands.command(name="test_player", deletable=False)
-    async def _test_player(self, ctx: ContextPlus):
-        # noinspection PyTypeChecker
-        player: Player = self.bot.wavelink.get_player(
-            guild_id=ctx.guild.id, cls=Player, context=ctx
-        )
-        view = ControllerView(author=ctx.author, player=player)
-
-        await ctx.send(
-            embed=view.build_embed(),
-            view=view
-        )

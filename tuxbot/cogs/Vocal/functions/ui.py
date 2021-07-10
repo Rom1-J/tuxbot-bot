@@ -1,11 +1,14 @@
+from __future__ import annotations
 import datetime
 from os.path import dirname
-from typing import Optional
+from typing import Optional, TYPE_CHECKING, List
 
 import discord
 from tuxbot.core.i18n import Translator
-from .utils import Player, Track
 
+
+if TYPE_CHECKING:
+    from .utils import Player, Track
 
 _ = Translator("Vocal", dirname(__file__))
 
@@ -69,13 +72,30 @@ class PlaylistSelect(discord.ui.Select):
 
 
 class ControllerView(discord.ui.View):
-    def __init__(self, *args, author: discord.User, player: Player, **kwargs):
+    children: List[discord.ui.Button]
+
+    def __init__(
+        self,
+        *args,
+        author: discord.User,
+        player: Player,
+        track: Track,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
 
         self._author = author
         self._player = player
+        self._track = track
 
-        print(self.children)
+        self._prev = self.get_button("prev_song_w")
+        self._next = self.get_button("next_song_w")
+
+        if not self._player.current.previous:
+            self._prev.disabled = True
+
+        if not self._player.current.next:
+            self._next.disabled = True
 
     # =========================================================================
     # =========================================================================
@@ -86,7 +106,7 @@ class ControllerView(discord.ui.View):
         style=discord.ButtonStyle.danger,
     )
     async def _remove(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         return
 
@@ -96,15 +116,19 @@ class ControllerView(discord.ui.View):
         style=discord.ButtonStyle.primary,
     )
     async def _vol_up(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("vol up...", ephemeral=True)
 
-    @discord.ui.button(emoji="<:shuffle_w:863162986184310828>", row=0)
-    async def _shuffle(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+    @discord.ui.button(
+        emoji="<:leave_w:863442392307597363>",
+        row=0,
+        style=discord.ButtonStyle.danger,
+    )
+    async def _end(
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
-        await interaction.response.send_message("shuffle...", ephemeral=True)
+        await self._player.end(self._player.context)
 
     # =========================================================================
 
@@ -114,17 +138,17 @@ class ControllerView(discord.ui.View):
         style=discord.ButtonStyle.primary,
     )
     async def _prev(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("previous...", ephemeral=True)
 
     @discord.ui.button(
-        emoji="<:play_song_w:863162951032766494>",
+        emoji="<:pause_song_w:863162917595906048>",
         row=1,
         style=discord.ButtonStyle.primary,
     )
     async def _toggle(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         button.emoji = (
             "<:play_song_w:863162951032766494>"
@@ -139,19 +163,17 @@ class ControllerView(discord.ui.View):
         style=discord.ButtonStyle.primary,
     )
     async def _next(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
-        await interaction.response.send_message("next...", ephemeral=True)
+        await self._player.skip(self._player.context, track=self._track)
 
     # =========================================================================
 
-    @discord.ui.button(
-        disabled=True, emoji="<:blank:863085374640488518>", row=2
-    )
-    async def _blank3(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+    @discord.ui.button(emoji="<:shuffle_w:863162986184310828>", row=2)
+    async def _shuffle(
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
-        return
+        await interaction.response.send_message("shuffle...", ephemeral=True)
 
     @discord.ui.button(
         emoji="<:vol_down_w:863163012927848484>",
@@ -159,33 +181,41 @@ class ControllerView(discord.ui.View):
         style=discord.ButtonStyle.primary,
     )
     async def _vol_down(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("vol down...", ephemeral=True)
 
     @discord.ui.button(emoji="<:playlist_w:863162933211037726>", row=2)
     async def _queue(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+        self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("queue...", ephemeral=True)
 
     # =========================================================================
     # =========================================================================
 
+    def get_button(self, name: str) -> Optional[discord.ui.Button]:
+        for button in self.children:
+            if button.emoji.name == name:
+                return button
+
+        return None
+
     def build_embed(self) -> Optional[discord.Embed]:
         track: Track = self._player.current
         if not track:
             return None
 
-        qsize = self._player.queue.qsize()
+        queue_size = len(self._player.queue)
+        if track not in self._player.queue:
+            queue_pos = 1
+        else:
+            queue_pos = self._player.queue.index(track) + 1
 
         e = discord.Embed(colour=0x2F3136)
         e.add_field(
             name=f"{track.emoji} {track.author}",
-            value=(
-                f"[{track.title}]"
-                f"({track.uri})"
-            ),
+            value=f"[{track.title}]({track.uri})",
             inline=False,
         )
         if track.thumb:
@@ -195,28 +225,26 @@ class ControllerView(discord.ui.View):
             name=_(
                 "Duration",
                 self._player.context,
-                self._player.context.bot.config
+                self._player.context.bot.config,
             ),
             value=str(datetime.timedelta(milliseconds=int(track.length))),
             inline=True,
         )
         e.add_field(
-            name="Volume",
-            value=f"**`{self._player.volume}%`**",
-            inline=True
+            name="Volume", value=f"**`{self._player.volume}%`**", inline=True
         )
-        e.add_field(
-            name="DJ",
-            value=self._player.dj.mention,
-            inline=True
-        )
+        e.add_field(name="DJ", value=self._player.dj.mention, inline=True)
 
         e.set_footer(
             text=_(
                 "Requested by {name} | Position in queue: {pos}/{total}",
                 self._player.context,
-                self._player.context.bot.config
-            ).format(name=str(track.requester), pos=str(-1), total=str(qsize))
+                self._player.context.bot.config,
+            ).format(
+                name=str(track.requester),
+                pos=str(queue_pos),
+                total=str(queue_size),
+            )
         )
 
         return e
