@@ -2,13 +2,13 @@ from os.path import dirname
 
 import discord
 import wavelink
-from tuxbot.cogs.Vocal.functions.utils import Player
 
 from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.extra import ContextPlus
 from .exceptions import VocalException, IncorrectChannelException
+from .utils import Player
 
-_ = Translator("Vocal", dirname(__file__))
+_ = Translator("Music", dirname(__file__))
 
 
 async def cog_before_invoke(self, ctx: ContextPlus):

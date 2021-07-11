@@ -56,7 +56,7 @@ packages: Tuple = (
     "tuxbot.cogs.Math",
     "tuxbot.cogs.Test",
     "tuxbot.cogs.Help",
-    "tuxbot.cogs.Vocal",
+    "tuxbot.cogs.Music",
 )
 
 

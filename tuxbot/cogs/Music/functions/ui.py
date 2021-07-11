@@ -8,9 +8,10 @@ from tuxbot.core.i18n import Translator
 
 
 if TYPE_CHECKING:
+    # pylint: disable=cyclic-import
     from .utils import Player, Track
 
-_ = Translator("Vocal", dirname(__file__))
+_ = Translator("Music", dirname(__file__))
 BLANK_EMOJI = "<:blank:863085374640488518>"
 
 
@@ -89,24 +90,32 @@ class ControllerView(discord.ui.View):
         self._player = player
         self._track = track
 
-        self._prev = self.get_button("prev_song_w")
-        self._next = self.get_button("next_song_w")
+        _prev = self.get_button("prev_song_w")
+        _next = self.get_button("next_song_w")
 
-        if not self._player.current.previous:
-            self._prev.disabled = True
+        if _prev and not self._player.current.previous:
+            _prev.disabled = True
 
-        if not self._player.current.next:
-            self._next.disabled = True
+        if _next and not self._player.current.next:
+            _next.disabled = True
+
+    async def on_timeout(self) -> None:
+        if self._player.controller:
+            await self._player.controller.delete()
+
+        await self._player.invoke_controller()
 
     # =========================================================================
     # =========================================================================
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji=BLANK_EMOJI, row=0, disabled=True)
     async def _blank11(
         self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         return
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:trash_w:863163000038227998>",
         row=0,
@@ -117,6 +126,7 @@ class ControllerView(discord.ui.View):
     ):
         return
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:vol_up_w:863163026470076447>",
         row=0,
@@ -127,6 +137,7 @@ class ControllerView(discord.ui.View):
     ):
         await interaction.response.send_message("vol up...", ephemeral=True)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:leave_w:863442392307597363>",
         row=0,
@@ -137,6 +148,7 @@ class ControllerView(discord.ui.View):
     ):
         await self._player.end(self._player.context)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji=BLANK_EMOJI, row=0, disabled=True)
     async def _blank15(
         self, button: discord.ui.Button, interaction: discord.Interaction
@@ -145,12 +157,14 @@ class ControllerView(discord.ui.View):
 
     # =========================================================================
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji="<:backward_10_w:863557569553104936>", row=1)
     async def _backw10(
         self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("back 10s...", ephemeral=True)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:prev_song_w:863162971802042400>",
         row=1,
@@ -161,6 +175,7 @@ class ControllerView(discord.ui.View):
     ):
         await self._player.back(self._player.context, track=self._track)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:pause_song_w:863162917595906048>",
         row=1,
@@ -176,6 +191,7 @@ class ControllerView(discord.ui.View):
         )
         await interaction.response.edit_message(view=self)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:next_song_w:863162901820735538>",
         row=1,
@@ -186,6 +202,7 @@ class ControllerView(discord.ui.View):
     ):
         await self._player.skip(self._player.context, track=self._track)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji="<:forward_10_w:863557551478800384>", row=1)
     async def _forw10(
         self, button: discord.ui.Button, interaction: discord.Interaction
@@ -194,18 +211,21 @@ class ControllerView(discord.ui.View):
 
     # =========================================================================
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji=BLANK_EMOJI, row=2, disabled=True)
     async def _blank31(
         self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         return
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji="<:shuffle_w:863162986184310828>", row=2)
     async def _shuffle(
         self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("shuffle...", ephemeral=True)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(
         emoji="<:vol_down_w:863163012927848484>",
         row=2,
@@ -216,12 +236,14 @@ class ControllerView(discord.ui.View):
     ):
         await interaction.response.send_message("vol down...", ephemeral=True)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji="<:playlist_w:863162933211037726>", row=2)
     async def _queue(
         self, button: discord.ui.Button, interaction: discord.Interaction
     ):
         await interaction.response.send_message("queue...", ephemeral=True)
 
+    # pylint: disable=unused-argument
     @discord.ui.button(emoji=BLANK_EMOJI, row=2, disabled=True)
     async def _blank35(
         self, button: discord.ui.Button, interaction: discord.Interaction

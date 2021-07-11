@@ -1,6 +1,5 @@
 import logging
 import datetime
-import math
 import typing
 
 import discord
@@ -11,8 +10,8 @@ from discord.ext import commands
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.functions.extra import ContextPlus, command_extra
-from .converters import QueryConverter
 from .functions import listeners
+from .functions.converters import QueryConverter
 from .functions.exceptions import EmptyChannelException, NoDMException
 from .functions.ui import PlaylistSelect
 from .functions.utils import (
@@ -22,13 +21,11 @@ from .functions.utils import (
     generate_playlist_options,
 )
 
-log = logging.getLogger("tuxbot.cogs.Vocal")
-_ = Translator("Vocal", __file__)
+log = logging.getLogger("tuxbot.cogs.Music")
+_ = Translator("Music", __file__)
 
 
-class Vocal(commands.Cog, wavelink.WavelinkMixin):
-    """Music Cog."""
-
+class Music(commands.Cog, wavelink.WavelinkMixin):
     def __init__(self, bot: Tux, version_info):
         self.bot = bot
         self.version_info = version_info
@@ -127,6 +124,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
 
         await player.connect(channel.id)
 
+    # pylint: disable=too-many-branches
     @command_extra(name="play", deletable=False)
     async def _play(self, ctx: ContextPlus, *, query: QueryConverter):
         # noinspection PyTypeChecker
@@ -152,21 +150,19 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             count = 0
 
             for i, track in enumerate(tracks.tracks):
+                prev_track = None
+                next_track = None
+
                 if i == 0:
-                    first_track = track
                     if player.queue:
                         prev_track = player.queue[-1]
                     else:
                         prev_track = player.current
                 elif i > 0:
                     prev_track = tracks.tracks[i - 1]
-                else:
-                    prev_track = None
 
                 if i < len(tracks.tracks) - 1:
                     next_track = tracks.tracks[i + 1]
-                else:
-                    next_track = None
 
                 track = Track(
                     track.id,
@@ -177,7 +173,7 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
                     next=next_track,
                 )
 
-                if track.length < 3600 * 2 * 1000:
+                if track.length < 3605 * 2 * 1000:
                     if prev_track and i == 0:
                         prev_track.next = track
 
@@ -198,10 +194,10 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
 
             await ctx.send(embed=e, delete_after=15)
         else:
+            prev_track = None
+
             if len(player.queue) > 1:
                 prev_track = player.queue[-2]
-            else:
-                prev_track = None
 
             track = Track(
                 tracks[0].id,

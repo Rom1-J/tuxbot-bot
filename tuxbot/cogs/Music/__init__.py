@@ -1,8 +1,8 @@
 from collections import namedtuple
 
 from tuxbot.core.bot import Tux
-from .vocal import Vocal
-from .config import VocalConfig, HAS_MODELS
+from .music import Music
+from .config import MusicConfig, HAS_MODELS
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=1, minor=0, micro=0, release_level="alpha")
@@ -16,4 +16,4 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 def setup(bot: Tux):
-    bot.add_cog(Vocal(bot, version_info))
+    bot.add_cog(Music(bot, version_info))

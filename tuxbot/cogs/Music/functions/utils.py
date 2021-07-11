@@ -1,14 +1,13 @@
 import asyncio
 import textwrap
+import math
 from os.path import dirname
 
-from typing import Optional, List
+from typing import Optional, List, Set
 
 import async_timeout
 import discord
-import math
 import wavelink
-from rich import inspect
 
 from tuxbot.core.bot import Tux
 from tuxbot.core.utils.functions.extra import ContextPlus
@@ -16,7 +15,7 @@ from tuxbot.core.i18n import Translator
 from .exceptions import TrackTooLong
 from .ui import ControllerView
 
-_ = Translator("Vocal", dirname(__file__))
+_ = Translator("Music", dirname(__file__))
 
 
 class Track(wavelink.Track):
@@ -67,13 +66,13 @@ class Player(wavelink.Player):
         self.waiting = False
         self.updating = False
 
-        self.pause_votes = set()
-        self.resume_votes = set()
-        self.back_votes = set()
-        self.skip_votes = set()
-        self.shuffle_votes = set()
-        self.end_votes = set()
-        self.delete_votes = set()
+        self.pause_votes: Set[discord.User] = set()
+        self.resume_votes: Set[discord.User] = set()
+        self.back_votes: Set[discord.User] = set()
+        self.skip_votes: Set[discord.User] = set()
+        self.shuffle_votes: Set[discord.User] = set()
+        self.end_votes: Set[discord.User] = set()
+        self.delete_votes: Set[discord.User] = set()
 
     async def pause(self, ctx: ContextPlus):
         raise NotImplementedError
@@ -214,9 +213,9 @@ class Player(wavelink.Player):
         if self.is_privileged(ctx):
             self.skip_votes.clear()
 
-            try:
+            if self.controller:
                 await self.controller.delete()
-            except KeyError:
+            else:
                 await self.terminate()
                 return await ctx.send(
                     _(
@@ -332,9 +331,15 @@ class Player(wavelink.Player):
     # =========================================================================
 
     async def is_position_fresh(self) -> bool:
+        if not self.controller:
+            return False
+
         try:
             async for message in self.context.channel.history(limit=5):
-                if message.id == self.controller.id:
+                if (
+                    isinstance(message, discord.Message)
+                    and message.id == self.controller.id
+                ):
                     return True
         except (discord.HTTPException, AttributeError):
             return False
@@ -345,7 +350,8 @@ class Player(wavelink.Player):
 
     async def terminate(self) -> None:
         try:
-            await self.controller.delete()
+            if self.controller:
+                await self.controller.delete()
         except discord.HTTPException:
             pass
 
@@ -385,25 +391,19 @@ class Player(wavelink.Player):
         if track:
             new_queue = [None, track.previous] + self.queue[
                 self.queue.index(track) :
-            ]
+            ]  # type: ignore
 
-            if hasattr(new_queue[0], "previous"):
-                new_queue[0].previous = None
-
-            self.queue = new_queue.copy()
+            self.queue = new_queue  # type: ignore
         else:
-            new_queue = [None, self.current.previous] + self.queue
+            new_queue = [None, self.current.previous] + self.queue  # type: ignore
 
-            if hasattr(new_queue[0], "previous"):
-                new_queue[0].previous = None
-
-            self.queue = new_queue
+            self.queue = new_queue  # type: ignore
 
     def skip_queue(self, track: Optional[Track]) -> None:
         if track:
             new_queue = self.queue[self.queue.index(track) :]
 
-            self.queue = new_queue
+            self.queue = new_queue  # type: ignore
 
 
 def generate_playlist_options(
@@ -450,7 +450,7 @@ def generate_playlist_options(
 
 
 def check_track_or_raise(track: Track):
-    if track.length > 3600 * 2 * 1000:
+    if track.length > 3605 * 2 * 1000:
 
         def _(x):
             return x

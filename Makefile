@@ -70,7 +70,7 @@ black:
 
 .PHONY: lint
 lint:
-	$(PYTHON_PATH) -m pylint tuxbot
+	$(PYTHON_PATH) -m pylint tuxbot --verbose --output-format=colorized
 
 .PHONY: type
 type:
