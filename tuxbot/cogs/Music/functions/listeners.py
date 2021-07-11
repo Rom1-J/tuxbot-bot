@@ -65,6 +65,7 @@ async def on_node_ready(self, node: wavelink.Node):
 async def on_player_stop(
     self, node: wavelink.Node, payload: wavelink.TrackEnd
 ):
+    del payload.player.queue[0]
     await payload.player.do_next()
 
 

@@ -152,7 +152,13 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
             count = 0
 
             for i, track in enumerate(tracks.tracks):
-                if i > 0:
+                if i == 0:
+                    first_track = track
+                    if player.queue:
+                        prev_track = player.queue[-1]
+                    else:
+                        prev_track = player.current
+                elif i > 0:
                     prev_track = tracks.tracks[i - 1]
                 else:
                     prev_track = None
@@ -172,6 +178,9 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
                 )
 
                 if track.length < 3600 * 2 * 1000:
+                    if prev_track and i == 0:
+                        prev_track.next = track
+
                     count += 1
                     player.queue.append(track)
 
@@ -211,11 +220,26 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
                 ).format(name=track.title),
             )
 
-            await ctx.send(embed=e, delete_after=15)
+            if prev_track:
+                prev_track.next = track
+
             player.queue.append(track)
+
+            await ctx.send(embed=e, delete_after=15)
 
         if not player.is_playing:
             await player.do_next()
+        else:
+            await player.invoke_controller()
+
+    @command_extra(name="back", deletable=False)
+    async def _back(self, ctx: ContextPlus):
+        # noinspection PyTypeChecker
+        player: Player = self.bot.wavelink.get_player(
+            guild_id=ctx.guild.id, cls=Player, context=ctx
+        )
+
+        await player.back(ctx)
 
     @command_extra(name="skip", deletable=False)
     async def _skip(self, ctx: ContextPlus):
@@ -236,14 +260,16 @@ class Vocal(commands.Cog, wavelink.WavelinkMixin):
         if not player.is_connected:
             return
 
-        if not player.queue:
+        if len(player.queue) == 1:
             return await ctx.send(
                 "There are no more songs in the queue.", delete_after=15
             )
 
         view = discord.ui.View()
         view.add_item(
-            PlaylistSelect(generate_playlist_options(player.queue), ctx.author)
+            PlaylistSelect(
+                generate_playlist_options(player.queue[1:]), ctx.author
+            )
         )
 
         await ctx.send("Music on hold:", view=view)

@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .utils import Player, Track
 
 _ = Translator("Vocal", dirname(__file__))
+BLANK_EMOJI = "<:blank:863085374640488518>"
 
 
 class PlaylistSelect(discord.ui.Select):
@@ -100,6 +101,12 @@ class ControllerView(discord.ui.View):
     # =========================================================================
     # =========================================================================
 
+    @discord.ui.button(emoji=BLANK_EMOJI, row=0, disabled=True)
+    async def _blank11(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        return
+
     @discord.ui.button(
         emoji="<:trash_w:863163000038227998>",
         row=0,
@@ -130,7 +137,19 @@ class ControllerView(discord.ui.View):
     ):
         await self._player.end(self._player.context)
 
+    @discord.ui.button(emoji=BLANK_EMOJI, row=0, disabled=True)
+    async def _blank15(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        return
+
     # =========================================================================
+
+    @discord.ui.button(emoji="<:backward_10_w:863557569553104936>", row=1)
+    async def _backw10(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        await interaction.response.send_message("back 10s...", ephemeral=True)
 
     @discord.ui.button(
         emoji="<:prev_song_w:863162971802042400>",
@@ -140,7 +159,7 @@ class ControllerView(discord.ui.View):
     async def _prev(
         self, button: discord.ui.Button, interaction: discord.Interaction
     ):
-        await interaction.response.send_message("previous...", ephemeral=True)
+        await self._player.back(self._player.context, track=self._track)
 
     @discord.ui.button(
         emoji="<:pause_song_w:863162917595906048>",
@@ -167,7 +186,19 @@ class ControllerView(discord.ui.View):
     ):
         await self._player.skip(self._player.context, track=self._track)
 
+    @discord.ui.button(emoji="<:forward_10_w:863557551478800384>", row=1)
+    async def _forw10(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        await interaction.response.send_message("forw 10s...", ephemeral=True)
+
     # =========================================================================
+
+    @discord.ui.button(emoji=BLANK_EMOJI, row=2, disabled=True)
+    async def _blank31(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        return
 
     @discord.ui.button(emoji="<:shuffle_w:863162986184310828>", row=2)
     async def _shuffle(
@@ -191,6 +222,12 @@ class ControllerView(discord.ui.View):
     ):
         await interaction.response.send_message("queue...", ephemeral=True)
 
+    @discord.ui.button(emoji=BLANK_EMOJI, row=2, disabled=True)
+    async def _blank35(
+        self, button: discord.ui.Button, interaction: discord.Interaction
+    ):
+        return
+
     # =========================================================================
     # =========================================================================
 
@@ -207,10 +244,6 @@ class ControllerView(discord.ui.View):
             return None
 
         queue_size = len(self._player.queue)
-        if track not in self._player.queue:
-            queue_pos = 1
-        else:
-            queue_pos = self._player.queue.index(track) + 1
 
         e = discord.Embed(colour=0x2F3136)
         e.add_field(
@@ -237,12 +270,11 @@ class ControllerView(discord.ui.View):
 
         e.set_footer(
             text=_(
-                "Requested by {name} | Position in queue: {pos}/{total}",
+                "Requested by {name} | Queue length: {total}",
                 self._player.context,
                 self._player.context.bot.config,
             ).format(
                 name=str(track.requester),
-                pos=str(queue_pos),
                 total=str(queue_size),
             )
         )

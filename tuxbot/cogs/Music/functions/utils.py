@@ -8,6 +8,7 @@ import async_timeout
 import discord
 import math
 import wavelink
+from rich import inspect
 
 from tuxbot.core.bot import Tux
 from tuxbot.core.utils.functions.extra import ContextPlus
@@ -19,7 +20,8 @@ _ = Translator("Vocal", dirname(__file__))
 
 
 class Track(wavelink.Track):
-    """Wavelink Track object with a requester attribute."""
+    previous: Optional["Track"]
+    next: Optional["Track"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
@@ -27,8 +29,8 @@ class Track(wavelink.Track):
         self.requester = kwargs.get("requester")
         self.emoji = self.get_emoji(kwargs.get("query", ""))
 
-        self.previous: Optional[Track] = kwargs.get("previous", None)
-        self.next: Optional[Track] = kwargs.get("next", None)
+        self.previous = kwargs.get("previous", None)
+        self.next = kwargs.get("next", None)
 
     @staticmethod
     def get_emoji(query: str) -> str:
@@ -50,6 +52,7 @@ class Track(wavelink.Track):
 
 class Player(wavelink.Player):
     bot: Tux
+    controller: Optional[discord.Message]
 
     def __init__(self, bot: Tux, *args, **kwargs):
         super().__init__(bot, *args, **kwargs)
@@ -66,6 +69,7 @@ class Player(wavelink.Player):
 
         self.pause_votes = set()
         self.resume_votes = set()
+        self.back_votes = set()
         self.skip_votes = set()
         self.shuffle_votes = set()
         self.end_votes = set()
@@ -76,6 +80,75 @@ class Player(wavelink.Player):
 
     async def resume(self, ctx: ContextPlus):
         raise NotImplementedError
+
+    async def back(self, ctx: ContextPlus, track: Optional[Track] = None):
+        if not self.is_connected:
+            return
+
+        if not self.current.previous:
+            return await ctx.send(
+                _("There is not previous song...", ctx, self.bot.config)
+            )
+
+        if track:
+            huge_back = _(
+                " directly to __{name}__.", ctx, self.bot.config
+            ).format(name=track.title)
+        else:
+            huge_back = "."
+
+        if self.is_privileged(ctx):
+            await ctx.send(
+                _(
+                    "An admin or DJ has came back on the song",
+                    ctx,
+                    self.bot.config,
+                )
+                + huge_back,
+                delete_after=10,
+            )
+            self.back_votes.clear()
+
+            self.back_queue(track)
+            return await self.stop()
+
+        if ctx.author == self.current.requester:
+            await ctx.send(
+                _(
+                    "The song requester has came back on the song",
+                    ctx,
+                    self.bot.config,
+                )
+                + huge_back,
+                delete_after=10,
+            )
+            self.back_votes.clear()
+
+            self.back_queue(track)
+            return await self.stop()
+
+        required = self.required()
+        self.skip_votes.add(ctx.author)
+
+        if len(self.skip_votes) >= required:
+            await ctx.send(
+                _("Vote to came back passed. Came back", ctx, self.bot.config)
+                + huge_back,
+                delete_after=10,
+            )
+            self.back_votes.clear()
+            self.back_queue(track)
+            await self.stop()
+        else:
+            await ctx.send(
+                _(
+                    "{name} has voted to came back on the song",
+                    ctx,
+                    self.bot.config,
+                ).format(name=ctx.author.mention)
+                + huge_back,
+                delete_after=15,
+            )
 
     async def skip(self, ctx: ContextPlus, track: Optional[Track] = None):
         if not self.is_connected:
@@ -144,7 +217,7 @@ class Player(wavelink.Player):
             try:
                 await self.controller.delete()
             except KeyError:
-                await self.disconnect()
+                await self.terminate()
                 return await ctx.send(
                     _(
                         "There was no controller to stop.",
@@ -154,7 +227,7 @@ class Player(wavelink.Player):
                     delete_after=20,
                 )
 
-            await self.disconnect()
+            await self.terminate()
             return await ctx.send(
                 _(
                     "Disconnected player and killed controller.",
@@ -173,7 +246,7 @@ class Player(wavelink.Player):
                 delete_after=10,
             )
             self.skip_votes.clear()
-            await self.disconnect()
+            await self.terminate()
         else:
             await ctx.send(
                 _(
@@ -203,7 +276,7 @@ class Player(wavelink.Player):
         try:
             self.waiting = True
             with async_timeout.timeout(120):
-                track = self.queue.pop(0)
+                track = self.queue[0]
         except asyncio.TimeoutError:
             return await self.terminate()
 
@@ -219,6 +292,10 @@ class Player(wavelink.Player):
             return
 
         self.updating = True
+
+        if len(self.queue) > 1:
+            self.queue[0].next = self.queue[1]
+            self.queue[1].previous = self.queue[0]
 
         if not self.controller:
             view = ControllerView(
@@ -248,9 +325,7 @@ class Player(wavelink.Player):
                 author=self.context.author, player=self, track=self.current
             )
 
-            await self.controller.message.edit(
-                embed=view.build_embed(), view=view
-            )
+            await self.controller.edit(embed=view.build_embed(), view=view)
 
         self.updating = False
 
@@ -259,7 +334,7 @@ class Player(wavelink.Player):
     async def is_position_fresh(self) -> bool:
         try:
             async for message in self.context.channel.history(limit=5):
-                if message.id == self.controller.message.id:
+                if message.id == self.controller.id:
                     return True
         except (discord.HTTPException, AttributeError):
             return False
@@ -306,12 +381,29 @@ class Player(wavelink.Player):
 
     # =========================================================================
 
+    def back_queue(self, track: Optional[Track]) -> None:
+        if track:
+            new_queue = [None, track.previous] + self.queue[
+                self.queue.index(track) :
+            ]
+
+            if hasattr(new_queue[0], "previous"):
+                new_queue[0].previous = None
+
+            self.queue = new_queue.copy()
+        else:
+            new_queue = [None, self.current.previous] + self.queue
+
+            if hasattr(new_queue[0], "previous"):
+                new_queue[0].previous = None
+
+            self.queue = new_queue
+
     def skip_queue(self, track: Optional[Track]) -> None:
         if track:
             new_queue = self.queue[self.queue.index(track) :]
-            new_queue[0].previous = None
 
-            self.queue = new_queue.copy()
+            self.queue = new_queue
 
 
 def generate_playlist_options(
