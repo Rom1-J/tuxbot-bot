@@ -13,12 +13,10 @@ from tuxbot.core.utils.functions.extra import ContextPlus, command_extra
 from .functions import listeners
 from .functions.converters import QueryConverter
 from .functions.exceptions import EmptyChannelException, NoDMException
-from .functions.ui import PlaylistSelect
 from .functions.utils import (
     Player,
     Track,
     check_track_or_raise,
-    generate_playlist_options,
 )
 
 log = logging.getLogger("tuxbot.cogs.Music")
@@ -253,22 +251,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             guild_id=ctx.guild.id, cls=Player, context=ctx
         )
 
-        if not player.is_connected:
-            return
-
-        if len(player.queue) == 1:
-            return await ctx.send(
-                "There are no more songs in the queue.", delete_after=15
-            )
-
-        view = discord.ui.View()
-        view.add_item(
-            PlaylistSelect(
-                generate_playlist_options(player.queue[1:]), ctx.author
-            )
-        )
-
-        await ctx.send("Music on hold:", view=view)
+        await player.playlist(ctx)
 
     @command_extra(name="now_playing", aliases=["np"], deletable=False)
     async def _now_playing(self, ctx: ContextPlus):
