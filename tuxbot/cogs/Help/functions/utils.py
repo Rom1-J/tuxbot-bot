@@ -18,7 +18,7 @@ class HelpCommand(commands.HelpCommand):
     # =========================================================================
     # =========================================================================
 
-    async def send_bot_help(self, mapping: dict):
+    async def send_bot_help(self, mapping: dict):  # skipcq: PYL-W0613
         e = discord.Embed(title="Tuxbot Wiki!", color=0x2F3136)
         e.add_field(
             name="Site",

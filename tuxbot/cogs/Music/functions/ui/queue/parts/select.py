@@ -12,6 +12,9 @@ if TYPE_CHECKING:
 
 
 class QueueSelect(discord.ui.Select):
+    placeholder: str
+    options: List[TrackOption]
+
     def __init__(
         self,
         player: Player,

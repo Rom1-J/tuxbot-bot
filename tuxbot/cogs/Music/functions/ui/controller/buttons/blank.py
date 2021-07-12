@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 
 import discord
 
@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class BlankButton(discord.ui.Button):
+    disabled: bool
+    label: str
+    emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
+    row: int
+
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
             emoji="<:blank:863085374640488518>",

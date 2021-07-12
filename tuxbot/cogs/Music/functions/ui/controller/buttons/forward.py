@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 
 import discord
 
@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class ForwardButton(discord.ui.Button):
+    disabled: bool
+    label: str
+    emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
+    row: int
+
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
             emoji="<:forward_10_w:863557551478800384>",
@@ -19,5 +24,7 @@ class ForwardButton(discord.ui.Button):
         self._player: Player = player
         self._track: Track = track
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(
+        self, interaction: discord.Interaction  # skipcq: PYL-W0613
+    ):
         await interaction.response.send_message("forw 10s...", ephemeral=True)

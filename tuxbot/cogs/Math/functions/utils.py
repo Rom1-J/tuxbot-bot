@@ -72,12 +72,11 @@ class Wolfram:
         try:
             async with aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=5)
-            ) as cs:
-                async with cs.get(link) as s:
-                    if s.status != 200:
-                        return None
+            ) as cs, cs.get(link) as s:
+                if s.status != 200:
+                    return None
 
-                    return io.BytesIO(await s.read())
+                return io.BytesIO(await s.read())
         except asyncio.exceptions.TimeoutError:
             from ..images.load_fail import value
 

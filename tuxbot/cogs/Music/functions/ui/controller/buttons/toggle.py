@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union, Optional
 
 import discord
 
@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class ToggleButton(discord.ui.Button):
+    disabled: bool
+    label: str
+    emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
+    row: int
+
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
             emoji="<:pause_song_w:863162917595906048>",
@@ -20,7 +25,9 @@ class ToggleButton(discord.ui.Button):
         self._player: Player = player
         self._track: Track = track
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(
+        self, interaction: discord.Interaction  # skipcq: PYL-W0613
+    ):
         self.emoji = (
             "<:play_song_w:863162951032766494>"
             if str(self.emoji) == "<:pause_song_w:863162917595906048>"  # type: ignore

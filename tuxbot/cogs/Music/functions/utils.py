@@ -28,8 +28,8 @@ class Track(wavelink.Track):
         self.requester = kwargs.get("requester")
         self.emoji = self.get_emoji(kwargs.get("query", ""))
 
-        self.previous = kwargs.get("previous", None)
-        self.next = kwargs.get("next", None)
+        self.previous = kwargs.get("previous")
+        self.next = kwargs.get("next")
 
     @staticmethod
     def get_emoji(query: str) -> str:
@@ -56,11 +56,11 @@ class Player(wavelink.Player):
     def __init__(self, bot: Tux, *args, **kwargs):
         super().__init__(bot, *args, **kwargs)
 
-        self.context: ContextPlus = kwargs.get("context", None)
+        self.context: ContextPlus = kwargs.get("context")
         if self.context:
             self.dj: discord.Member = self.context.author
 
-        self.queue: List[Track] = list()
+        self.queue: List[Track] = []
         self.controller: Optional[discord.Message] = None
 
         self.waiting = False
@@ -74,10 +74,7 @@ class Player(wavelink.Player):
         self.end_votes: Set[discord.User] = set()
         self.delete_votes: Set[discord.User] = set()
 
-    async def pause(self, ctx: ContextPlus):
-        raise NotImplementedError
-
-    async def resume(self, ctx: ContextPlus):
+    async def toggle_pause(self, ctx: ContextPlus):
         raise NotImplementedError
 
     async def back(self, ctx: ContextPlus, track: Optional[Track] = None):

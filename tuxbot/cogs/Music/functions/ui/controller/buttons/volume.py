@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 
 import discord
 
@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class VolumeUpButton(discord.ui.Button):
+    disabled: bool
+    label: str
+    emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
+    row: int
+
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
             emoji="<:vol_up_w:863163026470076447>",
@@ -20,11 +25,18 @@ class VolumeUpButton(discord.ui.Button):
         self._player: Player = player
         self._track: Track = track
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(
+        self, interaction: discord.Interaction  # skipcq: PYL-W0613
+    ):
         await interaction.response.send_message("vol up...", ephemeral=True)
 
 
 class VolumeDownButton(discord.ui.Button):
+    disabled: bool
+    label: str
+    emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
+    row: int
+
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
             emoji="<:vol_down_w:863163012927848484>",
@@ -35,5 +47,7 @@ class VolumeDownButton(discord.ui.Button):
         self._player: Player = player
         self._track: Track = track
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(
+        self, interaction: discord.Interaction  # skipcq: PYL-W0613
+    ):
         await interaction.response.send_message("vol down...", ephemeral=True)
