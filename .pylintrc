@@ -13,6 +13,7 @@ disable=
 	C0115,  # missing-class-docstring
 	C0116,  # missing-function-docstring
 	C0415,  # import-outside-toplevel
+	W0511,  # fixme
 	W0703,  # broad-except
 	W0707,  # raise-missing-from
 	R0801,  # duplicate-code

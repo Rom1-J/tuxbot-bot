@@ -6,10 +6,10 @@ import discord
 
 if TYPE_CHECKING:
     # pylint: disable=cyclic-import
-    from ....utils import Player, Track
+    from .....utils import Player, Track
 
 
-class RemoveButton(discord.ui.Button):
+class BackwardButton(discord.ui.Button):
     disabled: bool
     label: str
     emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
@@ -17,9 +17,7 @@ class RemoveButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:trash_w:863163000038227998>",
-            row=row,
-            style=discord.ButtonStyle.danger,
+            emoji="<:backward_10_w:863557569553104936>", row=row, disabled=True
         )
 
         self._player: Player = player
@@ -28,4 +26,4 @@ class RemoveButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await interaction.response.send_message("Remove...", ephemeral=True)
+        await interaction.response.send_message("back 10s...", ephemeral=True)

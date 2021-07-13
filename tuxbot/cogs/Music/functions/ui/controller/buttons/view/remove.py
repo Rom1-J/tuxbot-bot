@@ -1,15 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Union, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
 import discord
 
 
 if TYPE_CHECKING:
     # pylint: disable=cyclic-import
-    from ....utils import Player, Track
+    from .....utils import Player, Track
 
 
-class ToggleButton(discord.ui.Button):
+class RemoveButton(discord.ui.Button):
     disabled: bool
     label: str
     emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
@@ -17,9 +17,9 @@ class ToggleButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:pause_song_w:863162917595906048>",
+            emoji="<:trash_w:863163000038227998>",
             row=row,
-            style=discord.ButtonStyle.primary,
+            style=discord.ButtonStyle.danger,
         )
 
         self._player: Player = player
@@ -28,9 +28,4 @@ class ToggleButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        self.emoji = (
-            "<:play_song_w:863162951032766494>"
-            if str(self.emoji) == "<:pause_song_w:863162917595906048>"  # type: ignore
-            else "<:pause_song_w:863162917595906048>"
-        )
-        await interaction.response.edit_message(view=self.view)
+        await self._player.delete(interaction.user, track=self._track)

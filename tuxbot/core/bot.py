@@ -152,6 +152,7 @@ class Tux(commands.AutoShardedBot):
                     try:
                         self.load_extension(package)
                         progress.console.print(f"{package} loaded")
+                        log.info("Package %s loaded", package)
                     except Exception as e:
                         log.exception(
                             "Failed to load package %s", package, exc_info=e

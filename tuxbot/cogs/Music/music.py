@@ -102,7 +102,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def _connect(
         self,
         ctx: ContextPlus,
-        *,
         channel: typing.Union[
             discord.VoiceChannel, discord.StageChannel
         ] = None,
@@ -154,8 +153,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 if i == 0:
                     if player.queue:
                         prev_track = player.queue[-1]
-                    else:
-                        prev_track = player.current
+
                 elif i > 0:
                     prev_track = tracks.tracks[i - 1]
 
@@ -194,8 +192,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         else:
             prev_track = None
 
-            if len(player.queue) > 1:
-                prev_track = player.queue[-2]
+            if player.queue:
+                prev_track = player.queue[-1]
 
             track = Track(
                 tracks[0].id,
@@ -222,6 +220,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.send(embed=e, delete_after=15)
 
         if not player.is_playing:
+            # noinspection PyUnboundLocalVariable
+            player.track_position = player.queue.index(track)
             await player.do_next()
         else:
             await player.invoke_controller()
@@ -233,7 +233,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             guild_id=ctx.guild.id, cls=Player, context=ctx
         )
 
-        await player.back(ctx)
+        await player.back(ctx.author)
 
     @command_extra(name="skip", deletable=False)
     async def _skip(self, ctx: ContextPlus):
@@ -242,7 +242,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             guild_id=ctx.guild.id, cls=Player, context=ctx
         )
 
-        await player.skip(ctx)
+        await player.skip(ctx.author)
 
     @command_extra(name="queue", aliases=["q"], deletable=False)
     async def _queue(self, ctx: ContextPlus):
@@ -251,7 +251,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             guild_id=ctx.guild.id, cls=Player, context=ctx
         )
 
-        await player.playlist(ctx)
+        await player.playlist(ctx.author)
 
     @command_extra(name="now_playing", aliases=["np"], deletable=False)
     async def _now_playing(self, ctx: ContextPlus):
@@ -263,7 +263,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if not player.is_connected:
             return
 
-        await player.invoke_controller()
+        await player.invoke_controller(force=True)
 
     @commands.command(name="player_info", deletable=False)
     async def _player_info(self, ctx):

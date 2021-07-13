@@ -19,7 +19,7 @@ class QueueSelect(discord.ui.Select):
         self,
         player: Player,
         options: List[List[TrackOption]],
-        author: discord.User,
+        author: discord.Member,
         **kwargs,
     ):
         self._player: Player = player
@@ -27,7 +27,7 @@ class QueueSelect(discord.ui.Select):
         self._options = options
         self._page = kwargs.get("page", 0)
 
-        self._author: discord.User = author
+        self._author: discord.Member = author
         self._ephemeral = kwargs.get("ephemeral", False)
 
         super().__init__(
@@ -44,16 +44,19 @@ class QueueSelect(discord.ui.Select):
         if interaction.data["values"][0] == "prev":
             return await self.update_page(interaction, -1)
 
+        track = self._options[self._page][
+            int(interaction.data["values"][0])
+        ].track
+
         view = ControllerView(
             author=interaction.user,
             player=self._player,
-            track=self._options[self._page][
-                int(interaction.data["values"][0])
-            ].track,
+            track=track,
+            action="jump",
         )
 
-        return await interaction.response.send_message(
-            embed=view.build_embed(), view=view, ephemeral=True
+        return await interaction.response.edit_message(
+            content="", embed=view.build_embed(), view=view
         )
 
     # =========================================================================

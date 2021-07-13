@@ -103,7 +103,7 @@ class Network(commands.Cog):
         except asyncio.exceptions.TimeoutError:
             pass
         else:
-            log.log(logging.INFO, "_update_peering_db")
+            log.log(logging.INFO, "_update_peering_db ready!")
 
     # =========================================================================
     # =========================================================================

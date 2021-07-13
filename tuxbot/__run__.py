@@ -205,6 +205,7 @@ def run() -> None:
     asyncio.set_event_loop(loop)
 
     try:
+        log.info("Starting TuxBot...")
         tux = Tux(
             cli_flags=cli_flags,
             description="Tuxbot, made from and for OpenSource",

@@ -6,7 +6,7 @@ import discord
 
 if TYPE_CHECKING:
     # pylint: disable=cyclic-import
-    from ....utils import Player, Track
+    from .....utils import Player, Track
 
 
 class VolumeUpButton(discord.ui.Button):

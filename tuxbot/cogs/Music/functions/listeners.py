@@ -1,3 +1,4 @@
+import logging
 from os.path import dirname
 
 import discord
@@ -8,6 +9,7 @@ from tuxbot.core.utils.functions.extra import ContextPlus
 from .exceptions import VocalException, IncorrectChannelException
 from .utils import Player
 
+log = logging.getLogger("tuxbot.cogs.Music")
 _ = Translator("Music", dirname(__file__))
 
 
@@ -30,7 +32,7 @@ async def cog_before_invoke(self, ctx: ContextPlus):
 
     if (
         (ctx.command.name == "connect" and not player.context)
-        or player.is_privileged(ctx)
+        or player.is_privileged(ctx.author)
         or not player.channel_id
     ):
         return
@@ -54,18 +56,20 @@ async def cog_before_invoke(self, ctx: ContextPlus):
 
 async def cog_command_error(self, ctx, error):
     if isinstance(error, VocalException):
-        await ctx.send(_(str(error), ctx, self.bot.config))
+        return await ctx.send(_(str(error), ctx, self.bot.config))
+
+    raise error
 
 
+# pylint: disable=unused-argument
 async def on_node_ready(self, node: wavelink.Node):
-    self.bot.console.log(f"Node {node.identifier} is ready!")
+    log.log(logging.INFO, "Node %s ready!", node.identifier)
 
 
 # pylint: disable=unused-argument
 async def on_player_stop(
     self, node: wavelink.Node, payload: wavelink.TrackEnd
 ):
-    del payload.player.queue[0]
     await payload.player.do_next()
 
 
@@ -97,3 +101,5 @@ async def on_voice_state_update(
 
     elif after.channel == channel and player.dj not in channel.members:
         player.dj = member
+
+    # todo: auto pause/leave when nobody

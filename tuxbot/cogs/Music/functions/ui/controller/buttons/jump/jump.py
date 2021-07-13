@@ -6,10 +6,10 @@ import discord
 
 if TYPE_CHECKING:
     # pylint: disable=cyclic-import
-    from ....utils import Player, Track
+    from .....utils import Player, Track
 
 
-class ForwardButton(discord.ui.Button):
+class JumpButton(discord.ui.Button):
     disabled: bool
     label: str
     emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
@@ -17,8 +17,9 @@ class ForwardButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:forward_10_w:863557551478800384>",
+            emoji="<:play_song_w:863162951032766494>",
             row=row,
+            style=discord.ButtonStyle.primary,
         )
 
         self._player: Player = player
@@ -27,4 +28,6 @@ class ForwardButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await interaction.response.send_message("forw 10s...", ephemeral=True)
+        await self._player.skip(interaction.user, track=self._track)
+        self.view.clear_items()
+        self.view.stop()

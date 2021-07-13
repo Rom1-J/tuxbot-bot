@@ -6,10 +6,10 @@ import discord
 
 if TYPE_CHECKING:
     # pylint: disable=cyclic-import
-    from ....utils import Player, Track
+    from .....utils import Player, Track
 
 
-class PreviousButton(discord.ui.Button):
+class QueueButton(discord.ui.Button):
     disabled: bool
     label: str
     emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
@@ -17,9 +17,8 @@ class PreviousButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:prev_song_w:863162971802042400>",
+            emoji="<:playlist_w:863162933211037726>",
             row=row,
-            style=discord.ButtonStyle.primary,
         )
 
         self._player: Player = player
@@ -28,4 +27,4 @@ class PreviousButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await self._player.back(self._player.context, track=self._track)
+        await self._player.playlist(interaction.user, interaction)

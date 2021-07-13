@@ -20,17 +20,25 @@ _ = Translator("Music", dirname(dirname(dirname(__file__))))
 class QueueView(discord.ui.View):
     children: List[QueueSelect]
 
-    def __init__(self, player: Player, author: discord.User):
+    def __init__(self, player: Player, author: discord.Member):
         super().__init__()
 
         self._player: Player = player
-        self._author: discord.User = author
+        self._author: discord.Member = author
 
         self.init_select()
 
     async def on_timeout(self) -> None:
         self.clear_items()
         self.stop()
+
+    async def on_error(
+        self,
+        error: Exception,
+        item: discord.ui.Item,
+        interaction: discord.Interaction,
+    ) -> None:
+        raise error
 
     # =========================================================================
     # =========================================================================

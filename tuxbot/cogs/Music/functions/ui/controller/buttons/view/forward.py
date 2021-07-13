@@ -6,10 +6,10 @@ import discord
 
 if TYPE_CHECKING:
     # pylint: disable=cyclic-import
-    from ....utils import Player, Track
+    from .....utils import Player, Track
 
 
-class ShuffleButton(discord.ui.Button):
+class ForwardButton(discord.ui.Button):
     disabled: bool
     label: str
     emoji: Optional[Union[discord.PartialEmoji, discord.Emoji, str]]
@@ -17,9 +17,7 @@ class ShuffleButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:shuffle_w:863162986184310828>",
-            row=row,
-            style=discord.ButtonStyle.primary,
+            emoji="<:forward_10_w:863557551478800384>", row=row, disabled=True
         )
 
         self._player: Player = player
@@ -28,4 +26,4 @@ class ShuffleButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await interaction.response.send_message("shuffle...", ephemeral=True)
+        await interaction.response.send_message("forw 10s...", ephemeral=True)
