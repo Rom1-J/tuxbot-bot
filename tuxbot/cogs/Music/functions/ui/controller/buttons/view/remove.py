@@ -29,3 +29,10 @@ class RemoveButton(discord.ui.Button):
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
         await self._player.delete(interaction.user, track=self._track)
+
+        if self.view.action == "jump":
+            self.view.stop()
+
+            await interaction.response.edit_message(
+                content="<:blank:863085374640488518>", view=None
+            )

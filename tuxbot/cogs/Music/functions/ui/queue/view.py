@@ -58,7 +58,7 @@ class QueueView(discord.ui.View):
     def gen_options(self) -> List[List[TrackOption]]:
         parts: List[List[Track]] = [
             self._player.queue[x : x + 23]
-            for x in range(1, len(self._player.queue), 23)
+            for x in range(0, len(self._player.queue), 23)
         ]
 
         options: List[List[TrackOption]] = [[]]

@@ -146,33 +146,15 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if isinstance(tracks, wavelink.TrackPlaylist):
             count = 0
 
-            for i, track in enumerate(tracks.tracks):
-                prev_track = None
-                next_track = None
-
-                if i == 0:
-                    if player.queue:
-                        prev_track = player.queue[-1]
-
-                elif i > 0:
-                    prev_track = tracks.tracks[i - 1]
-
-                if i < len(tracks.tracks) - 1:
-                    next_track = tracks.tracks[i + 1]
-
+            for track in tracks.tracks:
                 track = Track(
                     track.id,
                     track.info,
                     requester=ctx.author,
                     query=query,
-                    previous=prev_track,
-                    next=next_track,
                 )
 
                 if track.length < 3605 * 2 * 1000:
-                    if prev_track and i == 0:
-                        prev_track.next = track
-
                     count += 1
                     player.queue.append(track)
 
@@ -190,18 +172,11 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
             await ctx.send(embed=e, delete_after=15)
         else:
-            prev_track = None
-
-            if player.queue:
-                prev_track = player.queue[-1]
-
             track = Track(
                 tracks[0].id,
                 tracks[0].info,
                 requester=ctx.author,
                 query=query,
-                previous=prev_track,
-                next=None,
             )
             check_track_or_raise(track)
 
@@ -212,16 +187,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 ).format(name=track.title),
             )
 
-            if prev_track:
-                prev_track.next = track
-
             player.queue.append(track)
 
             await ctx.send(embed=e, delete_after=15)
 
         if not player.is_playing:
-            # noinspection PyUnboundLocalVariable
-            player.track_position = player.queue.index(track)
+            if player.last_played_position > -1:
+                # noinspection PyUnboundLocalVariable
+                player.track_position = player.queue.index(track)
             await player.do_next()
         else:
             await player.invoke_controller()

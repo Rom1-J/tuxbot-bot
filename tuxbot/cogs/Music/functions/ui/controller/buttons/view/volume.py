@@ -20,6 +20,7 @@ class VolumeUpButton(discord.ui.Button):
             emoji="<:vol_up_w:863163026470076447>",
             row=row,
             style=discord.ButtonStyle.primary,
+            disabled=True,
         )
 
         self._player: Player = player
@@ -42,6 +43,7 @@ class VolumeDownButton(discord.ui.Button):
             emoji="<:vol_down_w:863163012927848484>",
             row=row,
             style=discord.ButtonStyle.primary,
+            disabled=True,
         )
 
         self._player: Player = player

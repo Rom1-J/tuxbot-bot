@@ -20,17 +20,11 @@ _ = Translator("Music", dirname(__file__))
 
 
 class Track(wavelink.Track):
-    previous: Optional["Track"]
-    next: Optional["Track"]
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
 
         self.requester = kwargs.get("requester")
         self.emoji = self.get_emoji(kwargs.get("query", ""))
-
-        self.previous = kwargs.get("previous")
-        self.next = kwargs.get("next")
 
     @staticmethod
     def get_emoji(query: str) -> str:
@@ -53,11 +47,9 @@ class Track(wavelink.Track):
         return self.title
 
     def __repr__(self):
-        return '<Track requester="%s" title="%s" previous="%s" next="%s">' % (
+        return '<Track requester="%s" title="%s">' % (
             str(self.requester),
             self.title,
-            str(self.previous),
-            str(self.next),
         )
 
 
@@ -65,6 +57,7 @@ class Player(wavelink.Player):
     bot: Tux
     controller: Optional[discord.Message]
 
+    last_played_position: int = -1
     track_position: int = -1
 
     def __init__(self, bot: Tux, *args, **kwargs):
@@ -88,17 +81,71 @@ class Player(wavelink.Player):
         self.end_votes: Set[discord.Member] = set()
         self.delete_votes: Set[discord.Member] = set()
 
-    async def toggle_pause(self, ctx: ContextPlus):
+    async def toggle_pause(self, user: discord.Member):
+        if self.is_paused:
+            action = (
+                _("resume", self.context, self.bot.config),
+                _("resumed", self.context, self.bot.config),
+                _("Resuming", self.context, self.bot.config),
+            )
+        else:
+            action = (
+                _("pause", self.context, self.bot.config),
+                _("paused", self.context, self.bot.config),
+                _("Pausing", self.context, self.bot.config),
+            )
+
+        if self.is_privileged(user):
+            await self.context.send(
+                _(
+                    "An admin or DJ has {action} the song",
+                    self.context,
+                    self.bot.config,
+                ).format(action=action[1]),
+                delete_after=15,
+            )
+
+            self.pause_votes.clear()
+            await self.set_pause(not self.is_paused)
+
+            return await self.invoke_controller()
+
+        required = self.required()
+        self.pause_votes.add(user)
+
+        if len(self.pause_votes) >= required:
+            await self.context.send(
+                _(
+                    "Vote to {actionA} passed. {actionB} the song.",
+                    self.context,
+                    self.bot.config,
+                ).format(actionA=action[0], actionB=action[2]),
+                delete_after=15,
+            )
+
+            self.pause_votes.clear()
+            await self.set_pause(not self.is_paused)
+
+            return await self.invoke_controller()
+
         await self.context.send(
-            "Play/Pause not implemented yet...", delete_after=5
+            _(
+                "{name} has voted to {action} this song.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention, action=action[0]),
+            delete_after=15,
         )
 
+    # pylint: disable=unused-argument
     async def back(self, user: discord.Member, track: Optional[Track] = None):
         await self.context.send("back not implemented yet...", delete_after=5)
 
+    # pylint: disable=unused-argument
     async def skip(self, user: discord.Member, track: Optional[Track] = None):
         await self.context.send("Skip not implemented yet...", delete_after=5)
 
+    # pylint: disable=unused-argument
     async def shuffle(self, user: discord.Member):
         await self.context.send(
             "shuffle not implemented yet...", delete_after=5
@@ -106,7 +153,7 @@ class Player(wavelink.Player):
 
     async def end(self, user: discord.Member):
         if self.is_privileged(user):
-            self.skip_votes.clear()
+            self.end_votes.clear()
 
             if self.controller:
                 await self.controller.delete()
@@ -118,7 +165,7 @@ class Player(wavelink.Player):
                         self.context,
                         self.bot.config,
                     ),
-                    delete_after=20,
+                    delete_after=15,
                 )
 
             await self.terminate()
@@ -128,36 +175,74 @@ class Player(wavelink.Player):
                     self.context,
                     self.bot.config,
                 ),
-                delete_after=20,
+                delete_after=15,
             )
 
         required = self.required(stop=True)
         self.end_votes.add(user)
 
-        if len(self.skip_votes) >= required:
+        if len(self.end_votes) >= required:
             await self.context.send(
                 _(
                     "Vote to end passed. Ending session.",
                     self.context,
                     self.bot.config,
                 ),
-                delete_after=10,
+                delete_after=15,
             )
-            self.skip_votes.clear()
-            await self.terminate()
-        else:
+            self.end_votes.clear()
+            return await self.terminate()
+
+        await self.context.send(
+            _(
+                "{name} has voted to end this session.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention),
+            delete_after=15,
+        )
+
+    async def delete(self, user: discord.Member, track: Track):
+        if self.is_privileged(user):
             await self.context.send(
                 _(
-                    "{name} has voted to end this session.",
+                    "An admin or DJ has removed the song __{track}__",
                     self.context,
                     self.bot.config,
-                ).format(name=user.mention),
+                ).format(track=str(track)),
                 delete_after=15,
             )
 
-    async def delete(self, user: discord.Member, track: Track):
+            self.delete_votes.clear()
+            await self.remove_queue(track)
+
+            return await self.invoke_controller()
+
+        required = self.required()
+        self.delete_votes.add(user)
+
+        if len(self.delete_votes) >= required:
+            await self.context.send(
+                _(
+                    "Vote to remove __{track}__ passed. Removing the song.",
+                    self.context,
+                    self.bot.config,
+                ).format(track=str(track)),
+                delete_after=15,
+            )
+
+            self.delete_votes.clear()
+            await self.remove_queue(track)
+
+            return await self.invoke_controller()
+
         await self.context.send(
-            "Remove not implemented yet...", delete_after=5
+            _(
+                "{name} has voted to remove the song __{track}__.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention, track=str(track)),
+            delete_after=15,
         )
 
     async def playlist(
@@ -178,6 +263,10 @@ class Player(wavelink.Player):
     # =========================================================================
 
     async def do_next(self) -> None:
+        print(self.last_played_position)
+        print(self.track_position)
+        print(self.is_playing)
+
         if self.is_playing or self.waiting:
             return
 
@@ -187,11 +276,12 @@ class Player(wavelink.Player):
         self.shuffle_votes.clear()
         self.end_votes.clear()
 
-        if self.track_position != -1 and self.track_position < len(self.queue):
+        if -1 <= self.track_position < len(self.queue) - 1:
+            self.last_played_position = self.track_position
+            self.track_position += 1
+
             await self.play(self.queue[self.track_position])
             self.waiting = False
-
-            self.track_position += 1
         else:
             print("finish")
 
@@ -294,14 +384,29 @@ class Player(wavelink.Player):
 
     # =========================================================================
 
-    async def back_queue(self, track: Optional[Track]) -> None:
-        raise NotImplementedError
+    async def back_queue(self) -> None:
+        self.track_position = self.last_played_position - 1
+        self.last_played_position -= 1
 
-    async def skip_queue(self, track: Optional[Track]) -> None:
-        raise NotImplementedError
+    async def skip_queue(self) -> None:
+        self.last_played_position = self.track_position
+        self.track_position += 1
+
+    async def go_to_queue(self, track: Track) -> None:
+        self.track_position = self.queue.index(track) - 1
+        self.last_played_position = self.track_position - 1
 
     async def remove_queue(self, track: Track) -> None:
-        raise NotImplementedError
+        try:
+            index = self.queue.index(track)
+            del self.queue[self.queue.index(track)]
+
+            if index == self.track_position:
+                self.last_played_position -= 1
+                self.track_position -= 1
+                await self.stop()
+        except ValueError:
+            pass
 
 
 def check_track_or_raise(track: Track):

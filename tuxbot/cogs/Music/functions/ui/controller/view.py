@@ -35,6 +35,8 @@ class ControllerView(discord.ui.View):
 
         self._author: discord.User = author
 
+        self.action = action
+
         panel = ViewPanel.buttons
         if action == "jump":
             panel = JumpPanel.buttons
@@ -50,9 +52,6 @@ class ControllerView(discord.ui.View):
             self.set_pause_button()
 
     async def on_timeout(self) -> None:
-        if self._player.controller:
-            await self._player.controller.delete()
-
         await self._player.invoke_controller()
 
     # =========================================================================
@@ -62,16 +61,19 @@ class ControllerView(discord.ui.View):
         _prev = self.get_button("prev_song_w")
         _next = self.get_button("next_song_w")
 
-        if _prev and not (self._track and self._track.previous):
+        if _prev and self._player.last_played_position == -1:
             _prev.disabled = True
 
-        if _next and not (self._track and self._track.next):
+        if (
+            _next
+            and self._player.track_position == len(self._player.queue) - 1
+        ):
             _next.disabled = True
 
     # =========================================================================
 
     def set_pause_button(self):
-        if not self._player.is_playing:
+        if not self._player.is_playing or self._player.is_paused:
             _pause = self.get_button("pause_song_w")
 
             _pause.emoji = "<:play_song_w:863162951032766494>"
@@ -88,7 +90,9 @@ class ControllerView(discord.ui.View):
     # =========================================================================
 
     def build_embed(self) -> Optional[discord.Embed]:
-        track: Track = self._track or self._player.queue[-1]
+        track: Track = (
+            self._track or self._player.queue[self._player.track_position]
+        )
 
         queue_size = len(self._player.queue)
 
@@ -122,7 +126,7 @@ class ControllerView(discord.ui.View):
                 self._player.context.bot.config,
             ).format(
                 name=str(track.requester),
-                track_pos=str(self._player.track_position),
+                track_pos=str(self._player.track_position + 1),
                 total=str(queue_size),
             )
         )

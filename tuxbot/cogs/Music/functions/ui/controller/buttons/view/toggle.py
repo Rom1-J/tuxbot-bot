@@ -28,9 +28,4 @@ class ToggleButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        self.emoji = (
-            "<:play_song_w:863162951032766494>"
-            if str(self.emoji) == "<:pause_song_w:863162917595906048>"  # type: ignore
-            else "<:pause_song_w:863162917595906048>"
-        )
-        await interaction.response.edit_message(view=self.view)
+        await self._player.toggle_pause(interaction.user)
