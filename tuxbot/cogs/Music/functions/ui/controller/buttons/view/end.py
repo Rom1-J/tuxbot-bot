@@ -25,7 +25,5 @@ class EndButton(discord.ui.Button):
         self._player: Player = player
         self._track: Track = track
 
-    async def callback(
-        self, interaction: discord.Interaction  # skipcq: PYL-W0613
-    ):
+    async def callback(self, interaction: discord.Interaction):
         await self._player.end(interaction.user)

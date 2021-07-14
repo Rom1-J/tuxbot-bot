@@ -19,13 +19,10 @@ class ShuffleButton(discord.ui.Button):
         super().__init__(
             emoji="<:shuffle_w:863162986184310828>",
             row=row,
-            disabled=True,
         )
 
         self._player: Player = player
         self._track: Track = track
 
-    async def callback(
-        self, interaction: discord.Interaction  # skipcq: PYL-W0613
-    ):
-        await interaction.response.send_message("shuffle...", ephemeral=True)
+    async def callback(self, interaction: discord.Interaction):
+        await self._player.shuffle(interaction.user)

@@ -1,4 +1,5 @@
 import logging
+import random
 
 import math
 from os.path import dirname
@@ -84,18 +85,19 @@ class Player(wavelink.Player):
         self.end_votes: Set[discord.Member] = set()
         self.delete_votes: Set[discord.Member] = set()
 
+    # todo: rework repeating shit code
     async def toggle_pause(self, user: discord.Member):
+        action = (
+            _("pause", self.context, self.bot.config),
+            _("paused", self.context, self.bot.config),
+            _("Pausing", self.context, self.bot.config),
+        )
+
         if self.is_paused:
             action = (
                 _("resume", self.context, self.bot.config),
                 _("resumed", self.context, self.bot.config),
                 _("Resuming", self.context, self.bot.config),
-            )
-        else:
-            action = (
-                _("pause", self.context, self.bot.config),
-                _("paused", self.context, self.bot.config),
-                _("Pausing", self.context, self.bot.config),
             )
 
         if self.is_privileged(user):
@@ -140,6 +142,7 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
+    # todo: rework repeating shit code
     async def back(self, user: discord.Member):
         if self.is_privileged(user):
             await self.context.send(
@@ -179,6 +182,7 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
+    # todo: rework repeating shit code
     async def skip(self, user: discord.Member):
         if self.is_privileged(user):
             await self.context.send(
@@ -194,9 +198,9 @@ class Player(wavelink.Player):
             return await self.skip_queue()
 
         required = self.required()
-        self.back_votes.add(user)
+        self.skip_votes.add(user)
 
-        if len(self.back_votes) >= required:
+        if len(self.skip_votes) >= required:
             await self.context.send(
                 _(
                     "Vote to skip passed. Skipping the song.",
@@ -218,6 +222,7 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
+    # todo: rework repeating shit code
     async def jump(self, user: discord.Member, track: Track):
         if self.is_privileged(user):
             await self.context.send(
@@ -233,9 +238,9 @@ class Player(wavelink.Player):
             return await self.jump_queue(track)
 
         required = self.required()
-        self.back_votes.add(user)
+        self.skip_votes.add(user)
 
-        if len(self.back_votes) >= required:
+        if len(self.skip_votes) >= required:
             await self.context.send(
                 _(
                     "Vote to go to __{track}__. Jumping to the song.",
@@ -257,12 +262,47 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
-    # pylint: disable=unused-argument
+    # todo: rework repeating shit code
     async def shuffle(self, user: discord.Member):
+        if self.is_privileged(user):
+            await self.context.send(
+                _(
+                    "An admin or DJ has shuffled the queue.",
+                    self.context,
+                    self.bot.config,
+                ),
+                delete_after=15,
+            )
+
+            self.shuffle_votes.clear()
+            return await self.shuffle_queue()
+
+        required = self.required()
+        self.shuffle_votes.add(user)
+
+        if len(self.shuffle_votes) >= required:
+            await self.context.send(
+                _(
+                    "Vote to shuffle passed. Shuffling the queue.",
+                    self.context,
+                    self.bot.config,
+                ),
+                delete_after=15,
+            )
+
+            self.shuffle_votes.clear()
+            return await self.shuffle_queue()
+
         await self.context.send(
-            "shuffle not implemented yet...", delete_after=5
+            _(
+                "{name} has voted to shuffle the queue.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention),
+            delete_after=15,
         )
 
+    # todo: rework repeating shit code
     async def end(self, user: discord.Member):
         if self.is_privileged(user):
             self.end_votes.clear()
@@ -314,6 +354,7 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
+    # todo: rework repeating shit code
     async def delete(self, user: discord.Member, track: Track):
         if self.is_privileged(user):
             await self.context.send(
@@ -504,6 +545,14 @@ class Player(wavelink.Player):
         await self.stop()
 
     async def skip_queue(self) -> None:
+        await self.stop()
+
+    async def shuffle_queue(self) -> None:
+        self.track_position = -1
+        self.last_played_position = -1
+
+        random.shuffle(self.queue)
+
         await self.stop()
 
     async def jump_queue(self, track: Track) -> None:
