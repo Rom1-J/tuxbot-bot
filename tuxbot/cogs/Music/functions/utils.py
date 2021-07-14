@@ -77,8 +77,7 @@ class Player(wavelink.Player):
         self.waiting = False
         self.updating = False
 
-        self.pause_votes: Set[discord.Member] = set()
-        self.resume_votes: Set[discord.Member] = set()
+        self.toggle_votes: Set[discord.Member] = set()
         self.back_votes: Set[discord.Member] = set()
         self.skip_votes: Set[discord.Member] = set()
         self.shuffle_votes: Set[discord.Member] = set()
@@ -110,15 +109,15 @@ class Player(wavelink.Player):
                 delete_after=15,
             )
 
-            self.pause_votes.clear()
+            self.toggle_votes.clear()
             await self.set_pause(not self.is_paused)
 
             return await self.invoke_controller()
 
         required = self.required()
-        self.pause_votes.add(user)
+        self.toggle_votes.add(user)
 
-        if len(self.pause_votes) >= required:
+        if len(self.toggle_votes) >= required:
             await self.context.send(
                 _(
                     "Vote to {actionA} passed. {actionB} the song.",
@@ -128,7 +127,7 @@ class Player(wavelink.Player):
                 delete_after=15,
             )
 
-            self.pause_votes.clear()
+            self.toggle_votes.clear()
             await self.set_pause(not self.is_paused)
 
             return await self.invoke_controller()
@@ -360,6 +359,12 @@ class Player(wavelink.Player):
     async def vol_up(self, interaction: discord.Interaction) -> None:
         await self.__update_volume(interaction, value=+10)
 
+    async def forward(self, interaction: discord.Interaction) -> None:
+        await self.__update_position(interaction, value=+10)
+
+    async def backward(self, interaction: discord.Interaction) -> None:
+        await self.__update_position(interaction, value=-10)
+
     # todo: rework repeating shit code
     async def delete(self, user: discord.Member, track: Track):
         if self.is_privileged(user):
@@ -421,11 +426,12 @@ class Player(wavelink.Player):
         if self.is_playing or self.waiting:
             return
 
-        self.pause_votes.clear()
-        self.resume_votes.clear()
+        self.toggle_votes.clear()
+        self.back_votes.clear()
         self.skip_votes.clear()
         self.shuffle_votes.clear()
         self.end_votes.clear()
+        self.delete_votes.clear()
 
         if -1 <= self.track_position < len(self.queue) - 1:
             self.last_played_position = self.track_position
@@ -437,7 +443,7 @@ class Player(wavelink.Player):
             await self.invoke_controller()
         else:
             print("finish")
-            await self.terminate()
+            # await self.terminate()
 
     # =========================================================================
 
@@ -543,6 +549,7 @@ class Player(wavelink.Player):
         return required
 
     # =========================================================================
+    # =========================================================================
 
     async def __back_queue(self) -> None:
         self.track_position = self.last_played_position - 1
@@ -571,7 +578,32 @@ class Player(wavelink.Player):
 
         await interaction.response.send_message(
             _(
-                "You must be the DJ to control the volume",
+                "You must be the DJ to control the volume.",
+                self.context,
+                self.bot.config,
+            ),
+            ephemeral=True,
+        )
+
+    async def __update_position(
+        self, interaction: discord.Interaction, value: int
+    ) -> None:
+        if self.is_privileged(interaction.user):
+            new_position = self.position + value * 1000
+
+            if new_position < 0:
+                new_position = 0
+
+            if new_position > self.current.length:
+                new_position = self.current.length - 1000
+
+            await self.seek(new_position)
+
+            return await self.invoke_controller()
+
+        await interaction.response.send_message(
+            _(
+                "You must be the DJ to move in the song.",
                 self.context,
                 self.bot.config,
             ),

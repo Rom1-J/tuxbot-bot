@@ -17,11 +17,12 @@ class BackwardButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:backward_10_w:863557569553104936>", row=row, disabled=True
+            emoji="<:backward_10_w:863557569553104936>",
+            row=row,
         )
 
         self._player: Player = player
         self._track: Track = track
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message("back 10s...", ephemeral=True)
+        await self._player.backward(interaction)

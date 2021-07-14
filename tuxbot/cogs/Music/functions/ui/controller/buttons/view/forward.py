@@ -17,11 +17,12 @@ class ForwardButton(discord.ui.Button):
 
     def __init__(self, row: int, player: Player, track: Track):
         super().__init__(
-            emoji="<:forward_10_w:863557551478800384>", row=row, disabled=True
+            emoji="<:forward_10_w:863557551478800384>",
+            row=row,
         )
 
         self._player: Player = player
         self._track: Track = track
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message("forw 10s...", ephemeral=True)
+        await self._player.forward(interaction)
