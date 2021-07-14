@@ -12,7 +12,7 @@ import wavelink
 from tuxbot.core.bot import Tux
 from tuxbot.core.utils.functions.extra import ContextPlus
 from tuxbot.core.i18n import Translator
-from .exceptions import TrackTooLong
+from .exceptions import TrackTooLong, NotInChannelException
 from .ui.controller.view import ControllerView
 from .ui.queue.view import QueueView
 
@@ -529,6 +529,17 @@ class Player(wavelink.Player):
     # =========================================================================
 
     def is_privileged(self, user: discord.Member) -> bool:
+        channel = self.bot.get_channel(
+            int(self.channel_id if self.channel_id else 0)
+        )
+        if not isinstance(
+                channel, (discord.VoiceChannel, discord.StageChannel)
+        ):
+            return False
+
+        if user not in channel.members:
+            raise NotInChannelException
+
         return self.dj == user or user.guild_permissions.kick_members
 
     # =========================================================================

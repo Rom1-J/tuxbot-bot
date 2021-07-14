@@ -19,3 +19,7 @@ class IncorrectChannelException(VocalException):
 
 class TrackTooLong(VocalException):
     pass
+
+
+class NotInChannelException(VocalException):
+    pass
