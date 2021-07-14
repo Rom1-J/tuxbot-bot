@@ -155,7 +155,7 @@ class Player(wavelink.Player):
             )
 
             self.back_votes.clear()
-            return await self.back_queue()
+            return await self.__back_queue()
 
         required = self.required()
         self.back_votes.add(user)
@@ -171,7 +171,7 @@ class Player(wavelink.Player):
             )
 
             self.back_votes.clear()
-            return await self.back_queue()
+            return await self.__back_queue()
 
         await self.context.send(
             _(
@@ -195,7 +195,7 @@ class Player(wavelink.Player):
             )
 
             self.skip_votes.clear()
-            return await self.skip_queue()
+            return await self.__skip_queue()
 
         required = self.required()
         self.skip_votes.add(user)
@@ -211,7 +211,7 @@ class Player(wavelink.Player):
             )
 
             self.skip_votes.clear()
-            return await self.skip_queue()
+            return await self.__skip_queue()
 
         await self.context.send(
             _(
@@ -235,7 +235,7 @@ class Player(wavelink.Player):
             )
 
             self.skip_votes.clear()
-            return await self.jump_queue(track)
+            return await self.__jump_queue(track)
 
         required = self.required()
         self.skip_votes.add(user)
@@ -251,7 +251,7 @@ class Player(wavelink.Player):
             )
 
             self.skip_votes.clear()
-            return await self.jump_queue(track)
+            return await self.__jump_queue(track)
 
         await self.context.send(
             _(
@@ -275,7 +275,7 @@ class Player(wavelink.Player):
             )
 
             self.shuffle_votes.clear()
-            return await self.shuffle_queue()
+            return await self.__shuffle_queue()
 
         required = self.required()
         self.shuffle_votes.add(user)
@@ -291,7 +291,7 @@ class Player(wavelink.Player):
             )
 
             self.shuffle_votes.clear()
-            return await self.shuffle_queue()
+            return await self.__shuffle_queue()
 
         await self.context.send(
             _(
@@ -354,6 +354,12 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
+    async def vol_down(self, interaction: discord.Interaction) -> None:
+        await self.__update_volume(interaction, value=-10)
+
+    async def vol_up(self, interaction: discord.Interaction) -> None:
+        await self.__update_volume(interaction, value=+10)
+
     # todo: rework repeating shit code
     async def delete(self, user: discord.Member, track: Track):
         if self.is_privileged(user):
@@ -367,7 +373,7 @@ class Player(wavelink.Player):
             )
 
             self.delete_votes.clear()
-            return await self.remove_queue(track)
+            return await self.__remove_queue(track)
 
         required = self.required()
         self.delete_votes.add(user)
@@ -383,7 +389,7 @@ class Player(wavelink.Player):
             )
 
             self.delete_votes.clear()
-            return await self.remove_queue(track)
+            return await self.__remove_queue(track)
 
         await self.context.send(
             _(
@@ -538,16 +544,16 @@ class Player(wavelink.Player):
 
     # =========================================================================
 
-    async def back_queue(self) -> None:
+    async def __back_queue(self) -> None:
         self.track_position = self.last_played_position - 1
         self.last_played_position -= 1
 
         await self.stop()
 
-    async def skip_queue(self) -> None:
+    async def __skip_queue(self) -> None:
         await self.stop()
 
-    async def shuffle_queue(self) -> None:
+    async def __shuffle_queue(self) -> None:
         self.track_position = -1
         self.last_played_position = -1
 
@@ -555,7 +561,24 @@ class Player(wavelink.Player):
 
         await self.stop()
 
-    async def jump_queue(self, track: Track) -> None:
+    async def __update_volume(
+        self, interaction: discord.Interaction, value: int
+    ) -> None:
+        if self.is_privileged(interaction.user):
+            await self.set_volume(self.volume + value)
+
+            return await self.invoke_controller()
+
+        await interaction.response.send_message(
+            _(
+                "You must be the DJ to control the volume",
+                self.context,
+                self.bot.config,
+            ),
+            ephemeral=True,
+        )
+
+    async def __jump_queue(self, track: Track) -> None:
         try:
             self.track_position = self.queue.index(track) - 1
             self.last_played_position = self.track_position - 1
@@ -564,7 +587,7 @@ class Player(wavelink.Player):
         except ValueError:
             pass
 
-    async def remove_queue(self, track: Track) -> None:
+    async def __remove_queue(self, track: Track) -> None:
         try:
             index = self.queue.index(track)
             del self.queue[self.queue.index(track)]

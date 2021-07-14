@@ -20,14 +20,13 @@ class VolumeUpButton(discord.ui.Button):
             emoji="<:vol_up_w:863163026470076447>",
             row=row,
             style=discord.ButtonStyle.primary,
-            disabled=True,
         )
 
         self._player: Player = player
         self._track: Track = track
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message("vol up...", ephemeral=True)
+        await self._player.vol_up(interaction)
 
 
 class VolumeDownButton(discord.ui.Button):
@@ -41,11 +40,10 @@ class VolumeDownButton(discord.ui.Button):
             emoji="<:vol_down_w:863163012927848484>",
             row=row,
             style=discord.ButtonStyle.primary,
-            disabled=True,
         )
 
         self._player: Player = player
         self._track: Track = track
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message("vol down...", ephemeral=True)
+        await self._player.vol_down(interaction)

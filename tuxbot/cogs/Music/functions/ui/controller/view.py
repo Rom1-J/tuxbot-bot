@@ -61,6 +61,9 @@ class ControllerView(discord.ui.View):
         _prev = self.get_button("prev_song_w")
         _next = self.get_button("next_song_w")
 
+        _vol_up = self.get_button("vol_up_w")
+        _vol_down = self.get_button("vol_down_w")
+
         if _prev and self._player.last_played_position == -1:
             _prev.disabled = True
 
@@ -69,6 +72,12 @@ class ControllerView(discord.ui.View):
             and self._player.track_position == len(self._player.queue) - 1
         ):
             _next.disabled = True
+
+        if _vol_up and self._player.volume == 100:
+            _vol_up.disabled = True
+
+        if _vol_down and self._player.volume == 0:
+            _vol_down.disabled = True
 
     # =========================================================================
 
