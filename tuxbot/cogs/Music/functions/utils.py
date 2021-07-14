@@ -199,7 +199,7 @@ class Player(wavelink.Player):
         if len(self.back_votes) >= required:
             await self.context.send(
                 _(
-                    "Vote to skip passed. Skipping the song song.",
+                    "Vote to skip passed. Skipping the song.",
                     self.context,
                     self.bot.config,
                 ),
@@ -215,6 +215,45 @@ class Player(wavelink.Player):
                 self.context,
                 self.bot.config,
             ).format(name=user.mention),
+            delete_after=15,
+        )
+
+    async def jump(self, user: discord.Member, track: Track):
+        if self.is_privileged(user):
+            await self.context.send(
+                _(
+                    "An admin or DJ went directly to the song __{track}__.",
+                    self.context,
+                    self.bot.config,
+                ).format(track=str(track)),
+                delete_after=15,
+            )
+
+            self.skip_votes.clear()
+            return await self.jump_queue(track)
+
+        required = self.required()
+        self.back_votes.add(user)
+
+        if len(self.back_votes) >= required:
+            await self.context.send(
+                _(
+                    "Vote to go to __{track}__. Jumping to the song.",
+                    self.context,
+                    self.bot.config,
+                ).format(track=str(track)),
+                delete_after=15,
+            )
+
+            self.skip_votes.clear()
+            return await self.jump_queue(track)
+
+        await self.context.send(
+            _(
+                "{name} has voted to go to the song __{track}__.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention, track=str(track)),
             delete_after=15,
         )
 
@@ -467,9 +506,14 @@ class Player(wavelink.Player):
     async def skip_queue(self) -> None:
         await self.stop()
 
-    async def go_to_queue(self, track: Track) -> None:
-        self.track_position = self.queue.index(track) - 1
-        self.last_played_position = self.track_position - 1
+    async def jump_queue(self, track: Track) -> None:
+        try:
+            self.track_position = self.queue.index(track) - 1
+            self.last_played_position = self.track_position - 1
+
+            await self.stop()
+        except ValueError:
+            pass
 
     async def remove_queue(self, track: Track) -> None:
         try:

@@ -28,6 +28,10 @@ class JumpButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await interaction.response.send_message(
-            content="Jump not implemented yet...", ephemeral=True
+        await self._player.jump(interaction.user, self._track)
+
+        self.view.stop()
+
+        await interaction.response.edit_message(
+            content="<:blank:863085374640488518>", view=None
         )
