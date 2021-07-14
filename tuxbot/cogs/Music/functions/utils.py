@@ -87,17 +87,18 @@ class Player(wavelink.Player):
     # todo: rework repeating shit code
     async def toggle_pause(self, user: discord.Member):
         action = (
-            _("pause", self.context, self.bot.config),
-            _("paused", self.context, self.bot.config),
-            _("Pausing", self.context, self.bot.config),
-        )
-
-        if self.is_paused:
-            action = (
+            (
                 _("resume", self.context, self.bot.config),
                 _("resumed", self.context, self.bot.config),
                 _("Resuming", self.context, self.bot.config),
             )
+            if self.is_paused  # skipcq: PYL-W0125
+            else (
+                _("pause", self.context, self.bot.config),
+                _("paused", self.context, self.bot.config),
+                _("Pausing", self.context, self.bot.config),
+            )
+        )
 
         if self.is_privileged(user):
             await self.context.send(
@@ -591,11 +592,8 @@ class Player(wavelink.Player):
         if self.is_privileged(interaction.user):
             new_position = self.position + value * 1000
 
-            if new_position < 0:
-                new_position = 0
-
-            if new_position > self.current.length:
-                new_position = self.current.length - 1000
+            new_position = max(new_position, 0)
+            new_position = min(new_position, self.current.length - 1000)
 
             await self.seek(new_position)
 
