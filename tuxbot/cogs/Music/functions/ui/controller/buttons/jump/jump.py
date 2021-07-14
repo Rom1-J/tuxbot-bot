@@ -28,6 +28,6 @@ class JumpButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await self._player.skip(interaction.user, track=self._track)
-        self.view.clear_items()
-        self.view.stop()
+        await interaction.response.send_message(
+            content="Jump not implemented yet...", ephemeral=True
+        )

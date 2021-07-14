@@ -28,4 +28,4 @@ class NextButton(discord.ui.Button):
     async def callback(
         self, interaction: discord.Interaction  # skipcq: PYL-W0613
     ):
-        await self._player.skip(interaction.user, track=self._track)
+        await self._player.skip(interaction.user)

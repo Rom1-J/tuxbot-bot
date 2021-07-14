@@ -56,6 +56,7 @@ class Track(wavelink.Track):
 class Player(wavelink.Player):
     bot: Tux
     controller: Optional[discord.Message]
+    controller_view: Optional[ControllerView]
 
     last_played_position: int = -1
     track_position: int = -1
@@ -68,7 +69,9 @@ class Player(wavelink.Player):
             self.dj: discord.Member = self.context.author
 
         self.queue: List[Track] = []
+
         self.controller: Optional[discord.Message] = None
+        self.controller_view: Optional[discord.Message] = None
 
         self.waiting = False
         self.updating = False
@@ -98,7 +101,7 @@ class Player(wavelink.Player):
         if self.is_privileged(user):
             await self.context.send(
                 _(
-                    "An admin or DJ has {action} the song",
+                    "An admin or DJ has {action} the song.",
                     self.context,
                     self.bot.config,
                 ).format(action=action[1]),
@@ -137,13 +140,83 @@ class Player(wavelink.Player):
             delete_after=15,
         )
 
-    # pylint: disable=unused-argument
-    async def back(self, user: discord.Member, track: Optional[Track] = None):
-        await self.context.send("back not implemented yet...", delete_after=5)
+    async def back(self, user: discord.Member):
+        if self.is_privileged(user):
+            await self.context.send(
+                _(
+                    "An admin or DJ has go back on the previous song",
+                    self.context,
+                    self.bot.config,
+                ),
+                delete_after=15,
+            )
 
-    # pylint: disable=unused-argument
-    async def skip(self, user: discord.Member, track: Optional[Track] = None):
-        await self.context.send("Skip not implemented yet...", delete_after=5)
+            self.back_votes.clear()
+            return await self.back_queue()
+
+        required = self.required()
+        self.back_votes.add(user)
+
+        if len(self.back_votes) >= required:
+            await self.context.send(
+                _(
+                    "Vote to go back passed. Going back on the previous song.",
+                    self.context,
+                    self.bot.config,
+                ),
+                delete_after=15,
+            )
+
+            self.back_votes.clear()
+            return await self.back_queue()
+
+        await self.context.send(
+            _(
+                "{name} has voted to go back on the previous song.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention),
+            delete_after=15,
+        )
+
+    async def skip(self, user: discord.Member):
+        if self.is_privileged(user):
+            await self.context.send(
+                _(
+                    "An admin or DJ has skipped the song.",
+                    self.context,
+                    self.bot.config,
+                ),
+                delete_after=15,
+            )
+
+            self.skip_votes.clear()
+            return await self.skip_queue()
+
+        required = self.required()
+        self.back_votes.add(user)
+
+        if len(self.back_votes) >= required:
+            await self.context.send(
+                _(
+                    "Vote to skip passed. Skipping the song song.",
+                    self.context,
+                    self.bot.config,
+                ),
+                delete_after=15,
+            )
+
+            self.skip_votes.clear()
+            return await self.skip_queue()
+
+        await self.context.send(
+            _(
+                "{name} has voted to skip the song.",
+                self.context,
+                self.bot.config,
+            ).format(name=user.mention),
+            delete_after=15,
+        )
 
     # pylint: disable=unused-argument
     async def shuffle(self, user: discord.Member):
@@ -206,7 +279,7 @@ class Player(wavelink.Player):
         if self.is_privileged(user):
             await self.context.send(
                 _(
-                    "An admin or DJ has removed the song __{track}__",
+                    "An admin or DJ has removed the song __{track}__.",
                     self.context,
                     self.bot.config,
                 ).format(track=str(track)),
@@ -214,9 +287,7 @@ class Player(wavelink.Player):
             )
 
             self.delete_votes.clear()
-            await self.remove_queue(track)
-
-            return await self.invoke_controller()
+            return await self.remove_queue(track)
 
         required = self.required()
         self.delete_votes.add(user)
@@ -232,9 +303,7 @@ class Player(wavelink.Player):
             )
 
             self.delete_votes.clear()
-            await self.remove_queue(track)
-
-            return await self.invoke_controller()
+            return await self.remove_queue(track)
 
         await self.context.send(
             _(
@@ -263,10 +332,6 @@ class Player(wavelink.Player):
     # =========================================================================
 
     async def do_next(self) -> None:
-        print(self.last_played_position)
-        print(self.track_position)
-        print(self.is_playing)
-
         if self.is_playing or self.waiting:
             return
 
@@ -282,10 +347,11 @@ class Player(wavelink.Player):
 
             await self.play(self.queue[self.track_position])
             self.waiting = False
+
+            await self.invoke_controller()
         else:
             print("finish")
-
-        await self.invoke_controller()
+            await self.terminate()
 
     # =========================================================================
 
@@ -295,13 +361,17 @@ class Player(wavelink.Player):
 
         self.updating = True
 
+        if self.controller_view:
+            self.controller_view.stop()
+
         if not self.controller:
-            view = ControllerView(
+            self.controller_view = ControllerView(
                 author=self.context.author, player=self, track=self.current
             )
 
             self.controller = await self.context.send(
-                embed=view.build_embed(), view=view
+                embed=self.controller_view.build_embed(),
+                view=self.controller_view,
             )
 
         elif force or not await self.is_position_fresh():
@@ -310,20 +380,24 @@ class Player(wavelink.Player):
             except discord.HTTPException:
                 pass
 
-            view = ControllerView(
+            self.controller_view = ControllerView(
                 author=self.context.author, player=self, track=self.current
             )
 
             self.controller = await self.context.send(
-                embed=view.build_embed(), view=view
+                embed=self.controller_view.build_embed(),
+                view=self.controller_view,
             )
 
         else:
-            view = ControllerView(
+            self.controller_view = ControllerView(
                 author=self.context.author, player=self, track=self.current
             )
 
-            await self.controller.edit(embed=view.build_embed(), view=view)
+            await self.controller.edit(
+                embed=self.controller_view.build_embed(),
+                view=self.controller_view,
+            )
 
         self.updating = False
 
@@ -388,9 +462,10 @@ class Player(wavelink.Player):
         self.track_position = self.last_played_position - 1
         self.last_played_position -= 1
 
+        await self.stop()
+
     async def skip_queue(self) -> None:
-        self.last_played_position = self.track_position
-        self.track_position += 1
+        await self.stop()
 
     async def go_to_queue(self, track: Track) -> None:
         self.track_position = self.queue.index(track) - 1
