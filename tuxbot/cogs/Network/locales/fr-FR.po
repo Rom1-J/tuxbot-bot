@@ -41,7 +41,7 @@ msgstr "Impossible de collecter des informations pour cette IP avec la version d
 
 #: tuxbot/cogs/Network/functions/utils.py:164
 msgid "IP address {ip_address} is already defined as Private-Use Networks via RFC 1918."
-msgstr "L'adresse ip {ip_address} est est reservée à un usage local selon la RFC 1918"
+msgstr "L'adresse ip est est reservée à un usage local selon la RFC 1918"
 
 #: tuxbot/cogs/Network/network.py:94
 msgid "*Retrieving information...*"
