@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Dict, NoReturn, Any, Tuple, Union
+from typing import Dict, NoReturn, Any, Tuple, Union, Optional
 
 from babel.messages.pofile import read_po
 
@@ -68,8 +68,12 @@ class Translator:
         self.load_translations()
 
     def __call__(
-        self, untranslated: str, ctx: ContextPlus, config: Config
+        self,
+        untranslated: str,
+        ctx: ContextPlus,
+        config: Optional[Config] = None,
     ) -> str:
+        config = config or ctx.bot.config
         try:
             user_locale = search_for(
                 config.Users, ctx.author.id, "locale", None

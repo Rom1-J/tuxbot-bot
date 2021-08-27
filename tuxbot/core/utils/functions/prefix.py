@@ -21,4 +21,5 @@ def get_prefixes(tux, guild: Optional[discord.Guild]) -> List[str]:
     """
     if not guild:
         return []
+
     return search_for(tux.config.Servers, guild.id, "prefixes", [])

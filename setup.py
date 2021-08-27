@@ -18,7 +18,6 @@ setup(
         "python-Levenshtein>=0.12.2.",
         "psutil>=5.7.2",
         "pydig>=0.3.0",
-        "tio @ git+https://github.com/Rom1-J/python-tio",
         "rich>=9.10.0",
         "sentry_sdk>=0.20.2",
         "structured_config>=4.12",

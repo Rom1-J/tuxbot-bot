@@ -11,7 +11,7 @@ from typing import Any, Dict, List, DefaultDict
 import discord
 import humanize
 import sentry_sdk
-from discord.ext import commands, tasks
+from discord.ext import commands, tasks  # type: ignore
 from structured_config import ConfigFile
 
 from tuxbot.core.bot import Tux
@@ -93,11 +93,13 @@ class Logs(commands.Cog):
         return webhook
 
     async def send_guild_stats(self, e, guild: discord.Guild):
+        owner = guild.owner or discord.Object(-1)
+
         e.add_field(name="Name", value=guild.name)
         e.add_field(name="ID", value=guild.id)
         e.add_field(name="Shard ID", value=guild.shard_id or "N/A")
         e.add_field(
-            name="Owner", value=f"{guild.owner} (ID: {guild.owner.id})"
+            name="Owner", value=f"{owner} (ID: {owner.id})"
         )
 
         bots = sum(member.bot for member in guild.members)
@@ -215,7 +217,7 @@ class Logs(commands.Cog):
             e = discord.Embed(colour=0x0A97F5, title="New DM")  # blue colour
             e.set_author(
                 name=message.author,
-                icon_url=message.author.avatar.url,
+                icon_url=message.author.display_avatar.url,
             )
             e.description = message.content
             if len(message.attachments) > 0:

@@ -16,12 +16,13 @@ async def on_member_join(self, member: discord.Member):
             await member.send(autoban.reason)
             await member.ban(reason=autoban.reason, delete_message_days=1)
 
-            if autoban.log_channel:
+            if autoban.log_channel and isinstance(
+                channel := await member.guild.fetch_channel(
+                    autoban.log_channel
+                ),
+                discord.TextChannel,
+            ):
                 try:
-                    channel = await member.guild.fetch_channel(
-                        autoban.log_channel
-                    )
-
                     await channel.send(
                         f"Autoban: {member}\n"
                         f"For matching with: {autoban.match}"

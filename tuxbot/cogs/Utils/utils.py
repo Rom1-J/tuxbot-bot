@@ -7,7 +7,7 @@ from typing import Union
 import discord
 import humanize
 import psutil
-from discord.ext import commands, menus
+from discord.ext import commands, menus  # type: ignore
 from tuxbot.cogs.Utils.functions.quote import Quote
 
 from tuxbot import version_info as tuxbot_version_info, __version__
@@ -213,7 +213,7 @@ class Utils(commands.Cog):
                 self.bot.config,
             )
             + _("[Add!]", ctx, self.bot.config)
-            + f"({discord.utils.oauth_url(self.bot.user.id, basic_perms)})",
+            + f"({discord.utils.oauth_url(self.bot.user.id, permissions=basic_perms)})",
             inline=False,
         )
         e.add_field(
@@ -225,7 +225,7 @@ class Utils(commands.Cog):
                 self.bot.config,
             )
             + _("[Add!]", ctx, self.bot.config)
-            + f"({discord.utils.oauth_url(self.bot.user.id, admin_perms)})",
+            + f"({discord.utils.oauth_url(self.bot.user.id, permissions=admin_perms)})",
             inline=False,
         )
 
@@ -303,8 +303,8 @@ class Utils(commands.Cog):
             e = discord.Embed(color=0x2F3136)
 
             if isinstance(user_id, (discord.User, discord.Member)):
-                e.set_author(name=user_id, icon_url=user_id.avatar.url)
-                e.set_thumbnail(url=user_id.avatar.url)
+                e.set_author(name=user_id, icon_url=user_id.display_avatar.url)
+                e.set_thumbnail(url=user_id.display_avatar.url)
                 e.set_footer(text=f"ID: {user_id.id}")
 
                 created_at = user_id.created_at.replace(tzinfo=None)
@@ -316,11 +316,10 @@ class Utils(commands.Cog):
                 )
 
             if isinstance(user_id, discord.Member):
-                joined_at = user_id.joined_at.replace(tzinfo=None)
                 e.add_field(
                     name=_("Joined at:", ctx, self.bot.config),
-                    value=f"> {humanize.time.naturaldate(joined_at)} "
-                    f"({humanize.time.naturaltime(joined_at)})",
+                    value=f"> {humanize.time.naturaldate(user_id.joined_at)} "
+                    f"({humanize.time.naturaltime(user_id.joined_at)})",
                 )
 
             embeds.append(e)

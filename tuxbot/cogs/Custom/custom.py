@@ -28,7 +28,7 @@ class Custom(commands.Cog):
         self.bot = bot
         self.version_info = version_info
 
-    async def cog_command_error(self, ctx, error):
+    async def cog_command_error(self, ctx: ContextPlus, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send(_(str(error), ctx, self.bot.config))
 

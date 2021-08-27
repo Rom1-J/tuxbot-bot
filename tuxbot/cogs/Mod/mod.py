@@ -332,7 +332,9 @@ class Mod(commands.Cog):
                 )
             )
 
-        muted_members = [m for m in ctx.guild.members if role in m.roles]
+        muted_members = [
+            m for m in ctx.guild.members if role in m.roles
+        ]  # todo:
 
         e = discord.Embed(
             title=f"Role: {role.name} (ID: {role.id})", color=role.color

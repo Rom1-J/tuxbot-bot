@@ -81,7 +81,7 @@ class Polls(commands.Cog):
             )
         e.set_footer(text=f"ID: #{poll_row.id}")
 
-        poll_row.content = e.to_dict()
+        poll_row.content = e.to_dict()  # type: ignore
         await poll_row.save()
 
         await stmt.edit(content="", embed=e)
@@ -103,7 +103,12 @@ class Polls(commands.Cog):
         return False
 
     async def update_poll(self, poll: Poll):
-        channel: discord.TextChannel = self.bot.get_channel(poll.channel_id)
+        if (
+            c := self.bot.fetch_channel(poll.channel_id)
+        ) is None or not isinstance(c, discord.TextChannel):
+            return
+
+        channel: discord.TextChannel = c
         message: discord.Message = await channel.fetch_message(poll.message_id)
 
         chart_base_url = "https://quickchart.io/chart?backgroundColor=white&c="
@@ -162,11 +167,17 @@ class Polls(commands.Cog):
         await poll.save()
 
     async def remove_reaction(self, pld: discord.RawReactionActionEvent):
-        channel: discord.TextChannel = self.bot.get_channel(pld.channel_id)
+        if (
+            c := self.bot.fetch_channel(pld.channel_id)
+        ) is None or not isinstance(c, discord.TextChannel):
+            return
+
+        channel: discord.TextChannel = c
         message: discord.Message = await channel.fetch_message(pld.message_id)
         user: discord.User = await self.bot.fetch_user(pld.user_id)
 
-        await message.remove_reaction(pld.emoji.name, user)
+        # todo: Add type
+        await message.remove_reaction(pld.emoji.name, user)  # type: ignore
 
     async def created_suggest(
         self, ctx: ContextPlus, poll: PollConverter, new: str
@@ -194,9 +205,12 @@ class Polls(commands.Cog):
 
         await suggest_row.save()
 
-        poll_channel: discord.TextChannel = await self.bot.fetch_channel(
-            poll.channel_id
-        )
+        if (
+            c := self.bot.fetch_channel(poll.channel_id)
+        ) is None or not isinstance(c, discord.TextChannel):
+            return
+
+        poll_channel: discord.TextChannel = c
         poll_message = await poll_channel.fetch_message(poll.message_id)
 
         e = discord.Embed(
@@ -215,7 +229,7 @@ class Polls(commands.Cog):
             text=_("Requested by {author}", ctx, self.bot.config).format(
                 author=ctx.author.name
             ),
-            icon_url=ctx.author.avatar.url,
+            icon_url=ctx.author.display_avatar.url,
         )
 
         await stmt.edit(content="", embed=e)

@@ -1,4 +1,6 @@
 """
+todo: Add type
+
 Credits to Rapptz/RoboDanny
 
 https://github.com/Rapptz/RoboDanny/blob/0dfa21599da76e84c2f8e7fde0c132ec93c840a8/cogs/utils/paginator.py
@@ -6,7 +8,7 @@ https://github.com/Rapptz/RoboDanny/blob/0dfa21599da76e84c2f8e7fde0c132ec93c840a
 import asyncio
 import discord
 from discord.ext.commands import Paginator as CommandPaginator
-from discord.ext import menus
+from discord.ext import menus  # type: ignore
 
 
 class RoboPages(menus.MenuPages):

@@ -1,4 +1,4 @@
-from discord.ext import menus
+from discord.ext import menus  # type: ignore
 
 
 class UserPageSource(menus.ListPageSource):

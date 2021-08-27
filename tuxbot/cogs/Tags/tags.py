@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 import discord
-from discord.ext import commands, menus
+from discord.ext import commands, menus  # type: ignore
 
 from tuxbot.cogs.Tags.functions.converters import TagConverter, NewTagConverter
 from tuxbot.cogs.Tags.functions.exceptions import (
@@ -120,7 +120,7 @@ class Tags(commands.Cog):
             await self.bot.fetch_user(owner_id)
         )
 
-        e.set_author(name=str(user), icon_url=user.avatar.url)
+        e.set_author(name=str(user), icon_url=user.display_avatar.url)
 
         e.add_field(
             name=_("Owner", ctx, self.bot.config), value=f"<@{owner_id}>"
@@ -151,7 +151,7 @@ class Tags(commands.Cog):
                 p = TagPages(entries=tags)
                 await p.start(ctx)
             except menus.MenuError as e:
-                await ctx.send(e)
+                await ctx.send(e)  # todo: Add type
         else:
             await ctx.send(_("No tags found", ctx, self.bot.config))
 
@@ -167,11 +167,11 @@ class Tags(commands.Cog):
             try:
                 p = TagPages(entries=tags)
                 p.embed.set_author(
-                    name=str(author), icon_url=author.avatar.url
+                    name=str(author), icon_url=author.display_avatar.url
                 )
                 await p.start(ctx)
             except menus.MenuError as e:
-                await ctx.send(e)
+                await ctx.send(e)  # todo: Add type
         else:
             await ctx.send(
                 _("No tags found for {}", ctx, self.bot.config).format(author)
@@ -186,7 +186,7 @@ class Tags(commands.Cog):
                 p = TagPages(entries=tags)
                 await p.start(ctx)
             except menus.MenuError as e:
-                await ctx.send(e)
+                await ctx.send(e)  # todo: Add type
         else:
             await ctx.send(
                 _("No tags found for {}", ctx, self.bot.config).format(

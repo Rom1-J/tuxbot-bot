@@ -8,7 +8,7 @@ import aiohttp
 import discord
 from aiohttp import ClientConnectorError, InvalidURL, TCPConnector
 from jishaku.models import copy_context_with
-from discord.ext import commands, tasks
+from discord.ext import commands, tasks  # type: ignore
 from ipinfo.exceptions import RequestQuotaExceededError
 from structured_config import ConfigFile
 from tuxbot.cogs.Network.functions.converters import (

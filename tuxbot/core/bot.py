@@ -56,7 +56,6 @@ packages: Tuple = (
     "tuxbot.cogs.Math",
     "tuxbot.cogs.Test",
     "tuxbot.cogs.Help",
-    "tuxbot.cogs.Music",
 )
 
 
@@ -128,7 +127,7 @@ class Tux(commands.AutoShardedBot):
         ):
             return True
 
-        return (
+        return bool(
             search_for(self.config.Users, message.author.id, "blacklisted")
             or search_for(
                 self.config.Channels, message.channel.id, "blacklisted"
@@ -261,7 +260,9 @@ class Tux(commands.AutoShardedBot):
         return owner
 
     # pylint: disable=unused-argument
-    async def get_context(self, message: discord.Message, *, cls=None):
+    async def get_context(
+        self, message: discord.Message, *, cls=None
+    ) -> ContextPlus:
         ctx: ContextPlus = await super().get_context(message, cls=ContextPlus)
 
         if (ctx is None or not ctx.valid) and (
@@ -388,7 +389,12 @@ class Tux(commands.AutoShardedBot):
                     progress.advance(task)
                     continue
 
-                if importlib.import_module(extension).HAS_MODELS:
+                extension_config = importlib.import_module(extension)
+
+                if (
+                    hasattr(extension_config, "HAS_MODELS")
+                    and extension_config.HAS_MODELS
+                ):
                     models.append(f"{extension}.models.__init__")
 
                 progress.advance(task)

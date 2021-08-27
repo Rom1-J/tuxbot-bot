@@ -71,7 +71,9 @@ class Math(commands.Cog):
             query = q
 
         e.set_image(url="attachment://output.png")
-        e.set_footer(text=ctx.author, icon_url=ctx.author.avatar.url)
+        e.set_footer(
+            text=str(ctx.author), icon_url=ctx.author.display_avatar.url
+        )
         e.add_field(
             name="<:wolframalpha:851473526992797756> WolframAlpha",
             value=(
@@ -118,6 +120,8 @@ class Math(commands.Cog):
             title=shorten(discord.utils.escape_markdown(expr), 255)
         )
         e.set_image(url="attachment://output.png")
-        e.set_footer(text=ctx.author, icon_url=ctx.author.avatar.url)
+        e.set_footer(
+            text=str(ctx.author), icon_url=ctx.author.display_avatar.url
+        )
 
         await ctx.send(f"```\n{text}```", embed=e, file=file)

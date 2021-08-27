@@ -28,6 +28,9 @@ class TagConverter(commands.Converter):
 
 class NewTagConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        if (tag := ctx.bot.get_command("tag")) is None:
+            raise commands.CommandNotFound()
+
         arg = argument.lower()
 
         if len(arg) > 50:
@@ -35,7 +38,8 @@ class NewTagConverter(commands.Converter):
                 _("Tag must be lower than 50 characters")
             )
 
-        if arg.split(" ")[0] in ctx.bot.get_command("tag").all_commands:
+        # noinspection PyUnresolvedReferences
+        if arg.split(" ")[0] in tag.all_commands:
             raise ReservedTagException(
                 _("This tag name starts with a tag subcommand name")
             )

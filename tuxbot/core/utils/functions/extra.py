@@ -1,5 +1,5 @@
+#  type: ignore
 import asyncio
-
 import aiohttp
 import discord
 from discord import Embed
