@@ -194,7 +194,7 @@ def additional_config(cogs: Union[str, list] = "**"):
         paths = [Path(f"tuxbot/cogs/{cog}/config.py") for cog in cogs]
 
     for path in paths:
-        cog_name = str(path.parent).split("/")[-1]
+        cog_name = str(path.parent).rsplit("/", maxsplit=1)[-1]
         if path.exists():
             console.print(Rule(f"\nConfiguration for `{cog_name}` module"))
             mod = importlib.import_module(str(path).replace("/", ".")[:-3])
@@ -323,7 +323,7 @@ def basic_setup() -> None:
 def update() -> None:
     response = json.load(
         # skipcq:  BAN-B310
-        request.urlopen(
+        request.urlopen(  # pylint: disable=consider-using-with
             "https://api.github.com/repos/Rom1-J/tuxbot-bot/commits/master"
         )
     )

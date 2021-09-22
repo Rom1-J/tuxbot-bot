@@ -12,12 +12,15 @@ disable=
 	C0114,  # missing-module-docstring
 	C0115,  # missing-class-docstring
 	C0116,  # missing-function-docstring
+	C0209,  # consider-using-f-string
 	C0415,  # import-outside-toplevel
 	W0511,  # fixme
 	W0703,  # broad-except
 	W0707,  # raise-missing-from
+	R0201,  # no-self-use
 	R0801,  # duplicate-code
 	R0901,  # too-many-ancestors
 	R0902,  # too-many-instance-attributes
 	R0903,  # too-few-public-methods
+	R0913,  # too-many-arguments
 	E1136,  # unsubscriptable-object (false positive with python 3.9)

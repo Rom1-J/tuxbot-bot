@@ -81,23 +81,6 @@ def set_if_none(config, key, ctype) -> None:
 
 
 def set_for_key(config, key, ctype, **values) -> None:
-    # pylint: disable=anomalous-backslash-in-string
-    """
-    La fonction suivante        \`*-.
-    a été écrite le lundi        )  _`-.
-    19 octobre 2020 a 13h40     .  : `. .
-    soit 1h apres la découverte : _   '  \
-    du corps de mon chat        ; *` _.   `*-._
-                                `-.-'          `-.
-                                  ;       `       `.
-                                  :.       .        \
-                                  . \  .   :   .-'   .
-                                  '  `+.;  ;  '      :
-                                  :  '  |    ;       ;-.
-                                  ; '   : :`-:     _.`* ;
-               rip roxy        .*' /  .*' ; .*`- +'  `*'
-           201?-2020 :,(       `*-*   `*-*  `*-*'
-    """
     set_if_none(config, key, ctype)
 
     for k, v in values.items():

@@ -17,6 +17,17 @@ class IPConverter(commands.Converter):
         return argument.lower()
 
 
+class InetConverter(commands.Converter):
+    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+        if "6" in argument:
+            return 6
+
+        if "4" in argument:
+            return 4
+
+        return None
+
+
 class DomainConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         if not argument.startswith("http"):
@@ -28,26 +39,6 @@ class DomainConverter(commands.Converter):
 class QueryTypeConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         return argument.lower()
-
-
-class IPParamsConverter(commands.Converter):
-    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
-        if not argument:
-            return None
-
-        params = {
-            "inet": "",
-            "map": "map" in argument.lower(),
-        }
-
-        if "4" in argument:
-            params["inet"] = "4"
-        elif "6" in argument:
-            params["inet"] = "6"
-        elif len(arg := argument.split(" ")) >= 2:
-            params["inet"] = arg[0]
-
-        return params
 
 
 class ASConverter(commands.Converter):

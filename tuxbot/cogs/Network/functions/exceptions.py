@@ -5,7 +5,7 @@ class NetworkException(commands.BadArgument):
     pass
 
 
-class RFC18(NetworkException):
+class RFC1819(NetworkException):
     pass
 
 

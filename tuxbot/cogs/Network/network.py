@@ -11,21 +11,7 @@ from jishaku.models import copy_context_with
 from discord.ext import commands, tasks  # type: ignore
 from ipinfo.exceptions import RequestQuotaExceededError
 from structured_config import ConfigFile
-from tuxbot.cogs.Network.functions.converters import (
-    IPConverter,
-    IPParamsConverter,
-    DomainConverter,
-    QueryTypeConverter,
-    ASConverter,
-)
-from tuxbot.cogs.Network.functions.exceptions import (
-    RFC18,
-    InvalidIp,
-    VersionNotFound,
-    InvalidDomain,
-    InvalidQueryType,
-    InvalidAsn,
-)
+
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
 from tuxbot.core.utils.data_manager import cogs_data_path
@@ -34,19 +20,31 @@ from tuxbot.core.utils.functions.extra import (
     command_extra,
 )
 from tuxbot.core.utils.functions.utils import shorten, str_if_empty
+
 from .config import NetworkConfig
+from .functions.providers.base import get_all_providers
+from .functions.ui.iplocalise.view import ViewController
 from .functions.utils import (
-    get_ip,
-    get_hostname,
     get_crimeflare_result,
-    get_ipinfo_result,
-    get_ipwhois_result,
-    get_map_bytes,
     get_pydig_result,
-    merge_ipinfo_ipwhois,
     check_query_type_or_raise,
-    check_ip_version_or_raise,
     check_asn_or_raise,
+    get_ip,
+)
+from .functions.exceptions import (
+    RFC1819,
+    InvalidIp,
+    VersionNotFound,
+    InvalidDomain,
+    InvalidQueryType,
+    InvalidAsn,
+)
+from .functions.converters import (
+    IPConverter,
+    DomainConverter,
+    QueryTypeConverter,
+    ASConverter,
+    InetConverter,
 )
 
 log = logging.getLogger("tuxbot.cogs.Network")
@@ -69,12 +67,14 @@ class Network(commands.Cog):
 
         self._update_peering_db.start()  # pylint: disable=no-member
 
+    # =========================================================================
+
     async def cog_command_error(self, ctx: ContextPlus, error):
         if isinstance(
             error,
             (
                 RequestQuotaExceededError,
-                RFC18,
+                RFC1819,
                 InvalidIp,
                 InvalidDomain,
                 InvalidQueryType,
@@ -90,7 +90,9 @@ class Network(commands.Cog):
     def cog_unload(self):
         self._update_peering_db.cancel()  # pylint: disable=no-member
 
-    @tasks.loop(hours=1.0)
+    # =========================================================================
+
+    @tasks.loop(hours=1.30)
     async def _update_peering_db(self):
         try:
             async with aiohttp.ClientSession(
@@ -108,82 +110,29 @@ class Network(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    @command_extra(name="iplocalise", aliases=["localiseip"], deletable=True)
+    @command_extra(name="iplocalise", aliases=["localiseip"], deletable=False)
     async def _iplocalise(
         self,
         ctx: ContextPlus,
-        ip: IPConverter,
-        *,
-        params: Optional[IPParamsConverter] = None,
+        domain: IPConverter,
+        inet: InetConverter = None,
     ):
-        # noinspection PyUnresolvedReferences
-        check_ip_version_or_raise(params)  # type: ignore
+        ip = await get_ip(self.bot.loop, str(domain), inet)
+        cache_key = self.bot.cache.gen_key(ip)
 
-        # noinspection PyUnresolvedReferences
-        ip_address = await get_ip(
-            self.bot.loop, str(ip), params  # type: ignore
+        result = await self.bot.cache.async_get(
+            cache_key,
+            get_all_providers,
+            ttl=3600 * 5,
+            args=(self.__config,),
+            kwargs={"data": {"ip": ip, "domain": domain}},
         )
 
-        ip_hostname = await get_hostname(self.bot.loop, str(ip_address))
+        controller = ViewController(ctx=ctx, author=ctx.author, data=result)
 
-        ipinfo_result = await get_ipinfo_result(
-            self.bot.loop, self.__config.ipinfoKey, ip_address
-        )
-        ipwhois_result = await get_ipwhois_result(self.bot.loop, ip_address)
+        await controller.send()
 
-        merged_results = merge_ipinfo_ipwhois(ipinfo_result, ipwhois_result)
-
-        e = discord.Embed(
-            title=_(
-                "Information for ``{ip} ({ip_address})``", ctx, self.bot.config
-            ).format(ip=ip, ip_address=ip_address),
-            color=0x5858D7,
-        )
-
-        e.add_field(
-            name=_("Belongs to:", ctx, self.bot.config),
-            value=merged_results["belongs"],
-            inline=True,
-        )
-        e.add_field(
-            name="RIR :",
-            value=merged_results["rir"],
-            inline=True,
-        )
-        e.add_field(
-            name=_("Region:", ctx, self.bot.config),
-            value=merged_results["region"],
-            inline=False,
-        )
-
-        e.set_thumbnail(url=merged_results["flag"])
-
-        e.set_footer(
-            text=_("Hostname: {hostname}", ctx, self.bot.config).format(
-                hostname=ip_hostname
-            ),
-        )
-
-        kwargs: dict = {}
-
-        # noinspection PyUnresolvedReferences
-        if (
-            params is not None
-            and params["map"]
-            and (  # type: ignore
-                map_bytes := await get_map_bytes(
-                    self.__config.geoapifyKey, merged_results["map"]
-                )
-            )
-        ):
-            file = discord.File(map_bytes, "map.png")
-            e.set_image(url="attachment://map.png")
-
-            kwargs["file"] = file
-
-        kwargs["embed"] = e
-
-        return await ctx.send(f"https://ipinfo.io/{ip_address}#", **kwargs)
+    # =========================================================================
 
     @command_extra(
         name="cloudflare", aliases=["cf", "crimeflare"], deletable=True
@@ -208,6 +157,8 @@ class Network(commands.Cog):
                 self.bot.config,
             )
         )
+
+    # =========================================================================
 
     @command_extra(name="getheaders", aliases=["headers"], deletable=True)
     async def _getheaders(
@@ -264,6 +215,8 @@ class Network(commands.Cog):
                 _("Cannot connect to host {}", ctx, self.bot.config).format(ip)
             )
 
+    # =========================================================================
+
     @command_extra(name="dig", deletable=True)
     async def _dig(
         self,
@@ -291,6 +244,8 @@ class Network(commands.Cog):
 
         await ctx.send(embed=e)
 
+    # =========================================================================
+
     @command_extra(name="ping", deletable=True)
     async def _ping(self, ctx: ContextPlus):
         start = time.perf_counter()
@@ -304,6 +259,8 @@ class Network(commands.Cog):
         e.add_field(name="Websocket", value=f"{latency}ms")
         e.add_field(name="Typing", value=f"{typing}ms")
         await ctx.send(embed=e)
+
+    # =========================================================================
 
     @command_extra(name="isdown", aliases=["is_down", "down?"], deletable=True)
     async def _isdown(self, ctx: ContextPlus, domain: IPConverter):
@@ -337,6 +294,8 @@ class Network(commands.Cog):
                     domain
                 )
             )
+
+    # =========================================================================
 
     @command_extra(
         name="peeringdb", aliases=["peer", "peering"], deletable=True

@@ -98,9 +98,7 @@ class Logs(commands.Cog):
         e.add_field(name="Name", value=guild.name)
         e.add_field(name="ID", value=guild.id)
         e.add_field(name="Shard ID", value=guild.shard_id or "N/A")
-        e.add_field(
-            name="Owner", value=f"{owner} (ID: {owner.id})"
-        )
+        e.add_field(name="Owner", value=f"{owner} (ID: {owner.id})")
 
         bots = sum(member.bot for member in guild.members)
         total = guild.member_count

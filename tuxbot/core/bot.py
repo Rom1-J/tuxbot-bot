@@ -37,25 +37,26 @@ from tuxbot.core.config import (
 from tuxbot.core.i18n import Translator
 from . import __version__, ExitCodes
 from . import exceptions
+from .utils.cache import Cache
 
 log = logging.getLogger("tuxbot")
 _ = Translator("core", __file__)
 
 packages: Tuple = (
     "jishaku",
-    "tuxbot.cogs.Admin",
-    "tuxbot.cogs.Logs",
-    "tuxbot.cogs.Dev",
-    "tuxbot.cogs.Utils",
-    "tuxbot.cogs.Polls",
-    "tuxbot.cogs.Custom",
+    # "tuxbot.cogs.Admin",
+    # "tuxbot.cogs.Logs",
+    # "tuxbot.cogs.Dev",
+    # "tuxbot.cogs.Utils",
+    # "tuxbot.cogs.Polls",
+    # "tuxbot.cogs.Custom",
     "tuxbot.cogs.Network",
-    "tuxbot.cogs.Linux",
-    "tuxbot.cogs.Mod",
-    "tuxbot.cogs.Tags",
-    "tuxbot.cogs.Math",
-    "tuxbot.cogs.Test",
-    "tuxbot.cogs.Help",
+    # "tuxbot.cogs.Linux",
+    # "tuxbot.cogs.Mod",
+    # "tuxbot.cogs.Tags",
+    # "tuxbot.cogs.Math",
+    # "tuxbot.cogs.Test",
+    # "tuxbot.cogs.Help",
 )
 
 
@@ -74,11 +75,13 @@ class Tux(commands.AutoShardedBot):
         self.logs = logs_data_path()
 
         self.console = console
+        self.cache = Cache()
 
         self.stats = {"commands": Counter(), "socket": Counter()}
         self.all_subcommands = ["help"]
 
         self.config: Config = ConfigFile(config_file, Config).config
+
         self.instance_name = self.config.Core.instance_name
 
         async def _prefixes(bot, message) -> List[str]:
@@ -88,6 +91,7 @@ class Tux(commands.AutoShardedBot):
 
             if self.config.Core.mentionable:
                 return commands.when_mentioned_or(*prefixes)(bot, message)
+
             return prefixes
 
         if "command_prefix" not in kwargs:
@@ -120,12 +124,8 @@ class Tux(commands.AutoShardedBot):
         if message.author.bot:
             return True
 
-        if (
-            message.guild
-            and message.guild.id == 336642139381301249
-            and message.author.id != 269156684155453451
-        ):
-            return True
+        if await self.is_owner(message.author):
+            return False
 
         return bool(
             search_for(self.config.Users, message.author.id, "blacklisted")
@@ -209,7 +209,9 @@ class Tux(commands.AutoShardedBot):
         table.add_row(f"Language: {self.config.Core.locale}")
         table.add_row(f"Tuxbot Version: {__version__}")
         table.add_row(f"Discord.py Version: {discord.__version__}")
-        table.add_row(f"Python Version: {sys.version.split(' ')[0]}")
+        table.add_row(
+            f"Python Version: {sys.version.split(' ', maxsplit=1)[0]}"
+        )
         table.add_row(f"Instance name: {self.instance_name}")
         table.add_row(f"Shards: {self.shard_count}")
         table.add_row(f"Servers: {len(self.guilds)}")

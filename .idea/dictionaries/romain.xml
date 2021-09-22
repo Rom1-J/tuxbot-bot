@@ -15,6 +15,7 @@
       <w>ayin</w>
       <w>backw</w>
       <w>bipoles</w>
+      <w>callingcode</w>
       <w>carto</w>
       <w>chemfig</w>
       <w>circuitikz</w>
@@ -39,11 +40,14 @@
       <w>forw</w>
       <w>francais</w>
       <w>français</w>
+      <w>geoapify</w>
       <w>gimel</w>
       <w>gitea</w>
       <w>gnous</w>
       <w>hebrewletters</w>
       <w>inputenc</w>
+      <w>ipgeo</w>
+      <w>ipgeolocation</w>
       <w>ipinfo</w>
       <w>iplocalise</w>
       <w>ipwhois</w>
@@ -63,6 +67,8 @@
       <w>newcommand</w>
       <w>nicefrac</w>
       <w>octobre</w>
+      <w>opencage</w>
+      <w>opencagedata</w>
       <w>outout</w>
       <w>outoutxyz</w>
       <w>outouxyz</w>

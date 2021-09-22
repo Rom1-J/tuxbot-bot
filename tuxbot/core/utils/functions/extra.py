@@ -1,9 +1,15 @@
 #  type: ignore
+from typing import TYPE_CHECKING, Union
+
 import asyncio
 import aiohttp
 import discord
 from discord import Embed
 from discord.ext import commands
+
+
+if TYPE_CHECKING:
+    from tuxbot.core.bot import Tux
 
 TOKEN_REPLACEMENT = "■" * 13
 PASSWORD_REPLACEMENT = "■" * 13
@@ -12,6 +18,8 @@ IP_REPLACEMENT = "■" * 13
 
 class ContextPlus(commands.Context):
     # noinspection PyTypedDict
+    bot: "Tux"
+
     async def send(
         self,
         content: str = None,
@@ -19,7 +27,7 @@ class ContextPlus(commands.Context):
         embed: discord.Embed = None,
         deletable=True,
         **kwargs
-    ):
+    ) -> Union[discord.Message, discord.WebhookMessage]:
         from tuxbot.core.utils.functions.utils import (
             replace_in_dict,
             replace_in_list,

@@ -27,7 +27,7 @@ install:
 
 .PHONY: install-dev
 install-dev:
-	$(VIRTUAL_ENV)/bin/pip install -r dev.requirements.txt
+	$(VIRTUAL_ENV)/bin/pip install -r requirements/dev.requirements.txt
 
 .PHONY: update
 update:

@@ -100,7 +100,7 @@ class FieldPageSource(menus.ListPageSource):
         super().__init__(entries, per_page=per_page)
         self.embed = discord.Embed(colour=discord.Colour.blurple())
 
-    # pylint: disable=arguments-differ
+    # pylint: disable=arguments-differ, arguments-renamed
     async def format_page(self, menu, entries):
         self.embed.clear_fields()
         self.embed.description = discord.Embed.Empty
@@ -126,7 +126,7 @@ class TextPageSource(menus.ListPageSource):
 
         super().__init__(entries=pages.pages, per_page=1)
 
-    # pylint: disable=arguments-differ
+    # pylint: disable=arguments-differ, arguments-renamed
     async def format_page(self, menu, content):
         maximum = self.get_max_pages()
         if maximum > 1:
@@ -139,7 +139,7 @@ class SimplePageSource(menus.ListPageSource):
         super().__init__(entries, per_page=per_page)
         self.initial_page = True
 
-    # pylint: disable=arguments-differ
+    # pylint: disable=arguments-differ, arguments-renamed
     async def format_page(self, menu, entries):
         pages = []
         for index, entry in enumerate(

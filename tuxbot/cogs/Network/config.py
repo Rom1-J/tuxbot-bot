@@ -8,6 +8,8 @@ HAS_MODELS = False
 class NetworkConfig(Structure):
     ipinfoKey: str = StrField("")
     geoapifyKey: str = StrField("")
+    ipgeolocationKey: str = StrField("")
+    opencagedataKey: str = StrField("")
 
 
 extra: Dict[str, Dict] = {
@@ -18,5 +20,13 @@ extra: Dict[str, Dict] = {
     "geoapifyKey": {
         "type": str,
         "description": "API Key for geoapify.com (.iplocalise command)",
+    },
+    "ipgeolocationKey": {
+        "type": str,
+        "description": "API Key for ipgeolocation.io (.iplocalise command)",
+    },
+    "opencagedataKey": {
+        "type": str,
+        "description": "API Key for opencagedata.io (.iplocalise command)",
     },
 }
