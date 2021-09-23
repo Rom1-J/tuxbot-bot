@@ -5,7 +5,7 @@ class MapProvider(Provider):
     # pylint: disable=arguments-renamed
     async def fetch(self, latlon: str) -> dict:
         url = (
-            "https://maps.geoapify.com/v1/staticmap"
+            "https://tux-maps-prod.gnous.eu/v1/staticmap"
             "?style=osm-carto"
             "&width=333"
             "&height=250"
