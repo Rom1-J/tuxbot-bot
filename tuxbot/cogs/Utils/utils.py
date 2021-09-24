@@ -2,12 +2,12 @@ import inspect
 import logging
 import os
 import platform
-from typing import Union
+from typing import Optional
 
 import discord
 import humanize
 import psutil
-from discord.ext import commands, menus  # type: ignore
+from discord.ext import commands
 from tuxbot.cogs.Utils.functions.quote import Quote
 
 from tuxbot import version_info as tuxbot_version_info, __version__
@@ -15,9 +15,9 @@ from tuxbot import version_info as tuxbot_version_info, __version__
 from tuxbot.core.utils.functions.extra import command_extra, ContextPlus
 from tuxbot.core.bot import Tux
 from tuxbot.core.i18n import Translator
-from .functions.converters import QuoteConverter
+from .functions.converters import QuoteConverter, UserOrMeConverter
+from .functions.exceptions import UserNotFound
 from .functions.info import fetch_info
-from .functions.menus import UserPageSource
 
 log = logging.getLogger("tuxbot.cogs.Utils")
 _ = Translator("Utils", __file__)
@@ -27,6 +27,12 @@ class Utils(commands.Cog):
     def __init__(self, bot: Tux, version_info):
         self.bot = bot
         self.version_info = version_info
+
+    # =========================================================================
+
+    async def cog_command_error(self, ctx: ContextPlus, error):
+        if isinstance(error, UserNotFound):
+            await ctx.send(_(str(error), ctx, self.bot.config))
 
     # =========================================================================
     # =========================================================================
@@ -288,46 +294,50 @@ class Utils(commands.Cog):
 
     @command_extra(name="ui", aliases=["user_info", "userinfo"])
     async def _ui(
-        self,
-        ctx: ContextPlus,
-        user_ids: commands.Greedy[
-            Union[commands.MemberConverter, commands.UserConverter]
-        ],
+        self, ctx: ContextPlus, *, user_id: Optional[UserOrMeConverter] = None
     ):
-        embeds = []
+        user_id = user_id or ctx.author
 
-        if not user_ids:
-            user_ids.append(ctx.author)
+        e = discord.Embed(color=self.bot.colors.EMBED_BORDER.value)
 
-        for user_id in user_ids:
-            e = discord.Embed(color=0x2F3136)
+        if isinstance(user_id, (discord.User, discord.Member)):
+            e.set_author(name=user_id, icon_url=user_id.display_avatar.url)
+            e.set_thumbnail(url=user_id.display_avatar.url)
+            e.set_footer(text=f"ID: {user_id.id}")
 
-            if isinstance(user_id, (discord.User, discord.Member)):
-                e.set_author(name=user_id, icon_url=user_id.display_avatar.url)
-                e.set_thumbnail(url=user_id.display_avatar.url)
-                e.set_footer(text=f"ID: {user_id.id}")
+            e.add_field(
+                name=_("Created at", ctx, self.bot.config),
+                value=f"> <t:{int(user_id.created_at.timestamp())}:F>",
+                inline=True,
+            )
 
-                created_at = user_id.created_at.replace(tzinfo=None)
+        if isinstance(user_id, discord.Member):
+            e.add_field(
+                name=_("Joined at", ctx, self.bot.config),
+                value=f"> <t:{int(user_id.joined_at.timestamp())}:F>",
+                inline=True,
+            )
+
+            roles = user_id.roles[1:]
+            e.add_field(
+                name=f"Roles ({len(roles)})",
+                value=" ".join(role.mention for role in roles),
+                inline=False,
+            )
+
+            if premium_since := user_id.premium_since:
                 e.add_field(
-                    name=_("Created at:", ctx, self.bot.config),
-                    value=f"> {humanize.time.naturaldate(created_at)} "
-                    f"({humanize.time.naturaltime(created_at)})",
-                    inline=False,
+                    name=_("Premium since", ctx, self.bot.config),
+                    value=f"> <t:{int(premium_since.timestamp())}:F>",
                 )
 
-            if isinstance(user_id, discord.Member):
-                e.add_field(
-                    name=_("Joined at:", ctx, self.bot.config),
-                    value=f"> {humanize.time.naturaldate(user_id.joined_at)} "
-                    f"({humanize.time.naturaltime(user_id.joined_at)})",
-                )
+            # noinspection PyUnresolvedReferences
+            if (
+                status := user_id.status.value.upper()
+            ) in self.bot.colors.__members__:
+                e.colour = getattr(self.bot.colors, status).value
 
-            embeds.append(e)
+            if activity := user_id.activity:
+                e.description = activity.name
 
-        pages = menus.MenuPages(
-            UserPageSource(embeds), delete_message_after=False
-        )
-        try:
-            await pages.start(ctx)
-        except menus.MenuError:
-            await pages.stop()
+        await ctx.send(embed=e)

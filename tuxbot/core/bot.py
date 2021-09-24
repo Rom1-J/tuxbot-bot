@@ -38,25 +38,26 @@ from tuxbot.core.i18n import Translator
 from . import __version__, ExitCodes
 from . import exceptions
 from .utils.cache import Cache
+from .utils.colors import Colors
 
 log = logging.getLogger("tuxbot")
 _ = Translator("core", __file__)
 
 packages: Tuple = (
     "jishaku",
-    # "tuxbot.cogs.Admin",
-    # "tuxbot.cogs.Logs",
-    # "tuxbot.cogs.Dev",
-    # "tuxbot.cogs.Utils",
-    # "tuxbot.cogs.Polls",
-    # "tuxbot.cogs.Custom",
+    "tuxbot.cogs.Admin",
+    "tuxbot.cogs.Logs",
+    "tuxbot.cogs.Dev",
+    "tuxbot.cogs.Utils",
+    "tuxbot.cogs.Polls",
+    "tuxbot.cogs.Custom",
     "tuxbot.cogs.Network",
-    # "tuxbot.cogs.Linux",
-    # "tuxbot.cogs.Mod",
-    # "tuxbot.cogs.Tags",
-    # "tuxbot.cogs.Math",
-    # "tuxbot.cogs.Test",
-    # "tuxbot.cogs.Help",
+    "tuxbot.cogs.Linux",
+    "tuxbot.cogs.Mod",
+    "tuxbot.cogs.Tags",
+    "tuxbot.cogs.Math",
+    "tuxbot.cogs.Test",
+    "tuxbot.cogs.Help",
 )
 
 
@@ -75,6 +76,7 @@ class Tux(commands.AutoShardedBot):
         self.logs = logs_data_path()
 
         self.console = console
+        self.colors = Colors
         self.cache = Cache()
 
         self.stats = {"commands": Counter(), "socket": Counter()}
