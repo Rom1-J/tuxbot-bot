@@ -2,10 +2,6 @@ from discord.ext import commands
 from discord.ext.commands import Context
 
 
-def _(x):
-    return x
-
-
 class IPConverter(commands.Converter):
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         argument = argument.replace("http://", "").replace("https://", "")
