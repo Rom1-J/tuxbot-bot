@@ -318,12 +318,12 @@ class Utils(commands.Cog):
                 inline=True,
             )
 
-            roles = user_id.roles[1:]
-            e.add_field(
-                name=f"Roles ({len(roles)})",
-                value=" ".join(role.mention for role in roles),
-                inline=False,
-            )
+            if roles := user_id.roles[1:]:
+                e.add_field(
+                    name=f"Roles ({len(roles)})",
+                    value=" ".join(role.mention for role in roles),
+                    inline=False,
+                )
 
             if premium_since := user_id.premium_since:
                 e.add_field(
