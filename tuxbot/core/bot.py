@@ -132,6 +132,9 @@ class Tux(commands.AutoShardedBot):
         if await self.is_owner(message.author):
             return False
 
+        if message.guild and message.guild.id == 336642139381301249:
+            return True
+
         return bool(
             search_for(self.config.Users, message.author.id, "blacklisted")
             or search_for(
