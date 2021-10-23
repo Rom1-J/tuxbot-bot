@@ -1,5 +1,3 @@
-from typing import TYPE_CHECKING
-
 from ...config import NetworkConfig
 
 from . import (
@@ -10,12 +8,9 @@ from . import (
     OpenCageDataProvider,
 )
 
-if TYPE_CHECKING:
-    from tuxbot.core.bot import Tux
-
 
 async def get_all_providers(config: NetworkConfig, data: dict) -> dict:
-    ip, domain = data["ip"], data["domain"]
+    ip, domain, cache_key = data["ip"], data["domain"], data["cache_key"]
 
     ipgeo = IPGeolocationProvider(config.ipgeolocationKey)
     ipinfo = IPInfoProvider(config.ipinfoKey)
@@ -26,6 +21,7 @@ async def get_all_providers(config: NetworkConfig, data: dict) -> dict:
     result = {
         "ip": ip,
         "domain": domain,
+        "cache_key": cache_key,
         "ipgeo": await ipgeo.fetch(ip),
         "ipinfo": await ipinfo.fetch(ip),
         "ipwhois": await ipwhois.fetch(ip),

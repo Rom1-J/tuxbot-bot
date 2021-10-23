@@ -11,7 +11,7 @@ import pip
 from rich.columns import Columns
 from rich.panel import Panel
 from rich.table import Table, box
-from rich import print as rprint
+from rich import print  # pylint: disable=redefined-builtin
 
 import tuxbot.logging
 from tuxbot.core.bot import Tux
@@ -196,8 +196,8 @@ def run() -> None:
     if cli_flags.debug:
         debug_info()
     elif cli_flags.version:
-        rprint(f"Tuxbot V{version_info.major}")
-        rprint(f"Complete Version: {__version__}")
+        print(f"Tuxbot V{version_info.major}")
+        print(f"Complete Version: {__version__}")
 
         sys.exit(os.EX_OK)
 
@@ -229,7 +229,12 @@ def run() -> None:
         raise
     except Exception as exc:
         log.error("Unexpected exception (%s): ", type(exc))
-        console.print_exception(show_locals=True)
+        console.print_exception(
+            width=console.width,
+            show_locals=True,
+            word_wrap=True,
+            extra_lines=5,
+        )
         if tux is not None:
             loop.run_until_complete(shutdown_handler(tux, None, 1))
     finally:

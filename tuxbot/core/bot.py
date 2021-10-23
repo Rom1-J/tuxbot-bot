@@ -14,7 +14,7 @@ from jishaku.models import copy_context_with
 from rich import box
 from rich.columns import Columns
 from rich.panel import Panel
-from rich.progress import Progress
+from rich.progress import Progress, BarColumn
 from rich.table import Table
 
 from tortoise import Tortoise
@@ -63,7 +63,10 @@ packages: Tuple = (
 
 class Tux(commands.AutoShardedBot):
     _loading: asyncio.Task
-    _progress = {"tasks": {}, "main": Progress()}
+    _progress = {
+        "tasks": {},
+        "main": Progress(BarColumn(bar_width=None), transient=True),
+    }
 
     wavelink: wavelink.Client
 
@@ -144,7 +147,9 @@ class Tux(commands.AutoShardedBot):
 
     async def load_packages(self):
         if packages:
-            with Progress() as progress:
+            with Progress(
+                "Launching Tuxbot", BarColumn(bar_width=None), transient=True
+            ) as progress:
                 task = progress.add_task(
                     "Loading packages...", total=len(packages)
                 )
@@ -152,13 +157,15 @@ class Tux(commands.AutoShardedBot):
                 for package in packages:
                     try:
                         self.load_extension(package)
-                        progress.console.print(f"{package} loaded")
+                        progress.log(
+                            f"[u]{package}[/u]'s [cyan]package[/cyan] [green]loaded[/green]"
+                        )
                         log.info("Package %s loaded", package)
                     except Exception as e:
                         log.exception(
                             "Failed to load package %s", package, exc_info=e
                         )
-                        progress.console.print(
+                        progress.log(
                             f"[red]Failed to load package {package} "
                             f"[i](see "
                             f"{str((self.logs / 'tuxbot.log').resolve())} "
@@ -381,7 +388,9 @@ class Tux(commands.AutoShardedBot):
 
     async def start(self, token):  # pylint: disable=arguments-differ
         """Connect to Discord and start all connections."""
-        with Progress() as progress:
+        with Progress(
+            "Launching Tuxbot", BarColumn(bar_width=None), transient=True
+        ) as progress:
             task = progress.add_task(
                 "Connecting to PostgreSQL...", total=len(self.extensions)
             )
@@ -402,6 +411,9 @@ class Tux(commands.AutoShardedBot):
                     models.append(f"{extension}.models.__init__")
 
                 progress.advance(task)
+                progress.log(
+                    f"[u]{extension}[/u]'s [yellow]model[/yellow] [green]loaded[/green]"
+                )
 
             await Tortoise.init(
                 db_url="postgres://{}:{}@{}:{}/{}".format(

@@ -59,8 +59,9 @@ class Cache:
     @staticmethod
     def gen_key(*args, **kwargs):
         frame = inspect.stack()[1]
+        file = "/tuxbot/" + frame.filename.split("/tuxbot/")[-1]
 
-        base_key = f"{frame.filename}>{frame.function}"
+        base_key = f"{file}>{frame.function}"
         params = ""
 
         if args:

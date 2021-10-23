@@ -118,14 +118,16 @@ class Network(commands.Cog):
         inet: InetConverter = None,
     ):
         ip = await get_ip(self.bot.loop, str(domain), inet)
-        cache_key = self.bot.cache.gen_key(ip)
+        cache_key = self.bot.cache.gen_key(f"{domain}+{ip}")
 
         result = await self.bot.cache.async_get(
             cache_key,
             get_all_providers,
             ttl=3600 * 5,
             args=(self.__config,),
-            kwargs={"data": {"ip": ip, "domain": domain}},
+            kwargs={
+                "data": {"ip": ip, "domain": domain, "cache_key": cache_key}
+            },
         )
 
         controller = ViewController(ctx=ctx, author=ctx.author, data=result)

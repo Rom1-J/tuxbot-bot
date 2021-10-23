@@ -89,7 +89,7 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def select_embed(self) -> Optional[discord.Embed]:
-        cache_key = self.ctx.bot.cache.gen_key(self.data["ip"])
+        cache_key = self.ctx.bot.cache.gen_key(self.data["cache_key"])
 
         self.embeds = await self.ctx.bot.cache.async_get(
             cache_key,
