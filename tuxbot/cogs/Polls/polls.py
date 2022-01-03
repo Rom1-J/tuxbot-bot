@@ -104,7 +104,7 @@ class Polls(commands.Cog):
 
     async def update_poll(self, poll: Poll):
         if (
-            c := self.bot.fetch_channel(poll.channel_id)
+            c := await self.bot.fetch_channel(poll.channel_id)
         ) is None or not isinstance(c, discord.TextChannel):
             return
 

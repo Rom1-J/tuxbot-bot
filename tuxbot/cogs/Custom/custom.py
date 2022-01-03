@@ -4,10 +4,8 @@ from typing import List
 import discord
 from discord.ext import commands
 
-from tuxbot.cogs.Custom.functions.converters import AliasConvertor
 from tuxbot.core.bot import Tux
-from tuxbot.core.config import set_for_key, search_for, set_if_none
-from tuxbot.core.config import Config
+from tuxbot.core.config import Config, set_if_none
 from tuxbot.core.i18n import (
     Translator,
     find_locale,
@@ -18,6 +16,9 @@ from tuxbot.core.utils.functions.extra import (
     group_extra,
     ContextPlus,
 )
+
+from .functions.converters import AliasConvertor
+from .functions.utils import save_lang, get_aliases, save_alias
 
 log = logging.getLogger("tuxbot.cogs.Custom")
 _ = Translator("Custom", __file__)
@@ -35,22 +36,6 @@ class Custom(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    async def _get_aliases(self, ctx: ContextPlus) -> dict:
-        return search_for(self.bot.config.Users, ctx.author.id, "aliases")
-
-    async def _save_lang(self, ctx: ContextPlus, lang: str) -> None:
-        set_for_key(
-            self.bot.config.Users, ctx.author.id, Config.User, locale=lang
-        )
-
-    async def _save_alias(self, ctx: ContextPlus, alias: dict) -> None:
-        set_for_key(
-            self.bot.config.Users, ctx.author.id, Config.User, alias=alias
-        )
-
-    # =========================================================================
-    # =========================================================================
-
     @group_extra(name="custom", aliases=["perso"], deletable=True)
     @commands.guild_only()
     async def _custom(self, ctx: ContextPlus):
@@ -59,7 +44,9 @@ class Custom(commands.Cog):
     @_custom.command(name="locale", aliases=["langue", "lang"])
     async def _custom_locale(self, ctx: ContextPlus, lang: str):
         try:
-            await self._save_lang(ctx, find_locale(lang.lower()))
+            await save_lang(
+                self.bot.config.Users, ctx, find_locale(lang.lower())
+            )
             await ctx.send(
                 _(
                     "Locale changed for you to {lang} successfully",
@@ -83,11 +70,11 @@ class Custom(commands.Cog):
         command = args[0]
         custom = args[1]
 
-        user_aliases = await self._get_aliases(ctx)
+        user_aliases = await get_aliases(self.bot.config.Users, ctx)
 
         if not user_aliases:
             set_if_none(self.bot.config.Users, ctx.author.id, Config.User)
-            user_aliases = await self._get_aliases(ctx)
+            user_aliases = await get_aliases(self.bot.config.Users, ctx)
 
         if custom in user_aliases.keys():
             return await ctx.send(
@@ -101,7 +88,7 @@ class Custom(commands.Cog):
 
         user_aliases[custom] = command
 
-        await self._save_alias(ctx, user_aliases)
+        await save_alias(self.bot.config.Users, ctx, user_aliases)
 
         await ctx.send(
             _(
