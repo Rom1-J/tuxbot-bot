@@ -1,3 +1,9 @@
+"""
+Tuxbot,
+
+bot made initially for https://gnous.eu, then proposed to the entire
+free software community
+"""
 import os
 from collections import namedtuple
 
@@ -8,7 +14,7 @@ VersionInfo = namedtuple(
     "VersionInfo", "major minor micro releaselevel build, info"
 )
 version_info = VersionInfo(
-    major=3, minor=0, micro=0, releaselevel="alpha", build=build, info=info
+    major=4, minor=0, micro=0, releaselevel="alpha", build=build, info=info
 )
 
 __version__ = "v{}.{}.{}-{}.{}".format(
@@ -18,9 +24,3 @@ __version__ = "v{}.{}.{}-{}.{}".format(
     version_info.releaselevel,
     version_info.build,
 ).replace("\n", "")
-
-
-class ExitCodes:
-    CRITICAL = 1
-    SHUTDOWN = 0
-    RESTART = 42

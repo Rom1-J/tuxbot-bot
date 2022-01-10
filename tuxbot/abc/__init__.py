@@ -1,0 +1,3 @@
+"""
+Tuxbot abstract class module
+"""

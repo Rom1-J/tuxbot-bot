@@ -112,3 +112,13 @@ msgmerge:
 .PHONY: cog
 cog:
 	$(PYTHON_PATH) tuxbot/core/utils/cli/cog_generator.py
+
+
+########################################################################################################################
+# Rewrite
+########################################################################################################################
+
+.PHONY: rewrite
+rewrite: update
+	cd tuxbot && \
+	PYTHON_ENV=development clusterId=1 shard_id=0 shard_count=1 cluster_count=1 first_shard_id=0 last_shard_id=0 python start.py

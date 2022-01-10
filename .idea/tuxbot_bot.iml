@@ -10,8 +10,13 @@
       <excludeFolder url="file://$MODULE_DIR$/venv3.8" />
       <excludeFolder url="file://$MODULE_DIR$/venv3.9" />
       <excludeFolder url="file://$MODULE_DIR$/venv3.11" />
+      <excludeFolder url="file://$MODULE_DIR$/tuxbot.back" />
+      <excludeFolder url="file://$MODULE_DIR$/tuxbot.back2" />
+      <excludeFolder url="file://$MODULE_DIR$/.envs/.production" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint" />
+      <excludeFolder url="file://$MODULE_DIR$/Tuxbot_bot.egg-info" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (tuxbot_bot)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.10 (tuxbot_bot)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
