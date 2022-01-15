@@ -6,18 +6,17 @@ Contains all config workers
 import yaml
 from pathlib import Path
 
-base_path = "."
+cwd = Path().resolve().parent.resolve()
+base_path = Path().resolve()
+python_base_path = ""
 
-with open(Path().resolve().parent.resolve() / "data" / "settings" / "config.yaml") as f:
+with open(cwd / "data" / "settings" / "development.yaml") as f:
     config = yaml.load(f, Loader=yaml.SafeLoader)
 
-config["sentry"] = {
-    "dsn": "https://758fc55570d540f5b404f7c01a757823@o511839.ingest.sentry.io/6136538"
-}
-
 config["paths"] = {
+    "cwd": cwd,
     "base": base_path,
-    "commands": base_path + "commands",
-    "controllers": base_path + "controllers",
-    "events": base_path + "events",
+    "python_base": python_base_path,
+    "cogs": base_path / "cogs",
+    "python_cogs": python_base_path + ".cogs",
 }

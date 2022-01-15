@@ -1,0 +1,19 @@
+# French translations for Tuxbot-bot package
+# Traductions françaises du paquet Tuxbot-bot.
+# Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tuxbot-bot package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tuxbot-bot\n"
+"Report-Msgid-Bugs-To: rick@gnous.eu\n"
+"POT-Creation-Date: 2020-10-21 01:15+0200\n"
+"PO-Revision-Date: 2020-10-21 01:15+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"

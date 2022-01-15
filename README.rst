@@ -14,7 +14,7 @@ Installing the pre-requirements
 
 -  The pre-requirements are:
 
-   -  Python 3.9 or greater
+   -  Python 3.8 or greater
    -  Pip
    -  Git
 

@@ -1,5 +1,6 @@
 """
-Tuxbot,
+Tuxbot
+~~~~~~~
 
 bot made initially for https://gnous.eu, then proposed to the entire
 free software community
@@ -17,7 +18,7 @@ version_info = VersionInfo(
     major=4, minor=0, micro=0, releaselevel="alpha", build=build, info=info
 )
 
-__version__ = "v{}.{}.{}-{}.{}".format(
+__version__ = "v{}.{}.{}-{}+{}".format(
     version_info.major,
     version_info.minor,
     version_info.micro,

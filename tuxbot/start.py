@@ -2,6 +2,7 @@
 Starter file
 """
 import asyncio
+
 import os
 import traceback
 
@@ -10,6 +11,7 @@ from tuxbot.core.logger import logger
 
 
 env = os.getenv("PYTHON_ENV", "production")
+profiling = os.getenv("PROFILING", False)
 
 
 async def run_bot(tuxbot: Tuxbot) -> None:
@@ -17,11 +19,23 @@ async def run_bot(tuxbot: Tuxbot) -> None:
 
     Parameters
     ----------
-    tuxbot:Tuxbot
+    tuxbot: :class:`Tuxbot`
         Tuxbot instance
     """
     try:
-        await tuxbot.launch()
+        if profiling:
+            import cProfile
+            import pstats
+
+            with cProfile.Profile() as pr:
+                await tuxbot.launch()
+
+            stats = pstats.Stats(pr)
+            stats.sort_stats(pstats.SortKey.TIME)
+            stats.print_stats()
+            stats.dump_stats("../profiling.prof")
+        else:
+            await tuxbot.launch()
     except Exception as e:
         if env == "development":
             traceback.print_exc()
@@ -31,11 +45,11 @@ async def run_bot(tuxbot: Tuxbot) -> None:
 
 def start():
     """Start function"""
-    with open("logo.txt", "r") as f:
+    with open("misc/logo.txt", "r") as f:
         logo = f.read()
 
     print(logo)
-    logger.info(f"[C{os.getenv('clusterId')}] Process {os.getgid()} online.")
+    logger.info(f"[C{os.getenv('clusterId')}] Process {os.getpid()} online.")
 
     options = {}
 

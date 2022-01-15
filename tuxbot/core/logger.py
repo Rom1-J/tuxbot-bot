@@ -4,7 +4,6 @@ Tuxbot core module: logger
 Logger to format discord and tuxbot logs
 """
 import logging
-from logging.config import fileConfig
 
 from pythonjsonlogger import jsonlogger
 import sentry_sdk
@@ -13,22 +12,48 @@ from rich.logging import RichHandler
 from tuxbot.core.config import config
 
 
-# noinspection PyMissingOrEmptyDocstring
 class Logger(logging.Logger):
     """Tuxbot logger"""
+    keys = [
+        'asctime',
+        'created',
+        'filename',
+        'funcName',
+        'levelname',
+        'levelno',
+        'lineno',
+        'module',
+        'msecs',
+        'message',
+        'name',
+        'pathname',
+        'process',
+        'processName',
+        'relativeCreated',
+        'thread',
+        'threadName'
+    ]
+
     def __init__(self):
         super(Logger, self).__init__("tuxbot")
 
-        formatter = jsonlogger.JsonFormatter()
-        fileConfig("logging.ini")
+        custom_format = ' '.join(['%({0:s})s'.format(i) for i in self.keys])
+        formatter = jsonlogger.JsonFormatter(custom_format)
 
-        json_handler = logging.FileHandler(filename="logs/logs.json")
+        json_handler = logging.FileHandler(
+            filename=str(
+                config["paths"]["cwd"] / "data" / "logs" / "logs.json"
+            )
+        )
         json_handler.setFormatter(formatter)
 
         self.addHandler(json_handler)
-        self.addHandler(RichHandler(rich_tracebacks=True, tracebacks_show_locals=True))
 
-        if dsn := config["sentry"].get("dsn"):
+        if config["test"]:
+            self.addHandler(
+                RichHandler(rich_tracebacks=True, tracebacks_show_locals=True)
+            )
+        elif dsn := config["sentry"].get("dsn"):
             sentry_sdk.init(dsn=dsn)
 
 

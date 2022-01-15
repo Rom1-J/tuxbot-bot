@@ -4,89 +4,74 @@ Tuxbot collections module: ModuleCollection
 Contains all module collections
 """
 import importlib.util
-from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Iterator, Dict, Type
+from typing import TYPE_CHECKING, Type
 
-from tuxbot.abc.ModuleABC import ModuleABC
+from discord.ext import commands
+
 from tuxbot.core.logger import logger
 
 if TYPE_CHECKING:
     from tuxbot.core.Tuxbot import Tuxbot
 
 
-class ModuleCollection(MutableMapping):
+class ModuleCollection:
     """Tuxbot modules collection"""
 
-    _modules: Dict[str, ModuleABC] = {}
-
-    def __setitem__(self, key: str, value: ModuleABC) -> None:
-        self._modules[key] = value
-
-    def __delitem__(self, key: str) -> None:
-        del self._modules[key]
-
-    def __getitem__(self, key: str) -> ModuleABC:
-        return self._modules[key]
-
-    def __len__(self) -> int:
-        return len(self._modules)
-
-    def __iter__(self) -> Iterator[str]:
-        return self._modules.__iter__()
-
-    def __init__(self, config, tuxbot: "Tuxbot"):
+    def __init__(self, config, bot: "Tuxbot"):
         self.config = config
-        self.tuxbot = tuxbot
+        self.bot = bot
 
     # =========================================================================
 
-    async def load_modules(self):
+    def load_modules(self):
         """Load all modules from config"""
-        for module_name in self.config["modules"]:
-            module_path = self.config["paths"]["commands"] + f".{module_name}"
+        if not (modules := self.config["modules"]):
+            return
 
-            module: Type[ModuleABC] = getattr(
+        for module_name in modules:
+            module_path = self.config["paths"]["python_cogs"] + f".{module_name}"
+
+            module: Type[commands.Cog] = getattr(
                 importlib.import_module(module_path, package='tuxbot'),
-                f"{module_name}Module"
+                module_name
             )
 
             self.register(module)
 
     # =========================================================================
 
-    def register(self, _module: Type[ModuleABC]):
+    def register(self, _module: Type[commands.Cog]):
         """Register module
 
         Parameters
         ----------
-        _module:ModuleABC
+        _module: Type[commands.Cog]
             Module class to register
         """
-        if not _module.__base__.__name__ == "ModuleABC":
+        if not isinstance(_module, commands.CogMeta):
             return logger.debug("[ModuleCollection] Skipping unknown module")
 
-        module = _module(self.tuxbot)
-        active_module = self._modules.get(module.name)
+        module = _module(bot=self.bot)
+
+        module.name = (
+            module.name if hasattr(module, "name") else module.__cog_name__
+        )
+        active_module = self.bot.cogs.get(module.name)
 
         if active_module:
             logger.debug(f"[ModuleCollection] Unloading module {module.name}")
-            active_module.cog_unload()
-            del self._modules[module.name]
+            self.bot.remove_cog(module.name)
 
         logger.debug(f"[ModuleCollection] Registering module {module.name}")
 
-        self.tuxbot.add_cog(module)
+        self.bot.add_cog(module)
 
-        if models := module.models:
+        logger.debug(
+            f"[ModuleCollection] Added {len(module.get_commands())} commands"
+        )
+
+        if hasattr(module, "models") and (models := module.models):
             self.register_models(models)
-
-        self._modules[module.name] = module
-
-        for event in self.tuxbot.dispatcher.events:
-            if not hasattr(module, event):
-                continue
-
-            module.register_listener(event, getattr(module, event))
 
     # =========================================================================
 
@@ -101,4 +86,4 @@ class ModuleCollection(MutableMapping):
 
         for model in models:
             logger.debug(f"[ModuleCollection] Registering model: {model.name}")
-            self.tuxbot.db.register_model()
+            self.bot.db.register_model()

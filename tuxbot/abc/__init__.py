@@ -1,3 +1,6 @@
 """
-Tuxbot abstract class module
+tuxbot.abc
+~~~~~~~~~~~
+
+A module who contains all Abstract Classes.
 """

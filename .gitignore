@@ -27,16 +27,12 @@ __pycache__/
 
 .idea/sonarlint/
 
-*.logs
-tuxbot/logs/*
+*.log
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
 venv
-venv3.8
-venv3.9
-venv3.11
 dist
 build
 *.egg
@@ -49,5 +45,7 @@ build
 !.envs/.local/
 
 
-data/settings/
+data/settings/*
+data/logs/*
 dump.rdb
+profiling.prof

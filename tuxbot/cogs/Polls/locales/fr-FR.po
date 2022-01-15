@@ -1,0 +1,58 @@
+# French translations for Tuxbot-bot package
+# Traductions françaises du paquet Tuxbot-bot.
+# Copyright (C) 2020 THE Tuxbot-bot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tuxbot-bot package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tuxbot-bot\n"
+"Report-Msgid-Bugs-To: rick@gnous.eu\n"
+"POT-Creation-Date: 2020-10-21 01:15+0200\n"
+"PO-Revision-Date: 2020-10-21 01:15+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tuxbot/cogs/Polls/polls.py:55 tuxbot/cogs/Polls/polls.py:176
+msgid "**Preparation**"
+msgstr "**Préparation**"
+
+#: tuxbot/cogs/Polls/polls.py:204
+#, python-brace-format
+msgid "Proposed addition for poll #{id}"
+msgstr "Proposition d'ajout pour le sondage #{id}"
+
+#: tuxbot/cogs/Polls/polls.py:209
+msgid "Poll"
+msgstr "Sondage"
+
+#: tuxbot/cogs/Polls/polls.py:211
+msgid "here"
+msgstr "ici"
+
+#: tuxbot/cogs/Polls/polls.py:215
+#, python-brace-format
+msgid "Requested by {author}"
+msgstr "Demandée par {author}"
+
+#: tuxbot/cogs/Polls/functions/converters.py:21
+#: tuxbot/cogs/Polls/functions/converters.py:49
+msgid "Please provide a message in this channel"
+msgstr "Veuillez fournir un message dans ce salon"
+
+#: tuxbot/cogs/Polls/functions/converters.py:30
+#: tuxbot/cogs/Polls/functions/converters.py:36
+#: tuxbot/cogs/Polls/functions/converters.py:41
+#: tuxbot/cogs/Polls/functions/converters.py:46
+msgid "Unable to find this poll"
+msgstr "Impossible de trouver ce sondage"
+
+#: tuxbot/cogs/Polls/functions/converters.py:58
+msgid "Your proposal must be smaller than 30"
+msgstr "Votre proposition doit être inférieure à 30"
+

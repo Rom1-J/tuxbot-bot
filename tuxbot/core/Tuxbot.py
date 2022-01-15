@@ -7,23 +7,20 @@ import json
 import sys
 import traceback
 from datetime import datetime
-from typing import NoReturn, Tuple
+from typing import NoReturn, Tuple, List
 
 import aiohttp
 import discord
+from discord.ext import commands
 from datadog import initialize
+from jishaku import Jishaku
+
+from tuxbot.core.collections.ModuleCollection import ModuleCollection
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
 
 from tuxbot.core import redis
 from tuxbot.core.config import config
-
-from tuxbot.core.collections.CommandCollection import CommandCollection
-from tuxbot.core.collections.ModuleCollection import ModuleCollection
-
-from tuxbot.core.managers.PermissionsManager import PermissionsManager
-from tuxbot.core.managers.WebhookManager import WebhookManager
-from tuxbot.core.managers.EventManager import EventManager
 
 initialize(**{
     'statsd_host': '127.0.0.1',
@@ -43,18 +40,6 @@ class Tuxbot(TuxbotABC):
             "PermissionsManager": {}
         }
 
-        # Create collections
-        self.collections = {
-            "commands": CommandCollection(config, self),
-            "modules": ModuleCollection(config, self),
-        }
-
-        # Create managers
-        self.managers = {
-            "webhooks": WebhookManager(self),
-            "permissions": PermissionsManager(self)
-        }
-
         options = options or {}
 
         self.client_options, self.cluster_options = self.configure(options)
@@ -62,6 +47,11 @@ class Tuxbot(TuxbotABC):
 
     async def load_config(self):
         """Load configurations"""
+
+        modules = ModuleCollection(self._config, self)
+        modules.register(Jishaku)
+        modules.load_modules()
+
         try:
             if hasattr(self.models, "Config"):
                 db_config = await self.models.Config.findOne(
@@ -82,11 +72,9 @@ class Tuxbot(TuxbotABC):
 
         try:
             self.redis = await redis.connect()
+            self.logger.info(f"[Tuxbot] Redis connection established.")
         except Exception as e:
             self.logger.error(e)
-
-        self.dispatcher = EventManager(self)
-        await self.collections.get("modules").load_modules()
 
         await super(Tuxbot, self).start(config["client"]["token"])
 
@@ -107,8 +95,6 @@ class Tuxbot(TuxbotABC):
             f"[Tuxbot] {self.config['name']} "
             f"ready with {len(self.guilds)} guilds."
         )
-
-        self.logger.debug(self._listeners)
 
         if game := self.config["client"].get("game"):
             await self.change_presence(
@@ -134,6 +120,15 @@ class Tuxbot(TuxbotABC):
     def configure(options: dict) -> Tuple[dict, dict]:
         """Configure Tuxbot"""
 
+        async def get_prefix(
+                bot: "Tuxbot", message: discord.Message
+        ) -> List[str]:
+            """Get bot prefixes from config or set it as mentionable"""
+            if not (prefixes := config.get("prefixes")):
+                prefixes = commands.when_mentioned(bot, message)
+
+            return prefixes
+
         client_config = {
             "disable_events": {
                 "TYPING_START": True
@@ -141,8 +136,10 @@ class Tuxbot(TuxbotABC):
             "allowed_mentions": discord.AllowedMentions(
                 everyone=(not config["client"]["disable_everyone"]) or False
             ),
-            "max_messages": int(config["client"]["max_cached_messages"]) or 10000,
-            "command_prefix": config["prefix"] if hasattr(config, 'prefix') else ".",
+            "max_messages": (
+                    int(config["client"]["max_cached_messages"]) or 10000
+            ),
+            "command_prefix": get_prefix,
             "owner_ids": config["client"]["owners_id"],
             "first_shard_id": (
                     options.get("first_shard_id")
@@ -183,7 +180,7 @@ class Tuxbot(TuxbotABC):
 
         Parameters
         ----------
-        client:Tuxbot
+        client: :class:`Tuxbot`
             Tuxbot client instance
         err:Exception
             Crash exception
@@ -194,9 +191,14 @@ class Tuxbot(TuxbotABC):
         """
         cluster_id = f"C{client.cluster_options.get('cluster_id')}"
         time = datetime.utcnow().isoformat()
+
+        crash_name = f"crashreport_{cluster_id}_{time}.txt"
+        crash_path = config["paths"]["cwd"] / "data" / "logs" / crash_name
+
         trace = "".join(
             traceback.TracebackException.from_exception(err).format()
         )
+
         client_options = json.dumps(
             client.client_options,
             indent=4,
@@ -219,12 +221,13 @@ class Tuxbot(TuxbotABC):
         report += "\n\nCluster Options:"
         report += f"\n{cluster_options}"
 
-        for module in client.collections.get("modules").values():
-            if hasattr(module, "crash_report"):
-                report += f"\n\n{module.crash_report()}"
+        report += "\n\nCogs crash reports:"
 
-        with open(f"logs/crashreport_{cluster_id}_{time}.txt", "w") as f:
+        for module in client.cogs:
+            if hasattr(module, "crash_report"):
+                report += f"\n{module.crash_report()}\n"
+
+        with open(str(crash_path), "w") as f:
             f.write(report)
 
         return sys.exit(1)
-

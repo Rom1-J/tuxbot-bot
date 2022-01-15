@@ -4,25 +4,15 @@ Tuxbot abstract class module: TuxbotABC
 Contains all Tuxbot properties
 """
 from datetime import datetime
-from typing import Optional, Dict, Union
+from typing import Optional
 
 import aioredis
 from datadog import DogStatsd, statsd
 from discord.ext import commands
 
-from tuxbot.core.collections.CommandCollection import CommandCollection
-from tuxbot.core.collections.ModuleCollection import ModuleCollection
-
-from tuxbot.core.managers.EventManager import EventManager
-from tuxbot.core.managers.WebhookManager import WebhookManager
-from tuxbot.core.managers.PermissionsManager import PermissionsManager
-
 from tuxbot.core.logger import logger, prom
 from tuxbot.core.database import db
 from tuxbot.core import utils
-
-_C = Union[CommandCollection, ModuleCollection]
-_M = Union[WebhookManager, PermissionsManager]
 
 
 class TuxbotABC(commands.AutoShardedBot):
@@ -40,10 +30,6 @@ class TuxbotABC(commands.AutoShardedBot):
 
     _uptime: Optional[datetime] = None
     _last_on_ready: Optional[datetime] = None
-
-    _collections: Optional[Dict[str, _C]]
-    _managers: Optional[Dict[str, _M]]
-    _dispatcher: Optional[EventManager] = None
 
     # =========================================================================
     # =========================================================================
@@ -229,54 +215,6 @@ class TuxbotABC(commands.AutoShardedBot):
         prom
         """
         return prom
-
-    # =========================================================================
-
-    @property
-    def dispatcher(self) -> EventManager:
-        """EventManager instance
-
-        Returns
-        -------
-        EventManager
-        """
-        return self._dispatcher
-
-    @dispatcher.setter
-    def dispatcher(self, value: EventManager):
-        self._dispatcher = value
-
-    # =========================================================================
-
-    @property
-    def collections(self) -> Dict[str, _C]:
-        """Collections instance
-
-        Returns
-        -------
-        Dict[str, _C]
-        """
-        return self._collections
-
-    @collections.setter
-    def collections(self, value: Dict[str, _C]):
-        self._collections = value
-
-    # =========================================================================
-
-    @property
-    def managers(self) -> Dict[str, _M]:
-        """Managers instance
-
-        Returns
-        -------
-        Dict[str, _M]
-        """
-        return self._managers
-
-    @managers.setter
-    def managers(self, value: Dict[str, _M]):
-        self._managers = value
 
     # =========================================================================
     # =========================================================================
