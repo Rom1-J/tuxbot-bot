@@ -4,12 +4,11 @@ tuxbot.cogs.Help.commands.HelpCommand
 
 Command to restart Tuxbot
 """
+
 from typing import Dict
 
 import discord
 from discord.ext import commands
-
-from tuxbot.core.Tuxbot import Tuxbot
 
 
 class HelpCommand(commands.HelpCommand):

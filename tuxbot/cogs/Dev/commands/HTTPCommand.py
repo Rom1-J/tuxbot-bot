@@ -4,6 +4,7 @@ tuxbot.cogs.Dev.commands.HTTPCommand
 
 Command to show doc about HTTP code
 """
+
 import discord
 from discord.ext import commands
 

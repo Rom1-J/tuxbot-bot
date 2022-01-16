@@ -93,7 +93,9 @@ class Tuxbot(TuxbotABC):
 
         self.logger.info(
             f"[Tuxbot] {self.config['name']} "
-            f"ready with {len(self.guilds)} guilds."
+            f"ready with {len(self.guilds)} guilds, "
+            f"{len(self.users)} users and "
+            f"{len(tuple(self.walk_commands()))} commands."
         )
 
         if game := self.config["client"].get("game"):

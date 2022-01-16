@@ -67,7 +67,8 @@ class ModuleCollection:
         self.bot.add_cog(module)
 
         logger.debug(
-            f"[ModuleCollection] Added {len(module.get_commands())} commands"
+            f"[ModuleCollection] Added {len(tuple(module.walk_commands()))} "
+            f"commands"
         )
 
         if hasattr(module, "models") and (models := module.models):
