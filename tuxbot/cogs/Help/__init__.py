@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Help
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Tuxbot help command.
 """

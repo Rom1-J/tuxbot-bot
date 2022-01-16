@@ -31,7 +31,7 @@ class CNFCommand(commands.Cog):
             await self.bot.redis.set(
                 self.bot.utils.gen_key(command),
                 str(cnf),
-                ex=3600 * 12  # cache for 12h
+                ex=3600 * 12,  # cache for 12h
             )
 
         if distro := cnf["distro"]:
@@ -51,9 +51,8 @@ class CNFCommand(commands.Cog):
 
             e.set_footer(
                 text="Powered by https://command-not-found.com/ "
-                     "and with his authorization " + (
-                         "(Retrieved from cache)" if from_cache else ""
-                     )
+                "and with his authorization "
+                + ("(Retrieved from cache)" if from_cache else "")
             )
 
             for k, v in distro.items():

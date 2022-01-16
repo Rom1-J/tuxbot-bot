@@ -11,7 +11,7 @@ from tuxbot.core.logger import logger
 
 
 env = os.getenv("PYTHON_ENV", "production")
-profiling = os.getenv("PROFILING", False)
+profiling = os.getenv("PROFILING", None)
 
 
 async def run_bot(tuxbot: Tuxbot) -> None:
@@ -45,11 +45,13 @@ async def run_bot(tuxbot: Tuxbot) -> None:
 
 def start():
     """Start function"""
-    with open("misc/logo.txt", "r") as f:
+    with open("misc/logo.txt", "r", encoding="UTF-8") as f:
         logo = f.read()
 
     print(logo)
-    logger.info(f"[C{os.getenv('clusterId')}] Process {os.getpid()} online.")
+    logger.info(
+        "[C%s] Process %d online.", os.getenv("clusterId"), os.getpid()
+    )
 
     options = {}
 
@@ -92,5 +94,5 @@ def start():
         Tuxbot.crash_report(tuxbot, e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     start()

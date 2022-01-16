@@ -36,9 +36,7 @@ class IplocaliseCommand(commands.Cog):
             ip = await get_ip(self.bot.loop, str(domain), inet)
 
             await self.bot.redis.set(
-                self.bot.utils.gen_key(str(domain)),
-                str(ip),
-                ex=3600 * 24
+                self.bot.utils.gen_key(str(domain)), str(ip), ex=3600 * 24
             )
         else:
             ip = ip.decode()
@@ -49,13 +47,11 @@ class IplocaliseCommand(commands.Cog):
 
         if not result:
             result = await get_all_providers(
-                    self.bot.config["Network"],
-                    data={"ip": ip, "domain": domain}
-                )
+                self.bot.config["Network"], data={"ip": ip, "domain": domain}
+            )
 
             await self.bot.redis.set(
-                self.bot.utils.gen_key(f"{domain}+{ip}"),
-                str(result)
+                self.bot.utils.gen_key(f"{domain}+{ip}"), str(result)
             )
         else:
             result = yaml.load(result, Loader=yaml.Loader)

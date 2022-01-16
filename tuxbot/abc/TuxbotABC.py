@@ -3,6 +3,7 @@ Tuxbot abstract class module: TuxbotABC
 
 Contains all Tuxbot properties
 """
+
 from datetime import datetime
 from typing import Optional
 
@@ -130,7 +131,7 @@ class TuxbotABC(commands.AutoShardedBot):
         -------
         db
         """
-        return db.models
+        return db.models  # pylint: disable=no-member
 
     # =========================================================================
 

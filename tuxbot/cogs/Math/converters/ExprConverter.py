@@ -4,6 +4,7 @@ tuxbot.cogs.Math.converters.ExprConverter
 
 Converter to parse user expr as sympy expr.
 """
+
 from typing import Dict, Any
 
 from discord.ext import commands
@@ -46,8 +47,8 @@ class ExprConverter(commands.Converter):
                 return parse_expr(
                     argument,
                     transformations=(
-                            standard_transformations
-                            + (implicit_multiplication_application,)
+                        standard_transformations
+                        + (implicit_multiplication_application,)
                     ),
                     evaluate=False,
                     global_dict=global_dict,

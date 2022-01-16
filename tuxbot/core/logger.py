@@ -14,30 +14,31 @@ from tuxbot.core.config import config
 
 class Logger(logging.Logger):
     """Tuxbot logger"""
+
     keys = [
-        'asctime',
-        'created',
-        'filename',
-        'funcName',
-        'levelname',
-        'levelno',
-        'lineno',
-        'module',
-        'msecs',
-        'message',
-        'name',
-        'pathname',
-        'process',
-        'processName',
-        'relativeCreated',
-        'thread',
-        'threadName'
+        "asctime",
+        "created",
+        "filename",
+        "funcName",
+        "levelname",
+        "levelno",
+        "lineno",
+        "module",
+        "msecs",
+        "message",
+        "name",
+        "pathname",
+        "process",
+        "processName",
+        "relativeCreated",
+        "thread",
+        "threadName",
     ]
 
     def __init__(self):
-        super(Logger, self).__init__("tuxbot")
+        super().__init__("tuxbot")
 
-        custom_format = ' '.join(['%({0:s})s'.format(i) for i in self.keys])
+        custom_format = " ".join(["%({0:s})s".format(i) for i in self.keys])
         formatter = jsonlogger.JsonFormatter(custom_format)
 
         json_handler = logging.FileHandler(
@@ -54,6 +55,7 @@ class Logger(logging.Logger):
                 RichHandler(rich_tracebacks=True, tracebacks_show_locals=True)
             )
         elif dsn := config["sentry"].get("dsn"):
+            # pylint: disable=abstract-class-instantiated
             sentry_sdk.init(dsn=dsn)
 
 

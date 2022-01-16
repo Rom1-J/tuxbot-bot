@@ -29,11 +29,13 @@ class ModuleCollection:
             return
 
         for module_name in modules:
-            module_path = self.config["paths"]["python_cogs"] + f".{module_name}"
+            module_path = (
+                self.config["paths"]["python_cogs"] + f".{module_name}"
+            )
 
             module: Type[commands.Cog] = getattr(
-                importlib.import_module(module_path, package='tuxbot'),
-                module_name
+                importlib.import_module(module_path, package="tuxbot"),
+                module_name,
             )
 
             self.register(module)
@@ -49,7 +51,8 @@ class ModuleCollection:
             Module class to register
         """
         if not isinstance(_module, commands.CogMeta):
-            return logger.debug("[ModuleCollection] Skipping unknown module")
+            logger.debug("[ModuleCollection] Skipping unknown module")
+            return
 
         module = _module(bot=self.bot)
 
@@ -59,16 +62,16 @@ class ModuleCollection:
         active_module = self.bot.cogs.get(module.name)
 
         if active_module:
-            logger.debug(f"[ModuleCollection] Unloading module {module.name}")
+            logger.debug("[ModuleCollection] Unloading module %s", module.name)
             self.bot.remove_cog(module.name)
 
-        logger.debug(f"[ModuleCollection] Registering module {module.name}")
+        logger.debug("[ModuleCollection] Registering module %s", module.name)
 
         self.bot.add_cog(module)
 
         logger.debug(
-            f"[ModuleCollection] Added {len(tuple(module.walk_commands()))} "
-            f"commands"
+            "[ModuleCollection] Added %d commands",
+            len(tuple(module.walk_commands())),
         )
 
         if hasattr(module, "models") and (models := module.models):
@@ -86,5 +89,7 @@ class ModuleCollection:
         """
 
         for model in models:
-            logger.debug(f"[ModuleCollection] Registering model: {model.name}")
+            logger.debug(
+                "[ModuleCollection] Registering model: %s", model.name
+            )
             self.bot.db.register_model()

@@ -7,10 +7,6 @@ from .abc import Provider
 from ..exceptions import RFC1819
 
 
-def _(x):
-    return x
-
-
 class IPWhoisProvider(Provider):
     async def fetch(self, ip: str) -> dict:
         def _get_ipwhois_result(_ip: str) -> dict:
@@ -23,9 +19,7 @@ class IPWhoisProvider(Provider):
 
             except ipwhois.exceptions.IPDefinedError as e:
                 raise RFC1819(
-                    _(
-                        "This IP address defined as Private-Use Networks via RFC 1918."
-                    )
+                    "This IP address defined as Private-Use Networks via RFC 1918."
                 ) from e
 
         try:

@@ -1,6 +1,6 @@
 """
-tuxbot.cogs.Linux.functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Math.functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Useful global functions and classes for Linux module.
+Useful global functions and classes for Math module.
 """

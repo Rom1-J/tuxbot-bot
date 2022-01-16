@@ -3,14 +3,17 @@ Tuxbot core module: config
 
 Contains all config workers
 """
-import yaml
+
 from pathlib import Path
+import yaml
 
 cwd = Path().resolve().parent.resolve()
 base_path = Path().resolve()
 python_base_path = ""
 
-with open(cwd / "data" / "settings" / "development.yaml") as f:
+config_path = cwd / "data" / "settings" / "development.yaml"
+
+with open(str(config_path), encoding="UTF-8") as f:
     config = yaml.load(f, Loader=yaml.SafeLoader)
 
 config["paths"] = {

@@ -29,6 +29,7 @@ class WolframAlpha:
         """Retrieve client if not already done"""
 
         if self.client is None:
+
             def _get_client():
                 return wolframalpha.Client(self.api_key)
 
@@ -78,7 +79,7 @@ class WolframAlpha:
 
     @staticmethod
     async def get_images(
-        result: wolframalpha.Result
+        result: wolframalpha.Result,
     ) -> Dict[str, List[Optional[io.BytesIO]]]:
         """Get image result from query result"""
 
@@ -140,9 +141,7 @@ class WolframAlpha:
             max(
                 max(
                     result.pods,
-                    key=lambda pod: width_pod(
-                        max(pod.subpods, key=width_pod)
-                    ),
+                    key=lambda pod: width_pod(max(pod.subpods, key=width_pod)),
                 ).subpods,
                 key=width_pod,
             )

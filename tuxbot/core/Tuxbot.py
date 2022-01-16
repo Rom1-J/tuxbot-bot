@@ -22,10 +22,7 @@ from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core import redis
 from tuxbot.core.config import config
 
-initialize(**{
-    'statsd_host': '127.0.0.1',
-    'statsd_port': 8125
-})
+initialize(**{"statsd_host": "127.0.0.1", "statsd_port": 8125})
 
 
 class Tuxbot(TuxbotABC):
@@ -35,15 +32,12 @@ class Tuxbot(TuxbotABC):
 
     def __init__(self, options):
         self._config = config
-        self._global_config = {
-            "modules": {},
-            "PermissionsManager": {}
-        }
+        self._global_config = {"modules": {}, "PermissionsManager": {}}
 
         options = options or {}
 
         self.client_options, self.cluster_options = self.configure(options)
-        super(Tuxbot, self).__init__(**self.client_options)
+        super().__init__(**self.client_options)
 
     async def load_config(self):
         """Load configurations"""
@@ -72,11 +66,11 @@ class Tuxbot(TuxbotABC):
 
         try:
             self.redis = await redis.connect()
-            self.logger.info(f"[Tuxbot] Redis connection established.")
+            self.logger.info("[Tuxbot] Redis connection established.")
         except Exception as e:
             self.logger.error(e)
 
-        await super(Tuxbot, self).start(config["client"]["token"])
+        await super().start(config["client"]["token"])
 
     async def shutdown(self) -> None:
         """Disconnect from Discord and closes all actives connections."""
@@ -92,16 +86,19 @@ class Tuxbot(TuxbotABC):
         self.last_on_ready = self.uptime
 
         self.logger.info(
-            f"[Tuxbot] {self.config['name']} "
-            f"ready with {len(self.guilds)} guilds, "
-            f"{len(self.users)} users and "
-            f"{len(tuple(self.walk_commands()))} commands."
+            "[Tuxbot] %s "
+            "ready with %d guilds, "
+            "%d users and "
+            "%d commands.",
+            self.config["name"],
+            len(self.guilds),
+            len(self.users),
+            len(tuple(self.walk_commands())),
         )
 
         if game := self.config["client"].get("game"):
             await self.change_presence(
-                status=discord.Status.online,
-                activity=discord.Game(game)
+                status=discord.Status.online, activity=discord.Game(game)
             )
 
     @staticmethod
@@ -123,7 +120,7 @@ class Tuxbot(TuxbotABC):
         """Configure Tuxbot"""
 
         async def get_prefix(
-                bot: "Tuxbot", message: discord.Message
+            bot: "Tuxbot", message: discord.Message
         ) -> List[str]:
             """Get bot prefixes from config or set it as mentionable"""
             if not (prefixes := config.get("prefixes")):
@@ -132,28 +129,26 @@ class Tuxbot(TuxbotABC):
             return prefixes
 
         client_config = {
-            "disable_events": {
-                "TYPING_START": True
-            },
+            "disable_events": {"TYPING_START": True},
             "allowed_mentions": discord.AllowedMentions(
                 everyone=(not config["client"]["disable_everyone"]) or False
             ),
             "max_messages": (
-                    int(config["client"]["max_cached_messages"]) or 10000
+                int(config["client"]["max_cached_messages"]) or 10000
             ),
             "command_prefix": get_prefix,
             "owner_ids": config["client"]["owners_id"],
             "first_shard_id": (
-                    options.get("first_shard_id")
-                    or options.get("custer_id")
-                    or options.get("shard_id")
-                    or 0
+                options.get("first_shard_id")
+                or options.get("custer_id")
+                or options.get("shard_id")
+                or 0
             ),
             "last_shard_id": (
-                    options.get("last_shard_id")
-                    or options.get("custer_id")
-                    or options.get("shard_id")
-                    or 0
+                options.get("last_shard_id")
+                or options.get("custer_id")
+                or options.get("shard_id")
+                or 0
             ),
             "max_shards": options.get("shard_count") or 1,
             "intents": config["client"].get("intents", discord.Intents.all()),
@@ -205,13 +200,13 @@ class Tuxbot(TuxbotABC):
             client.client_options,
             indent=4,
             sort_keys=True,
-            default=lambda o: f"<<non-serializable: {repr(o)}>>"
+            default=lambda o: f"<<non-serializable: {repr(o)}>>",
         )
         cluster_options = json.dumps(
             client.cluster_options,
             indent=4,
             sort_keys=True,
-            default=lambda o: f"<<non-serializable: {repr(o)}>>"
+            default=lambda o: f"<<non-serializable: {repr(o)}>>",
         )
 
         report = f"Crash Report [{cluster_id}] {time}:\n\n"
@@ -229,7 +224,7 @@ class Tuxbot(TuxbotABC):
             if hasattr(module, "crash_report"):
                 report += f"\n{module.crash_report()}\n"
 
-        with open(str(crash_path), "w") as f:
+        with open(str(crash_path), "w", encoding="UTF-8") as f:
             f.write(report)
 
         return sys.exit(1)

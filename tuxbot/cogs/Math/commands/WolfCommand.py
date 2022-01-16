@@ -50,11 +50,13 @@ class WolfCommand(commands.Cog):
 
             await self.bot.redis.set(
                 self.bot.utils.gen_key(query),
-                str({
-                    "q": q,
-                    "image": base64.b64encode(image.getvalue()).decode()
-                }),
-                ex=3600 * 12  # cache for 12h
+                str(
+                    {
+                        "q": q,
+                        "image": base64.b64encode(image.getvalue()).decode(),
+                    }
+                ),
+                ex=3600 * 12,  # cache for 12h
             )
 
             image.seek(0)

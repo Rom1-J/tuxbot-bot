@@ -23,7 +23,8 @@ class Embeds:
         e = discord.Embed(
             color=0x1E448A,
             title=f"Information for ``{self.data['domain']} "
-                  f"({self.data['ip']})``")
+            f"({self.data['ip']})``",
+        )
 
         e.description = (
             f"```"
@@ -107,7 +108,7 @@ class Embeds:
         e = discord.Embed(
             color=0xB2157E,
             title=f"Location for ``{self.data['domain']} "
-                  f"({self.data['ip']})``"
+            f"({self.data['ip']})``",
         )
 
         if self.data["opencage"] and (

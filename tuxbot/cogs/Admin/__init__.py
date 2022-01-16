@@ -14,7 +14,7 @@ from .commands.UpdateCommand import UpdateCommand
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
-from discord.ext import commands
+from discord.ext import commands  # pylint: disable=wrong-import-order
 
 
 STANDARD_COMMANDS = (RestartCommand, UpdateCommand)
@@ -34,6 +34,7 @@ __version__ = "v{}.{}.{}-{}".format(
 class Admin(ModuleABC, *STANDARD_COMMANDS):
     """Set of owner only commands."""
 
+    # pylint: disable=invalid-overridden-method
     async def cog_check(self, ctx: commands.Context):
         """Ensure author is owner"""
 

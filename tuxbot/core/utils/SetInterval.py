@@ -10,6 +10,7 @@ class SetInterval:
 
     source: https://stackoverflow.com/a/37514633
     """
+
     def __init__(self, func, time):
         self.func = func
         self.time = time

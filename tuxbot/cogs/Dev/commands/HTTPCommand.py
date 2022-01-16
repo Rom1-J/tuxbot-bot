@@ -16,6 +16,7 @@ from ..converters.HttpCodeConverter import HttpCodeConverter
 
 class HTTPCommand(commands.Cog):
     """Shows HTTP code doc"""
+
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 

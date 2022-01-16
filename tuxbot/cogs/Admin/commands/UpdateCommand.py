@@ -4,6 +4,7 @@ tuxbot.cogs.Admin.commands.UpdateCommand
 
 Command to update Tuxbot
 """
+
 from discord.ext import commands
 from jishaku.models import copy_context_with
 
@@ -12,6 +13,7 @@ from tuxbot.core.Tuxbot import Tuxbot
 
 class UpdateCommand(commands.Cog):
     """Update tuxbot"""
+
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
