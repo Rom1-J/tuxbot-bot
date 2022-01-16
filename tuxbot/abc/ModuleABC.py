@@ -5,9 +5,12 @@ Contains all Module properties
 """
 from discord.ext import commands
 
+from tuxbot.core.Tuxbot import Tuxbot
+
 
 class ModuleABC(commands.Cog):
     """Module Abstract Class"""
+    bot: Tuxbot
 
     def crash_report(self) -> str:
         """Generate crash report"""

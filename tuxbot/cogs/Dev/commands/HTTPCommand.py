@@ -10,7 +10,7 @@ from discord.ext import commands
 from tuxbot.core.Tuxbot import Tuxbot
 
 from ..functions.HTTPs import HttpCode
-from ..functions.converters import HttpCodeConverter
+from ..converters.HttpCodeConverter import HttpCodeConverter
 
 
 class HTTPCommand(commands.Cog):

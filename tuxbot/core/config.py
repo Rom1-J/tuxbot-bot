@@ -20,3 +20,9 @@ config["paths"] = {
     "cogs": base_path / "cogs",
     "python_cogs": python_base_path + ".cogs",
 }
+
+config["urls"] = {
+    "wiki": "https://tuxbot.gnous.eu/wiki",
+    "site": "https://tuxbot.gnous.eu",
+    "discord": "https://discord.gg/QXmESeghBP",
+}

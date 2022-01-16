@@ -1,6 +1,6 @@
 """
-tuxbot.cogs.Dev.functions
+tuxbot.cogs.Dev.converters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Useful global functions and classes for Dev module.
+Useful global converters for Dev module.
 """
