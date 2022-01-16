@@ -49,3 +49,5 @@ data/settings/*
 data/logs/*
 dump.rdb
 profiling.prof
+
+cogs.back/

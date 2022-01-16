@@ -1,12 +1,14 @@
 from setuptools import setup
 
 setup(
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=[
         "aiocache>=0.11.1",
+        "aioredis>=2.0.1",
         "asyncpg>=0.21.0",
         "Babel>=2.8.0",
         "beautifulsoup4>=4.9.3",
+        "datadog>=0.43.0",
         "discord.py @ git+https://github.com/iDevision/enhanced-discord.py",
         "discord-ext-menus",
         "graphviz>=0.16",
@@ -15,9 +17,9 @@ setup(
         "ipwhois>=1.2.0",
         "jishaku @ git+https://github.com/Gorialis/jishaku",
         "Pillow>=8.2.0",
-        "python-Levenshtein>=0.12.2.",
         "psutil>=5.7.2",
         "pydig>=0.3.0",
+        "python_json_logger>=2.0.2",
         "rich>=9.10.0",
         "sentry_sdk>=0.20.2",
         "structured_config>=4.12",

@@ -14,7 +14,7 @@ class RestartCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-    @commands.commagnd("restart", aliases=["reboot"])
-    async def _restart(self, ctx):
+    @commands.command("restart", aliases=["reboot"])
+    async def _restart(self, ctx: commands.Context):
         await ctx.send("*restarting...*")
         await self.bot.shutdown()

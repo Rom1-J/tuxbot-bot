@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5a252e73-dccc-4919-9bc7-028503709aef" name="Tuxbot VM">
+        <fileTransfer rootFolder="/opt/pre-deploy" accessType="SFTP" host="192.168.1.197" port="22" sshConfigId="2afac30e-5d3f-491f-9136-c8083c131ce4" sshConfig="romain@192.168.1.197:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -16,7 +16,7 @@ class UpdateCommand(commands.Cog):
         self.bot = bot
 
     @commands.command("update")
-    async def _update(self, ctx):
+    async def _update(self, ctx: commands.Context):
         sh = "jsk sh"
 
         git = f"{sh} git pull"

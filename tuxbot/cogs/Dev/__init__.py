@@ -1,11 +1,22 @@
+"""
+tuxbot.cogs.Dev
+~~~~~~~~~~~~~~~~
+
+Set of useful commands for developers.
+"""
+
 from collections import namedtuple
 
-from tuxbot.core.bot import Tux
-from .dev import Dev
-from .config import DevConfig, HAS_MODELS
+from tuxbot.abc.ModuleABC import ModuleABC
+
+from .commands.HTTPCommand import HTTPCommand
+
+
+STANDARD_COMMANDS = (HTTPCommand,)
+
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=1, release_level="alpha")
+version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -15,5 +26,5 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-def setup(bot: Tux):
-    bot.add_cog(Dev(bot, version_info))
+class Dev(ModuleABC, *STANDARD_COMMANDS):
+    """Set of useful commands for developers."""
