@@ -10,7 +10,7 @@ from collections import namedtuple
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .commands.HelpCommand import HelpCommand
+from .commands.Help.command import HelpCommand
 
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")

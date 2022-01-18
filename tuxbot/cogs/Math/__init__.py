@@ -9,8 +9,8 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.WolfCommand import WolfCommand
-from .commands.GraphCommand import GraphCommand
+from .commands.Wolf.command import WolfCommand
+from .commands.Graph.command import GraphCommand
 
 
 STANDARD_COMMANDS = (WolfCommand, GraphCommand)

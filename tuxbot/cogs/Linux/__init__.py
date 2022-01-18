@@ -9,7 +9,7 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.CNFCommand import CNFCommand
+from .commands.CNF.command import CNFCommand
 
 
 STANDARD_COMMANDS = (CNFCommand,)

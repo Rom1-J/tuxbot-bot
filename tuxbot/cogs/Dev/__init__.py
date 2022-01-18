@@ -9,7 +9,7 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.HTTPCommand import HTTPCommand
+from .commands.HTTP.command import HTTPCommand
 
 
 STANDARD_COMMANDS = (HTTPCommand,)

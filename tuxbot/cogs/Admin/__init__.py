@@ -9,8 +9,8 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.RestartCommand import RestartCommand
-from .commands.UpdateCommand import UpdateCommand
+from .commands.Restart.command import RestartCommand
+from .commands.Update.command import UpdateCommand
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯

@@ -9,10 +9,16 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.IplocaliseCommand import IplocaliseCommand
+from .commands.Iplocalise.command import IplocaliseCommand
+from .commands.Peeringdb.command import PeeringdbCommand
 
+# Note: for some reasons, this import must be done after tuxbot.* imports.
+# If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
+from discord.ext import commands  # pylint: disable=wrong-import-order
 
-STANDARD_COMMANDS = (IplocaliseCommand,)
+from ...core.Tuxbot import Tuxbot
+
+STANDARD_COMMANDS = (IplocaliseCommand, PeeringdbCommand)
 
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
@@ -28,3 +34,6 @@ __version__ = "v{}.{}.{}-{}".format(
 
 class Network(ModuleABC, *STANDARD_COMMANDS):
     """Set of useful commands for networking."""
+
+    async def cog_before_invoke(self, ctx: commands.Context):
+        await ctx.trigger_typing()
