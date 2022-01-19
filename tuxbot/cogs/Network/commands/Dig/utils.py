@@ -16,8 +16,8 @@ async def get_from_bortzmeyer(domain: str, query_type: str) -> Dict[str, Any]:
 
     try:
         async with aiohttp.ClientSession() as cs, cs.get(
-                f"https://dns.bortzmeyer.org/{domain}/{query_type}?format=json",
-                timeout=aiohttp.ClientTimeout(total=2),
+            f"https://dns.bortzmeyer.org/{domain}/{query_type}?format=json",
+            timeout=aiohttp.ClientTimeout(total=2),
         ) as s:
             return await s.json()
     except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):

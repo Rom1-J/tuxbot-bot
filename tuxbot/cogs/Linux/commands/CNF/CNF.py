@@ -6,7 +6,7 @@ Command-not-found scrapper and parser
 """
 
 import asyncio
-from typing import Dict, Union
+from typing import Dict, Union, Any, Optional
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -23,8 +23,8 @@ class CNF:
     command: str
 
     description: str = ""
-    meta: dict = None
-    distro: dict = None
+    meta: Optional[Dict[str, Any]] = None
+    distro: Optional[Dict[str, Any]] = None
 
     def __init__(self, command: str):
         self.command = command
@@ -88,12 +88,12 @@ class CNF:
 
     # =========================================================================
 
-    def to_dict(self) -> Dict[str, Union[str, dict]]:
+    def to_dict(self) -> Dict[str, Any]:
         """Return result as dict
 
         Returns
         -------
-        Dict[str, str]
+        Dict[str, Any]
         """
 
         return {

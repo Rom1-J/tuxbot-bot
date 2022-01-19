@@ -26,5 +26,5 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Linux(ModuleABC, *STANDARD_COMMANDS):
+class Linux(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for GNU/Linux users."""

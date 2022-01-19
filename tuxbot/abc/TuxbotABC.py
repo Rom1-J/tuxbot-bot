@@ -11,9 +11,9 @@ import aioredis
 from datadog import DogStatsd, statsd
 from discord.ext import commands
 
-from tuxbot.core.logger import logger, prom
+from tuxbot.core.logger import Logger, logger, prom
 from tuxbot.core.database import db
-from tuxbot.core import utils
+from tuxbot.core.utils import Utils, utils
 
 
 class TuxbotABC(commands.AutoShardedBot):
@@ -25,8 +25,8 @@ class TuxbotABC(commands.AutoShardedBot):
     _cluster_options: dict = {}
     _client_options: dict = {}
 
-    _logger: logger
-    _db: db
+    _logger: logger  # type: ignore
+    _db: db  # type: ignore
     _redis: aioredis.Redis
 
     _uptime: Optional[datetime] = None
@@ -100,19 +100,19 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def logger(self) -> logger:
+    def logger(self) -> Logger:
         """Logger
 
         Returns
         -------
-        logger
+        Logger
         """
         return logger
 
     # =========================================================================
 
     @property
-    def db(self) -> db:
+    def db(self) -> db:  # type: ignore
         """DB instance
 
         Returns
@@ -124,7 +124,7 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def models(self) -> db:
+    def models(self) -> db:  # type: ignore
         """DB models
 
         Returns
@@ -159,7 +159,7 @@ class TuxbotABC(commands.AutoShardedBot):
         -------
         datetime
         """
-        return self._uptime
+        return self._uptime or datetime.fromtimestamp(0)
 
     @uptime.setter
     def uptime(self, value: datetime):
@@ -175,7 +175,7 @@ class TuxbotABC(commands.AutoShardedBot):
         -------
         datetime
         """
-        return self._last_on_ready
+        return self._last_on_ready or datetime.fromtimestamp(0)
 
     @last_on_ready.setter
     def last_on_ready(self, value: datetime):
@@ -196,12 +196,12 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def utils(self) -> utils:
+    def utils(self) -> Utils:  # type: ignore
         """Tuxbot utils set
 
         Returns
         -------
-        utils
+        Utils
         """
         return utils
 

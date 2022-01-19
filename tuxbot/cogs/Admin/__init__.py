@@ -31,7 +31,7 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Admin(ModuleABC, *STANDARD_COMMANDS):
+class Admin(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of owner only commands."""
 
     # pylint: disable=invalid-overridden-method

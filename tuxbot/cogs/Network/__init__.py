@@ -33,7 +33,7 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Network(ModuleABC, *STANDARD_COMMANDS):
+class Network(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for networking."""
 
     async def cog_before_invoke(self, ctx: commands.Context):

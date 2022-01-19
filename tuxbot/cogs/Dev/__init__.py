@@ -26,5 +26,5 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Dev(ModuleABC, *STANDARD_COMMANDS):
+class Dev(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for developers."""

@@ -17,9 +17,9 @@ class HelpCommand(commands.HelpCommand):
     def __init__(self, urls: Dict[str, str]):
         super().__init__()
 
-        self.wiki_url = urls.get("wiki")
-        self.site_url = urls.get("site")
-        self.discord_url = urls.get("discord")
+        self.wiki_url = urls.get("wiki", "")
+        self.site_url = urls.get("site", "")
+        self.discord_url = urls.get("discord", "")
 
     async def on_help_command_error(self, ctx, error):
         """Shows error if happens"""

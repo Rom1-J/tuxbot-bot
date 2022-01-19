@@ -27,5 +27,5 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Math(ModuleABC, *STANDARD_COMMANDS):
+class Math(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for maths."""

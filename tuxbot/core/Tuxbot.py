@@ -227,4 +227,4 @@ class Tuxbot(TuxbotABC):
         with open(str(crash_path), "w", encoding="UTF-8") as f:
             f.write(report)
 
-        return sys.exit(1)
+        sys.exit(1)

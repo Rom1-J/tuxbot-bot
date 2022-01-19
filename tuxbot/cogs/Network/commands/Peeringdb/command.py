@@ -11,7 +11,7 @@ from datetime import datetime
 import aiohttp
 import discord
 from aiohttp import TCPConnector
-from discord.ext import commands, tasks
+from discord.ext import commands, tasks  # type: ignore
 
 from tuxbot.core.Tuxbot import Tuxbot
 
