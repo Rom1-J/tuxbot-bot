@@ -11,6 +11,7 @@ from tuxbot.abc.ModuleABC import ModuleABC
 
 from .commands.Iplocalise.command import IplocaliseCommand
 from .commands.Peeringdb.command import PeeringdbCommand
+from .commands.Dig.command import DigCommand
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
@@ -18,7 +19,7 @@ from discord.ext import commands  # pylint: disable=wrong-import-order
 
 from ...core.Tuxbot import Tuxbot
 
-STANDARD_COMMANDS = (IplocaliseCommand, PeeringdbCommand)
+STANDARD_COMMANDS = (IplocaliseCommand, PeeringdbCommand, DigCommand)
 
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")

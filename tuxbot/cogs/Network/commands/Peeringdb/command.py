@@ -40,7 +40,7 @@ class PeeringdbCommand(commands.Cog):
     async def _update_peering_db(self):
         try:
             async with aiohttp.ClientSession(
-                    connector=TCPConnector(verify_ssl=False)
+                connector=TCPConnector(verify_ssl=False)
             ) as cs, cs.get(
                 "https://peeringdb.com/api/net",
                 timeout=aiohttp.ClientTimeout(total=60),
@@ -96,16 +96,14 @@ class PeeringdbCommand(commands.Cog):
         )
 
         for key, name in filtered.items():
-            e.add_field(
-                name=name, value=f"```{data.get(key) or 'N/A'}```"
-            )
+            e.add_field(name=name, value=f"```{data.get(key) or 'N/A'}```")
 
         for key, names in filtered_link.items():
             if data.get(key):
                 e.add_field(
                     name=names[0],
                     value=f"[{data.get(key) or 'N/A'}]"
-                          f"({data.get(names[1]) or 'N/A'})",
+                    f"({data.get(names[1]) or 'N/A'})",
                 )
 
         if data["notes"]:

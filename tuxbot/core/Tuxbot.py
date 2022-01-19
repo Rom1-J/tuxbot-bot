@@ -90,7 +90,7 @@ class Tuxbot(TuxbotABC):
             "ready with %d guilds, "
             "%d users and "
             "%d commands.",
-            self.config["name"],
+            self.user.name,
             len(self.guilds),
             len(self.users),
             len(tuple(self.walk_commands())),
