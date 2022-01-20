@@ -5,11 +5,7 @@ tuxbot.cogs.Dev.commands.HTTP.exceptions
 Throwable Dev module exceptions.
 """
 
-from discord.ext import commands
-
-
-class DevException(commands.BadArgument):
-    """Base Dev module exceptions"""
+from ...commands.exceptions import DevException
 
 
 class UnknownHttpCode(DevException):

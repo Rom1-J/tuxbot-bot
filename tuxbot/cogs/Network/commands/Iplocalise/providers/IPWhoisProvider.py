@@ -4,7 +4,7 @@ import ipwhois
 from ipwhois import IPWhois
 
 from .abc import Provider
-from ..exceptions import RFC1819
+from ...exceptions import RFC1918
 
 
 class IPWhoisProvider(Provider):
@@ -18,7 +18,7 @@ class IPWhoisProvider(Provider):
                 return {}
 
             except ipwhois.exceptions.IPDefinedError as e:
-                raise RFC1819(
+                raise RFC1918(
                     "This IP address defined as Private-Use Networks via RFC 1918."
                 ) from e
 

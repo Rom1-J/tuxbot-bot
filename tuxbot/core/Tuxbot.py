@@ -78,7 +78,7 @@ class Tuxbot(TuxbotABC):
 
     async def on_ready(self):
         """Ready event handler"""
-        if self.uptime is not None:
+        if self.uptime is not None and self.uptime.timestamp() > 0:
             self.last_on_ready = datetime.now()
             return
 

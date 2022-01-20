@@ -9,8 +9,10 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.CNF.command import CNFCommand
+from discord.ext import commands
 
+from .commands.CNF.command import CNFCommand
+from .commands.exceptions import LinuxException
 
 STANDARD_COMMANDS = (CNFCommand,)
 
@@ -28,3 +30,8 @@ __version__ = "v{}.{}.{}-{}".format(
 
 class Linux(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for GNU/Linux users."""
+
+    async def cog_command_error(self, ctx: commands. Context, error: Exception) -> None:
+        """Send errors raised by commands"""
+        if isinstance(error, LinuxException):
+            await ctx.send(str(error))

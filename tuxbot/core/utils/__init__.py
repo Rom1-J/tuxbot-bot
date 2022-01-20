@@ -1,6 +1,7 @@
 """
 Set of utils functions and classes
 """
+
 from typing import Type, Callable, Coroutine, Any
 
 from .SetInterval import SetInterval

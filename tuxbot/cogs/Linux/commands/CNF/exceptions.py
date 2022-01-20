@@ -5,11 +5,7 @@ tuxbot.cogs.Linux.commands.CNF.exceptions
 Throwable Linux module exceptions.
 """
 
-from discord.ext import commands
-
-
-class LinuxException(commands.BadArgument):
-    """Base Linux module exceptions"""
+from ...commands.exceptions import LinuxException
 
 
 class CNFException(LinuxException):

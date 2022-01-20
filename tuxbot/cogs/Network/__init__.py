@@ -12,14 +12,15 @@ from tuxbot.abc.ModuleABC import ModuleABC
 from .commands.Iplocalise.command import IplocaliseCommand
 from .commands.Peeringdb.command import PeeringdbCommand
 from .commands.Dig.command import DigCommand
+from .commands.Getheaders.command import GetheadersCommand
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
 from discord.ext import commands  # pylint: disable=wrong-import-order
 
-from ...core.Tuxbot import Tuxbot
+from .commands.exceptions import NetworkException
 
-STANDARD_COMMANDS = (IplocaliseCommand, PeeringdbCommand, DigCommand)
+STANDARD_COMMANDS = (IplocaliseCommand, PeeringdbCommand, DigCommand, GetheadersCommand)
 
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
@@ -36,5 +37,7 @@ __version__ = "v{}.{}.{}-{}".format(
 class Network(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for networking."""
 
-    async def cog_before_invoke(self, ctx: commands.Context):
-        await ctx.trigger_typing()
+    async def cog_command_error(self, ctx: commands. Context, error: Exception) -> None:
+        """Send errors raised by commands"""
+        if isinstance(error, NetworkException):
+            await ctx.send(str(error))

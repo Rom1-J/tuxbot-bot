@@ -13,7 +13,7 @@ from discord.ext import commands
 
 from tuxbot.core.logger import Logger, logger, prom
 from tuxbot.core.database import db
-from tuxbot.core.utils import Utils, utils
+from tuxbot.core import utils
 
 
 class TuxbotABC(commands.AutoShardedBot):
@@ -196,14 +196,14 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def utils(self) -> Utils:  # type: ignore
+    def utils(self) -> utils.Utils:  # type: ignore
         """Tuxbot utils set
 
         Returns
         -------
-        Utils
+        utils.Utils
         """
-        return utils
+        return utils  # type: ignore
 
     # =========================================================================
 

@@ -10,6 +10,7 @@ from collections import namedtuple
 from tuxbot.abc.ModuleABC import ModuleABC
 
 from .commands.HTTP.command import HTTPCommand
+from .commands.exceptions import DevException
 
 
 STANDARD_COMMANDS = (HTTPCommand,)
@@ -28,3 +29,8 @@ __version__ = "v{}.{}.{}-{}".format(
 
 class Dev(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for developers."""
+
+    async def cog_command_error(self, ctx: commands. Context, error: Exception) -> None:
+        """Send errors raised by commands"""
+        if isinstance(error, DevException):
+            await ctx.send(str(error))
