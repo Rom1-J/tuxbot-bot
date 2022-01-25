@@ -51,10 +51,11 @@ async def get_headers(ip: str, user_agent: str) -> tuple:
         req_headers["User-Agent"] = user_agent
 
     async with aiohttp.ClientSession() as cs, cs.get(
-            str(ip),
-            headers=req_headers,
-            timeout=aiohttp.ClientTimeout(total=8),
+        str(ip),
+        headers=req_headers,
+        timeout=aiohttp.ClientTimeout(total=8),
     ) as s:
+        # noinspection PyTypeChecker
         headers = dict(s.headers.items())
         headers.pop("Set-Cookie", headers)
         headers.pop("X-Client-IP", headers)

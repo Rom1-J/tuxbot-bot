@@ -23,7 +23,9 @@ class GetheadersCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="getheaders", aliases=["headers"])
-    async def _getheaders(self, ctx: commands.Context, ip: str, *, user_agent: str = ""):
+    async def _getheaders(
+        self, ctx: commands.Context, ip: str, *, user_agent: str = ""
+    ):
         if not ip.startswith("http"):
             ip = f"http://{ip}"
 

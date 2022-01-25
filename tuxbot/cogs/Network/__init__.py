@@ -20,7 +20,12 @@ from discord.ext import commands  # pylint: disable=wrong-import-order
 
 from .commands.exceptions import NetworkException
 
-STANDARD_COMMANDS = (IplocaliseCommand, PeeringdbCommand, DigCommand, GetheadersCommand)
+STANDARD_COMMANDS = (
+    IplocaliseCommand,
+    PeeringdbCommand,
+    DigCommand,
+    GetheadersCommand,
+)
 
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
@@ -37,7 +42,9 @@ __version__ = "v{}.{}.{}-{}".format(
 class Network(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
     """Set of useful commands for networking."""
 
-    async def cog_command_error(self, ctx: commands. Context, error: Exception) -> None:
+    async def cog_command_error(
+        self, ctx: commands.Context, error: Exception
+    ) -> None:
         """Send errors raised by commands"""
         if isinstance(error, NetworkException):
             await ctx.send(str(error))
