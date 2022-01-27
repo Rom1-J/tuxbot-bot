@@ -4,7 +4,7 @@ from typing import Optional, TYPE_CHECKING
 import discord
 
 if TYPE_CHECKING:
-    from ...iplocalise.view import ViewController
+    from ..view import ViewController
 
 
 class IPInfoButton(discord.ui.Button):

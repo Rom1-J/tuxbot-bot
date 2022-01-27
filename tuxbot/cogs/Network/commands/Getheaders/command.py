@@ -6,7 +6,7 @@ Shows address headers.
 """
 
 import discord
-from discord.ext import commands, tasks  # type: ignore
+from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
@@ -50,7 +50,7 @@ class GetheadersCommand(commands.Cog):
         e.set_thumbnail(url=f"https://http.cat/{session.status}")
 
         for key, value in headers.items():
-            fail, output = await self.bot.utils.shorten(value, 50)
+            _, output = await self.bot.utils.shorten(value, 50)
 
             if output["link"]:
                 value = f"[show all]({output['link']})"

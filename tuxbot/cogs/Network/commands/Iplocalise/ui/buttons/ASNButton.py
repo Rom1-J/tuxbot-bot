@@ -5,7 +5,7 @@ import discord
 from jishaku.models import copy_context_with
 
 if TYPE_CHECKING:
-    from ...iplocalise.view import ViewController
+    from ..view import ViewController
 
 
 class ASNButton(discord.ui.Button):

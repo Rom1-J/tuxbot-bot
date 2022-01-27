@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class ViewController(discord.ui.View):
     children: List[ButtonType]  # type: ignore
     page: str = "global"
-    pages: tuple = ("global", "geo")
+    pages: tuple = ("global", "geo", "raw")
     sent_message = None
 
     embeds: Dict[str, discord.Embed] = {}

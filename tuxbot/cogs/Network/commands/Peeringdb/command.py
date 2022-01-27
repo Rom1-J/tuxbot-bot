@@ -22,6 +22,8 @@ from .utils import check_asn_or_raise
 class PeeringdbCommand(commands.Cog):
     """Shows information about given ASN"""
 
+    _update_peering_db: tasks.Loop
+
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 

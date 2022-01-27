@@ -2,6 +2,7 @@ from typing import TypeVar
 
 from .GlobalButton import GlobalButton
 from .GeoButton import GeoButton
+from .RawButton import RawButton
 
 from .WhoisButton import WhoisButton
 from .ASNButton import ASNButton
@@ -16,6 +17,7 @@ __all__ = [
     "ButtonType",
     "GlobalButton",
     "GeoButton",
+    "RawButton",
     "WhoisButton",
     "ASNButton",
     "IPInfoButton",
@@ -28,6 +30,7 @@ ButtonType = TypeVar(
     "ButtonType",
     GlobalButton,
     GeoButton,
+    RawButton,
     WhoisButton,
     ASNButton,
     IPInfoButton,

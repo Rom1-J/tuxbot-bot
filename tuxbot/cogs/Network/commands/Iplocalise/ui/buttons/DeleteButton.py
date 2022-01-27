@@ -5,7 +5,7 @@ import discord
 
 
 if TYPE_CHECKING:
-    from ...iplocalise.view import ViewController
+    from ..view import ViewController
 
 
 class DeleteButton(discord.ui.Button):

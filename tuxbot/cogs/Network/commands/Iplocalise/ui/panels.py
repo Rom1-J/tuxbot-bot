@@ -1,6 +1,7 @@
 from .buttons import (
     GlobalButton,
     GeoButton,
+    RawButton,
     WhoisButton,
     ASNButton,
     IPInfoButton,
@@ -15,6 +16,6 @@ class Panel:
 
 class ViewPanel(Panel):
     buttons = [
-        [GlobalButton, GeoButton, IPInfoButton, BGPButton],
+        [GlobalButton, GeoButton, RawButton, IPInfoButton, BGPButton],
         [WhoisButton, ASNButton, DeleteButton],
     ]

@@ -1,3 +1,4 @@
+import json
 from typing import TYPE_CHECKING
 
 import discord
@@ -149,5 +150,23 @@ class Embeds:
 
         if map_url := self.data["map"].get("url", ""):
             e.set_image(url=map_url)
+
+        return e
+
+    # =========================================================================
+
+    async def raw_embed(self) -> discord.Embed:
+        e = discord.Embed(
+            title=f"Raw data for ``{self.data['domain']} "
+            f"({self.data['ip']})``",
+        )
+
+        fail, output = await self.ctx.bot.utils.shorten(
+            json.dumps(self.data, indent=2), 4000
+        )
+
+        e.description = (
+            f"```json\n{output['text']}```" if fail else output["link"]
+        )
 
         return e

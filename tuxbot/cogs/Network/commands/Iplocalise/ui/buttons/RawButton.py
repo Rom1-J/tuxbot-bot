@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from ..view import ViewController
 
 
-class GeoButton(discord.ui.Button):
+class RawButton(discord.ui.Button):
     disabled: bool
     label: str
     emoji: Optional[discord.PartialEmoji]
@@ -19,10 +19,10 @@ class GeoButton(discord.ui.Button):
 
         super().__init__(
             style=discord.ButtonStyle.secondary,
-            emoji="\N{WORLD MAP}",
+            emoji="\N{BOOKMARK TABS}",
             row=row,
-            label="geo",
+            label="raw",
         )
 
     async def callback(self, interaction: discord.Interaction):
-        await self.controller.change_to("geo", interaction)
+        await self.controller.change_to("raw", interaction)
