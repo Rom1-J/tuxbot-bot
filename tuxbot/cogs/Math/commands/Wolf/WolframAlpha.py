@@ -75,7 +75,7 @@ class WolframAlpha:
 
                 return io.BytesIO(await s.read())
         except asyncio.exceptions.TimeoutError:
-            from ..images.load_fail import value
+            from ...images.load_fail import value
 
             return io.BytesIO(value)
 

@@ -22,7 +22,11 @@ from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core import redis
 from tuxbot.core.config import config
 
-initialize(**{"statsd_host": "127.0.0.1", "statsd_port": 8125})
+initialize(
+    statsd_host="192.168.1.197",
+    statsd_port=8125,
+    statsd_namespace="tuxbot_metric",
+)
 
 
 class Tuxbot(TuxbotABC):
@@ -55,7 +59,10 @@ class Tuxbot(TuxbotABC):
                 if db_config:
                     self.config |= db_config
 
-            global_config = await self.models.Tuxbot.findOne()
+            # Todo: remove pylint disable when models done
+            global_config = (
+                await self.models.Tuxbot.findOne()  # pylint: disable=no-member
+            )
             self.global_config = self.config["global_config"] = global_config
         except Exception as e:
             self.logger.error(e)
