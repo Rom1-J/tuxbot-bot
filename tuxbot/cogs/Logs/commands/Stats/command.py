@@ -1,21 +1,32 @@
 """
-tuxbot.cogs.Logs.commands.CommandStats.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Logs.commands.Stats.command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Statistics about commands uses
+Send Datadog dashboard link
 """
-
+import discord
 from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
 
-class CommandStats(commands.Cog):
-    """Shows all command uses stats"""
+class Stats(commands.Cog):
+    """Send Datadog dashboard link"""
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-    @commands.command(name="commandstats")
-    async def _commandstats(self, ctx: commands.Context):
-        ...
+        self.datadog_url = (
+            "https://p.datadoghq.com/sb/"
+            "9xjljtz2ur1xzb71-f2770ff41307443a259597fa4a881b0b"
+        )
+
+    @commands.command(name="stats", aliases=["statistics"])
+    async def _stats(self, ctx: commands.Context):
+        e = discord.Embed(title="Tuxbot statistics")
+
+        e.add_field(
+            name="__Datadog:__", value=f"[dashboard]({self.datadog_url})"
+        )
+
+        await ctx.send(embed=e)

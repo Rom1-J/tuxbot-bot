@@ -3,6 +3,7 @@ from setuptools import setup
 setup(
     python_requires=">=3.9",
     install_requires=[
+        "aiofiles>=0.8.0",
         "aiocache>=0.11.1",
         "aioredis>=2.0.1",
         "asyncpg>=0.21.0",

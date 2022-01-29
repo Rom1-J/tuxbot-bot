@@ -9,8 +9,7 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.CommandStats.command import CommandStats
-from .commands.SocketStats.command import SocketStats
+from .commands.Stats.command import Stats
 
 from .listeners.CommandCompletion.listener import CommandCompletion
 from .listeners.GuildJoin.listener import GuildJoin
@@ -20,7 +19,7 @@ from .listeners.Ready.listener import Ready
 from .listeners.SocketRawReceive.listener import SocketRawReceive
 
 
-STANDARD_COMMANDS = (CommandStats, SocketStats)
+STANDARD_COMMANDS = (Stats,)
 STANDARD_LISTENERS = (
     CommandCompletion,
     GuildJoin,
