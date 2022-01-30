@@ -15,6 +15,7 @@ from tuxbot.core.Tuxbot import Tuxbot
 from .commands.Credits.command import CreditsCommand
 from .commands.Info.command import InfoCommand
 from .commands.Invite.command import InviteCommand
+from .commands.Ping.command import PingCommand
 from .commands.Quote.command import QuoteCommand
 from .commands.Source.command import SourceCommand
 from .commands.UI.command import UICommand
@@ -29,6 +30,7 @@ STANDARD_COMMANDS = (
     CreditsCommand,
     InfoCommand,
     InviteCommand,
+    PingCommand,
     QuoteCommand,
     SourceCommand,
     UICommand,
