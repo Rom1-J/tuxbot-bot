@@ -29,9 +29,7 @@ class InfoCommand(commands.Cog):
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
 
-        if result := (
-            await self.bot.redis.get(self.bot.utils.gen_key() + "42")
-        ):
+        if result := (await self.bot.redis.get(self.bot.utils.gen_key())):
             infos = json.loads(result)
         else:
             infos = await fetch_info(self.bot.config["paths"])

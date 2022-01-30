@@ -28,9 +28,7 @@ async def fetch_info(paths: dict) -> Dict[str, Any]:
     for path, _, files in os.walk(paths.get("base", "./")):
         for name in files:
             file_dir = str(pathlib.PurePath(path, name))
-            if (
-                name.split(".")[-1] not in ("py", "po", "json", "png")
-            ) or "env" in file_dir:
+            if "env" in file_dir:
                 continue
 
             file_amount += 1

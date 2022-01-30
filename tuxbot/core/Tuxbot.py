@@ -7,7 +7,7 @@ import json
 import sys
 import traceback
 from datetime import datetime
-from typing import NoReturn, Tuple, List
+from typing import NoReturn, Tuple, List, Union
 
 import aiohttp
 import discord
@@ -109,18 +109,23 @@ class Tuxbot(TuxbotABC):
             )
 
     @staticmethod
-    async def post_webhook(webhook: str, payload: dict):
+    async def post_webhook(webhook: str, payload: Union[dict, discord.Embed]):
         """Post webhook
 
         Parameters
         ----------
         webhook:str
             Webhook URL
-        payload:dict
+        payload:Union[dict, discord.Embed]
             Webhook data
         """
         async with aiohttp.ClientSession() as session:
-            await session.post(webhook, json=payload)
+            if isinstance(payload, discord.Embed):
+                await discord.Webhook.from_url(webhook, session=session).send(
+                    embed=payload
+                )
+            else:
+                await session.post(webhook, json=payload)
 
     @staticmethod
     def configure(options: dict) -> Tuple[dict, dict]:
