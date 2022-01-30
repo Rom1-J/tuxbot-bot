@@ -20,7 +20,7 @@ from .utils import fetch_info
 
 
 class InfoCommand(commands.Cog):
-    """Show tuxbot's information"""
+    """Shows tuxbot's information"""
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
