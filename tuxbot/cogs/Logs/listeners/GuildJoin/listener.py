@@ -17,7 +17,9 @@ class GuildJoin(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener(name="on_guild_join")
-    async def _on_guild_join(self, guild: discord.Guild):
+    async def _on_guild_join(
+        self, guild: discord.Guild
+    ):  # pylint: disable=unused-argument
         self.bot.statsd.gauge(
             "guilds",
             value=len(self.bot.guilds),

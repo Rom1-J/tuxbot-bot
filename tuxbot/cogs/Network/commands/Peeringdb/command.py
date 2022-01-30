@@ -7,6 +7,7 @@ Shows information from peeringdb about an ASN
 
 import asyncio
 from datetime import datetime
+from typing import Any, Dict
 
 import aiohttp
 import discord
@@ -22,13 +23,11 @@ from .utils import check_asn_or_raise
 class PeeringdbCommand(commands.Cog):
     """Shows information about given ASN"""
 
-    _update_peering_db: tasks.Loop
-
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
         self._peeringdb_net = None
-        self._update_peering_db.start()
+        self._update_peering_db.start()  # pylint: disable=no-member
 
     # =========================================================================
 
@@ -51,20 +50,25 @@ class PeeringdbCommand(commands.Cog):
         except asyncio.exceptions.TimeoutError:
             pass
         else:
-            self.bot.logger.info("_update_peering_db ready!")
+            self.bot.logger.info(
+                "[PeeringdbCommand] _update_peering_db ready!"
+            )
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="peeringdb", aliases=["peer", "peering"])
     async def _peeringdb(self, ctx: commands.Context, asn: ASConverter):
-        if not self._update_peering_db.is_running():
+        if (
+            # pylint: disable=no-member
+            not self._update_peering_db.is_running()
+        ):
             self._peeringdb_net = None
-            self._update_peering_db.start()
+            self._update_peering_db.start()  # pylint: disable=no-member
 
         check_asn_or_raise(str(asn))
 
-        data = {}
+        data: Dict[str, Any] = {}
 
         if self._peeringdb_net is None:
             return await ctx.send("Please retry in few seconds.")

@@ -9,6 +9,9 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
+from tuxbot.core.Tuxbot import Tuxbot
+
+
 from .commands.CNF.command import CNFCommand
 from .commands.exceptions import LinuxException
 
@@ -30,7 +33,14 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Linux(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
+# noinspection PyMissingOrEmptyDocstring
+class Commands:
+    def __init__(self, bot: Tuxbot):
+        for command in STANDARD_COMMANDS:
+            bot.add_cog(command(bot=bot))
+
+
+class Linux(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for GNU/Linux users."""
 
     async def cog_command_error(

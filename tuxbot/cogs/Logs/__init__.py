@@ -9,7 +9,10 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
-from .commands.Stats.command import Stats
+from tuxbot.core.Tuxbot import Tuxbot
+
+
+from .commands.Stats.command import StatsCommand
 
 from .listeners.CommandCompletion.listener import CommandCompletion
 from .listeners.GuildJoin.listener import GuildJoin
@@ -18,8 +21,8 @@ from .listeners.Message.listener import Message
 from .listeners.Ready.listener import Ready
 from .listeners.SocketRawReceive.listener import SocketRawReceive
 
+STANDARD_COMMANDS = (StatsCommand,)
 
-STANDARD_COMMANDS = (Stats,)
 STANDARD_LISTENERS = (
     CommandCompletion,
     GuildJoin,
@@ -41,5 +44,12 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Logs(ModuleABC, *STANDARD_COMMANDS, *STANDARD_LISTENERS):  # type: ignore
+# noinspection PyMissingOrEmptyDocstring
+class Commands:
+    def __init__(self, bot: Tuxbot):
+        for command in STANDARD_COMMANDS + STANDARD_LISTENERS:
+            bot.add_cog(command(bot=bot))
+
+
+class Logs(ModuleABC, Commands):  # type: ignore
     """Set of useful statistics commands & workers."""

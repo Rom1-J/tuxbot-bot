@@ -7,7 +7,6 @@ Set of utils functions
 
 import asyncio
 import socket
-from typing import NoReturn
 from urllib.parse import urlparse
 
 import aiohttp
@@ -21,7 +20,7 @@ from ..exceptions import RFC1918
 async def check_for_rfc1918_or_raise(ip: str) -> bool:
     """Check for RFC1918 or raise"""
 
-    def _check_for_rfc1918_or_raise(_ip: str) -> NoReturn:
+    def _check_for_rfc1918_or_raise(_ip: str) -> None:
         try:
             IPWhois(
                 socket.getaddrinfo(urlparse(_ip).netloc, None)[1][4][0]
@@ -34,7 +33,7 @@ async def check_for_rfc1918_or_raise(ip: str) -> bool:
     try:
         return await asyncio.wait_for(
             asyncio.get_running_loop().run_in_executor(
-                None, _check_for_rfc1918_or_raise, str(ip)
+                None, _check_for_rfc1918_or_raise, str(ip)  # type: ignore
             ),
             timeout=2,
         )

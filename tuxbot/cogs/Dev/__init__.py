@@ -9,6 +9,9 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
+from tuxbot.core.Tuxbot import Tuxbot
+
+
 from .commands.HTTP.command import HTTPCommand
 from .commands.exceptions import DevException
 
@@ -31,7 +34,14 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Dev(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
+# noinspection PyMissingOrEmptyDocstring
+class Commands:
+    def __init__(self, bot: Tuxbot):
+        for command in STANDARD_COMMANDS:
+            bot.add_cog(command(bot=bot))
+
+
+class Dev(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for developers."""
 
     async def cog_command_error(

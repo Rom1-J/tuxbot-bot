@@ -9,6 +9,9 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
+from tuxbot.core.Tuxbot import Tuxbot
+
+
 from .commands.Restart.command import RestartCommand
 from .commands.Update.command import UpdateCommand
 
@@ -31,7 +34,14 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Admin(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
+# noinspection PyMissingOrEmptyDocstring
+class Commands:
+    def __init__(self, bot: Tuxbot):
+        for command in STANDARD_COMMANDS:
+            bot.add_cog(command(bot=bot))
+
+
+class Admin(ModuleABC, Commands):  # type: ignore
     """Set of owner only commands."""
 
     # pylint: disable=invalid-overridden-method

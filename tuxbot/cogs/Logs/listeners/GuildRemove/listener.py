@@ -17,7 +17,9 @@ class GuildRemove(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener(name="on_guild_remove")
-    async def _on_guild_remove(self, guild: discord.Guild):
+    async def _on_guild_remove(
+        self, guild: discord.Guild
+    ):  # pylint: disable=unused-argument
         self.bot.statsd.gauge(
             "guilds",
             value=len(self.bot.guilds),

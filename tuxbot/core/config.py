@@ -28,4 +28,5 @@ config["urls"] = {
     "wiki": "https://tuxbot.gnous.eu/wiki",
     "site": "https://tuxbot.gnous.eu",
     "discord": "https://discord.gg/QXmESeghBP",
+    "github": "https://github.com/Rom1-J/tuxbot-bot",
 }

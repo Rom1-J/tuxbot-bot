@@ -10,7 +10,7 @@ from discord.ext import commands
 from tuxbot.core.Tuxbot import Tuxbot
 
 
-class Stats(commands.Cog):
+class StatsCommand(commands.Cog):
     """Send Datadog dashboard link"""
 
     def __init__(self, bot: Tuxbot):

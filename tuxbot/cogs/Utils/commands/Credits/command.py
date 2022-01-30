@@ -17,11 +17,13 @@ class CreditsCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-    @commands.command(name="credits", aliases=["contributors", "authors", "credit"])
+    @commands.command(
+        name="credits", aliases=["contributors", "authors", "credit"]
+    )
     async def _credits(self, ctx: commands.Context):
         e = discord.Embed(
             title="Contributors",
-            color=self.bot.utils.colors.EMBED_BORDER.value
+            color=self.bot.utils.colors.EMBED_BORDER.value,
         )
 
         e.add_field(

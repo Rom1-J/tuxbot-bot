@@ -43,7 +43,8 @@ class SourceCommand(commands.Cog):
             location = (
                 os.path.relpath(rpath)
                 .replace("\\", "/")
-                .split("site-packages/")[-1].lstrip("/")
+                .split("site-packages/")[-1]
+                .lstrip("/")
             )
         else:
             location = rpath.split("tuxbot_bot")[-1].lstrip("/")

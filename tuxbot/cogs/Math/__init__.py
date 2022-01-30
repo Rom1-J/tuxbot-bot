@@ -9,6 +9,9 @@ from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
 
+from tuxbot.core.Tuxbot import Tuxbot
+
+
 from .commands.Wolf.command import WolfCommand
 from .commands.Graph.command import GraphCommand
 
@@ -27,5 +30,12 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-class Math(ModuleABC, *STANDARD_COMMANDS):  # type: ignore
+# noinspection PyMissingOrEmptyDocstring
+class Commands:
+    def __init__(self, bot: Tuxbot):
+        for command in STANDARD_COMMANDS:
+            bot.add_cog(command(bot=bot))
+
+
+class Math(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for maths."""
