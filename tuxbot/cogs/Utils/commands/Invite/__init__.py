@@ -1,5 +1,5 @@
 """
-tuxbot.cogs.Utils.commands.Credits.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Utils.commands.Invite.command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """

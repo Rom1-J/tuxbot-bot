@@ -43,9 +43,11 @@ class Commands:
 class Linux(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for GNU/Linux users."""
 
-    async def cog_command_error(
+    @commands.Cog.listener()
+    async def on_command_error(
         self, ctx: commands.Context, error: Exception
     ) -> None:
         """Send errors raised by commands"""
+
         if isinstance(error, LinuxException):
             await ctx.send(str(error))

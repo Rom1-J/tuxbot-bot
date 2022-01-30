@@ -44,9 +44,11 @@ class Commands:
 class Dev(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for developers."""
 
-    async def cog_command_error(
+    @commands.Cog.listener()
+    async def on_command_error(
         self, ctx: commands.Context, error: Exception
     ) -> None:
         """Send errors raised by commands"""
+
         if isinstance(error, DevException):
             await ctx.send(str(error))

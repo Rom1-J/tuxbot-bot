@@ -1,5 +1,5 @@
 """
-tuxbot.cogs.Utils.commands.Source.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Utils.commands.Quote.command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """

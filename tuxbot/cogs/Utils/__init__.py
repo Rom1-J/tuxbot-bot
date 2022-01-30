@@ -17,6 +17,13 @@ from .commands.Info.command import InfoCommand
 from .commands.Invite.command import InviteCommand
 from .commands.Quote.command import QuoteCommand
 from .commands.Source.command import SourceCommand
+from .commands.UI.command import UICommand
+
+from .commands.exceptions import UtilsException
+
+# Note: for some reasons, this import must be done after tuxbot.* imports.
+# If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
+from discord.ext import commands  # pylint: disable=wrong-import-order
 
 STANDARD_COMMANDS = (
     CreditsCommand,
@@ -24,6 +31,7 @@ STANDARD_COMMANDS = (
     InviteCommand,
     QuoteCommand,
     SourceCommand,
+    UICommand,
 )
 
 
@@ -47,3 +55,12 @@ class Commands:
 
 class Utils(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for tuxbot."""
+
+    @commands.Cog.listener()
+    async def on_command_error(
+        self, ctx: commands.Context, error: Exception
+    ) -> None:
+        """Send errors raised by commands"""
+
+        if isinstance(error, UtilsException):
+            await ctx.send(str(error))
