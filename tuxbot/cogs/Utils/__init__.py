@@ -15,9 +15,16 @@ from tuxbot.core.Tuxbot import Tuxbot
 from .commands.Credits.command import CreditsCommand
 from .commands.Info.command import InfoCommand
 from .commands.Invite.command import InviteCommand
+from .commands.Quote.command import QuoteCommand
 from .commands.Source.command import SourceCommand
 
-STANDARD_COMMANDS = (CreditsCommand, InfoCommand, InviteCommand, SourceCommand)
+STANDARD_COMMANDS = (
+    CreditsCommand,
+    InfoCommand,
+    InviteCommand,
+    QuoteCommand,
+    SourceCommand,
+)
 
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
