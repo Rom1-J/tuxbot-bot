@@ -24,3 +24,17 @@ class GuildRemove(commands.Cog):
             "guilds",
             value=len(self.bot.guilds),
         )
+
+        if guild_model := await self.bot.models["Guild"].get_or_none(
+                id=guild.id
+        ):
+            guild_model.deleted = True
+            await guild_model.save()
+        else:
+            guild_model = await self.bot.models["Guild"].create(
+                id=guild.id,
+                moderators=[],
+                moderator_roles=[],
+                deleted=True
+            )
+            await guild_model.save()

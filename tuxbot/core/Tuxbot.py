@@ -50,22 +50,21 @@ class Tuxbot(TuxbotABC):
         modules.register(Jishaku)
         modules.load_modules()
 
-        try:
-            if hasattr(self.models, "Config"):
-                db_config = await self.models.Config.findOne(
-                    client_id=self.config["client"].id
-                )
+        await self.db.init()
 
-                if db_config:
-                    self.config |= db_config
+        db_config = await self.models["Tuxbot"].get_or_none(
+            id=self.config["client"].get("id")
+        )
 
-            # Todo: remove pylint disable when models done
-            global_config = (
-                await self.models.Tuxbot.findOne()  # pylint: disable=no-member
+        if db_config:
+            self.config |= db_config
+        else:
+            await self.models["Tuxbot"].create(
+                id=self.config["client"].get("id"),
+                ignored_users=[],
+                ignored_channels=[],
+                ignored_guilds=[]
             )
-            self.global_config = self.config["global_config"] = global_config
-        except Exception as e:
-            self.logger.error(e)
 
     async def launch(self) -> None:
         """Login to discord"""
@@ -108,6 +107,21 @@ class Tuxbot(TuxbotABC):
                 status=discord.Status.online, activity=discord.Game(game)
             )
 
+        for guild in self.guilds:
+            if guild_model := await self.models["Guild"].get_or_none(
+                    id=guild.id
+            ):
+                guild_model.deleted = False
+                await guild_model.save()
+            else:
+                guild_model = await self.models["Guild"].create(
+                    id=guild.id,
+                    moderators=[],
+                    moderator_roles=[],
+                    deleted=False
+                )
+                await guild_model.save()
+
     @staticmethod
     async def post_webhook(webhook: str, payload: Union[dict, discord.Embed]):
         """Post webhook
@@ -132,7 +146,7 @@ class Tuxbot(TuxbotABC):
         """Configure Tuxbot"""
 
         async def get_prefix(
-            bot: "Tuxbot", message: discord.Message
+                bot: "Tuxbot", message: discord.Message
         ) -> List[str]:
             """Get bot prefixes from config or set it as mentionable"""
             if not (prefixes := config.get("prefixes")):
@@ -146,21 +160,21 @@ class Tuxbot(TuxbotABC):
                 everyone=(not config["client"]["disable_everyone"]) or False
             ),
             "max_messages": (
-                int(config["client"]["max_cached_messages"]) or 10000
+                    int(config["client"]["max_cached_messages"]) or 10000
             ),
             "command_prefix": get_prefix,
             "owner_ids": config["client"]["owners_id"],
             "first_shard_id": (
-                options.get("first_shard_id")
-                or options.get("custer_id")
-                or options.get("shard_id")
-                or 0
+                    options.get("first_shard_id")
+                    or options.get("custer_id")
+                    or options.get("shard_id")
+                    or 0
             ),
             "last_shard_id": (
-                options.get("last_shard_id")
-                or options.get("custer_id")
-                or options.get("shard_id")
-                or 0
+                    options.get("last_shard_id")
+                    or options.get("custer_id")
+                    or options.get("shard_id")
+                    or 0
             ),
             "max_shards": options.get("shard_count") or 1,
             "intents": config["client"].get("intents", discord.Intents.all()),

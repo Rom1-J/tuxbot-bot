@@ -12,7 +12,7 @@ from datadog import DogStatsd, statsd
 from discord.ext import commands
 
 from tuxbot.core.logger import Logger, logger, prom
-from tuxbot.core.database import db
+from tuxbot.core.database import db, Models
 from tuxbot.core import utils
 
 
@@ -124,7 +124,7 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def models(self) -> db:  # type: ignore
+    def models(self) -> Models:  # type: ignore
         """DB models
 
         Returns
