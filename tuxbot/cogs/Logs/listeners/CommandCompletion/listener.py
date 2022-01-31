@@ -24,5 +24,5 @@ class CommandCompletion(commands.Cog):
             command = f"{parent_name} {ctx.command.name}"
 
         self.bot.statsd.increment(
-            "commands", value=1, tags=[f"command:{command}"]
+            "command_success", value=1, tags=[f"command:{command}"]
         )

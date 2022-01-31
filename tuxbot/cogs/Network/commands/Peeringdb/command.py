@@ -32,12 +32,12 @@ class PeeringdbCommand(commands.Cog):
     # =========================================================================
 
     def cog_unload(self):
-        self.bot.logger.info("Canceling _update_peering_db")
+        self.bot.logger.info("[PeeringdbCommand Canceling _update_peering_db")
         self._update_peering_db.cancel()  # pylint: disable=no-member
 
     # =========================================================================
 
-    @tasks.loop(hours=1.30)
+    @tasks.loop(hours=6.00)
     async def _update_peering_db(self):
         try:
             async with aiohttp.ClientSession(
@@ -51,7 +51,7 @@ class PeeringdbCommand(commands.Cog):
             pass
         else:
             self.bot.logger.info(
-                "[PeeringdbCommand] _update_peering_db ready!"
+                "[PeeringdbCommand] _update_peering_db done!"
             )
 
     # =========================================================================
