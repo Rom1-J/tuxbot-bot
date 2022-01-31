@@ -3,7 +3,7 @@ name: Mypy
 on: [push]
 
 jobs:
-  build:
+  mypy:
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -3,7 +3,7 @@ name: Isort
 on: [push]
 
 jobs:
-  build:
+  isort:
     runs-on: ubuntu-latest
     strategy:
       matrix:
