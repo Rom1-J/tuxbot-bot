@@ -22,6 +22,7 @@ class TuxbotModel(Model):
 
     class Meta:
         """Meta values"""
+
         table = "tuxbot"
 
     # =========================================================================

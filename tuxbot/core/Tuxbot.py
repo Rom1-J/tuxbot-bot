@@ -63,7 +63,7 @@ class Tuxbot(TuxbotABC):
                 id=self.config["client"].get("id"),
                 ignored_users=[],
                 ignored_channels=[],
-                ignored_guilds=[]
+                ignored_guilds=[],
             )
 
     async def launch(self) -> None:
@@ -109,7 +109,7 @@ class Tuxbot(TuxbotABC):
 
         for guild in self.guilds:
             if guild_model := await self.models["Guild"].get_or_none(
-                    id=guild.id
+                id=guild.id
             ):
                 guild_model.deleted = False
                 await guild_model.save()
@@ -118,7 +118,7 @@ class Tuxbot(TuxbotABC):
                     id=guild.id,
                     moderators=[],
                     moderator_roles=[],
-                    deleted=False
+                    deleted=False,
                 )
                 await guild_model.save()
 
@@ -146,7 +146,7 @@ class Tuxbot(TuxbotABC):
         """Configure Tuxbot"""
 
         async def get_prefix(
-                bot: "Tuxbot", message: discord.Message
+            bot: "Tuxbot", message: discord.Message
         ) -> List[str]:
             """Get bot prefixes from config or set it as mentionable"""
             if not (prefixes := config.get("prefixes")):
@@ -160,21 +160,21 @@ class Tuxbot(TuxbotABC):
                 everyone=(not config["client"]["disable_everyone"]) or False
             ),
             "max_messages": (
-                    int(config["client"]["max_cached_messages"]) or 10000
+                int(config["client"]["max_cached_messages"]) or 10000
             ),
             "command_prefix": get_prefix,
             "owner_ids": config["client"]["owners_id"],
             "first_shard_id": (
-                    options.get("first_shard_id")
-                    or options.get("custer_id")
-                    or options.get("shard_id")
-                    or 0
+                options.get("first_shard_id")
+                or options.get("custer_id")
+                or options.get("shard_id")
+                or 0
             ),
             "last_shard_id": (
-                    options.get("last_shard_id")
-                    or options.get("custer_id")
-                    or options.get("shard_id")
-                    or 0
+                options.get("last_shard_id")
+                or options.get("custer_id")
+                or options.get("shard_id")
+                or 0
             ),
             "max_shards": options.get("shard_count") or 1,
             "intents": config["client"].get("intents", discord.Intents.all()),

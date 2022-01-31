@@ -17,12 +17,15 @@ class GuildModel(Model):
     moderators = BigIntArrayField(description="Guild moderators")
     moderator_roles = BigIntArrayField(description="Guild moderator roles")
 
-    deleted = fields.BooleanField(default=True, description="Either the bot is on this guild")
+    deleted = fields.BooleanField(
+        default=True, description="Either the bot is on this guild"
+    )
 
     # =========================================================================
 
     class Meta:
         """Meta values"""
+
         table = "guild"
 
     # =========================================================================

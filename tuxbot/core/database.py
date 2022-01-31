@@ -35,18 +35,25 @@ class Models:
         if model := self.__models.get(key):
             return model[1]
 
+        raise KeyError
+
     # =========================================================================
 
     @staticmethod
     def check(value: Any):
         """Check for given value"""
-        if isinstance(value, tuple) \
-                and len(value) == 2 \
-                and isinstance(value[0], str) \
-                and type(value[1]) == ModelMeta:
+        if (
+            isinstance(value, tuple)
+            and len(value) == 2
+            and isinstance(value[0], str)
+            and type(value[1])  # pylint: disable=unidiomatic-typecheck
+            == ModelMeta
+        ):
             return True
 
-        logger.error("[Models] Improper model value given (passed: %s).", value[1])
+        logger.error(
+            "[Models] Improper model value given (passed: %s).", value[1]
+        )
         return False
 
     # =========================================================================
@@ -64,6 +71,7 @@ class Models:
 
 class Database:
     """Tuxbot database"""
+
     models = Models()
 
     def __init__(self, c: Dict[str, Any]):
@@ -87,7 +95,6 @@ class Database:
                 "use_tz": False,
                 "timezone": "UTC",
             },
-
         )
         await Tortoise.generate_schemas()
 
@@ -98,20 +105,16 @@ class Database:
 
         for module_path in glob.glob(f"{core_models}/*.py"):
             module_path = (
-                module_path
-                    .replace(str(cwd), "")[:-3]
-                    .lstrip("/")
-                    .replace("/", ".")
+                module_path.replace(str(cwd), "")[:-3]
+                .lstrip("/")
+                .replace("/", ".")
             )
             module_name = module_path.split(".")[-1]
 
             module = importlib.import_module(module_path)
 
             if model := getattr(module, module_name + "Model", None):
-                self.models[module_name] = (
-                    module_path,
-                    model
-                )
+                self.models[module_name] = (module_path, model)
 
 
 db = Database(config)

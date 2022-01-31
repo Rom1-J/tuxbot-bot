@@ -50,9 +50,7 @@ class PeeringdbCommand(commands.Cog):
         except asyncio.exceptions.TimeoutError:
             pass
         else:
-            self.bot.logger.info(
-                "[PeeringdbCommand] _update_peering_db done!"
-            )
+            self.bot.logger.info("[PeeringdbCommand] _update_peering_db done!")
 
     # =========================================================================
     # =========================================================================

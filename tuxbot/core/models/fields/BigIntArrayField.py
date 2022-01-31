@@ -23,7 +23,7 @@ class BigIntArrayField(Field, list):
         super().__init__(**kwargs)
 
     def to_db_value(
-        self, value: List[int], instance: "Union[Type[Model], Model]"
+        self, value: List[int], instance: Union[Type[Model], Model]
     ) -> Optional[List[int]]:
         """Convert value before send to db"""
 
