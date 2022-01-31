@@ -6,7 +6,7 @@ Command-not-found scrapper and parser
 """
 
 import asyncio
-from typing import Dict, Union, Any, Optional
+from typing import Any, Dict, Optional, Union
 
 import aiohttp
 from bs4 import BeautifulSoup

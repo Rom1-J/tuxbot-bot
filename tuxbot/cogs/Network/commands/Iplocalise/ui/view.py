@@ -1,5 +1,5 @@
 import copy
-from typing import List, Optional, Union, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 import discord
 from discord.ext import commands
@@ -7,7 +7,6 @@ from discord.ext import commands
 from .buttons import ButtonType
 from .embeds import Embeds
 from .panels import ViewPanel
-
 
 if TYPE_CHECKING:
     Author = Union[discord.User, discord.Member]

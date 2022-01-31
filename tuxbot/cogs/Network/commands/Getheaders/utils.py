@@ -13,8 +13,8 @@ import aiohttp
 import ipwhois
 from ipwhois import IPWhois
 
-from .exceptions import UnreachableAddress
 from ..exceptions import RFC1918
+from .exceptions import UnreachableAddress
 
 
 async def check_for_rfc1918_or_raise(ip: str) -> bool:

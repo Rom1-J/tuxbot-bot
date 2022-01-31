@@ -5,7 +5,6 @@ tuxbot.cogs.Utils.commands.Invite.command
 Gives tuxbot invite links
 """
 import discord
-
 from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
@@ -60,7 +59,11 @@ class InviteCommand(commands.Cog):
                 "The minimum permissions include the strict requirements for "
                 "the proper functioning of all basics commands.\n"
                 "[Add!]"
-                f"({discord.utils.oauth_url(self.bot.user.id, permissions=basic_perms)})"
+                "({})".format(
+                    discord.utils.oauth_url(
+                        self.bot.user.id, permissions=basic_perms
+                    )
+                )
             ),
             inline=False,
         )
@@ -70,7 +73,11 @@ class InviteCommand(commands.Cog):
                 "All minimal permissions + extra permissions for admin "
                 "commands such as kick and ban\n"
                 "[Add!]"
-                f"({discord.utils.oauth_url(self.bot.user.id, permissions=admin_perms)})"
+                "({})".format(
+                    discord.utils.oauth_url(
+                        self.bot.user.id, permissions=admin_perms
+                    )
+                )
             ),
             inline=False,
         )

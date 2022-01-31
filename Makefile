@@ -76,42 +76,16 @@ lint:
 type:
 	$(PYTHON_PATH) -m mypy tuxbot
 
+.PHONY: flake8
+flake8:
+	$(PYTHON_PATH) -m flake8 tuxbot
+
+.PHONY: isort
+isort:
+	$(PYTHON_PATH) -m isort tuxbot
+
 .PHONY: style
-style: black lint type
-
-
-########################################################################################################################
-# Translations
-########################################################################################################################
-
-.PHONY: xgettext
-xgettext:
-	for cog in tuxbot/cogs/*/; do \
-		xgettext `find $$cog -type f -name '*.py'` --output=$$cog/locales/messages.pot $(XGETTEXT_FLAGS); \
-  	done
-
-.PHONY: msginit
-msginit:
-	for cog in tuxbot/cogs/*/; do \
-		msginit --input=$$cog/locales/messages.pot --output=$$cog/locales/fr-FR.po --locale=fr_FR.UTF-8 --no-translator; \
-		msginit --input=$$cog/locales/messages.pot --output=$$cog/locales/en-US.po --locale=en_US.UTF-8 --no-translator; \
-  	done
-
-.PHONY: msgmerge
-msgmerge:
-	for cog in tuxbot/cogs/*/; do \
-		msgmerge --update $$cog/locales/fr-FR.po $$cog/locales/messages.pot; \
-		msgmerge --update $$cog/locales/en-US.po $$cog/locales/messages.pot; \
-  	done
-
-
-########################################################################################################################
-# Misc
-########################################################################################################################
-
-.PHONY: cog
-cog:
-	$(PYTHON_PATH) tuxbot/core/utils/cli/cog_generator.py
+style: black isort lint type flake8
 
 ########################################################################################################################
 # Rewrite

@@ -7,7 +7,6 @@ Shows all pings about tuxbot
 import time
 
 import discord
-
 from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot

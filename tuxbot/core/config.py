@@ -5,6 +5,7 @@ Contains all config workers
 """
 
 from pathlib import Path
+
 import yaml
 
 cwd = Path().resolve().parent.resolve()

@@ -7,19 +7,17 @@ import json
 import sys
 import traceback
 from datetime import datetime
-from typing import NoReturn, Tuple, List, Union
+from typing import List, NoReturn, Tuple, Union
 
 import aiohttp
 import discord
-from discord.ext import commands
 from datadog import initialize
+from discord.ext import commands
 from jishaku import Jishaku
 
-from tuxbot.core.collections.ModuleCollection import ModuleCollection
-
 from tuxbot.abc.TuxbotABC import TuxbotABC
-
 from tuxbot.core import redis
+from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
 
 initialize(

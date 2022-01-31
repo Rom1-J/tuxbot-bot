@@ -51,7 +51,9 @@ class Embeds:
 
             e.add_field(
                 name="Description",
-                value=f'```{self.data["ipwhois"]["nets"][0].get("description", "N/A")}```',
+                value="```{}```".format(
+                    self.data["ipwhois"]["nets"][0].get("description", "N/A")
+                ),
                 inline=False,
             )
 
@@ -87,7 +89,8 @@ class Embeds:
         )
         e.add_field(
             name="RIR",
-            value=f"[{rir.upper()}](https://www.iana.org/numbers/allocations/{rir}/asn/)",
+            value=f"[{rir.upper()}]"
+            f"(https://www.iana.org/numbers/allocations/{rir}/asn/)",
             inline=True,
         )
 

@@ -8,16 +8,12 @@ Set of useful commands for maths.
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
-
 from tuxbot.core.Tuxbot import Tuxbot
 
-
-from .commands.Wolf.command import WolfCommand
 from .commands.Graph.command import GraphCommand
-
+from .commands.Wolf.command import WolfCommand
 
 STANDARD_COMMANDS = (WolfCommand, GraphCommand)
-
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")

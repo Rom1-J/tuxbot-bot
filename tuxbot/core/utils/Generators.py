@@ -3,7 +3,7 @@ Useful generators
 """
 import asyncio
 import inspect
-from typing import Tuple, Dict
+from typing import Dict, Tuple
 
 import aiohttp
 

@@ -1,6 +1,5 @@
 from . import HttpCode
 
-
 __all__ = (
     "Http500",
     "Http501",

@@ -1,12 +1,12 @@
 from .buttons import (
-    GlobalButton,
-    GeoButton,
-    RawButton,
-    WhoisButton,
     ASNButton,
-    IPInfoButton,
     BGPButton,
     DeleteButton,
+    GeoButton,
+    GlobalButton,
+    IPInfoButton,
+    RawButton,
+    WhoisButton,
 )
 
 

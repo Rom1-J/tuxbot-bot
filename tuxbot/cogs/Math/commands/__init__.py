@@ -7,10 +7,8 @@ Set of useful commands for maths.
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-
-from .Wolf.command import WolfCommand
 from .Graph.command import GraphCommand
-
+from .Wolf.command import WolfCommand
 
 STANDARD_COMMANDS = (WolfCommand, GraphCommand)
 

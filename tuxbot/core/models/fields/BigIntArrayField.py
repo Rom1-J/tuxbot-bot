@@ -4,7 +4,7 @@ Big Int Array field specifically for PostgreSQL.
 This field can store list of bigint values.
 """
 import json
-from typing import List, Union, Type, Optional, Any
+from typing import Any, List, Optional, Type, Union
 
 from tortoise import Model
 from tortoise.fields import Field

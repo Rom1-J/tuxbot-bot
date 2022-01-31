@@ -5,7 +5,7 @@ tuxbot.core
 A module who contains all tuxbot core components.
 """
 
-from .. import __version__, version_info, VersionInfo
+from .. import VersionInfo, __version__, version_info
 
 __all__ = (
     "__version__",

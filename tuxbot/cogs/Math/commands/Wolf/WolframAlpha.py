@@ -7,7 +7,7 @@ WolframAlpha api client
 
 import asyncio
 import io
-from typing import Dict, Tuple, Optional, List
+from typing import Dict, List, Optional, Tuple
 
 import aiohttp
 import wolframalpha

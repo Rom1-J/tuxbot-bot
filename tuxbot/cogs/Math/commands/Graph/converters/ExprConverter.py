@@ -5,17 +5,15 @@ tuxbot.cogs.Math.commands.Graph.converters.ExprConverter
 Converter to parse user expr as sympy expr.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 from discord.ext import commands
 from discord.ext.commands import Context
-
 from sympy.parsing.sympy_parser import (
+    implicit_multiplication_application,
     parse_expr,
     standard_transformations,
-    implicit_multiplication_application,
 )
-
 
 abc_dict: Dict[str, Any] = {}
 functions_dict: Dict[str, Any] = {}

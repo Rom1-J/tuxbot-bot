@@ -5,7 +5,6 @@ tuxbot.cogs.Utils.commands.Credits.command
 Shows information about tuxbot creators
 """
 import discord
-
 from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot

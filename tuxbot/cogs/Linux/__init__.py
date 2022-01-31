@@ -8,19 +8,17 @@ Set of useful commands for GNU/Linux users.
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
-
 from tuxbot.core.Tuxbot import Tuxbot
-
 
 from .commands.CNF.command import CNFCommand
 from .commands.exceptions import LinuxException
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
-# If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
-from discord.ext import commands  # pylint: disable=wrong-import-order
+# If it isn't, commands is bind on tuxbot.cogs.Linux.commands ¯\_(ツ)_/¯
+# pylint: disable=wrong-import-order
+from discord.ext import commands  # isort: skip
 
 STANDARD_COMMANDS = (CNFCommand,)
-
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")

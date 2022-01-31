@@ -10,9 +10,8 @@ from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .converters.IPConverter import IPConverter
 from .converters.InetConverter import InetConverter
-
+from .converters.IPConverter import IPConverter
 from .providers.base import get_all_providers
 from .ui.view import ViewController
 from .utils import get_ip

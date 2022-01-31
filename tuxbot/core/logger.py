@@ -5,8 +5,8 @@ Logger to format discord and tuxbot logs
 """
 import logging
 
-from pythonjsonlogger import jsonlogger
 import sentry_sdk
+from pythonjsonlogger import jsonlogger
 from rich.logging import RichHandler
 
 from tuxbot.core.config import config

@@ -1,6 +1,5 @@
 from . import HttpCode
 
-
 _all__ = (
     "Http300",
     "Http301",

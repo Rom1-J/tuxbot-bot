@@ -10,11 +10,9 @@ from collections import namedtuple
 import sentry_sdk
 
 from tuxbot.abc.ModuleABC import ModuleABC
-
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.Stats.command import StatsCommand
-
 from .listeners.CommandCompletion.listener import CommandCompletion
 from .listeners.CommandError.listener import CommandError
 from .listeners.GuildJoin.listener import GuildJoin

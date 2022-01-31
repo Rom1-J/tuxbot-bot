@@ -11,7 +11,8 @@ class IPInfoProvider(Provider):
         def _get_ipinfo_result(_ip: str) -> dict:
             """
             Q. Why no getHandlerAsync ?
-            A. Use of this return "Unclosed client session" and "Unclosed connector"
+            A. Use of this return "Unclosed client session" and
+            "Unclosed connector"
             """
             try:
                 handler = ipinfo.getHandler(self.apikey)

@@ -5,7 +5,7 @@ tuxbot.cogs.Network.functions.Peeringdb.utils
 Set of utils functions
 """
 
-from typing import Union, NoReturn
+from typing import NoReturn, Union
 
 from tuxbot.cogs.Network.commands.Peeringdb.exceptions import InvalidAsn
 

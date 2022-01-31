@@ -1,17 +1,13 @@
 from typing import TypeVar
 
-from .GlobalButton import GlobalButton
-from .GeoButton import GeoButton
-from .RawButton import RawButton
-
-from .WhoisButton import WhoisButton
 from .ASNButton import ASNButton
-
-from .IPInfoButton import IPInfoButton
 from .BGPButton import BGPButton
-
 from .DeleteButton import DeleteButton
-
+from .GeoButton import GeoButton
+from .GlobalButton import GlobalButton
+from .IPInfoButton import IPInfoButton
+from .RawButton import RawButton
+from .WhoisButton import WhoisButton
 
 __all__ = [
     "ButtonType",

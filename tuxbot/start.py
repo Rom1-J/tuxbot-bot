@@ -2,13 +2,11 @@
 Starter file
 """
 import asyncio
-
 import os
 import traceback
 
-from tuxbot.core.Tuxbot import Tuxbot
 from tuxbot.core.logger import logger
-
+from tuxbot.core.Tuxbot import Tuxbot
 
 env = os.getenv("PYTHON_ENV", "production")
 profiling = os.getenv("PROFILING", None)

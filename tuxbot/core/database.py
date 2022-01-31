@@ -5,13 +5,12 @@ Manage database instance
 """
 import glob
 import importlib
-from typing import Dict, Any, List, Tuple, TypeVar
+from typing import Any, Dict, List, Tuple, TypeVar
 
-from tortoise import Tortoise, ModelMeta
+from tortoise import ModelMeta, Tortoise
 
 from tuxbot.core.config import config
 from tuxbot.core.logger import logger
-
 from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.models.Tuxbot import TuxbotModel
 

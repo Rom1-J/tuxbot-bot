@@ -1,7 +1,7 @@
 import io
 import textwrap
 
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 FONT = ImageFont.truetype("./tuxbot/cogs/Utils/fonts/DejaVuSans.ttf", size=32)
 AUTHOR_FONT = ImageFont.truetype(

@@ -10,7 +10,9 @@ class OpenCageDataProvider(Provider):
     async def fetch(self, latlon: str) -> dict:
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
-                f"https://api.opencagedata.com/geocode/v1/json?q={latlon}&key={self.apikey}",
+                f"https://api.opencagedata.com/geocode/v1/json"
+                f"?q={latlon}"
+                f"&key={self.apikey}",
                 timeout=aiohttp.ClientTimeout(total=2),
             ) as s:
                 return await s.json()

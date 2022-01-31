@@ -11,9 +11,9 @@ import aioredis
 from datadog import DogStatsd, statsd
 from discord.ext import commands
 
-from tuxbot.core.logger import Logger, logger, prom
-from tuxbot.core.database import db, Models
 from tuxbot.core import utils
+from tuxbot.core.database import Models, db
+from tuxbot.core.logger import Logger, logger, prom
 
 
 class TuxbotABC(commands.AutoShardedBot):

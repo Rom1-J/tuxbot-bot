@@ -10,7 +10,6 @@ import platform
 import discord
 import humanize
 import psutil
-
 from discord.ext import commands
 
 import tuxbot
