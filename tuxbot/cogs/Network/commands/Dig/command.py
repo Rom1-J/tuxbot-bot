@@ -10,8 +10,9 @@ import json
 import discord
 from discord.ext import commands
 
-from tuxbot.cogs.Network.commands.Dig.utils import get_from_bortzmeyer
 from tuxbot.core.Tuxbot import Tuxbot
+
+from .utils import get_from_bortzmeyer
 
 
 class DigCommand(commands.Cog):
