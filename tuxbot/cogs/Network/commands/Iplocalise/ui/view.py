@@ -26,7 +26,7 @@ class ViewController(discord.ui.View):
         author: "Author",
         data: dict,
     ):
-        super().__init__(timeout=60)
+        super().__init__(timeout=None)
 
         self.author: Author = author
 

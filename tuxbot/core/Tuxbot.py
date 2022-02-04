@@ -70,6 +70,7 @@ class Tuxbot(TuxbotABC):
 
         try:
             self.redis = await redis.connect()
+            await self.redis.ping()
             self.logger.info("[Tuxbot] Redis connection established.")
         except Exception as e:
             self.logger.error(e)
