@@ -3,8 +3,11 @@ Tuxbot collections module: ModuleCollection
 
 Contains all module collections
 """
+import glob
 import importlib.util
-from typing import TYPE_CHECKING, Type
+import inspect
+import os
+from typing import TYPE_CHECKING, List, Type
 
 from discord.ext import commands
 
@@ -55,6 +58,7 @@ class ModuleCollection:
             return
 
         module = _module(bot=self.bot)
+        module_path = os.path.dirname(inspect.getfile(_module))
 
         module.name = (
             module.name if hasattr(module, "name") else module.__cog_name__
@@ -62,29 +66,28 @@ class ModuleCollection:
         active_module = self.bot.cogs.get(module.name)
 
         if active_module:
-            logger.debug("[ModuleCollection] Unloading module %s", module.name)
+            logger.debug(
+                "[ModuleCollection] Unloading module '%s'", module.name
+            )
             self.bot.remove_cog(module.name)
 
-        logger.debug("[ModuleCollection] Registering module %s", module.name)
+        logger.debug("[ModuleCollection] Registering module '%s'", module.name)
 
         self.bot.add_cog(module)
-
-        if hasattr(module, "models") and (models := module.models):
-            self.register_models(models)
+        self.register_models(
+            glob.glob(f"{module_path}/**/models/*.py", recursive=True)
+        )
 
     # =========================================================================
 
-    def register_models(self, models):
+    def register_models(self, models: List[str]):
         """Register module models
 
         Parameters
         ----------
-        models
+        models:List[str]
             Module models to register
         """
 
         for model in models:
-            logger.debug(
-                "[ModuleCollection] Registering model: %s", model.name
-            )
-            self.bot.db.register_model()
+            self.bot.db.register_model(model)  # type: ignore

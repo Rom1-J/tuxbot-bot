@@ -100,20 +100,24 @@ class Database:
     def fetch_models(self):
         """fetch all models"""
         core_models = self.config["paths"].get("base") / "core" / "models"
+
+        for model_path in glob.glob(f"{core_models}/*.py"):
+            self.register_model(model_path)
+
+    def register_model(self, model_path):
+        """register model"""
+
         cwd = self.config["paths"].get("cwd")
 
-        for module_path in glob.glob(f"{core_models}/*.py"):
-            module_path = (
-                module_path.replace(str(cwd), "")[:-3]
-                .lstrip("/")
-                .replace("/", ".")
-            )
-            module_name = module_path.split(".")[-1]
+        model_path = (
+            model_path.replace(str(cwd), "")[:-3].lstrip("/").replace("/", ".")
+        )
+        module_name = model_path.split(".")[-1]
 
-            module = importlib.import_module(module_path)
+        module = importlib.import_module(model_path)
 
-            if model := getattr(module, module_name + "Model", None):
-                self.models[module_name] = (module_path, model)
+        if model := getattr(module, module_name + "Model", None):
+            self.models[module_name] = (model_path, model)
 
 
 db = Database(config)
