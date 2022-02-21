@@ -54,7 +54,7 @@ class ModuleCollection:
             Module class to register
         """
         if not isinstance(_module, commands.CogMeta):
-            logger.debug("[ModuleCollection] Skipping unknown module")
+            logger.error("[ModuleCollection] Skipping unknown module")
             return
 
         module = _module(bot=self.bot)
@@ -66,12 +66,12 @@ class ModuleCollection:
         active_module = self.bot.cogs.get(module.name)
 
         if active_module:
-            logger.debug(
+            logger.info(
                 "[ModuleCollection] Unloading module '%s'", module.name
             )
             self.bot.remove_cog(module.name)
 
-        logger.debug("[ModuleCollection] Registering module '%s'", module.name)
+        logger.info("[ModuleCollection] Registering module '%s'", module.name)
 
         self.bot.add_cog(module)
         self.register_models(

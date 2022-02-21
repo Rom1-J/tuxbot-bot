@@ -84,6 +84,10 @@ flake8:
 isort:
 	$(PYTHON_PATH) -m isort tuxbot
 
+.PHONY: pre_commit
+pre_commit:
+	./$(VIRTUAL_ENV)/bin/pre-commit run --all-files
+
 .PHONY: style
 style: black isort lint type flake8
 

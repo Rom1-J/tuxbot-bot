@@ -34,7 +34,6 @@ class Tuxbot(TuxbotABC):
 
     def __init__(self, options):
         self._config = config
-        self._global_config = {"modules": {}, "PermissionsManager": {}}
 
         options = options or {}
 
