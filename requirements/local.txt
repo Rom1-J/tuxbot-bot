@@ -1,4 +1,4 @@
--r requirements.txt
+-r base.txt
 pylint>=2.6.0
 black>=20.8b1
 mypy>=0.812

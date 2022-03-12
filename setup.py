@@ -34,7 +34,7 @@ setup(
         "asyncpg>=0.21.0",
         "beautifulsoup4>=4.9.3",
         "datadog>=0.43.0",
-        "discord.py @ git+https://github.com/iDevision/enhanced-discord.py",
+        "discord.py @ git+https://github.com/Rapptz/discord.py",
         "graphviz>=0.16",
         "humanize>=2.6.0",
         "ipinfo>=4.1.0",
