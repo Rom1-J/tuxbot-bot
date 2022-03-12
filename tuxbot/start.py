@@ -48,26 +48,26 @@ def start():
 
     print(logo)
     logger.info(
-        "[C%s] Process %d online.", os.getenv("clusterId"), os.getpid()
+        "[C%s] Process %d online.", os.getenv("CLUSTER_ID"), os.getpid()
     )
 
     options = {}
 
-    if shard_id := os.getenv("shardId"):
+    if shard_id := os.getenv("SHARD_ID"):
         options["shard_id"] = int(shard_id)
 
-    if cluster_id := os.getenv("clusterId"):
+    if cluster_id := os.getenv("CLUSTER_ID"):
         options["cluster_id"] = int(cluster_id)
 
-    if shard_count := os.getenv("shardCount"):
+    if shard_count := os.getenv("SHARD_COUNT"):
         options["shard_count"] = int(shard_count)
 
-    if cluster_count := os.getenv("clusterCount"):
+    if cluster_count := os.getenv("CLUSTER_COUNT"):
         options["cluster_count"] = int(cluster_count)
 
-    if first_shard_id := os.getenv("firstShardId"):
+    if first_shard_id := os.getenv("FIRST_SHARD_ID"):
         options["first_shard_id"] = int(first_shard_id)
-        options["last_shard_id"] = os.getenv("lastShardId", None)
+        options["last_shard_id"] = os.getenv("LAST_SHARD_ID", None)
 
     if env == "development":
         from rich.traceback import install

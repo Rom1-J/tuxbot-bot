@@ -3,7 +3,7 @@ Tuxbot core module: config
 
 Contains all config workers
 """
-
+import os
 from pathlib import Path
 
 import yaml
@@ -12,7 +12,7 @@ cwd = Path().resolve().parent.resolve()
 base_path = Path().resolve()
 python_base_path = ""
 
-config_path = cwd / "data" / "settings" / "development.yaml"
+config_path = cwd / "data" / "settings" / f"{os.getenv('PYTHON_ENV')}.yaml"
 
 with open(str(config_path), encoding="UTF-8") as f:
     config = yaml.load(f, Loader=yaml.SafeLoader)

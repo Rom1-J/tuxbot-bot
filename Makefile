@@ -98,4 +98,12 @@ style: black isort lint type flake8
 .PHONY: rewrite
 rewrite: update
 	cd tuxbot && \
-	PYTHON_ENV=development clusterId=1 shard_id=0 shard_count=1 cluster_count=1 first_shard_id=0 last_shard_id=0 python start.py
+	PYTHON_ENV=development \
+	STATSD_HOST="192.168.1.195" \
+	CLUSTER_ID=1 \
+	CLUSTER_COUNT=1 \
+	SHARD_ID=0 \
+	SHARD_COUNT=1 \
+	FIRST_SHARD_ID=0 \
+	LAST_SHARD_ID=0 \
+	python start.py

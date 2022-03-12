@@ -65,7 +65,7 @@ class CommandError(commands.Cog):
         )
         e.add_field(
             name="Cluster ID",
-            value=os.getenv("clusterId"),
+            value=os.getenv("CLUSTER_ID"),
         )
 
         exc = "".join(

@@ -52,7 +52,7 @@ class Commands:
             sentry_sdk.init(
                 dsn=bot.config["sentry"].get("dsn"),
                 traces_sample_rate=1.0,
-                environment=os.getenv("clusterId"),
+                environment=os.getenv("CLUSTER_ID"),
                 debug=False,
                 attach_stacktrace=True,
             )

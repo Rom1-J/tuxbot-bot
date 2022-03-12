@@ -4,6 +4,7 @@ Tuxbot core module: Tuxbot
 Client class instance for Tuxbot
 """
 import json
+import os
 import sys
 import traceback
 from datetime import datetime
@@ -21,7 +22,7 @@ from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
 
 initialize(
-    statsd_host="192.168.1.197",
+    statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
     statsd_port=8125,
     statsd_namespace="tuxbot_metric",
 )
