@@ -17,7 +17,7 @@ from ..exceptions import RFC1918
 from .exceptions import UnreachableAddress
 
 
-async def check_for_rfc1918_or_raise(ip: str) -> bool:
+async def check_for_rfc1918_or_raise(ip: str) -> None:
     """Check for RFC1918 or raise"""
 
     def _check_for_rfc1918_or_raise(_ip: str) -> None:
@@ -37,7 +37,7 @@ async def check_for_rfc1918_or_raise(ip: str) -> bool:
             ),
             timeout=2,
         )
-    except asyncio.exceptions.TimeoutError:
+    except (asyncio.exceptions.TimeoutError, socket.gaierror):
         raise UnreachableAddress("Failed to reach this address.")
 
 
