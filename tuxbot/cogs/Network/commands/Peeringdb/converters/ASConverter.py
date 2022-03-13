@@ -14,10 +14,4 @@ class ASConverter(commands.Converter):
 
     # noinspection PyMissingOrEmptyDocstring
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
-        argument = argument.replace("http://", "").replace("https://", "")
-        argument = argument.rstrip("/")
-
-        if argument.startswith("`") and argument.endswith("`"):
-            argument = argument.lstrip("`").rstrip("`")
-
-        return argument.lower()
+        return argument.lower().lstrip("as")
