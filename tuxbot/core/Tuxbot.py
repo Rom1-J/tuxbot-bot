@@ -177,7 +177,7 @@ class Tuxbot(TuxbotABC):
             ),
             "max_shards": options.get("shard_count") or 1,
             "intents": config["client"].get("intents", discord.Intents.all()),
-            "help_command": None
+            "help_command": None,
         }
 
         cluster_config = {

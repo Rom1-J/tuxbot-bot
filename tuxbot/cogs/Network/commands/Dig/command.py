@@ -41,9 +41,12 @@ class DigCommand(commands.Cog):
                 ex=3600 * 12,
             )
 
-        e = discord.Embed(title=f"DIG {domain} {query_type}", color=0x5858D7)
+        e = discord.Embed(
+            title=result.get("header", f"DIG {domain} {query_type}"),
+            color=0x5858D7,
+        )
 
-        if not result or not result.get("AnswerSection"):
+        if not result:
             e.add_field(
                 name=f"DIG {domain} IN {query_type}",
                 value="No result...",
@@ -51,23 +54,13 @@ class DigCommand(commands.Cog):
             await ctx.send(embed=e)
             return
 
-        for i, value in enumerate(result["AnswerSection"]):
-            data = (
-                value.get("Text")
-                or value.get("Address")
-                or value.get("MailExchanger")
-                or value.get("Target")
-                or f"{value.get('MasterServerName', '')}"
-                f" {value.get('MaintainerName', '')}".strip()
-            )
+        for i, value in enumerate(result.get("body", [])):
             e.add_field(
                 name=f"#{i}",
-                value=f"```{value.get('Name')} "
-                f"{value.get('TTL')} "
-                f"{result['QuestionSection'].get('Qclass')} "
-                f"{value.get('Type')} "
-                f"{data}```",
+                value=f"```{value}```",
                 inline=False,
             )
+
+        e.set_footer(text=result.get("footer"))
 
         await ctx.send(embed=e)
