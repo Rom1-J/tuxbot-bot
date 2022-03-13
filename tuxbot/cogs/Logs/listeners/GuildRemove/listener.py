@@ -25,6 +25,10 @@ class GuildRemove(commands.Cog):
             value=len(self.bot.guilds),
         )
 
+        self.bot.logger.info(
+            "[GuildRemove] Tuxbot removed from the guild '%s'.", guild.name
+        )
+
         if guild_model := await self.bot.models["Guild"].get_or_none(
             id=guild.id
         ):

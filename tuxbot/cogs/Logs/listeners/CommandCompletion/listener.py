@@ -4,6 +4,7 @@ tuxbot.cogs.Logs.listeners.CommandCompletion.listener
 
 Listener whenever command is completed
 """
+from datetime import datetime, timezone
 
 from discord.ext import commands
 
@@ -22,6 +23,14 @@ class CommandCompletion(commands.Cog):
 
         if parent_name := ctx.command.full_parent_name:
             command = f"{parent_name} {ctx.command.name}"
+
+        delta = datetime.now(tz=timezone.utc) - ctx.message.created_at
+
+        self.bot.logger.info(
+            "[CommandCompletion] Command '%s' completed in %d ms.",
+            command,
+            delta.total_seconds() * 1000,
+        )
 
         self.bot.statsd.increment(
             "command_success", value=1, tags=[f"command:{command}"]

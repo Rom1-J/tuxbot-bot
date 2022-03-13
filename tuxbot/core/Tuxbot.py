@@ -8,7 +8,7 @@ import os
 import sys
 import traceback
 from datetime import datetime
-from typing import List, NoReturn, Tuple, Union
+from typing import List, Tuple, Union
 
 import aiohttp
 import discord
@@ -198,7 +198,7 @@ class Tuxbot(TuxbotABC):
         return client_config, cluster_config
 
     @staticmethod
-    def crash_report(client: "Tuxbot", err: Exception) -> NoReturn:
+    def crash_report(client: "Tuxbot", err: Exception):
         """Generate crash report file and exit
 
         Parameters

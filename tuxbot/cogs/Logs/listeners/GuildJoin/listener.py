@@ -25,6 +25,10 @@ class GuildJoin(commands.Cog):
             value=len(self.bot.guilds),
         )
 
+        self.bot.logger.info(
+            "[GuildJoin] Tuxbot added to the guild '%s'.", guild.name
+        )
+
         if guild_model := await self.bot.models["Guild"].get_or_none(
             id=guild.id
         ):
