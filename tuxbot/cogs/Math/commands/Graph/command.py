@@ -30,7 +30,7 @@ class GraphCommand(commands.Cog):
         if parsed_expr is None:
             return await ctx.send("Unable to parse this expression")
 
-        graph_bytes = await get_graph_bytes(self.bot.loop, parsed_expr)
+        graph_bytes = await get_graph_bytes(parsed_expr)
         file = discord.File(graph_bytes, "output.png")
 
         text = pretty(parsed_expr, use_unicode=True)

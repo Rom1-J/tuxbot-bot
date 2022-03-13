@@ -4,7 +4,7 @@ tuxbot.cogs.Math.commands.Graph.converters.ExprConverter
 
 Converter to parse user expr as sympy expr.
 """
-
+import asyncio
 from typing import Any, Dict
 
 from discord.ext import commands
@@ -54,7 +54,9 @@ class ExprConverter(commands.Converter):
             except Exception:
                 return None
 
-        parsed_arg = await ctx.bot.loop.run_in_executor(None, _parse_expr)
+        parsed_arg = await asyncio.get_running_loop().run_in_executor(
+            None, _parse_expr
+        )
 
         if isinstance(parsed_arg, bool):
             return argument, None

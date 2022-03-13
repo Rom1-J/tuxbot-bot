@@ -1,3 +1,4 @@
+import asyncio
 import io
 import textwrap
 
@@ -19,8 +20,8 @@ class Quote:
     text_width: int = 0
     text_height: int = 0
 
-    def __init__(self, loop, content, author, wrap_length=50):
-        self.loop = loop
+    def __init__(self, content, author, wrap_length=50):
+        self.loop = asyncio.get_running_loop()
 
         self.content = QUOTES[0] + content + QUOTES[1]
         self.author = "– " + author

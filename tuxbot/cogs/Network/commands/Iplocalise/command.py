@@ -33,7 +33,7 @@ class IplocaliseCommand(commands.Cog):
         if ip := await self.bot.redis.get(self.bot.utils.gen_key(str(domain))):
             ip = ip.decode()
         else:
-            ip = await get_ip(self.bot.loop, str(domain), inet)
+            ip = await get_ip(str(domain), inet)
 
             await self.bot.redis.set(
                 self.bot.utils.gen_key(str(domain)), str(ip), ex=3600 * 24

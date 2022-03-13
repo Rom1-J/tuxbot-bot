@@ -23,8 +23,8 @@ class WolframAlpha:
 
     client: wolframalpha.Client = None
 
-    def __init__(self, loop, api_key: str):
-        self.loop = loop
+    def __init__(self, api_key: str):
+        self.loop = asyncio.get_running_loop()
         self.api_key = api_key
 
     async def get_client(self):

@@ -22,7 +22,7 @@ class QuoteCommand(commands.Cog):
     @commands.command(name="quote")
     async def _source(self, ctx: commands.Context, *, message: QuoteConverter):
         # noinspection PyUnresolvedReferences
-        quote = Quote(self.bot.loop, message.content, str(message.author))
+        quote = Quote(message.content, str(message.author))
 
         quote_bytes = await quote.generate()
         file = discord.File(quote_bytes, "quote.png")

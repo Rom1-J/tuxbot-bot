@@ -4,14 +4,14 @@ tuxbot.cogs.Network.functions.Iplocalise.utils
 
 Set of utils functions
 """
-
+import asyncio
 import socket
 from typing import Optional, Union
 
 from .exceptions import VersionNotFound
 
 
-async def get_ip(loop, ip: str, inet: Optional[int]) -> str:
+async def get_ip(ip: str, inet: Optional[int]) -> str:
     """Get ip from domain"""
 
     _inet: Union[socket.AddressFamily, int] = 0  # pylint: disable=no-member
@@ -27,4 +27,6 @@ async def get_ip(loop, ip: str, inet: Optional[int]) -> str:
                 "Unable to collect information on this in the given version"
             ) from e
 
-    return await loop.run_in_executor(None, _get_ip, str(ip))
+    return await asyncio.get_running_loop().run_in_executor(
+        None, _get_ip, str(ip)
+    )

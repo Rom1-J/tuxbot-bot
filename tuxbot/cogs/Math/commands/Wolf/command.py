@@ -23,18 +23,14 @@ class WolfCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-        self.WA = WolframAlpha(
-            self.bot.loop, self.bot.config["Math"].get("wolframalpha_key")
-        )
+        self.WA = WolframAlpha(self.bot.config["Math"].get("wolframalpha_key"))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="wolf", aliases=["wolfram"])
     async def _wolf(self, ctx: commands.Context, *, query: str):
         await self.WA.get_client()
 
-        cache = await self.bot.redis.get(self.bot.utils.gen_key(query))
-
-        if cache:
+        if cache := await self.bot.redis.get(self.bot.utils.gen_key(query)):
             res = yaml.load(cache, Loader=yaml.Loader)
 
             q = res["q"]
