@@ -8,12 +8,14 @@ import os
 import sys
 import traceback
 from datetime import datetime
-from typing import List, Tuple, Union
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 import aiohttp
 import discord
 from datadog import initialize
+from discord import File
 from discord.ext import commands
+from discord.http import Route
 from jishaku import Jishaku
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
@@ -40,6 +42,9 @@ class Tuxbot(TuxbotABC):
 
         self.client_options, self.cluster_options = self.configure(options)
         super().__init__(**self.client_options)
+
+        self._internal_request = self.http.request
+        self.http.request = self._request
 
     async def load_config(self):
         """Load configurations"""
@@ -120,6 +125,29 @@ class Tuxbot(TuxbotABC):
                     deleted=False,
                 )
                 await guild_model.save()
+
+    async def _request(
+        self,
+        route: Route,
+        *,
+        files: Optional[Sequence[File]] = None,
+        form: Optional[Iterable[Dict[str, Any]]] = None,
+        **kwargs: Any,
+    ) -> Any:
+        """Proxy function for internal request manager of dpy"""
+
+        self.statsd.increment(
+            "request_event_type",
+            value=1,
+            tags=[
+                f"request_method:{route.method}",
+                f"request_endpoint:{route.path}",
+            ],
+        )
+
+        return await self._internal_request(
+            route, files=files, form=form, **kwargs
+        )
 
     @staticmethod
     async def post_webhook(webhook: str, payload: Union[dict, discord.Embed]):
