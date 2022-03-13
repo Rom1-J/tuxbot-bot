@@ -22,7 +22,7 @@ async def get_ip(loop, ip: str, inet: Optional[int]) -> str:
     def _get_ip(_ip: str):
         try:
             return socket.getaddrinfo(_ip, None, _inet)[1][4][0]
-        except socket.gaierror as e:
+        except (socket.gaierror, UnicodeError) as e:
             raise VersionNotFound(
                 "Unable to collect information on this in the given version"
             ) from e
