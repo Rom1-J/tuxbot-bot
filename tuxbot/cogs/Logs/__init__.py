@@ -61,6 +61,9 @@ class Commands:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Logs", command(bot=bot))
 
+        for listener in STANDARD_LISTENERS:
+            bot.collection.add_module("Logs", listener(bot=bot))
+
 
 class Logs(ModuleABC, Commands):  # type: ignore
     """Set of useful statistics commands & workers."""
