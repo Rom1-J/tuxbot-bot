@@ -46,12 +46,13 @@ class Tuxbot(TuxbotABC):
         self._internal_request = self.http.request
         self.http.request = self._request
 
-    async def load_config(self):
+        self.collection = ModuleCollection(self._config, self)
+
+    async def setup_hook(self):
         """Load configurations"""
 
-        modules = ModuleCollection(self._config, self)
-        modules.register(Jishaku)
-        modules.load_modules()
+        await self.collection.register(Jishaku)
+        await self.collection.load_modules()
 
         await self.db.init()
 
@@ -71,7 +72,6 @@ class Tuxbot(TuxbotABC):
 
     async def launch(self) -> None:
         """Login to discord"""
-        await self.load_config()
 
         try:
             self.redis = await redis.connect()

@@ -58,8 +58,8 @@ class Commands:
             )
 
         # noinspection PyTypeChecker
-        for command in STANDARD_COMMANDS + STANDARD_LISTENERS:
-            bot.add_cog(command(bot=bot))
+        for command in STANDARD_COMMANDS:
+            bot.collection.add_module("Logs", command(bot=bot))
 
 
 class Logs(ModuleABC, Commands):  # type: ignore

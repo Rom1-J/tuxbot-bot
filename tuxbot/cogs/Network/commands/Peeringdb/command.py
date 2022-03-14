@@ -31,7 +31,8 @@ class PeeringdbCommand(commands.Cog):
 
     # =========================================================================
 
-    def cog_unload(self):
+    async def cog_unload(self):
+        """Stop task updater"""
         self.bot.logger.info("[PeeringdbCommand Canceling _update_peering_db")
         self._update_peering_db.cancel()  # pylint: disable=no-member
 

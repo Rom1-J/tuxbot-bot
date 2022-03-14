@@ -7,26 +7,41 @@ import glob
 import importlib.util
 import inspect
 import os
-from typing import TYPE_CHECKING, List, Type
+from typing import TYPE_CHECKING, Dict, List, Type, Union
 
 from discord.ext import commands
 
 from tuxbot.core.logger import logger
 
 if TYPE_CHECKING:
+    from tuxbot.abc.ModuleABC import ModuleABC
     from tuxbot.core.Tuxbot import Tuxbot
 
 
 class ModuleCollection:
     """Tuxbot modules collection"""
 
+    _modules: Dict[str, List[commands.Cog]]
+
     def __init__(self, config, bot: "Tuxbot"):
         self.config = config
         self.bot = bot
 
+        self._modules = {}
+
     # =========================================================================
 
-    def load_modules(self):
+    def add_module(self, name: str, module: commands.Cog):
+        """Preload modules"""
+
+        if name not in self._modules:
+            self._modules[name] = [module]
+        else:
+            self._modules[name].append(module)
+
+    # =========================================================================
+
+    async def load_modules(self):
         """Load all modules from config"""
         if not (modules := self.config["modules"]):
             return
@@ -36,16 +51,16 @@ class ModuleCollection:
                 self.config["paths"]["python_cogs"] + f".{module_name}"
             )
 
-            module: Type[commands.Cog] = getattr(
+            module: Type[Union["ModuleABC", commands.Cog]] = getattr(
                 importlib.import_module(module_path, package="tuxbot"),
                 module_name,
             )
 
-            self.register(module)
+            await self.register(module)
 
     # =========================================================================
 
-    def register(self, _module: Type[commands.Cog]):
+    async def register(self, _module: Type[commands.Cog]):
         """Register module
 
         Parameters
@@ -69,11 +84,16 @@ class ModuleCollection:
             logger.info(
                 "[ModuleCollection] Unloading module '%s'", module.name
             )
-            self.bot.remove_cog(module.name)
+            await self.bot.remove_cog(module.name)
 
         logger.info("[ModuleCollection] Registering module '%s'", module.name)
 
-        self.bot.add_cog(module)
+        await self.bot.add_cog(module)
+
+        if sub_modules := self._modules.get(module.name):
+            for sub_module in sub_modules:
+                await self.bot.add_cog(sub_module)
+
         self.register_models(
             glob.glob(f"{module_path}/**/models/*.py", recursive=True)
         )

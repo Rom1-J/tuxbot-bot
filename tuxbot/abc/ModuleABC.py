@@ -13,6 +13,7 @@ class ModuleABC(commands.Cog):
     """Module Abstract Class"""
 
     bot: Tuxbot
+    modules: list
 
     def crash_report(self) -> str:
         """Generate crash report"""

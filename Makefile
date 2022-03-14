@@ -29,6 +29,10 @@ install:
 install-dev:
 	$(VIRTUAL_ENV)/bin/pip install -r requirements/local.txt
 
+.PHONY: soft-update
+soft-update:
+	$(VIRTUAL_ENV)/bin/pip install .
+
 .PHONY: update
 update:
 	$(VIRTUAL_ENV)/bin/pip install --upgrade .
@@ -97,6 +101,19 @@ style: black isort lint type flake8
 
 .PHONY: rewrite
 rewrite: update
+	cd tuxbot && \
+	PYTHON_ENV=development \
+	STATSD_HOST="192.168.1.195" \
+	CLUSTER_ID=1 \
+	CLUSTER_COUNT=1 \
+	SHARD_ID=0 \
+	SHARD_COUNT=1 \
+	FIRST_SHARD_ID=0 \
+	LAST_SHARD_ID=0 \
+	python start.py
+
+.PHONY: soft-rewrite
+soft-rewrite: soft-update
 	cd tuxbot && \
 	PYTHON_ENV=development \
 	STATSD_HOST="192.168.1.195" \

@@ -31,6 +31,6 @@ class Help(ModuleABC):
         bot.help_command = HelpCommand(urls=bot.config["urls"])
         bot.help_command.cog = self
 
-    def cog_unload(self):
+    async def cog_unload(self):
         """Rebind native dpy help command before unload"""
         self.bot.help_command = self.old_help_command

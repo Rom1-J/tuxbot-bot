@@ -4,7 +4,6 @@ tuxbot.cogs.Network
 
 Set of useful commands for networking.
 """
-
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
@@ -43,7 +42,7 @@ __version__ = "v{}.{}.{}-{}".format(
 class Commands:
     def __init__(self, bot: Tuxbot):
         for command in STANDARD_COMMANDS:
-            bot.add_cog(command(bot=bot))
+            bot.collection.add_module("Network", command(bot=bot))
 
 
 class Network(ModuleABC, Commands):  # type: ignore
