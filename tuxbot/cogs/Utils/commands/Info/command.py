@@ -130,7 +130,10 @@ class InfoCommand(commands.Cog):
             )
 
             e.set_footer(
-                text=f"version: {tuxbot.__version__} • prefix: {ctx.prefix}"
+                text=(
+                    f"version: {tuxbot.__version__} "
+                    f"• prefix: {ctx.clean_prefix}"
+                )
             )
 
         await ctx.send(embed=e)
