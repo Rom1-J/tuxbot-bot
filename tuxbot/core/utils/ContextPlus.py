@@ -1,7 +1,7 @@
 """
 Custom Context class
 """
-from typing import TYPE_CHECKING, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
 
 from discord import (
     AllowedMentions,
@@ -40,8 +40,38 @@ class ContextPlus(commands.Context):
 
     # =========================================================================
 
-    def _clean_message(self):
-        ...
+    def _clean_message(self, kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        def clear_embeds(_embeds: List[Embed]):
+            """Clear embed from sensitive data"""
+
+            es = _embeds.copy()
+
+            for i, e in enumerate(es):
+                e = e.to_dict()
+
+                for key, value in e.items():
+                    if isinstance(value, str):
+                        # noinspection PyTypedDict
+                        e[key] = value.replace(
+                            self.bot.http.token, "[redacted]"
+                        )
+
+                es[i] = Embed.from_dict(e)
+
+            return es
+
+        if content := kwargs.get("content"):
+            kwargs["content"] = content.replace(
+                self.bot.http.token, "[redacted]"
+            )
+
+        if embed := kwargs.get("embed"):
+            kwargs["embed"] = clear_embeds([embed])[0]
+
+        if embeds := kwargs.get("embeds"):
+            kwargs["embeds"] = clear_embeds(embeds)
+
+        return kwargs
 
     # =========================================================================
 
@@ -85,7 +115,7 @@ class ContextPlus(commands.Context):
             "suppress_embeds": suppress_embeds,
         }
 
-        self.bot.logger.debug(kwargs)
+        kwargs = self._clean_message(kwargs)
 
         # noinspection PyArgumentList
         return await super().send(**kwargs)
