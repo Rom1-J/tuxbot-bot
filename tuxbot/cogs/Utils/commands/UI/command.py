@@ -10,8 +10,8 @@ from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .converters.MemberOrUserConverter import MemberOrUserConverter
-from .exceptions import UserNotFound
+from ...converters.MemberOrUserConverter import MemberOrUserConverter
+from ..exceptions import UserNotFound
 
 
 class UICommand(commands.Cog):

@@ -109,8 +109,8 @@ class ContextPlus(commands.Context):
             "delete_after": delete_after,
             "nonce": nonce,
             "allowed_mentions": allowed_mentions,
-            "reference": reference,
-            "mention_author": mention_author,
+            "reference": reference or self.message,
+            "mention_author": mention_author or False,
             "view": view,
             "suppress_embeds": suppress_embeds,
         }

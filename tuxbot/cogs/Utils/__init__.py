@@ -9,6 +9,7 @@ from collections import namedtuple
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
+from .commands.Avatar.command import AvatarCommand
 from .commands.Credits.command import CreditsCommand
 from .commands.exceptions import UtilsException
 from .commands.Info.command import InfoCommand
@@ -24,6 +25,7 @@ from .commands.UI.command import UICommand
 from discord.ext import commands  # isort: skip
 
 STANDARD_COMMANDS = (
+    AvatarCommand,
     CreditsCommand,
     InfoCommand,
     InviteCommand,
