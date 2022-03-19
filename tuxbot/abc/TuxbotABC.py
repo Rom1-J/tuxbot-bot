@@ -12,8 +12,8 @@ from datadog import DogStatsd, statsd
 from discord.ext import commands
 
 from tuxbot.core import utils
-from tuxbot.core.database import Models, db
-from tuxbot.core.logger import Logger, logger, prom
+from tuxbot.core.database import Database, Models, db
+from tuxbot.core.logger import Logger, logger
 
 
 class TuxbotABC(commands.AutoShardedBot):
@@ -26,7 +26,7 @@ class TuxbotABC(commands.AutoShardedBot):
     _client_options: dict = {}
 
     _logger: logger  # type: ignore
-    _db: db  # type: ignore
+    _db: Database  # type: ignore
     _redis: aioredis.Redis
 
     _uptime: Optional[datetime] = None
@@ -112,12 +112,12 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def db(self) -> db:  # type: ignore
+    def db(self) -> Database:  # type: ignore
         """DB instance
 
         Returns
         -------
-        db
+        Database
         """
         return db
 
@@ -204,18 +204,6 @@ class TuxbotABC(commands.AutoShardedBot):
         utils.Utils
         """
         return utils  # type: ignore
-
-    # =========================================================================
-
-    @property
-    def prom(self) -> prom:
-        """Prometheus instance
-
-        Returns
-        -------
-        prom
-        """
-        return prom
 
     # =========================================================================
     # =========================================================================

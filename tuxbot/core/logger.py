@@ -60,4 +60,3 @@ class Logger(logging.Logger):
 
 
 logger = Logger()
-prom = object

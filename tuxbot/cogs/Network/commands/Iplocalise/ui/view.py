@@ -26,7 +26,7 @@ class ViewController(discord.ui.View):
         author: "Author",
         data: dict,
     ):
-        super().__init__(timeout=None)
+        super().__init__(timeout=60)
 
         self.author: Author = author
 
@@ -43,6 +43,8 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def on_timeout(self) -> None:
+        """Remove buttons after timeout"""
+
         self.clear_items()
 
         await self.send()
@@ -50,6 +52,8 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def send(self, interaction: Optional[discord.Interaction] = None):
+        """Send selected embed"""
+
         embed = await self.select_embed()
 
         args = {"embed": embed}
@@ -81,12 +85,16 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def select_embed(self) -> Optional[discord.Embed]:
+        """Select embed"""
+
         self.embeds = await self.build_embeds()
         return self.embeds[self.page]
 
     # =========================================================================
 
     async def build_embeds(self) -> Dict[str, discord.Embed]:
+        """Build embeds"""
+
         embeds = Embeds(self)
 
         output = {}
@@ -101,6 +109,8 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def change_to(self, page: str, interaction: discord.Interaction):
+        """Change page"""
+
         self.page = page
 
         for page_name in self.pages:
@@ -115,6 +125,8 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     def get_button(self, name: str) -> Optional[discord.ui.Button]:
+        """Get button by name"""
+
         for button in self.children:  # type: ignore
             if (button.label == name) or (  # type: ignore
                 button.emoji and button.emoji.name == name  # type: ignore

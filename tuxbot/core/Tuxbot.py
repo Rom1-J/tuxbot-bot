@@ -13,7 +13,6 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 import aiohttp
 import discord
 from datadog import initialize
-from discord import File
 from discord.ext import commands
 from discord.http import Route
 from jishaku import Jishaku
@@ -22,6 +21,7 @@ from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core import redis
 from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
+from tuxbot.core.utils.ContextPlus import ContextPlus
 
 initialize(
     statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
@@ -48,6 +48,9 @@ class Tuxbot(TuxbotABC):
 
         self.collection = ModuleCollection(self._config, self)
 
+    # =========================================================================
+    # =========================================================================
+
     async def setup_hook(self):
         """Load configurations"""
 
@@ -70,21 +73,7 @@ class Tuxbot(TuxbotABC):
                 ignored_guilds=[],
             )
 
-    async def launch(self) -> None:
-        """Login to discord"""
-
-        try:
-            self.redis = await redis.connect()
-            await self.redis.ping()
-            self.logger.info("[Tuxbot] Redis connection established.")
-        except Exception as e:
-            self.logger.error(e)
-
-        await super().start(config["client"]["token"])
-
-    async def shutdown(self) -> None:
-        """Disconnect from Discord and closes all actives connections."""
-        await super().close()
+    # =========================================================================
 
     async def on_ready(self):
         """Ready event handler"""
@@ -126,11 +115,52 @@ class Tuxbot(TuxbotABC):
                 )
                 await guild_model.save()
 
+    # =========================================================================
+
+    # noinspection PyMethodOverriding
+    async def get_context(self, message: discord.Message) -> ContextPlus:
+        """Bind custom context"""
+
+        return await super().get_context(message, cls=ContextPlus)
+
+    # =========================================================================
+
+    async def invoke(self, ctx: ContextPlus) -> None:
+        """Bind custom command invoker"""
+
+        if ctx.command is not None:
+            async with ctx.typing():
+                await super().invoke(ctx)
+
+    # =========================================================================
+    # =========================================================================
+
+    async def launch(self) -> None:
+        """Login to discord"""
+
+        try:
+            self.redis = await redis.connect()
+            await self.redis.ping()
+            self.logger.info("[Tuxbot] Redis connection established.")
+        except Exception as e:
+            self.logger.error(e)
+
+        await super().start(config["client"]["token"])
+
+    # =========================================================================
+
+    async def shutdown(self) -> None:
+        """Disconnect from Discord and closes all actives connections."""
+        await self.db.disconnect()
+        await super().close()
+
+    # =========================================================================
+
     async def _request(
         self,
         route: Route,
         *,
-        files: Optional[Sequence[File]] = None,
+        files: Optional[Sequence[discord.File]] = None,
         form: Optional[Iterable[Dict[str, Any]]] = None,
         **kwargs: Any,
     ) -> Any:
@@ -148,6 +178,9 @@ class Tuxbot(TuxbotABC):
         return await self._internal_request(
             route, files=files, form=form, **kwargs
         )
+
+    # =========================================================================
+    # =========================================================================
 
     @staticmethod
     async def post_webhook(webhook: str, payload: Union[dict, discord.Embed]):
@@ -167,6 +200,8 @@ class Tuxbot(TuxbotABC):
                 )
             else:
                 await session.post(webhook, json=payload)
+
+    # =========================================================================
 
     @staticmethod
     def configure(options: dict) -> Tuple[dict, dict]:
@@ -224,6 +259,8 @@ class Tuxbot(TuxbotABC):
         config["cluster_config"] = cluster_config
 
         return client_config, cluster_config
+
+    # =========================================================================
 
     @staticmethod
     def crash_report(client: "Tuxbot", err: Exception):

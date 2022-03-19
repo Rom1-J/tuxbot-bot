@@ -76,6 +76,9 @@ class Database:
     def __init__(self, c: Dict[str, Any]):
         self.config = c
 
+    # =========================================================================
+    # =========================================================================
+
     async def init(self):
         """Init database"""
         self.fetch_models()
@@ -95,7 +98,21 @@ class Database:
                 "timezone": "UTC",
             },
         )
+
+        logger.info("[Database] Generating schemas.")
         await Tortoise.generate_schemas()
+
+    # =========================================================================
+
+    @staticmethod
+    async def disconnect():
+        """Disconnect database"""
+
+        logger.info("[Database] Closing connections.")
+        await Tortoise.close_connections()
+
+    # =========================================================================
+    # =========================================================================
 
     def fetch_models(self):
         """fetch all models"""
@@ -103,6 +120,8 @@ class Database:
 
         for model_path in glob.glob(f"{core_models}/*.py"):
             self.register_model(model_path)
+
+    # =========================================================================
 
     def register_model(self, model_path):
         """register model"""
