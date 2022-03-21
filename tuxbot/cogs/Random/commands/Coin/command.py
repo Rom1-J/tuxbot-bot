@@ -1,6 +1,6 @@
 """
-tuxbot.cogs.Utils.commands.Coin.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Random.commands.Coin.command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Flip a coin
 """
