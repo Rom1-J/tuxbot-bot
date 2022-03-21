@@ -4,6 +4,7 @@ tuxbot.cogs.Logs.commands.Stats.command
 
 Send Datadog dashboard link
 """
+
 import discord
 from discord.ext import commands
 
@@ -20,6 +21,9 @@ class StatsCommand(commands.Cog):
             "https://p.datadoghq.com/sb/"
             "9xjljtz2ur1xzb71-f2770ff41307443a259597fa4a881b0b"
         )
+
+    # =========================================================================
+    # =========================================================================
 
     @commands.command(name="stats", aliases=["statistics"])
     async def _stats(self, ctx: commands.Context):

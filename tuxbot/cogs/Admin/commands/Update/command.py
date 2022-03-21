@@ -17,6 +17,9 @@ class UpdateCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command("update")
     async def _update(self, ctx: commands.Context):
         sh = "jsk sh"

@@ -16,6 +16,9 @@ class GuildRemove(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.Cog.listener(name="on_guild_remove")
     async def _on_guild_remove(
         self, guild: discord.Guild

@@ -25,6 +25,9 @@ class WolfCommand(commands.Cog):
 
         self.WA = WolframAlpha(self.bot.config["Math"].get("wolframalpha_key"))
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="wolf", aliases=["wolfram"])
     async def _wolf(self, ctx: commands.Context, *, query: str):

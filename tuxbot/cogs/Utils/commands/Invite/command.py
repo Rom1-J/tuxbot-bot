@@ -16,6 +16,9 @@ class InviteCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="invite")
     async def _invite(self, ctx: commands.Context):
         basic_perms = discord.Permissions(

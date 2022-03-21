@@ -19,6 +19,9 @@ class QuoteCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="quote")
     async def _source(self, ctx: commands.Context, *, message: QuoteConverter):
         # noinspection PyUnresolvedReferences

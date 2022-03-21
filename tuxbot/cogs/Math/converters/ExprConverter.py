@@ -4,6 +4,7 @@ tuxbot.cogs.Math.commands.Graph.converters.ExprConverter
 
 Converter to parse user expr as sympy expr.
 """
+
 import asyncio
 from typing import Any, Dict
 

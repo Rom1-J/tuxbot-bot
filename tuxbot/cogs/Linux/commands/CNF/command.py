@@ -20,6 +20,9 @@ class CNFCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="cnf")
     async def _cnf(self, ctx: commands.Context, command: str):
         if cnf := await self.bot.redis.get(self.bot.utils.gen_key(command)):

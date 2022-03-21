@@ -4,6 +4,7 @@ tuxbot.cogs.Utils.commands.Avatar.command
 
 Shows avatar of user
 """
+
 import discord
 from discord.ext import commands
 
@@ -19,6 +20,9 @@ class AvatarCommand(commands.Cog):
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
+
+    # =========================================================================
+    # =========================================================================
 
     @commands.command(name="avatar")
     async def _avatar(

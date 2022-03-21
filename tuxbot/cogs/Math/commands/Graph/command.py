@@ -5,16 +5,18 @@ tuxbot.cogs.Math.commands.Graph.command
 Decompose math expression as graphic
 """
 
+import asyncio
+import io
 from textwrap import shorten
 
 import discord
 from discord.ext import commands
-from sympy import pretty
+from graphviz import Source
+from sympy import dotprint, pretty
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .converters.ExprConverter import ExprConverter
-from .Graph import get_graph_bytes
+from ...converters.ExprConverter import ExprConverter
 
 
 class GraphCommand(commands.Cog):
@@ -23,6 +25,26 @@ class GraphCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
+    @staticmethod
+    async def __get_graph_bytes(expr) -> io.BytesIO:
+        """Generate graph as byte format from given expr"""
+
+        def _get_graph_bytes(_expr):
+            digraph = dotprint(expr)
+            raw_bytes = Source(digraph).pipe(format="png")
+
+            return io.BytesIO(raw_bytes)
+
+        return await asyncio.get_running_loop().run_in_executor(
+            None, _get_graph_bytes, expr
+        )
+
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="graph")
     async def _graph(self, ctx: commands.Context, *, expr: ExprConverter):
         expr, parsed_expr = expr
@@ -30,7 +52,7 @@ class GraphCommand(commands.Cog):
         if parsed_expr is None:
             return await ctx.send("Unable to parse this expression")
 
-        graph_bytes = await get_graph_bytes(parsed_expr)
+        graph_bytes = await self.__get_graph_bytes(parsed_expr)
         file = discord.File(graph_bytes, "output.png")
 
         text = pretty(parsed_expr, use_unicode=True)

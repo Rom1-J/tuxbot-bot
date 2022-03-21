@@ -18,6 +18,9 @@ class PingCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="ping")
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()

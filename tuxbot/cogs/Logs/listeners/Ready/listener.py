@@ -15,6 +15,9 @@ class Ready(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.Cog.listener(name="on_ready")
     async def _on_ready(self):
         self.bot.statsd.gauge(

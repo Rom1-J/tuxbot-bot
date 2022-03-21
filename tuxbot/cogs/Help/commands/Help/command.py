@@ -21,6 +21,8 @@ class HelpCommand(commands.HelpCommand):
         self.site_url = urls.get("site", "")
         self.discord_url = urls.get("discord", "")
 
+    # =========================================================================
+
     async def on_help_command_error(self, ctx, error):
         """Shows error if happens"""
 

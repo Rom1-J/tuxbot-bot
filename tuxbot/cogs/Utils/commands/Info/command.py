@@ -4,9 +4,14 @@ tuxbot.cogs.Utils.commands.Info.command
 
 Shows information about tuxbot
 """
-import json
-import platform
 
+import json
+import os
+import pathlib
+import platform
+from typing import Any, Dict
+
+import aiofiles
 import discord
 import humanize
 import psutil
@@ -15,14 +20,68 @@ from discord.ext import commands
 import tuxbot
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .utils import fetch_info
-
 
 class InfoCommand(commands.Cog):
     """Shows tuxbot's information"""
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
+
+    # =========================================================================
+    # =========================================================================
+
+    @staticmethod
+    async def __fetch_info(paths: dict) -> Dict[str, Any]:
+        """Fetch set of information about tuxbot"""
+
+        total_lines = 0
+
+        total_python_class = 0
+        total_python_functions = 0
+        total_python_coroutines = 0
+        total_python_comments = 0
+
+        file_amount = 0
+        python_file_amount = 0
+
+        for path, _, files in os.walk(paths.get("base", "./")):
+            for name in files:
+                file_dir = str(pathlib.PurePath(path, name))
+                if "env" in file_dir:
+                    continue
+
+                file_amount += 1
+
+                if name.endswith(".py"):
+                    python_file_amount += 1
+
+                    async with aiofiles.open(
+                        file_dir, "r", encoding="utf-8"
+                    ) as file:
+                        async for line in file:
+                            line = line.strip()
+                            if line.startswith("class"):
+                                total_python_class += 1
+                            if line.startswith("def"):
+                                total_python_functions += 1
+                            if line.startswith("async def"):
+                                total_python_coroutines += 1
+                            if "#" in line:
+                                total_python_comments += 1
+                            total_lines += 1
+
+        return {
+            "total_lines": total_lines,
+            "total_python_class": total_python_class,
+            "total_python_functions": total_python_functions,
+            "total_python_coroutines": total_python_coroutines,
+            "total_python_comments": total_python_comments,
+            "file_amount": file_amount,
+            "python_file_amount": python_file_amount,
+        }
+
+    # =========================================================================
+    # =========================================================================
 
     @commands.command(name="info", aliases=["about"])
     async def _info(self, ctx: commands.Context):
@@ -31,7 +90,7 @@ class InfoCommand(commands.Cog):
         if result := (await self.bot.redis.get(self.bot.utils.gen_key())):
             infos = json.loads(result)
         else:
-            infos = await fetch_info(self.bot.config["paths"])
+            infos = await self.__fetch_info(self.bot.config["paths"])
 
             await self.bot.redis.set(
                 self.bot.utils.gen_key(),

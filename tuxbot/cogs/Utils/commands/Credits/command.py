@@ -4,6 +4,7 @@ tuxbot.cogs.Utils.commands.Credits.command
 
 Shows information about tuxbot creators
 """
+
 import discord
 from discord.ext import commands
 
@@ -15,6 +16,9 @@ class CreditsCommand(commands.Cog):
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
+
+    # =========================================================================
+    # =========================================================================
 
     @commands.command(
         name="credits", aliases=["contributors", "authors", "credit"]

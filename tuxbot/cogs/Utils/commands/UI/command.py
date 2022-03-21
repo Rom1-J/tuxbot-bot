@@ -20,6 +20,9 @@ class UICommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="ui", aliases=["user_info"])
     async def _ui(
         self,

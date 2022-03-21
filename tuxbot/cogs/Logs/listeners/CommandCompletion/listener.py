@@ -17,6 +17,9 @@ class CommandCompletion(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.Cog.listener(name="on_command_completion")
     async def _on_command_completion(self, ctx: commands.Context):
         command = ctx.command.name

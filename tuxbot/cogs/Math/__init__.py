@@ -4,6 +4,7 @@ tuxbot.cogs.Math
 
 Set of useful commands for maths.
 """
+
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC

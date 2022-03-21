@@ -7,7 +7,7 @@ Shows information from peeringdb about an ASN
 
 import asyncio
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, NoReturn, Union
 
 import aiohttp
 import discord
@@ -17,7 +17,7 @@ from discord.ext import commands, tasks  # type: ignore
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .converters.ASConverter import ASConverter
-from .utils import check_asn_or_raise
+from .exceptions import InvalidAsn
 
 
 class PeeringdbCommand(commands.Cog):
@@ -36,6 +36,19 @@ class PeeringdbCommand(commands.Cog):
         self.bot.logger.info("[PeeringdbCommand Canceling _update_peering_db")
         self._update_peering_db.cancel()  # pylint: disable=no-member
 
+    # =========================================================================
+    # =========================================================================
+
+    @staticmethod
+    def __check_asn_or_raise(asn: str) -> Union[bool, NoReturn]:
+        """Validate asn format"""
+
+        if asn.isdigit() and int(asn) < 4_294_967_295:
+            return True
+
+        raise InvalidAsn("Invalid ASN provided")
+
+    # =========================================================================
     # =========================================================================
 
     @tasks.loop(hours=6.00)
@@ -65,7 +78,7 @@ class PeeringdbCommand(commands.Cog):
             self._peeringdb_net = None
             self._update_peering_db.start()  # pylint: disable=no-member
 
-        check_asn_or_raise(str(asn))
+        self.__check_asn_or_raise(str(asn))
 
         data: Dict[str, Any] = {}
 

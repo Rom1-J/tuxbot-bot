@@ -24,6 +24,9 @@ class CommandError(commands.Cog):
 
         self.error_webhook: str = self.bot.config["error_webhook"]
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.Cog.listener(name="on_command_error")
     async def _on_command_error(
         self, ctx: commands.Context, error: commands.CommandError

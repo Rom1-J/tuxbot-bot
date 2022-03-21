@@ -20,6 +20,9 @@ class HTTPCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="http")
     async def _http(self, ctx: commands.Context, http_code: HttpCodeConverter):
         if isinstance(http_code, HttpCode):

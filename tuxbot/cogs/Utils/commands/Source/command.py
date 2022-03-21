@@ -20,6 +20,9 @@ class SourceCommand(commands.Cog):
 
         self.github_url = self.bot.config["urls"].get("github", "")
 
+    # =========================================================================
+    # =========================================================================
+
     @commands.command(name="source", aliases=["sources"])
     async def _source(self, ctx: commands.Context, *, name=None):
         if not name:
