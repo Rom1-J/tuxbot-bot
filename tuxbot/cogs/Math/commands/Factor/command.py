@@ -37,6 +37,7 @@ class FactorCommand(commands.Cog):
                 ),
                 timeout=3,
             )
+            # noinspection PyUnresolvedReferences
             return pretty((await ExprConverter().convert(ctx, output))[1])
         except asyncio.exceptions.TimeoutError:
             return "Unable to find factors in appropriate time..."
