@@ -73,11 +73,11 @@ class IplocaliseCommand(commands.Cog):
                 self.bot.utils.gen_key(str(domain)), str(ip), ex=3600 * 24
             )
 
-        result = await self.bot.redis.get(
+        if result := await self.bot.redis.get(
             self.bot.utils.gen_key(f"{domain}+{ip}")
-        )
-
-        if not result:
+        ):
+            result = yaml.load(result, Loader=yaml.Loader)
+        else:
             result = await get_all_providers(
                 self.bot.config["Network"], data={"ip": ip, "domain": domain}
             )
@@ -85,8 +85,6 @@ class IplocaliseCommand(commands.Cog):
             await self.bot.redis.set(
                 self.bot.utils.gen_key(f"{domain}+{ip}"), str(result)
             )
-        else:
-            result = yaml.load(result, Loader=yaml.Loader)
 
         controller = ViewController(ctx=ctx, author=ctx.author, data=result)
 

@@ -28,9 +28,8 @@ class FactorCommand(commands.Cog):
         """Generate prime factor decomposition of n"""
 
         def _factors_result(_n: int) -> str:
-            return " + ".join(
-                    [f"{k}**{v}" for k, v in factorint(_n).items()]
-                )
+            return " + ".join([f"{k}**{v}" for k, v in factorint(_n).items()])
+
         try:
             output = await asyncio.wait_for(
                 asyncio.get_running_loop().run_in_executor(
