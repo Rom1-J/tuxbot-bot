@@ -19,6 +19,7 @@ from .commands.Quote.command import QuoteCommand
 from .commands.Source.command import SourceCommand
 from .commands.UI.command import UICommand
 
+
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Utils.commands ¯\_(ツ)_/¯
 # pylint: disable=wrong-import-order

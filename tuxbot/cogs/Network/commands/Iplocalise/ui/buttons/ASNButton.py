@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Optional
 import discord
 from jishaku.models import copy_context_with
 
+
 if TYPE_CHECKING:
     from ..view import ViewController
 

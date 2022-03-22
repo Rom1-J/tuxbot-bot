@@ -8,7 +8,17 @@ import os
 import sys
 import traceback
 from datetime import datetime
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 
 import aiohttp
 import discord
@@ -22,6 +32,7 @@ from tuxbot.core import redis
 from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
 from tuxbot.core.utils.ContextPlus import ContextPlus
+
 
 initialize(
     statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),

@@ -8,6 +8,7 @@ from .buttons import ButtonType
 from .embeds import Embeds
 from .panels import ViewPanel
 
+
 if TYPE_CHECKING:
     Author = Union[discord.User, discord.Member]
 

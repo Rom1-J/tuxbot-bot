@@ -13,6 +13,7 @@ from .commands.Coin.command import CoinCommand
 from .commands.Duck.command import DuckCommand
 from .commands.exceptions import RandomException
 
+
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Utils.commands ¯\_(ツ)_/¯
 # pylint: disable=wrong-import-order

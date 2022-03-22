@@ -6,6 +6,7 @@ from .JPGButton import JPGButton
 from .PNGButton import PNGButton
 from .WEBPButton import WEBPButton
 
+
 __all__ = [
     "ButtonType",
     "GIFButton",

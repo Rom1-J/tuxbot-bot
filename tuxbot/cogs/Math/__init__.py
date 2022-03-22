@@ -14,6 +14,7 @@ from .commands.Factor.command import FactorCommand
 from .commands.Graph.command import GraphCommand
 from .commands.Wolf.command import WolfCommand
 
+
 STANDARD_COMMANDS = (FactorCommand, WolfCommand, GraphCommand)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")

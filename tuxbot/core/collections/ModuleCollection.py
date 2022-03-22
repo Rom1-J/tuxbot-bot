@@ -13,6 +13,7 @@ from discord.ext import commands
 
 from tuxbot.core.logger import logger
 
+
 if TYPE_CHECKING:
     from tuxbot.abc.ModuleABC import ModuleABC
     from tuxbot.core.Tuxbot import Tuxbot

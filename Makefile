@@ -54,10 +54,6 @@ speed_dev: update
 # Blackify code
 ########################################################################################################################
 
-.PHONY: black
-black:
-	$(PYTHON_PATH) -m black `git ls-files "*.py"` --line-length=79
-
 .PHONY: lint
 lint:
 	$(PYTHON_PATH) -m pylint tuxbot --verbose --output-format=colorized
@@ -79,7 +75,7 @@ pre_commit:
 	./$(VIRTUAL_ENV)/bin/pre-commit run --all-files
 
 .PHONY: style
-style: black isort lint type flake8
+style: isort lint type flake8
 
 ########################################################################################################################
 # Rewrite

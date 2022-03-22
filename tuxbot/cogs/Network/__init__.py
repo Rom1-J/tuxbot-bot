@@ -15,6 +15,7 @@ from .commands.Getheaders.command import GetheadersCommand
 from .commands.Iplocalise.command import IplocaliseCommand
 from .commands.Peeringdb.command import PeeringdbCommand
 
+
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Network.commands ¯\_(ツ)_/¯
 # pylint: disable=wrong-import-order

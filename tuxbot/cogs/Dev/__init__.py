@@ -12,6 +12,7 @@ from tuxbot.core.Tuxbot import Tuxbot
 from .commands.exceptions import DevException
 from .commands.HTTP.command import HTTPCommand
 
+
 # Note: for some reasons, this import must be done after tuxbot.* imports.
 # If it isn't, commands is bind on tuxbot.cogs.Dev.commands ¯\_(ツ)_/¯
 # pylint: disable=wrong-import-order

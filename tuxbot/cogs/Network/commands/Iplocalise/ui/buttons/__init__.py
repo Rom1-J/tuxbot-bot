@@ -9,6 +9,7 @@ from .IPInfoButton import IPInfoButton
 from .RawButton import RawButton
 from .WhoisButton import WhoisButton
 
+
 __all__ = [
     "ButtonType",
     "GlobalButton",

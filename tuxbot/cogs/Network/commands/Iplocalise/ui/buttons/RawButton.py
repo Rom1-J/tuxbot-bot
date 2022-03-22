@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Optional
 
 import discord
 
+
 if TYPE_CHECKING:
     from ..view import ViewController
 

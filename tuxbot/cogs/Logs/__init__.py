@@ -21,6 +21,7 @@ from .listeners.Message.listener import Message
 from .listeners.Ready.listener import Ready
 from .listeners.SocketRawReceive.listener import SocketRawReceive
 
+
 STANDARD_COMMANDS = (StatsCommand,)
 
 STANDARD_LISTENERS = (

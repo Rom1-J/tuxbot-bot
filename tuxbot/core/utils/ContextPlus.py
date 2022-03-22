@@ -16,6 +16,7 @@ from discord import (
 from discord.ext import commands
 from discord.ui import View
 
+
 if TYPE_CHECKING:
     from tuxbot.abc.TuxbotABC import TuxbotABC
 

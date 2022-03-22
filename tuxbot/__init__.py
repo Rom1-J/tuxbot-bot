@@ -8,6 +8,7 @@ free software community
 import os
 from collections import namedtuple
 
+
 build = os.popen("/usr/bin/git rev-parse --short HEAD").read().strip()
 info = os.popen('/usr/bin/git log -n 3 -s --format="%s"').read().strip()
 

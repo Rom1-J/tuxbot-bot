@@ -13,6 +13,7 @@ import aiohttp
 import wolframalpha
 from PIL import Image, ImageDraw, ImageFont
 
+
 FONT = ImageFont.truetype(
     "./tuxbot/cogs/Math/commands/Wolf/fonts/DejaVuSans.ttf", size=16
 )

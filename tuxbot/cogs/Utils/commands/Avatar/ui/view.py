@@ -6,6 +6,7 @@ from discord.ext import commands
 from .buttons import ButtonType
 from .panels import ViewPanel
 
+
 if TYPE_CHECKING:
     Author = Union[discord.User, discord.Member]
 

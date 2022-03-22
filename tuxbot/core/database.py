@@ -14,6 +14,7 @@ from tuxbot.core.logger import logger
 from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.models.Tuxbot import TuxbotModel
 
+
 # Note: adding models manually is not useful for the bot,
 # it is only useful for the type hinting
 M = TypeVar("M", TuxbotModel, GuildModel)
