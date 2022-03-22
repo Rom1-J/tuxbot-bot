@@ -26,7 +26,7 @@ class DeleteButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         if (
-            interaction.user == self.controller.author
+            interaction.user == self.controller.ctx.author
         ) and self.controller.sent_message:
             self.controller.stop()
             await self.controller.sent_message.delete()

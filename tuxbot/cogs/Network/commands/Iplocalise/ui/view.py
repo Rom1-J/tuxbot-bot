@@ -23,12 +23,9 @@ class ViewController(discord.ui.View):
     def __init__(
         self,
         ctx: commands.Context,
-        author: "Author",
         data: dict,
     ):
         super().__init__(timeout=60)
-
-        self.author: Author = author
 
         self.ctx = ctx
         self.data = data
@@ -59,7 +56,7 @@ class ViewController(discord.ui.View):
         args = {"embed": embed}
 
         if interaction:
-            if (interaction.user == self.author) and self.sent_message:
+            if (interaction.user == self.ctx.author) and self.sent_message:
                 self.sent_message = await self.sent_message.edit(
                     **args, view=self
                 )

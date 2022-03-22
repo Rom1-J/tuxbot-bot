@@ -87,13 +87,17 @@ class InfoCommand(commands.Cog):
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
 
-        if result := (await self.bot.redis.get(self.bot.utils.gen_key())):
+        if result := (
+            await self.bot.redis.get(
+                self.bot.utils.gen_key(tuxbot.__version__)
+            )
+        ):
             infos = json.loads(result)
         else:
             infos = await self.__fetch_info(self.bot.config["paths"])
 
             await self.bot.redis.set(
-                self.bot.utils.gen_key(),
+                self.bot.utils.gen_key(tuxbot.__version__),
                 json.dumps(infos),
                 ex=3600 * 12,
             )

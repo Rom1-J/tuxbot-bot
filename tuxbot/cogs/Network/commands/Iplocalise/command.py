@@ -86,6 +86,6 @@ class IplocaliseCommand(commands.Cog):
                 self.bot.utils.gen_key(f"{domain}+{ip}"), str(result)
             )
 
-        controller = ViewController(ctx=ctx, author=ctx.author, data=result)
+        controller = ViewController(ctx=ctx, data=result)
 
         await controller.send()

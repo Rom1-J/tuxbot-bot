@@ -8,7 +8,7 @@ import os
 import sys
 import traceback
 from datetime import datetime
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
 
 import aiohttp
 import discord
@@ -117,11 +117,13 @@ class Tuxbot(TuxbotABC):
 
     # =========================================================================
 
-    # noinspection PyMethodOverriding
-    async def get_context(self, message: discord.Message) -> ContextPlus:
+    # noinspection PyMethodOverriding  # pylint: disable=arguments-differ
+    async def get_context(
+        self, message: discord.Message, *, cls: Type[ContextPlus] = None
+    ) -> ContextPlus:
         """Bind custom context"""
 
-        return await super().get_context(message, cls=ContextPlus)
+        return await super().get_context(message, cls=cls or ContextPlus)
 
     # =========================================================================
 
