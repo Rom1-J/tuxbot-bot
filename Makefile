@@ -86,6 +86,8 @@ rewrite: update
 	cd tuxbot && \
 	PYTHON_ENV=development \
 	STATSD_HOST="192.168.1.195" \
+	DD_AGENT_HOST="192.168.1.195" \
+	DD_ENV="Tuxbot-dev" \
 	CLUSTER_ID=1 \
 	CLUSTER_COUNT=1 \
 	SHARD_ID=0 \
