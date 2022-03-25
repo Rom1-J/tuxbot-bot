@@ -40,7 +40,7 @@ initialize(
     statsd_port=8125,
     statsd_namespace="tuxbot_metric",
 )
-patch_all()
+patch_all(logging=True)
 
 
 class Tuxbot(TuxbotABC):

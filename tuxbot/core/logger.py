@@ -33,6 +33,11 @@ class Logger(logging.Logger):
         "relativeCreated",
         "thread",
         "threadName",
+        "dd.env",
+        "dd.service",
+        "dd.version",
+        "dd.trace_id",
+        "dd.span_id",
     ]
 
     def __init__(self):
