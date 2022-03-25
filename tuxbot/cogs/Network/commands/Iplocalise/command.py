@@ -64,14 +64,14 @@ class IplocaliseCommand(commands.Cog):
         domain: IPConverter,
         inet: InetConverter = None,
     ):
-        if ip := await self.bot.redis.get(self.bot.utils.gen_key(str(domain))):
+        cache_key = self.bot.utils.gen_key(str(domain), str(inet))
+
+        if ip := await self.bot.redis.get(cache_key):
             ip = ip.decode()
         else:
             ip = await self.__get_ip(str(domain), inet)
 
-            await self.bot.redis.set(
-                self.bot.utils.gen_key(str(domain)), str(ip), ex=3600 * 24
-            )
+            await self.bot.redis.set(cache_key, str(ip), ex=3600 * 24)
 
         if result := await self.bot.redis.get(
             self.bot.utils.gen_key(f"{domain}+{ip}")

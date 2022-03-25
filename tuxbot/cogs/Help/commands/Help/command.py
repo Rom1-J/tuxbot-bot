@@ -23,6 +23,7 @@ class HelpCommand(commands.HelpCommand):
 
     # =========================================================================
 
+    # pylint: disable=arguments-differ
     async def on_help_command_error(self, ctx, error):
         """Shows error if happens"""
 
@@ -32,6 +33,7 @@ class HelpCommand(commands.HelpCommand):
     # =========================================================================
     # =========================================================================
 
+    # pylint: disable=arguments-differ
     async def send_bot_help(self, mapping: dict):  # skipcq: PYL-W0613
         """Send global bot help"""
 
@@ -52,6 +54,7 @@ class HelpCommand(commands.HelpCommand):
 
     # =========================================================================
 
+    # pylint: disable=arguments-differ
     async def send_cog_help(self, cog: commands.Cog):
         """Send specific cog help"""
 
@@ -64,6 +67,7 @@ class HelpCommand(commands.HelpCommand):
 
     # =========================================================================
 
+    # pylint: disable=arguments-differ
     async def send_command_help(self, command: commands.Command):
         """Send specific command help"""
 
@@ -76,6 +80,7 @@ class HelpCommand(commands.HelpCommand):
 
     # =========================================================================
 
+    # pylint: disable=arguments-differ
     async def send_group_help(self, group: commands.Group):
         """Send specific command group help"""
 
