@@ -11,6 +11,7 @@ from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.Cat.command import CatCommand
 from .commands.Coin.command import CoinCommand
+from .commands.Dog.command import DogCommand
 from .commands.Duck.command import DuckCommand
 from .commands.exceptions import RandomException
 
@@ -23,11 +24,12 @@ from discord.ext import commands  # isort: skip
 STANDARD_COMMANDS = (
     CatCommand,
     CoinCommand,
+    DogCommand,
     DuckCommand,
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=1, micro=0, release_level="stable")
+version_info = VersionInfo(major=1, minor=2, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
