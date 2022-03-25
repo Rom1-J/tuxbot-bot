@@ -12,7 +12,7 @@ from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .exceptions import RDUCKException
+from ..exceptions import APIException
 
 
 class DuckCommand(commands.Cog):
@@ -35,7 +35,7 @@ class DuckCommand(commands.Cog):
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
-        raise RDUCKException("Something went wrong ...")
+        raise APIException("Something went wrong ...")
 
     # =========================================================================
     # =========================================================================

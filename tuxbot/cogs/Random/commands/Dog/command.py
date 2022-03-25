@@ -12,7 +12,7 @@ from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .exceptions import DOGCEOException
+from ..exceptions import APIException
 
 
 class DogCommand(commands.Cog):
@@ -34,7 +34,7 @@ class DogCommand(commands.Cog):
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
-        raise DOGCEOException("Something went wrong ...")
+        raise APIException("Something went wrong ...")
 
     # =========================================================================
     # =========================================================================

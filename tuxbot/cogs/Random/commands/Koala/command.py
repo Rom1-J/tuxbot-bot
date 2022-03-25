@@ -1,11 +1,10 @@
 """
-tuxbot.cogs.Random.commands.Cat.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Random.commands.Koala.command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Get a random picture of cat
+Get a random picture of koala
 """
 import asyncio
-import random
 
 import aiohttp
 import discord
@@ -16,29 +15,20 @@ from tuxbot.core.Tuxbot import Tuxbot
 from ..exceptions import APIException
 
 
-class CatCommand(commands.Cog):
-    """Random cat picture"""
+class KoalaCommand(commands.Cog):
+    """Random koala picture"""
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-        self.cataas_url = (
-            "https://cataas.com"
-        )
-
     # =========================================================================
     # =========================================================================
 
-    async def __get_cat(self) -> dict:
+    @staticmethod
+    async def __get_koala() -> dict:
         try:
-            endpoint = random.choices(
-                ['cat', 'cat/gif'],
-                weights=[0.8, 0.2],
-                k=1
-            )[0]
-
             async with aiohttp.ClientSession() as cs, cs.get(
-                f"{self.cataas_url}/{endpoint}?json=true"
+                "https://some-random-api.ml/animal/koala"
             ) as s:
                 return await s.json()
 
@@ -50,16 +40,16 @@ class CatCommand(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    @commands.command(name="cat", aliases=["randomcat"])
-    async def _cat(self, ctx: commands.Context):
-        cat = await self.__get_cat()
+    @commands.command(name="koala", aliases=["randomkoala"])
+    async def _koala(self, ctx: commands.Context):
+        koala = await self.__get_koala()
 
         e = discord.Embed(
-            title="Here's your cat",
+            title="Here's your koala",
             color=self.bot.utils.colors.EMBED_BORDER.value,
         )
 
-        e.set_image(url=f"{self.cataas_url}/{cat['url']}")
-        e.set_footer(text="Powered by cataas.com")
+        e.set_image(url=koala["image"])
+        e.set_footer(text="Powered by some-random-api.ml")
 
         await ctx.send(embed=e)
