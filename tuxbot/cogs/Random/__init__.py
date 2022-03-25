@@ -15,6 +15,7 @@ from .commands.Dog.command import DogCommand
 from .commands.Duck.command import DuckCommand
 from .commands.exceptions import RandomException
 from .commands.Koala.command import KoalaCommand
+from .commands.RedPanda.command import RedPandaCommand
 
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
@@ -28,6 +29,7 @@ STANDARD_COMMANDS = (
     DogCommand,
     DuckCommand,
     KoalaCommand,
+    RedPandaCommand,
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
