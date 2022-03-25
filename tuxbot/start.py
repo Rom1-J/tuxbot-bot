@@ -5,12 +5,13 @@ import asyncio
 import os
 import traceback
 
+from ddtrace.profiling import Profiler
+
 from tuxbot.core.logger import logger
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 env = os.getenv("PYTHON_ENV", "production")
-profiling = os.getenv("PROFILING", None)
 
 
 async def run_bot(tuxbot: Tuxbot) -> None:
@@ -22,19 +23,10 @@ async def run_bot(tuxbot: Tuxbot) -> None:
         Tuxbot instance
     """
     try:
-        if profiling:
-            import cProfile
-            import pstats
+        if env != "development":
+            Profiler().start()
 
-            with cProfile.Profile() as pr:
-                await tuxbot.launch()
-
-            stats = pstats.Stats(pr)
-            stats.sort_stats(pstats.SortKey.TIME)
-            stats.print_stats()
-            stats.dump_stats("../profiling.prof")
-        else:
-            await tuxbot.launch()
+        await tuxbot.launch()
     except Exception as e:
         if env == "development":
             traceback.print_exc()
