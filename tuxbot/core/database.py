@@ -126,7 +126,6 @@ class Database:
 
     def register_model(self, model_path):
         """register model"""
-
         cwd = self.config["paths"].get("cwd")
 
         model_path = (

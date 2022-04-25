@@ -11,6 +11,7 @@ from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.Restart.command import RestartCommand
+from .commands.Sync.command import SyncCommand
 from .commands.Update.command import UpdateCommand
 
 
@@ -19,7 +20,7 @@ from .commands.Update.command import UpdateCommand
 # pylint: disable=wrong-import-order
 from discord.ext import commands  # isort: skip
 
-STANDARD_COMMANDS = (RestartCommand, UpdateCommand)
+STANDARD_COMMANDS = (RestartCommand, SyncCommand, UpdateCommand)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=3, minor=0, micro=0, release_level="alpha")

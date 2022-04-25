@@ -83,9 +83,9 @@ class ContextPlus(commands.Context):
         *,
         tts: bool = False,
         embed: Optional[Embed] = None,
-        embeds: Optional[List[Embed]] = None,
+        embeds: Optional[Sequence[Embed]] = None,
         file: Optional[File] = None,
-        files: Optional[List[File]] = None,
+        files: Optional[Sequence[File]] = None,
         stickers: Optional[Sequence[Union[GuildSticker, StickerItem]]] = None,
         delete_after: Optional[float] = None,
         nonce: Optional[Union[str, int]] = None,
@@ -96,6 +96,7 @@ class ContextPlus(commands.Context):
         mention_author: Optional[bool] = None,
         view: Optional[View] = None,
         suppress_embeds: bool = False,
+        ephemeral: bool = False,
     ) -> Message:
         """Proxy function for internal ctx.`send` of dpy"""
 
@@ -114,6 +115,7 @@ class ContextPlus(commands.Context):
             "mention_author": mention_author or False,
             "view": view,
             "suppress_embeds": suppress_embeds,
+            "ephemeral": ephemeral,
         }
 
         kwargs = self._clean_message(kwargs)

@@ -111,4 +111,5 @@ class ModuleCollection:
         """
 
         for model in models:
-            self.bot.db.register_model(model)  # type: ignore
+            # type: ignore
+            self.bot.db.register_model(model.split("site-packages/")[-1])

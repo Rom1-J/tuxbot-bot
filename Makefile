@@ -70,10 +70,6 @@ flake8:
 isort:
 	$(PYTHON_PATH) -m isort tuxbot
 
-.PHONY: pre_commit
-pre_commit:
-	./$(VIRTUAL_ENV)/bin/pre-commit run --all-files
-
 .PHONY: style
 style: isort lint type flake8
 
@@ -85,8 +81,8 @@ style: isort lint type flake8
 rewrite: update
 	cd tuxbot && \
 	PYTHON_ENV=development \
-	STATSD_HOST="192.168.1.195" \
-	DD_AGENT_HOST="192.168.1.195" \
+	STATSD_HOST="192.168.1.177" \
+	DD_AGENT_HOST="192.168.1.177" \
 	DD_ENV="Tuxbot-dev" \
 	CLUSTER_ID=1 \
 	CLUSTER_COUNT=1 \
