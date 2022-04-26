@@ -3,7 +3,7 @@ Tags creation view
 """
 import discord
 
-from ..models.Tags import TagsModel
+from ...models.Tags import TagsModel
 
 
 class TagCreationModal(discord.ui.Modal):
@@ -48,7 +48,7 @@ class TagCreationModal(discord.ui.Modal):
             guild_id=interaction.guild_id,
             author_id=interaction.user.id,
             name=name,
-            content=content
+            content=discord.utils.escape_mentions(content)
         )
 
         await interaction.response.send_message(

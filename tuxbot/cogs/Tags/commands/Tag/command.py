@@ -4,13 +4,17 @@ tuxbot.cogs.Tags.commands.Tag.command
 
 Manage tags
 """
+from typing import Optional
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .ui.modal import TagCreationModal
+from .models.Tags import TagsModel
+from .ui.modals.TagCreationModal import TagCreationModal
+from .ui.modals.TagEditionModal import TagEditionModal
 
 
 class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
@@ -20,6 +24,12 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
         self.bot = bot
 
         super().__init__()
+
+    @staticmethod
+    async def __get_tag(guild_id: int, name: str) -> Optional[TagsModel]:
+        return await TagsModel.get_or_none(
+            guild_id=guild_id, name=name.lower()
+        )
 
     # =========================================================================
     # =========================================================================
@@ -64,7 +74,18 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
     async def _tag_get(
             self, interaction: discord.Interaction, name: str
     ) -> None:
-        await interaction.response.send_message(f"Show {name}")
+        if tag := await self.__get_tag(interaction.guild_id, name):
+            await interaction.response.send_message(tag.content)
+
+            tag.uses += 1
+            await tag.save()
+
+            return
+
+        await interaction.response.send_message(
+            f"Tag '{name}' not found...",
+            ephemeral=True
+        )
 
     # =========================================================================
 
@@ -73,7 +94,20 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
     async def _tag_raw(
             self, interaction: discord.Interaction, name: str
     ) -> None:
-        await interaction.response.send_message(f"Raw {name}")
+        if tag := await self.__get_tag(interaction.guild_id, name):
+            await interaction.response.send_message(
+                discord.utils.escape_markdown(tag.content)
+            )
+
+            tag.uses += 1
+            await tag.save()
+
+            return
+
+        await interaction.response.send_message(
+            f"Tag '{name}' not found...",
+            ephemeral=True
+        )
 
     # =========================================================================
 
@@ -90,4 +124,47 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
     async def _tag_delete(
             self, interaction: discord.Interaction, name: str
     ) -> None:
-        await interaction.response.send_message(f"Delete {name}")
+        if tag := await self.__get_tag(interaction.guild_id, name):
+            if tag.author_id == interaction.user.id:
+                await tag.delete()
+
+                await interaction.response.send_message(
+                    f"Tag '{name}' deleted successfully!",
+                    ephemeral=True
+                )
+                return
+
+            await interaction.response.send_message(
+                f"You must be the owner of '{name}' to delete it...",
+                ephemeral=True
+            )
+            return
+
+        await interaction.response.send_message(
+            f"Tag '{name}' not found...",
+            ephemeral=True
+        )
+
+    # =========================================================================
+
+    @app_commands.command(name="edit", description="Edit a tag")
+    @app_commands.describe(name="Tag name")
+    async def _tag_edit(
+            self, interaction: discord.Interaction, name: str
+    ) -> None:
+        if tag := await self.__get_tag(interaction.guild_id, name):
+            if tag.author_id == interaction.user.id:
+                await interaction.response.send_modal(TagEditionModal(tag))
+
+                return
+
+            await interaction.response.send_message(
+                f"You must be the owner of '{name}' to edit it...",
+                ephemeral=True
+            )
+            return
+
+        await interaction.response.send_message(
+            f"Tag '{name}' not found...",
+            ephemeral=True
+        )
