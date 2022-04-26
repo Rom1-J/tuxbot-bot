@@ -225,7 +225,7 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
             self,
             interaction: discord.Interaction,
             member: Optional[discord.Member] = None
-    ):
+    ) -> None:
         member = member or interaction.user
 
         tags = await self.__get_tags(
@@ -239,5 +239,21 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
 
         await interaction.response.send_message(
             f"No tags found for {member}...",
+            ephemeral=True
+        )
+
+    # =========================================================================
+
+    @app_commands.command(name="all", description="List all tags")
+    async def _tag_all(self, interaction: discord.Interaction) -> None:
+        tags = await self.__get_tags(guild_id=interaction.guild_id)
+
+        if tags:
+            p = TagPages(tags, ctx=interaction)
+            await p.start()
+            return
+
+        await interaction.response.send_message(
+            "No tags found...",
             ephemeral=True
         )
