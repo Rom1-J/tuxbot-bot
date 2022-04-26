@@ -4,7 +4,7 @@ tuxbot.cogs.Tags.commands.Tag.command
 
 Manage tags
 """
-from typing import Optional
+from typing import List, Optional
 
 import discord
 from discord import app_commands
@@ -15,6 +15,7 @@ from tuxbot.core.Tuxbot import Tuxbot
 from .models.Tags import TagsModel
 from .ui.modals.TagCreationModal import TagCreationModal
 from .ui.modals.TagEditionModal import TagEditionModal
+from .ui.paginator import TagPages
 
 
 class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
@@ -30,6 +31,21 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
         return await TagsModel.get_or_none(
             guild_id=guild_id, name=name.lower()
         )
+
+    @staticmethod
+    async def __get_tags(
+            guild_id: int, member_id: Optional[int] = None
+    ) -> Optional[List[TagsModel]]:
+        if member_id is not None:
+            return (
+                await TagsModel.filter(
+                    guild_id=guild_id, author_id=member_id
+                ).all().order_by("-uses")
+            )
+
+        return await TagsModel.filter(
+            guild_id=guild_id
+        ).all().order_by("-uses")
 
     # =========================================================================
     # =========================================================================
@@ -198,5 +214,30 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
 
         await interaction.response.send_message(
             f"Tag '{name}' not found...",
+            ephemeral=True
+        )
+
+    # =========================================================================
+
+    @app_commands.command(name="list", description="List all tags of member")
+    @app_commands.describe(member="Member to search")
+    async def _tag_list(
+            self,
+            interaction: discord.Interaction,
+            member: Optional[discord.Member] = None
+    ):
+        member = member or interaction.user
+
+        tags = await self.__get_tags(
+            guild_id=interaction.guild_id, member_id=member.id
+        )
+
+        if tags:
+            p = TagPages(tags, ctx=interaction)
+            await p.start()
+            return
+
+        await interaction.response.send_message(
+            f"No tags found for {member}...",
             ephemeral=True
         )
