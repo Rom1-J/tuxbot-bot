@@ -89,7 +89,7 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
 
     # =========================================================================
 
-    @app_commands.command(name="raw", description="Print a tag as aaw")
+    @app_commands.command(name="raw", description="Print a tag as raw")
     @app_commands.describe(name="Tag name")
     async def _tag_raw(
             self, interaction: discord.Interaction, name: str
@@ -162,6 +162,38 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
                 f"You must be the owner of '{name}' to edit it...",
                 ephemeral=True
             )
+            return
+
+        await interaction.response.send_message(
+            f"Tag '{name}' not found...",
+            ephemeral=True
+        )
+
+    # =========================================================================
+
+    @app_commands.command(name="info", description="Show tag's info")
+    @app_commands.describe(name="Tag name")
+    async def _tag_info(
+            self,
+            interaction: discord.Interaction,
+            name: str
+    ) -> None:
+        if tag := await self.__get_tag(interaction.guild_id, name):
+            e = discord.Embed(color=discord.Colour.blue())
+
+            owner_id = tag.author_id
+            user = self.bot.get_user(owner_id) or (
+                await self.bot.fetch_user(owner_id)
+            )
+
+            e.title = tag.name
+            e.description = tag.content
+            e.timestamp = tag.created_at
+
+            e.set_author(name=user, icon_url=user.display_avatar.url)
+            e.set_footer(text=f"Uses: {tag.uses}")
+
+            await interaction.response.send_message(embed=e)
             return
 
         await interaction.response.send_message(
