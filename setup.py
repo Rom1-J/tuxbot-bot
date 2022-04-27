@@ -36,6 +36,7 @@ setup(
         "datadog>=0.43.0",
         "ddtrace>=0.60.0",
         "discord.py @ git+https://github.com/Rapptz/discord.py",
+        "discord-ext-menus>=1.1",
         "graphviz>=0.16",
         "humanize>=2.6.0",
         "ipinfo>=4.1.0",
