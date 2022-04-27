@@ -150,6 +150,27 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
     # =========================================================================
 
+    @staticmethod
+    async def fetch_member_or_none(
+            guild: discord.Guild, user_id: int
+    ) -> Optional[discord.Member]:
+        """fetch member and return None instead of raising NotFound"""
+        try:
+            return await guild.fetch_member(user_id)
+        except discord.NotFound:
+            return None
+
+    # =========================================================================
+
+    async def fetch_user_or_none(self, user_id: int) -> Optional[discord.User]:
+        """fetch user and return None instead of raising NotFound"""
+        try:
+            return await self.fetch_user(user_id)
+        except discord.NotFound:
+            return None
+
+    # =========================================================================
+
     async def launch(self) -> None:
         """Login to discord"""
 

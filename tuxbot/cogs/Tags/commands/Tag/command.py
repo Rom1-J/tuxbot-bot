@@ -197,16 +197,17 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
         if tag := await self.__get_tag(interaction.guild_id, name):
             e = discord.Embed(color=discord.Colour.blue())
 
-            owner_id = tag.author_id
-            user = self.bot.get_user(owner_id) or (
-                await self.bot.fetch_user(owner_id)
-            )
+            user = await self.bot.fetch_member_or_none(
+                interaction.guild, tag.author_id
+            ) or await self.bot.fetch_user_or_none(tag.author_id)
 
             e.title = tag.name
             e.description = tag.content
             e.timestamp = tag.created_at
 
-            e.set_author(name=user, icon_url=user.display_avatar.url)
+            if user:
+                e.set_author(name=user, icon_url=user.display_avatar.url)
+
             e.set_footer(text=f"Uses: {tag.uses}")
 
             await interaction.response.send_message(embed=e)
@@ -255,5 +256,38 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
 
         await interaction.response.send_message(
             "No tags found...",
+            ephemeral=True
+        )
+
+    # =========================================================================
+
+    @app_commands.command(name="claim", description="Claim orphelin tag")
+    @app_commands.describe(name="Tag name")
+    async def _tag_claim(
+            self,
+            interaction: discord.Interaction,
+            name: str
+    ) -> None:
+        if tag := await self.__get_tag(interaction.guild_id, name):
+            if await self.bot.fetch_member_or_none(
+                    interaction.guild, tag.author_id
+            ) is not None:
+                await interaction.response.send_message(
+                    "Tag owner is on this server.",
+                    ephemeral=True
+                )
+                return
+
+            tag.author_id = interaction.user.id
+            await tag.save()
+
+            await interaction.response.send_message(
+                "This tag is now owned by you.",
+                ephemeral=True
+            )
+            return
+
+        await interaction.response.send_message(
+            f"Tag '{name}' not found...",
             ephemeral=True
         )
