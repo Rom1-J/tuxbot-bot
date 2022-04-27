@@ -4,7 +4,7 @@ tuxbot.cogs.Tags.commands.Tag.command
 
 Manage tags
 """
-from typing import List, Optional
+from typing import Dict, List, Optional, Union
 
 import discord
 from discord import app_commands
@@ -34,18 +34,21 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
 
     @staticmethod
     async def __get_tags(
-            guild_id: int, member_id: Optional[int] = None
+            guild_id: int,
+            member_id: Optional[int] = None,
+            query: Optional[str] = None
     ) -> Optional[List[TagsModel]]:
-        if member_id is not None:
-            return (
-                await TagsModel.filter(
-                    guild_id=guild_id, author_id=member_id
-                ).all().order_by("-uses")
-            )
+        kwargs: Dict[str, Union[str, int]] = {
+            "guild_id": guild_id
+        }
 
-        return await TagsModel.filter(
-            guild_id=guild_id
-        ).all().order_by("-uses")
+        if member_id is not None:
+            kwargs["author_id"] = member_id
+
+        if query is not None:
+            kwargs["name__icontains"] = query
+
+        return await TagsModel.filter(**kwargs).all().order_by("-uses")
 
     # =========================================================================
     # =========================================================================
@@ -289,5 +292,28 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
 
         await interaction.response.send_message(
             f"Tag '{name}' not found...",
+            ephemeral=True
+        )
+
+    # =========================================================================
+
+    @app_commands.command(name="search", description="Search for tags")
+    @app_commands.describe(query="Query")
+    async def _tag_search(
+            self,
+            interaction: discord.Interaction,
+            query: str
+    ) -> None:
+        tags = await self.__get_tags(
+            guild_id=interaction.guild_id, query=query
+        )
+
+        if tags:
+            p = TagPages(tags, ctx=interaction)
+            await p.start()
+            return
+
+        await interaction.response.send_message(
+            "No tags found...",
             ephemeral=True
         )
