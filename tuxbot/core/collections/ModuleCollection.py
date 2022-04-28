@@ -35,6 +35,8 @@ class ModuleCollection:
     def add_module(self, name: str, module: commands.Cog):
         """Preload modules"""
 
+        module.__cog_name__ = f"{name}_{module.__cog_name__}"
+
         if name not in self._modules:
             self._modules[name] = [module]
         else:

@@ -37,7 +37,7 @@ STANDARD_COMMANDS = (
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=3, minor=2, micro=1, release_level="stable")
+version_info = VersionInfo(major=3, minor=2, micro=2, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
