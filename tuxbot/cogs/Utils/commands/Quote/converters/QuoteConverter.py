@@ -22,7 +22,14 @@ class QuoteConverter(commands.Converter):
     # noinspection PyMissingOrEmptyDocstring
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         try:
-            return await commands.MessageConverter().convert(ctx, argument)
+            if (message := await commands.MessageConverter().convert(
+                    ctx, argument
+            )) and message.channel.permissions_for(
+                    ctx.author
+            ).read_message_history:
+                return message
+
+            raise commands.BadArgument
         except commands.BadArgument:
             message = QuoteMessage()
 
