@@ -6,11 +6,19 @@ Set of useful automatic workers.
 """
 from collections import namedtuple
 
+import discord
+
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.AutoQuote.command import AutoQuoteCommand
 from .listeners.Message.listener import Message
+
+
+# Note: for some reasons, this import must be done after tuxbot.* imports.
+# If it isn't, commands is bind on tuxbot.cogs.Admin.commands ¯\_(ツ)_/¯
+# pylint: disable=wrong-import-order
+from discord.ext import commands  # isort: skip
 
 
 STANDARD_COMMANDS = (AutoQuoteCommand,)
@@ -41,3 +49,14 @@ class Commands:
 
 class Auto(ModuleABC, Commands):  # type: ignore
     """Set of useful automatic workers."""
+
+    # pylint: disable=invalid-overridden-method
+    async def cog_check(self, ctx: commands.Context):
+        """Ensure author is owner"""
+
+        if not ctx.author.guild_permissions.administrator:
+            raise commands.MissingPermissions(
+                [discord.Permissions.administrator]
+            )
+
+        return True

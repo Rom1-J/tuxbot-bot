@@ -37,6 +37,9 @@ class AutoQuote:
             if not (ctx := await self.bot.get_context(message)):
                 return
 
+            if ctx.command is not None:
+                return
+
             quotes = [q[0] for q in re.findall(REGEX, message.content)]
             embeds = []
 
