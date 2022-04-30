@@ -5,7 +5,6 @@ tuxbot.cogs.Utils.commands.Info.command
 Shows information about tuxbot
 """
 
-import json
 import os
 import pathlib
 import platform
@@ -26,6 +25,13 @@ class InfoCommand(commands.Cog):
 
     def __init__(self, bot: Tuxbot):
         self.bot = bot
+
+        self.stats: Dict[str, Any] = {}
+
+    async def cog_load(self) -> None:
+        """Fetch bot stats"""
+        self.stats = await self.__fetch_info(self.bot.config["paths"])
+        self.bot.logger.info("[InfoCommand] __fetch_info done!")
 
     # =========================================================================
     # =========================================================================
@@ -87,20 +93,8 @@ class InfoCommand(commands.Cog):
     async def _info(self, ctx: commands.Context):
         proc = psutil.Process()
 
-        if result := (
-            await self.bot.redis.get(
-                self.bot.utils.gen_key(tuxbot.__version__)
-            )
-        ):
-            infos = json.loads(result)
-        else:
-            infos = await self.__fetch_info(self.bot.config["paths"])
-
-            await self.bot.redis.set(
-                self.bot.utils.gen_key(tuxbot.__version__),
-                json.dumps(infos),
-                ex=3600 * 12,
-            )
+        if not self.stats:
+            self.stats = await self.__fetch_info(self.bot.config["paths"])
 
         with proc.oneshot():
             mem = proc.memory_full_info()
@@ -155,19 +149,19 @@ class InfoCommand(commands.Cog):
 
             e.add_field(
                 name="__:file_folder: Files__",
-                value=f"{infos.get('file_amount')} "
-                f"*({infos.get('python_file_amount')}"
+                value=f"{self.stats.get('file_amount')} "
+                f"*({self.stats.get('python_file_amount')}"
                 f" <:python:596577462335307777>)*",
                 inline=True,
             )
             e.add_field(
                 name="__¶ Lines__",
                 value=(
-                    f"{infos.get('total_lines')} "
-                    f"*({infos.get('total_python_class')} classes, "
-                    f"{infos.get('total_python_functions')} functions, "
-                    f"{infos.get('total_python_coroutines')} coroutines, "
-                    f"{infos.get('total_python_comments')} comments)*"
+                    f"{self.stats.get('total_lines')} "
+                    f"*({self.stats.get('total_python_class')} classes, "
+                    f"{self.stats.get('total_python_functions')} functions, "
+                    f"{self.stats.get('total_python_coroutines')} coroutines, "
+                    f"{self.stats.get('total_python_comments')} comments)*"
                 ),
                 inline=True,
             )

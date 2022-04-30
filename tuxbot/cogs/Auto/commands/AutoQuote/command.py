@@ -53,6 +53,11 @@ class AutoQuoteCommand(commands.Cog):
         model.activated = not model.activated
         await model.save()
 
+        if not self.bot.cached_config.get(ctx.guild.id):
+            self.bot.cached_config[ctx.guild.id] = {}
+
+        self.bot.cached_config[ctx.guild.id]["AutoQuote"] = model.activated
+
         e = discord.Embed(
             description=f"Auto quote toggled to {model.activated}",
             colour=self.bot.utils.colors.ONLINE.value

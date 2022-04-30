@@ -31,9 +31,17 @@ class AutoQuote:
         if message.guild is None or message.author.bot:
             return
 
-        if await AutoQuoteModel.get_or_none(
-                guild_id=message.guild.id, activated=True
-        ):
+        if not self.bot.cached_config.get(message.guild.id):
+            self.bot.cached_config[message.guild.id] = {}
+
+            if model := await AutoQuoteModel.get_or_create(
+                    guild_id=message.guild.id
+            ):
+                self.bot.cached_config[message.guild.id]["AutoQuote"] = (
+                    model[0].activated
+                )
+
+        if self.bot.cached_config[message.guild.id]["AutoQuote"]:
             if not (ctx := await self.bot.get_context(message)):
                 return
 
@@ -43,7 +51,7 @@ class AutoQuote:
             quotes = [q[0] for q in re.findall(REGEX, message.content)]
             embeds = []
 
-            for message_link in quotes[:5]:
+            for message_link in quotes[:3]:
                 if not (
                         referred_message := await commands.MessageConverter()
                         .convert(ctx, message_link)

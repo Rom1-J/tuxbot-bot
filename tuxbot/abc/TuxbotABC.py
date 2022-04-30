@@ -20,7 +20,7 @@ class TuxbotABC(commands.AutoShardedBot):
     """Tuxbot Abstract Class"""
 
     _config: dict = {}
-    _global_config: dict = {}
+    _cached_config: dict = {}
 
     _cluster_options: dict = {}
     _client_options: dict = {}
@@ -52,18 +52,18 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def global_config(self) -> dict:
-        """Tuxbot global configuration
+    def cached_config(self) -> dict:
+        """Tuxbot cached configuration
 
         Returns
         -------
         dict
         """
-        return self._global_config
+        return self._cached_config
 
-    @global_config.setter
-    def global_config(self, value: dict):
-        self._global_config = value
+    @cached_config.setter
+    def cached_config(self, value: dict):
+        self._cached_config = value
 
     # =========================================================================
 
