@@ -6,7 +6,7 @@ import discord
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class GeoButton(discord.ui.Button):
@@ -26,4 +26,4 @@ class GeoButton(discord.ui.Button):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        await self.controller.change_to("geo", interaction)
+        await self.controller.change_page(1, interaction)

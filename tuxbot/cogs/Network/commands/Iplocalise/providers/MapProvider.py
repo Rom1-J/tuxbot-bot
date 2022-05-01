@@ -1,9 +1,11 @@
+from typing import Tuple
+
 from .abc import Provider
 
 
 class MapProvider(Provider):
     # pylint: disable=arguments-renamed
-    async def fetch(self, latlon: str) -> dict:
+    async def fetch(self, latlon: str) -> Tuple[str, dict]:
         url = (
             "https://maps.geoapify.com/v1/staticmap"
             "?style=osm-carto"
@@ -19,4 +21,4 @@ class MapProvider(Provider):
 
         output = url.format(lonlat=lonlat, apikey=self.apikey)
 
-        return {"bytes": None, "url": output}
+        return "map", {"bytes": None, "url": output}

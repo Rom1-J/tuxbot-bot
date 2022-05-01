@@ -92,5 +92,8 @@ class CommandError(commands.Cog):
         if os.getenv("PYTHON_ENV", "production") != "development":
             sentry_sdk.capture_exception(error)
             e.set_footer(text=sentry_sdk.last_event_id())
+        else:
+            from rich.console import Console
+            Console().print(error)
 
         await ctx.send(embed=e)

@@ -4,7 +4,7 @@ tuxbot.cogs.Network.functions.providers.base
 
 Global provider which uses all sub provider
 """
-
+import asyncio
 from typing import Dict
 
 from . import (
@@ -16,28 +16,33 @@ from . import (
 )
 
 
-async def get_all_providers(config: Dict[str, str], data: dict) -> dict:
-    """Get result from all providers"""
-
-    ip, domain = data["ip"], data["domain"]
+def get_base_providers(config: Dict[str, str], data: dict) -> dict:
+    """Get result from base providers"""
 
     ipgeo = IPGeolocationProvider(config["ipgeolocation_key"])
     ipinfo = IPInfoProvider(config["ipinfo_key"])
     ipwhois = IPWhoisProvider()
+
+    result = {
+        "ipgeo": asyncio.create_task(ipgeo.fetch(data["ip"])),
+        "ipinfo": asyncio.create_task(ipinfo.fetch(data["ip"])),
+        "ipwhois": asyncio.create_task(ipwhois.fetch(data["ip"])),
+    }
+
+    return result
+
+
+def get_auxiliary_providers(config: Dict[str, str], data: dict) -> dict:
+    """Get result from auxiliary providers"""
+
+    loc = data["ipinfo"].get("loc", "")
+
     map_location = MapProvider(config["geoapify_key"])
     opencage = OpenCageDataProvider(config["opencagedata_key"])
 
     result = {
-        "ip": ip,
-        "domain": domain,
-        "ipgeo": await ipgeo.fetch(ip),
-        "ipinfo": await ipinfo.fetch(ip),
-        "ipwhois": await ipwhois.fetch(ip),
+        "map": asyncio.create_task(map_location.fetch(loc)),
+        "opencage": asyncio.create_task(opencage.fetch(loc.replace(",", "+"))),
     }
-
-    result["map"] = await map_location.fetch(result["ipinfo"].get("loc", ""))
-    result["opencage"] = await opencage.fetch(
-        result["ipinfo"].get("loc", "").replace(",", "+")
-    )
 
     return result

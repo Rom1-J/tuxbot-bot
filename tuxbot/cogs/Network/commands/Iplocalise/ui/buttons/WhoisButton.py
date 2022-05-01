@@ -6,7 +6,7 @@ import discord
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class WhoisButton(discord.ui.Button):

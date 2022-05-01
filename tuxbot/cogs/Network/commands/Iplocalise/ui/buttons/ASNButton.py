@@ -7,7 +7,7 @@ from jishaku.models import copy_context_with
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class ASNButton(discord.ui.Button):
@@ -26,12 +26,11 @@ class ASNButton(discord.ui.Button):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        args = "peeringdb " + self.controller.data["ipwhois"].get("asn", "")
+        args = "peeringdb " + str(self.controller.get_data("ipwhois", "asn"))
 
         command_ctx = await copy_context_with(
             self.controller.ctx,
             content=self.controller.ctx.prefix + args,
             author=interaction.user,
         )
-
         await self.controller.ctx.bot.process_commands(command_ctx.message)

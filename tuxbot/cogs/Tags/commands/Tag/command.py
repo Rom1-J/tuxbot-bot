@@ -18,7 +18,7 @@ from .ui.modals.TagEditionModal import TagEditionModal
 from .ui.paginator import TagPages
 
 
-class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
+class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     """Manage tags"""
 
     def __init__(self, bot: Tuxbot):
@@ -53,9 +53,8 @@ class TagCommand(commands.Cog, app_commands.Group, name="tag"):  # type: ignore
     # =========================================================================
     # =========================================================================
 
-    async def interaction_check(
-            self, interaction: discord.Interaction
-    ) -> bool:
+    @staticmethod
+    async def interaction_check(interaction: discord.Interaction) -> bool:
         """Run checks before processing command"""
 
         if interaction.guild is None:

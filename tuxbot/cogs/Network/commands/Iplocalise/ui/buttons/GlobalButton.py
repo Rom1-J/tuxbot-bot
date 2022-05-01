@@ -6,7 +6,7 @@ import discord
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class GlobalButton(discord.ui.Button):
@@ -23,8 +23,7 @@ class GlobalButton(discord.ui.Button):
             emoji="\N{GLOBE WITH MERIDIANS}",
             row=row,
             label="global",
-            disabled=True,
         )
 
     async def callback(self, interaction: discord.Interaction):
-        await self.controller.change_to("global", interaction)
+        await self.controller.change_page(0, interaction)

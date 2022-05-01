@@ -6,7 +6,7 @@ import discord
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class DeleteButton(discord.ui.Button):
@@ -26,8 +26,4 @@ class DeleteButton(discord.ui.Button):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        if (
-            interaction.user == self.controller.ctx.author
-        ) and self.controller.sent_message:
-            self.controller.stop()
-            await self.controller.sent_message.delete()
+        await self.controller.delete()

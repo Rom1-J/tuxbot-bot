@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import io
+import json
 from typing import TYPE_CHECKING, Optional
 
 import discord
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class RawButton(discord.ui.Button):
@@ -26,4 +28,10 @@ class RawButton(discord.ui.Button):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        await self.controller.change_to("raw", interaction)
+        await interaction.response.send_message(
+            file=discord.File(
+                filename="output.json",
+                fp=io.BytesIO(json.dumps(self.controller.data).encode())
+            ),
+            ephemeral=True
+        )

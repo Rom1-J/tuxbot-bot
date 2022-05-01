@@ -6,7 +6,7 @@ import discord
 
 
 if TYPE_CHECKING:
-    from ..view import ViewController
+    from ..ViewController import ViewController
 
 
 class BGPButton(discord.ui.Button):
@@ -20,8 +20,8 @@ class BGPButton(discord.ui.Button):
 
         super().__init__(
             label="BGP toolkit",
+            disabled=True,
             style=discord.ButtonStyle.link,
             row=row,
             url="https://bgp.he.net/AS"
-            + self.controller.data["ipwhois"].get("asn", ""),
         )
