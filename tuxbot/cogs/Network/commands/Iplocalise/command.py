@@ -78,7 +78,7 @@ class IplocaliseCommand(commands.Cog):
             ip, hostname = await self.__get_ip(str(domain), inet)
 
             await self.bot.redis.set(
-                cache_key, json.dumps((ip, hostname)), ex=3600 * 24
+                cache_key, json.dumps((ip, hostname)), ex=3600
             )
         await ViewController(
             ctx=ctx,
