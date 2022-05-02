@@ -43,9 +43,8 @@ class IplocaliseCommand(commands.Cog):
         def _get_ip(_ip: str):
             try:
                 key = 1 if inet == 4 else -1
-                _inet = socket.AF_INET if inet == 4 else socket.AF_INET6
 
-                addr = socket.getaddrinfo(_ip, None, _inet)[key][4][0]
+                addr = socket.getaddrinfo(_ip, None)[key][4][0]
                 return addr, socket.gethostbyaddr(addr)[0]
             except (socket.gaierror, UnicodeError):
                 raise throwable
