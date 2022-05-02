@@ -6,7 +6,7 @@ Abstract Class for providers.
 """
 
 from abc import ABC
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 
 class Provider(ABC):
@@ -17,5 +17,5 @@ class Provider(ABC):
 
     # pylint: disable=unused-argument
     # noinspection PyMissingOrEmptyDocstring
-    async def fetch(self, ip: str) -> Tuple[str, dict]:
+    async def fetch(self, ip: str) -> Tuple[str, Union[dict, str]]:
         ...

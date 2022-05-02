@@ -8,6 +8,7 @@ import asyncio
 from typing import Dict
 
 from . import (
+    HostnameProvider,
     IPGeolocationProvider,
     IPInfoProvider,
     IPWhoisProvider,
@@ -19,11 +20,13 @@ from . import (
 def get_base_providers(config: Dict[str, str], data: dict) -> dict:
     """Get result from base providers"""
 
+    hostname = HostnameProvider()
     ipgeo = IPGeolocationProvider(config["ipgeolocation_key"])
     ipinfo = IPInfoProvider(config["ipinfo_key"])
     ipwhois = IPWhoisProvider()
 
     result = {
+        "hostname": asyncio.create_task(hostname.fetch(data["ip"])),
         "ipgeo": asyncio.create_task(ipgeo.fetch(data["ip"])),
         "ipinfo": asyncio.create_task(ipinfo.fetch(data["ip"])),
         "ipwhois": asyncio.create_task(ipwhois.fetch(data["ip"])),

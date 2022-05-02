@@ -32,7 +32,7 @@ class IplocaliseCommand(commands.Cog):
     @staticmethod
     async def __get_ip(
             ip: str, inet: Optional[int]
-    ) -> Tuple[str, str]:
+    ) -> str:
         """Get ip from domain"""
 
         throwable = VersionNotFound(
@@ -42,10 +42,16 @@ class IplocaliseCommand(commands.Cog):
 
         def _get_ip(_ip: str):
             try:
-                key = 1 if inet == 4 else -1
+                key = -1
+                kwargs = {}
 
-                addr = socket.getaddrinfo(_ip, None)[key][4][0]
-                return addr, socket.gethostbyaddr(addr)[0]
+                if inet == 4:
+                    key = 1
+                elif inet == 6:
+                    kwargs["family"] = socket.AF_INET6
+
+                addr = socket.getaddrinfo(_ip, None, **kwargs)[key][4][0]
+                return addr
             except (socket.gaierror, UnicodeError):
                 raise throwable
 
@@ -72,15 +78,15 @@ class IplocaliseCommand(commands.Cog):
         cache_key = self.bot.utils.gen_key(str(domain), str(inet))
 
         if data := await self.bot.redis.get(cache_key):
-            ip, hostname = json.loads(data)
+            ip = json.loads(data)
         else:
-            ip, hostname = await self.__get_ip(str(domain), inet)
+            ip = await self.__get_ip(str(domain), inet)
 
             await self.bot.redis.set(
-                cache_key, json.dumps((ip, hostname)), ex=3600
+                cache_key, json.dumps(ip), ex=3600
             )
         await ViewController(
             ctx=ctx,
             config=self.bot.config["Network"],
-            data={"ip": ip, "domain": domain, "hostname": hostname}
+            data={"ip": ip, "domain": domain}
         ).send()
