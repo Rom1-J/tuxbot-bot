@@ -24,7 +24,7 @@ class PingCommand(commands.Cog):
     @commands.command(name="ping")
     async def _ping(self, ctx: commands.Context):
         start = time.perf_counter()
-        await ctx.trigger_typing()
+        await ctx.typing()
         end = time.perf_counter()
         typing = round((end - start) * 1000, 2)
 

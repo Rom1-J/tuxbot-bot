@@ -8,7 +8,7 @@ Shows information about given ip/domain
 import asyncio
 import json
 import socket
-from typing import Optional, Tuple
+from typing import Optional
 
 from discord.ext import commands
 

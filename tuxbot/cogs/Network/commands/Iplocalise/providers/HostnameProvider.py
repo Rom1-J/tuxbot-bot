@@ -2,8 +2,6 @@ import asyncio
 import socket
 from typing import Tuple
 
-import aiohttp
-
 from .abc import Provider
 
 
