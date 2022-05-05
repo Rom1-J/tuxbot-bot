@@ -24,13 +24,15 @@ class HTTPServerService(commands.Cog):
 
     async def cog_unload(self):
         """Stop server task"""
-        self.bot.logger.info("[HTTPServerService] Canceling _http_monitoring")
+        self.bot.logger.info(
+            "[HTTPServerService] Canceling '_http_monitoring'"
+        )
         self._http_monitoring.cancel()  # pylint: disable=no-member
 
     # =========================================================================
     # =========================================================================
 
-    @tasks.loop()
+    @tasks.loop(count=1)
     async def _http_monitoring(self):
         async def _home(_):
             return web.Response(text="I'm alive bitches 😎")

@@ -60,6 +60,7 @@ class Tuxbot(TuxbotABC):
         self.http.request = self._request
 
         self.collection = ModuleCollection(self._config, self)
+        self.running_instance = False
 
     # =========================================================================
     # =========================================================================
@@ -142,10 +143,18 @@ class Tuxbot(TuxbotABC):
 
     async def invoke(self, ctx: ContextPlus) -> None:
         """Bind custom command invoker"""
-
         if ctx.command is not None:
             async with ctx.typing():
                 await super().invoke(ctx)
+
+    # =========================================================================
+
+    def dispatch(
+            self, event_name: str, /, *args: Any, **kwargs: Any
+    ) -> None:
+        """Bind custom command invoker"""
+        if self.running_instance:
+            super().dispatch(event_name, *args, **kwargs)
 
     # =========================================================================
     # =========================================================================
@@ -214,6 +223,14 @@ class Tuxbot(TuxbotABC):
         return await self._internal_request(
             route, files=files, form=form, **kwargs
         )
+
+    # =========================================================================
+
+    def change_running_state(self, new_state: bool) -> None:
+        """Change running_instance state"""
+
+        self.running_instance = new_state
+        self.logger.info("[Tuxbot] 'running_instance' set to %s", new_state)
 
     # =========================================================================
     # =========================================================================

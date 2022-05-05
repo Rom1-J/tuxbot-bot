@@ -41,14 +41,6 @@ update:
 update-all:
 	$(VIRTUAL_ENV)/bin/pip install --upgrade --force-reinstall .
 
-.PHONY: dev
-dev: style update
-	$(VIRTUAL_ENV)/bin/tuxbot
-
-.PHONY: speed_dev
-speed_dev: update
-	$(VIRTUAL_ENV)/bin/tuxbot
-
 
 ########################################################################################################################
 # Blackify code
@@ -78,25 +70,12 @@ style: isort lint type flake8
 ########################################################################################################################
 
 .PHONY: rewrite
-rewrite: update-all
+dev: update-all
 	cd tuxbot && \
 	PYTHON_ENV=development \
 	STATSD_HOST="192.168.1.177" \
 	DD_AGENT_HOST="192.168.1.177" \
 	DD_ENV="Tuxbot-dev" \
-	CLUSTER_ID=1 \
-	CLUSTER_COUNT=1 \
-	SHARD_ID=0 \
-	SHARD_COUNT=1 \
-	FIRST_SHARD_ID=0 \
-	LAST_SHARD_ID=0 \
-	python start.py
-
-.PHONY: soft-rewrite
-soft-rewrite: soft-update
-	cd tuxbot && \
-	PYTHON_ENV=development \
-	STATSD_HOST="192.168.1.195" \
 	CLUSTER_ID=1 \
 	CLUSTER_COUNT=1 \
 	SHARD_ID=0 \

@@ -51,6 +51,7 @@ setup(
         "sentry_sdk>=0.20.2",
         "sympy>=1.8",
         "tortoise-orm>=0.16.17",
+        "websockets>=10.3",
         "wolframalpha>=5.0.0",
     ],
     package_dir={"tuxbot": "tuxbot"},

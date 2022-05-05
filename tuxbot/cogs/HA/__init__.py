@@ -10,6 +10,7 @@ from collections import namedtuple
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
+from .services.Assigner.main import AssignerService
 from .services.HTTPServer.main import HTTPServerService
 
 
@@ -18,7 +19,7 @@ from .services.HTTPServer.main import HTTPServerService
 # pylint: disable=wrong-import-order
 from discord.ext import commands  # isort: skip
 
-STANDARD_SERVICES = (HTTPServerService,)
+STANDARD_SERVICES = (AssignerService, HTTPServerService)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=3, minor=0, micro=0, release_level="alpha")
