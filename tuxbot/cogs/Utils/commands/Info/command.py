@@ -31,7 +31,7 @@ class InfoCommand(commands.Cog):
     async def cog_load(self) -> None:
         """Fetch bot stats"""
         self.stats = await self.__fetch_info(self.bot.config["paths"])
-        self.bot.logger.info("[InfoCommand] __fetch_info done!")
+        self.bot.logger.info("[InfoCommand] '__fetch_info' done!")
 
     # =========================================================================
     # =========================================================================
