@@ -161,14 +161,14 @@ class ViewController(discord.ui.View):
 
         bgp_button = self.get_button("BGP toolkit")
         bgp_button.disabled = False
-        bgp_button.url = "https://ipinfo.io/" + self.get_data("ip")
-
-        ipinfo_button = self.get_button("ipinfo.io")
-        ipinfo_button.disabled = False
-        ipinfo_button.url = (
+        bgp_button.url = (
                 "https://bgp.he.net/AS"
                 + self.get_data("ipwhois", "asn")
         )
+
+        ipinfo_button = self.get_button("ipinfo.io")
+        ipinfo_button.disabled = False
+        ipinfo_button.url = "https://ipinfo.io/" + self.get_data("ip")
 
         await self.edit()
 

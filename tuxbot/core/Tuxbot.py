@@ -60,7 +60,7 @@ class Tuxbot(TuxbotABC):
         self.http.request = self._request
 
         self.collection = ModuleCollection(self._config, self)
-        self.running_instance = False
+        self.running_instance = True
 
     # =========================================================================
     # =========================================================================

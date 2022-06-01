@@ -73,8 +73,8 @@ style: isort lint type flake8
 dev: update-all
 	cd tuxbot && \
 	PYTHON_ENV=development \
-	STATSD_HOST="192.168.1.177" \
-	DD_AGENT_HOST="192.168.1.177" \
+	STATSD_HOST="192.168.1.175" \
+	DD_AGENT_HOST="192.168.1.175" \
 	DD_ENV="Tuxbot-dev" \
 	CLUSTER_ID=1 \
 	CLUSTER_COUNT=1 \
