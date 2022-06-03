@@ -43,6 +43,13 @@ class Commands:
 class Tags(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for tags."""
 
+    def __init__(self, bot: Tuxbot):
+        self.bot = bot
+
+        super().__init__(bot=self.bot)
+
+    # =========================================================================
+
     @commands.Cog.listener()
     async def on_command_error(
         self, ctx: commands.Context, error: Exception
@@ -51,6 +58,9 @@ class Tags(ModuleABC, Commands):  # type: ignore
 
         if isinstance(error, TagsException):
             await ctx.send(str(error))
+
+    # =========================================================================
+    # =========================================================================
 
     @commands.command(name="tag")
     async def _tag_deprecated(self, ctx: commands.Context):

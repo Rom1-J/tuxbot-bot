@@ -37,3 +37,10 @@ class Commands:
 
 class Math(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for maths."""
+
+    def __init__(self, bot: Tuxbot):
+        self.bot = bot
+
+        super().__init__(bot=self.bot)
+
+    # =========================================================================

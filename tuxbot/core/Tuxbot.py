@@ -130,7 +130,6 @@ class Tuxbot(TuxbotABC):
                 await guild_model.save()
 
     # =========================================================================
-
     # noinspection PyMethodOverriding  # pylint: disable=arguments-differ
     async def get_context(
         self, message: discord.Message, *, cls: Type[ContextPlus] = None
@@ -143,7 +142,7 @@ class Tuxbot(TuxbotABC):
 
     async def invoke(self, ctx: ContextPlus) -> None:
         """Bind custom command invoker"""
-        if ctx.command is not None:
+        if ctx.command is not None and await ctx.command.can_run(ctx):
             async with ctx.typing():
                 await super().invoke(ctx)
 

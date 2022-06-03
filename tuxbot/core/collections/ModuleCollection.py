@@ -11,8 +11,6 @@ from typing import TYPE_CHECKING, Dict, List, Type, Union
 
 from discord.ext import commands
 
-from tuxbot.core.logger import logger
-
 
 if TYPE_CHECKING:
     from tuxbot.abc.ModuleABC import ModuleABC
@@ -72,7 +70,7 @@ class ModuleCollection:
             Module class to register
         """
         if not isinstance(_module, commands.CogMeta):
-            logger.error("[ModuleCollection] Skipping unknown module")
+            self.bot.logger.error("[ModuleCollection] Skipping unknown module")
             return
 
         module = _module(bot=self.bot)
@@ -84,17 +82,20 @@ class ModuleCollection:
         active_module = self.bot.cogs.get(module.name)
 
         if active_module:
-            logger.info(
+            self.bot.logger.info(
                 "[ModuleCollection] Unloading module '%s'", module.name
             )
             await self.bot.remove_cog(module.name)
 
-        logger.info("[ModuleCollection] Registering module '%s'", module.name)
+        self.bot.logger.info(
+            "[ModuleCollection] Registering module '%s'", module.name
+        )
 
         await self.bot.add_cog(module)
 
         if sub_modules := self._modules.get(module.name):
             for sub_module in sub_modules:
+                sub_module.cog_check = module.cog_check
                 await self.bot.add_cog(sub_module)
 
         self.register_models(

@@ -42,11 +42,15 @@ class Services:
 class HA(ModuleABC, Services):  # type: ignore
     """Set of instructions for High Availability."""
 
+    def __init__(self, bot: Tuxbot):
+        self.bot = bot
+
+        super().__init__(bot=self.bot)
+
+    # =========================================================================
+
     # pylint: disable=invalid-overridden-method
     async def cog_check(self, ctx: commands.Context):
         """Ensure author is owner"""
 
-        if not await self.bot.is_owner(ctx.author):
-            raise commands.NotOwner()
-
-        return True
+        return await self.bot.is_owner(ctx.author)

@@ -57,6 +57,13 @@ class Commands:
 class Utils(ModuleABC, Commands):  # type: ignore
     """Set of useful commands for tuxbot."""
 
+    def __init__(self, bot: Tuxbot):
+        self.bot = bot
+
+        super().__init__(bot=self.bot)
+
+    # =========================================================================
+
     @commands.Cog.listener()
     async def on_command_error(
         self, ctx: commands.Context, error: Exception

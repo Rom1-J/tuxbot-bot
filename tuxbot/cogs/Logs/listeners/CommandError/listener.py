@@ -32,7 +32,11 @@ class CommandError(commands.Cog):
         self, ctx: commands.Context, error: commands.CommandError
     ):
         if not isinstance(
-            error, (commands.CommandInvokeError, commands.ConversionError)
+            error, (
+                        commands.CommandInvokeError,
+                        commands.ConversionError,
+                        commands.NotOwner
+                )
         ):
             return
 

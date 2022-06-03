@@ -6,8 +6,6 @@ Set of useful automatic workers.
 """
 from collections import namedtuple
 
-import discord
-
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
@@ -50,13 +48,15 @@ class Commands:
 class Auto(ModuleABC, Commands):  # type: ignore
     """Set of useful automatic workers."""
 
+    def __init__(self, bot: Tuxbot):
+        self.bot = bot
+
+        super().__init__(bot=self.bot)
+
+    # =========================================================================
+
     # pylint: disable=invalid-overridden-method
     async def cog_check(self, ctx: commands.Context):
         """Ensure author is owner"""
 
-        if not ctx.author.guild_permissions.administrator:
-            raise commands.MissingPermissions(
-                [discord.Permissions.administrator]
-            )
-
-        return True
+        return ctx.author.guild_permissions.administrator

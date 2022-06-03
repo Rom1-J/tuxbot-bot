@@ -68,3 +68,10 @@ class Commands:
 
 class Logs(ModuleABC, Commands):  # type: ignore
     """Set of useful statistics commands & workers."""
+
+    def __init__(self, bot: Tuxbot):
+        self.bot = bot
+
+        super().__init__(bot=self.bot)
+
+    # =========================================================================
