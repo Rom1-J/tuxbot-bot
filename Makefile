@@ -69,8 +69,11 @@ style: isort lint type flake8
 # Rewrite
 ########################################################################################################################
 
-.PHONY: rewrite
-dev: update-all
+.PHONY: dev
+dev: update-all run
+
+.PHONY: run
+run:
 	cd tuxbot && \
 	PYTHON_ENV=development \
 	STATSD_HOST="192.168.1.175" \

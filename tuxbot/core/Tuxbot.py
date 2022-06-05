@@ -23,7 +23,7 @@ from typing import (
 import aiohttp
 import discord
 from datadog import initialize
-from ddtrace import patch_all
+from ddtrace import patch
 from discord.ext import commands
 from discord.http import Route
 from jishaku import Jishaku
@@ -40,7 +40,13 @@ initialize(
     statsd_port=8125,
     statsd_namespace="tuxbot_metric",
 )
-patch_all(logging=True)
+patch(
+    aioredis=True,
+    asyncio=True,
+    requests=True,
+    asyncpg=True,
+    logging=True,
+)
 
 
 class Tuxbot(TuxbotABC):
