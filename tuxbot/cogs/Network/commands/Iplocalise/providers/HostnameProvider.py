@@ -10,7 +10,7 @@ class HostnameProvider(Provider):
         def _get_hostname(_ip: str):
             try:
                 return socket.gethostbyaddr(_ip)[0]
-            except (socket.gaierror, UnicodeError):
+            except (socket.gaierror, socket.herror, UnicodeError):
                 return "N/A"
 
         try:
