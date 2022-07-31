@@ -71,7 +71,7 @@ pre_commit:
 ########################################################################################################################
 
 .PHONY: dev
-dev: style update-all run
+dev: pre_commit update-all run
 
 .PHONY: run
 run:

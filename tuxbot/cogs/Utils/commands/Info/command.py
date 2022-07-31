@@ -117,7 +117,7 @@ class InfoCommand(commands.Cog):
                 name="__<:python:596577462335307777> Python__",
                 value=(
                     f"**python** `{platform.python_version()}`\n"
-                    f"**discord.py** `{discord.__version__}`"
+                    f"**{self.bot.config['lib']}** `{discord.__version__}`"
                 ),
                 inline=True,
             )
