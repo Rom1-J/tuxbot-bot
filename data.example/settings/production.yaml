@@ -1,0 +1,131 @@
+---
+name: Tuxbot
+author: Romain#5117
+version: 4.0.0
+lib: dpy
+
+# prefixes
+prefix:
+  - '.'
+sudo_pref: '$'
+local_prefix:
+admin_refix: d.
+
+test: false
+log_level: info
+
+# cluster/sharding
+cluster_count: 1
+sharding_strategy: shared
+first_shard_override: 0
+last_shard_override: 0
+shard_count_override: 1
+cluster_ids: 0
+shard_ids: 1
+
+# client_config
+client:
+  id: ''
+  secret: ''
+  token: ''
+  userid: ''
+  game: ''
+  admin: ''
+  fetch_all_users: true
+  disable_everyone: true
+  max_cached_messages: 10
+  owners_id: []
+
+postgres:
+  dsn: ''
+
+sentry:
+  dsn: ''
+
+redis:
+  host: localhost
+  port: 6379
+  auth: ''
+
+statsd:
+  host: ''
+  port: 4280
+  prefix: tuxbot.prod.
+
+tuxbot_guild: ''
+guild_log: ''
+large_guild_log: ''
+test_guilds: []
+
+shard_webhook: ''
+cluster:
+  webhook_url: ''
+
+disable_heartbeat: true
+log_commands: false
+handle_region: false
+regions: []
+disable_events:
+- TYPING_START
+
+enabled_command_groups:
+disabled_command_groups:
+
+disable_help: false
+
+modules:
+  - Admin
+  - Auto
+  - Dev
+#  - HA
+  - Help
+  - Linux
+  - Logs
+  - Math
+  - Network
+  - Random
+  - Tags
+  - Utils
+
+# Cogs config
+Math:
+  wolframalpha_key: ''
+
+Network:
+  ipinfo_key: ''
+  geoapify_key: ''
+  ipgeolocation_key: ''
+  opencagedata_key: ''
+
+HA:
+  http_server:
+    port: 8080
+  instances:
+    dev1:
+      hostname: localhost
+      port: 10101
+#    dev2:
+#      hostname: localhost
+#      port: 10102
+    dev3:
+      hostname: localhost
+      port: 10103
+    dev4:
+      hostname: localhost
+      port: 10104
+  instance:
+#    name: dev1
+#    hostname: localhost
+#    port: 10101
+
+    name: dev2
+    hostname: localhost
+    port: 10102
+#
+#    name: dev3
+#    hostname: localhost
+#    port: 10103
+#
+#    name: dev4
+#    hostname: localhost
+#    port: 10104
