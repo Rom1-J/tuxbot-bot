@@ -36,7 +36,7 @@ async def run_bot(tuxbot: Tuxbot) -> None:
 
 def start():
     """Start function"""
-    with open("misc/logo.txt", "r", encoding="UTF-8") as f:
+    with open("misc/logo.txt", encoding="UTF-8") as f:
         logo = f.read()
 
     print(logo)

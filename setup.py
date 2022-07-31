@@ -6,7 +6,7 @@ bot made initially for https://gnous.eu, then proposed to the entire
 free software community
 """
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 from tuxbot import __version__
 

@@ -4,9 +4,6 @@ tuxbot.cogs.Help.commands.Help.command
 
 Command to restart Tuxbot
 """
-
-from typing import Dict
-
 import discord
 from discord.ext import commands
 
@@ -14,7 +11,7 @@ from discord.ext import commands
 class HelpCommand(commands.HelpCommand):
     """Tuxbot help command"""
 
-    def __init__(self, urls: Dict[str, str]):
+    def __init__(self, urls: dict[str, str]):
         super().__init__()
 
         self.wiki_url = urls.get("wiki", "")

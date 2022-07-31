@@ -14,9 +14,7 @@ class TagCreationModal(discord.ui.Modal):
     title = "Create a tag"
 
     name = discord.ui.TextInput(
-        label="Name",
-        placeholder="Tag name here...",
-        max_length=20
+        label="Name", placeholder="Tag name here...", max_length=20
     )
 
     content = discord.ui.TextInput(
@@ -40,7 +38,7 @@ class TagCreationModal(discord.ui.Modal):
                 f"Tag '{name}' already exists.\n\n"
                 "Your content: (in case you did not copy it)\n"
                 f">>> {discord.utils.escape_markdown(content)}",
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
@@ -48,10 +46,9 @@ class TagCreationModal(discord.ui.Modal):
             guild_id=interaction.guild_id,
             author_id=interaction.user.id,
             name=name,
-            content=discord.utils.escape_mentions(content)
+            content=discord.utils.escape_mentions(content),
         )
 
         await interaction.response.send_message(
-            f"Tag '{tag.name}' successfully created!",
-            ephemeral=True
+            f"Tag '{tag.name}' successfully created!", ephemeral=True
         )

@@ -2,7 +2,7 @@
 Geo embed page
 """
 
-from typing import Any, Dict
+from typing import Any
 
 import discord
 
@@ -19,13 +19,13 @@ class GeoEmbed(Embed):
             title=(
                 f"Information for ``{self.controller.get_data('domain')} "
                 f"({self.controller.get_data('ip')})``"
-            )
+            ),
         )
 
         if self.controller.get_data("opencage") != "Pending..." and (
-                results := self.controller.get_data("opencage", "results")
+            results := self.controller.get_data("opencage", "results")
         ):
-            result: Dict[str, Any] = results[0]  # type: ignore
+            result: dict[str, Any] = results[0]  # type: ignore
             annotations = result["annotations"]
             timezone = annotations["timezone"]
 
@@ -63,7 +63,7 @@ class GeoEmbed(Embed):
             )
 
         if self.controller.get_data("map") != "Pending..." and (
-                map_url := self.controller.get_data("map", "url")
+            map_url := self.controller.get_data("map", "url")
         ):
             e.set_image(url=map_url)
 

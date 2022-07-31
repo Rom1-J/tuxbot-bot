@@ -4,9 +4,8 @@ tuxbot.cogs.Linux.commands.CNF
 
 Command-not-found scrapper and parser
 """
-
 import asyncio
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -23,8 +22,8 @@ class CNF:
     command: str
 
     description: str = ""
-    meta: Optional[Dict[str, Any]] = None
-    distro: Optional[Dict[str, Any]] = None
+    meta: dict[str, Any] | None = None
+    distro: dict[str, Any] | None = None
 
     def __init__(self, command: str):
         self.command = command
@@ -88,12 +87,12 @@ class CNF:
 
     # =========================================================================
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Return result as dict
 
         Returns
         -------
-        Dict[str, Any]
+        dict[str, Any]
         """
 
         return {
@@ -104,7 +103,7 @@ class CNF:
         }
 
 
-async def get_from_cnf(command: str) -> Dict[str, Union[str, dict]]:
+async def get_from_cnf(command: str) -> dict[str, str | dict]:
     """Simple function to use CNF class
 
     Parameters
@@ -114,7 +113,7 @@ async def get_from_cnf(command: str) -> Dict[str, Union[str, dict]]:
 
     Returns
     -------
-    Dict[str, Union[str, dict]]
+    dict[str, str | dict]
     """
     cnf = CNF(command)
     await cnf.fetch()

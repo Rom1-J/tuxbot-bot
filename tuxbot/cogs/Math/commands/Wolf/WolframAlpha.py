@@ -4,10 +4,8 @@ tuxbot.cogs.Math.commands.Wolf.WolframAlpha
 
 WolframAlpha api client
 """
-
 import asyncio
 import io
-from typing import Dict, List, Optional, Tuple
 
 import aiohttp
 import wolframalpha
@@ -40,7 +38,7 @@ class WolframAlpha:
 
     async def query(
         self, query: str
-    ) -> Tuple[str, Optional[wolframalpha.Result]]:
+    ) -> tuple[str, wolframalpha.Result | None]:
         """Get query result from WolframAlpha"""
 
         def _query():
@@ -64,7 +62,7 @@ class WolframAlpha:
         return await self.query(query)
 
     @staticmethod
-    async def get_image(link) -> Optional[io.BytesIO]:
+    async def get_image(link) -> io.BytesIO | None:
         """Get image result from query link"""
 
         try:
@@ -83,10 +81,10 @@ class WolframAlpha:
     @staticmethod
     async def get_images(
         result: wolframalpha.Result,
-    ) -> Dict[str, List[Optional[io.BytesIO]]]:
+    ) -> dict[str, list[io.BytesIO | None]]:
         """Get image result from query result"""
 
-        output: Dict[str, List[Optional[io.BytesIO]]] = {}
+        output: dict[str, list[io.BytesIO | None]] = {}
 
         for pod in result.pods:
             output[pod["@title"]] = []
@@ -99,7 +97,7 @@ class WolframAlpha:
         return output
 
     async def merge_images(
-        self, images: Dict[str, List[Optional[io.BytesIO]]], width: int
+        self, images: dict[str, list[io.BytesIO | None]], width: int
     ) -> io.BytesIO:
         """Merge all images as single one"""
 
@@ -153,7 +151,7 @@ class WolframAlpha:
         return width if width >= 350 else 350
 
     @staticmethod
-    def height(images: Dict[str, List[Optional[io.BytesIO]]]) -> int:
+    def height(images: dict[str, list[io.BytesIO | None]]) -> int:
         """get height of all images"""
 
         height = 0

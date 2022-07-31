@@ -3,7 +3,7 @@ Page view controller
 """
 import asyncio
 import json
-from typing import Optional, Tuple, Union
+from typing import Union
 
 import discord
 from discord.ext import commands
@@ -58,17 +58,19 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def interaction_check(
-            self, interaction: discord.Interaction
+        self, interaction: discord.Interaction
     ) -> bool:
         """Ensure interaction is piloted by author"""
 
-        if interaction.user and self.ctx.author \
-                and interaction.user.id == self.ctx.author.id:
+        if (
+            interaction.user
+            and self.ctx.author
+            and interaction.user.id == self.ctx.author.id
+        ):
             return True
 
         await interaction.response.send_message(
-            "You aren't the author of this interaction.",
-            ephemeral=True
+            "You aren't the author of this interaction.", ephemeral=True
         )
         return False
 
@@ -108,12 +110,12 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    def get_button(self, name: str) -> Optional[discord.ui.Button]:
+    def get_button(self, name: str) -> discord.ui.Item | None:
         """Get view button"""
 
         for button in self.children:  # type: ignore
             if (button.label == name) or (  # type: ignore
-                    button.emoji and button.emoji.name == name  # type: ignore
+                button.emoji and button.emoji.name == name  # type: ignore
             ):  # type: ignore
                 return button
 
@@ -122,7 +124,7 @@ class ViewController(discord.ui.View):
     # =========================================================================
 
     async def change_page(
-            self, new_page: int, interaction: discord.Interaction
+        self, new_page: int, interaction: discord.Interaction
     ):
         """Change current page"""
         self.__page = new_page
@@ -133,7 +135,7 @@ class ViewController(discord.ui.View):
     # =========================================================================
     # =========================================================================
 
-    async def update(self, result: Tuple[str, dict]):
+    async def update(self, result: tuple[str, dict]):
         """Update embed"""
 
         name, data = result
@@ -153,7 +155,8 @@ class ViewController(discord.ui.View):
             self.data = json.loads(data)
         else:
             await self.__run_batch(
-                get_base_providers(self.__config, self.data))
+                get_base_providers(self.__config, self.data)
+            )
             await self.__run_batch(
                 get_auxiliary_providers(self.__config, self.data)
             )
@@ -161,9 +164,8 @@ class ViewController(discord.ui.View):
 
         bgp_button = self.get_button("BGP toolkit")
         bgp_button.disabled = False
-        bgp_button.url = (
-                "https://bgp.he.net/AS"
-                + self.get_data("ipwhois", "asn")
+        bgp_button.url = "https://bgp.he.net/AS" + self.get_data(
+            "ipwhois", "asn"
         )
 
         ipinfo_button = self.get_button("ipinfo.io")
@@ -180,10 +182,7 @@ class ViewController(discord.ui.View):
         embed = embeds[self.__page]
 
         if self.__message:
-            await self.__message.edit(
-                embed=embed,
-                view=self
-            )
+            await self.__message.edit(embed=embed, view=self)
             return
 
         self.__message = await self.ctx.send(embed=embed, view=self)
@@ -193,9 +192,7 @@ class ViewController(discord.ui.View):
     async def cache(self):
         """Cache result"""
         await self.ctx.bot.redis.set(
-            self.__cache_key,
-            json.dumps(self.data),
-            ex=3600 * 24
+            self.__cache_key, json.dumps(self.data), ex=3600 * 24
         )
 
     # =========================================================================

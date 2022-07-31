@@ -20,5 +20,5 @@ class TagPages(SimplePages):
         super().__init__(
             [TagPage(i, entry) for i, entry in enumerate(entries)],
             ctx=ctx,
-            per_page=per_page
+            per_page=per_page,
         )

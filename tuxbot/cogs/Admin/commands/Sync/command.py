@@ -4,7 +4,7 @@ tuxbot.cogs.Admin.commands.Sync.command
 
 Command to sync Tuxbot
 """
-from typing import Literal, Optional
+from typing import Literal
 
 import discord
 from discord.ext import commands
@@ -23,10 +23,10 @@ class SyncCommand(commands.Cog):
 
     @commands.command("sync")
     async def _sync(
-            self,
-            ctx: commands.Context,
-            guilds: commands.Greedy[discord.Object],
-            spec: Optional[Literal["~"]] = None
+        self,
+        ctx: commands.Context,
+        guilds: commands.Greedy[discord.Object],
+        spec: Literal["~"] | None = None,
     ) -> None:
         if not guilds:
             if spec == "~":
@@ -36,7 +36,7 @@ class SyncCommand(commands.Cog):
 
             await ctx.send(
                 f"Synced {len(fmt)} commands "
-                + ('globally' if spec is not None else 'to the current guild.')
+                + ("globally" if spec is not None else "to the current guild.")
             )
             return
 

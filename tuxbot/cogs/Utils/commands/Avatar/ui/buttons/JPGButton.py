@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import discord
 
@@ -12,10 +12,10 @@ if TYPE_CHECKING:
 class JPGButton(discord.ui.Button):
     disabled: bool
     label: str
-    emoji: Optional[discord.PartialEmoji]
+    emoji: discord.PartialEmoji | None
     row: int
 
-    def __init__(self, row: int, controller: "ViewController"):
+    def __init__(self, row: int, controller: ViewController):
         self.controller = controller
 
         super().__init__(

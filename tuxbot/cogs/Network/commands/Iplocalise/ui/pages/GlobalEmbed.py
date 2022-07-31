@@ -20,7 +20,7 @@ class GlobalEmbed(Embed):
             title=(
                 f"Information for ``{self.controller.get_data('domain')} "
                 f"({self.controller.get_data('ip')})``"
-            )
+            ),
         )
 
         e.description = (
@@ -37,8 +37,9 @@ class GlobalEmbed(Embed):
             inline=True,
         )
 
-        if isinstance(nets := self.controller.get_data("ipwhois", "nets"),
-                      list):
+        if isinstance(
+            nets := self.controller.get_data("ipwhois", "nets"), list
+        ):
             if created := nets[0].get("created", None):
                 created = created.replace("T", " ").split("Z")[0]
 
@@ -47,19 +48,13 @@ class GlobalEmbed(Embed):
 
             e.add_field(
                 name="Description",
-                value="```{}```".format(
-                    nets[0].get("description", "N/A")
-                ),
+                value="```{}```".format(nets[0].get("description", "N/A")),
                 inline=False,
             )
 
             e.add_field(
                 name="Name",
-                value=(
-                    "```"
-                    f"{nets[0].get('name', 'N/A')}"
-                    "```"
-                ),
+                value=("```" f"{nets[0].get('name', 'N/A')}" "```"),
                 inline=True,
             )
             e.add_field(

@@ -22,9 +22,7 @@ class CatCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-        self.cataas_url = (
-            "https://cataas.com"
-        )
+        self.cataas_url = "https://cataas.com"
 
     # =========================================================================
     # =========================================================================
@@ -32,9 +30,7 @@ class CatCommand(commands.Cog):
     async def __get_cat(self) -> dict:
         try:
             endpoint = random.choices(
-                ['cat', 'cat/gif'],
-                weights=[0.8, 0.2],
-                k=1
+                ["cat", "cat/gif"], weights=[0.8, 0.2], k=1
             )[0]
 
             async with aiohttp.ClientSession() as cs, cs.get(

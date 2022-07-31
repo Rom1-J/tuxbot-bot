@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 import discord
 from discord.ext import commands
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class ViewController(discord.ui.View):
-    children: List[ButtonType]  # type: ignore
+    children: list[ButtonType]  # type: ignore
 
     sent_message = None
 

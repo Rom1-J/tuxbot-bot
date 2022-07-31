@@ -53,8 +53,7 @@ class AssignerService(commands.Cog):
         end = time.perf_counter()
         redis = (end - start) * 1000
 
-        # todo: remove -50
-        self.manager.me.ping = self.bot.latency * 1000 + redis - 50
+        self.manager.me.ping = self.bot.latency * 1000 + redis
 
     @_ping_updater.before_loop
     async def _ping_updater_before(self):
@@ -67,9 +66,9 @@ class AssignerService(commands.Cog):
         self.bot.logger.info("[AssignerService] '_ws_server' started!")
 
         async with ws_server.serve(
-                self.manager.handler,
-                self.manager.me.hostname,
-                self.manager.me.port
+            self.manager.handler,
+            self.manager.me.hostname,
+            self.manager.me.port,
         ):
             await asyncio.Future()
 

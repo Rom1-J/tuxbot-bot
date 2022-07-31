@@ -4,9 +4,8 @@ tuxbot.cogs.Math.commands.Graph.converters.ExprConverter
 
 Converter to parse user expr as sympy expr.
 """
-
 import asyncio
-from typing import Any, Dict
+from typing import Any
 
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -17,9 +16,9 @@ from sympy.parsing.sympy_parser import (
 )
 
 
-abc_dict: Dict[str, Any] = {}
-functions_dict: Dict[str, Any] = {}
-core_dict: Dict[str, Any] = {}
+abc_dict: dict[str, Any] = {}
+functions_dict: dict[str, Any] = {}
+core_dict: dict[str, Any] = {}
 
 # pylint: disable=exec-used
 exec("from sympy.abc import *", abc_dict)

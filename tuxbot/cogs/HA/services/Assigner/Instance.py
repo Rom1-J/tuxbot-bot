@@ -14,7 +14,7 @@ class Instance:
 
     _client: ws_server.WebSocketServerProtocol = None
     _alive: bool = False
-    _ping: float = float('inf')
+    _ping: float = float("inf")
 
     def __init__(self, name: str, hostname: str, port: int):
         self.name = name
@@ -24,7 +24,7 @@ class Instance:
     # =========================================================================
 
     def __repr__(self):
-        return "<Instance name='%s' uri='%s' alive=%s ping=%s>" % (
+        return "<Instance name='{}' uri='{}' alive={} ping={}>".format(
             self.name, self.uri, self.alive, str(self.ping)
         )
 

@@ -2,7 +2,7 @@
 Main paginator constructor
 """
 import asyncio
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 import discord
 from discord.ext import commands, menus  # type: ignore
@@ -15,14 +15,14 @@ class Pages(discord.ui.View):
         self,
         source: menus.PageSource,
         *,
-        ctx: Union[commands.Context, discord.Interaction],
+        ctx: commands.Context | discord.Interaction,
     ):
         super().__init__()
         self.source: menus.PageSource = source
-        self.ctx: Union[commands.Context, discord.Interaction] = ctx
+        self.ctx: commands.Context | discord.Interaction = ctx
 
-        self.message: Optional[discord.Message] = None
-        self.author: Optional[Union[discord.Member, discord.User]] = None
+        self.message: discord.Message | None = None
+        self.author: discord.Member | discord.User | None = None
 
         self.current_page: int = 0
         self.input_lock = asyncio.Lock()
@@ -55,7 +55,7 @@ class Pages(discord.ui.View):
             if isinstance(self.ctx, commands.Context):
                 self.add_item(self.stop_pages)
 
-    async def _get_kwargs_from_page(self, page: int) -> Dict[str, Any]:
+    async def _get_kwargs_from_page(self, page: int) -> dict[str, Any]:
         value = await discord.utils.maybe_coroutine(
             self.source.format_page, self, page
         )
@@ -72,7 +72,7 @@ class Pages(discord.ui.View):
         return {}
 
     async def show_page(
-            self, interaction: discord.Interaction, page_number: int
+        self, interaction: discord.Interaction, page_number: int
     ) -> None:
         """Send page"""
 
@@ -107,14 +107,14 @@ class Pages(discord.ui.View):
 
             if (page_number + 1) >= max_pages:
                 self.go_to_next_page.disabled = True
-                self.go_to_next_page.label = '…'
+                self.go_to_next_page.label = "…"
 
             if page_number == 0:
                 self.go_to_previous_page.disabled = True
-                self.go_to_previous_page.label = '…'
+                self.go_to_previous_page.label = "…"
 
     async def show_checked_page(
-            self, interaction: discord.Interaction, page_number: int
+        self, interaction: discord.Interaction, page_number: int
     ) -> None:
         """Check before show page"""
 
@@ -132,16 +132,18 @@ class Pages(discord.ui.View):
             pass
 
     async def interaction_check(
-            self, interaction: discord.Interaction
+        self, interaction: discord.Interaction
     ) -> bool:
         """Ensure interaction is piloted by author"""
-        if interaction.user and self.author \
-                and interaction.user.id == self.author.id:
+        if (
+            interaction.user
+            and self.author
+            and interaction.user.id == self.author.id
+        ):
             return True
 
         await interaction.response.send_message(
-            "You aren't the author of this interaction.",
-            ephemeral=True
+            "You aren't the author of this interaction.", ephemeral=True
         )
         return False
 
@@ -151,17 +153,16 @@ class Pages(discord.ui.View):
             await self.message.edit(view=None)
 
     async def on_error(
-            self,
-            interaction: discord.Interaction,
-            error: Exception,
-            item: discord.ui.Item
+        self,
+        interaction: discord.Interaction,
+        error: Exception,
+        item: discord.ui.Item,
     ) -> None:
         """Unknown error occurred"""
 
         if interaction.response.is_done():
             await interaction.followup.send(
-                "Oops! Something went wrong.",
-                ephemeral=True
+                "Oops! Something went wrong.", ephemeral=True
             )
         else:
             await interaction.response.send_message(
@@ -171,7 +172,7 @@ class Pages(discord.ui.View):
         if isinstance(self.ctx, commands.Context):
             self.ctx.bot.logger.error(error)
 
-    async def start(self, *, content: Optional[str] = None) -> None:
+    async def start(self, *, content: str | None = None) -> None:
         """Start paginator"""
 
         # noinspection PyProtectedMember
@@ -199,7 +200,7 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="≪", style=discord.ButtonStyle.grey)
     async def go_to_first_page(
-            self, interaction: discord.Interaction, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """Go to the first page"""
         await self.show_page(interaction, 0)
@@ -210,7 +211,7 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="Back", style=discord.ButtonStyle.blurple)
     async def go_to_previous_page(
-            self, interaction: discord.Interaction, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """Go to the previous page"""
         await self.show_checked_page(interaction, self.current_page - 1)
@@ -223,7 +224,7 @@ class Pages(discord.ui.View):
         label="Current", style=discord.ButtonStyle.grey, disabled=True
     )
     async def go_to_current_page(
-            self, interaction: discord.Interaction, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """Go to the current page"""
 
@@ -233,7 +234,7 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="Next", style=discord.ButtonStyle.blurple)
     async def go_to_next_page(
-            self, interaction: discord.Interaction, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """Go to the next page"""
         await self.show_checked_page(interaction, self.current_page + 1)
@@ -244,7 +245,7 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="≫", style=discord.ButtonStyle.grey)
     async def go_to_last_page(
-            self, interaction: discord.Interaction, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """Go to the last page"""
         await self.show_page(interaction, self.source.get_max_pages() - 1)
@@ -255,7 +256,7 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="Quit", style=discord.ButtonStyle.red, row=1)
     async def stop_pages(
-            self, interaction: discord.Interaction, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """Stop the paginator"""
         await interaction.response.defer()

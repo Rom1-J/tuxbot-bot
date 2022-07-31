@@ -43,7 +43,7 @@ class Logger(logging.Logger):
     def __init__(self):
         super().__init__("tuxbot")
 
-        custom_format = " ".join(["%({0:s})s".format(i) for i in self.keys])
+        custom_format = " ".join([f"%({i:s})s" for i in self.keys])
         formatter = jsonlogger.JsonFormatter(custom_format)
 
         json_handler = logging.FileHandler(

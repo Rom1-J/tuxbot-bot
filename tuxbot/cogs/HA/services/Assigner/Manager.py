@@ -2,7 +2,6 @@
 Instances manager
 """
 import json
-from typing import Set
 
 from websockets import client as ws_client
 from websockets import server as ws_server
@@ -16,8 +15,8 @@ from .Instance import Instance
 class Manager:
     """Instances manager"""
 
-    __instances: Set[Instance] = set()
-    __connected_instances: Set[Instance] = set()
+    __instances: set[Instance] = set()
+    __connected_instances: set[Instance] = set()
     __me: Instance = None  # type: ignore
 
     def __init__(self, bot: Tuxbot):
@@ -26,18 +25,16 @@ class Manager:
         for instance_name in self.bot.config["HA"].get("instances", []):
             instance = Instance(
                 instance_name,
-                self.bot.config["HA"]["instances"].get(
-                    instance_name
-                )["hostname"],
-                self.bot.config["HA"]["instances"].get(
-                    instance_name
-                )["port"]
+                self.bot.config["HA"]["instances"].get(instance_name)[
+                    "hostname"
+                ],
+                self.bot.config["HA"]["instances"].get(instance_name)["port"],
             )
             self.instances.add(instance)
             self.bot.logger.info(
                 "[Manager] Adding instance '%s' (%s)",
                 instance.name,
-                instance.uri
+                instance.uri,
             )
 
         self.me = Instance(
@@ -50,23 +47,23 @@ class Manager:
     # =========================================================================
 
     @property
-    def instances(self) -> Set[Instance]:
+    def instances(self) -> set[Instance]:
         """Set of all bot instances"""
         return self.__instances
 
     @instances.setter
-    def instances(self, value: Set[Instance]):
+    def instances(self, value: set[Instance]):
         self.__instances = value
 
     # =========================================================================
 
     @property
-    def connected_instances(self) -> Set[Instance]:
+    def connected_instances(self) -> set[Instance]:
         """Set of all connected instances"""
         return self.__connected_instances
 
     @connected_instances.setter
-    def connected_instances(self, value: Set[Instance]):
+    def connected_instances(self, value: set[Instance]):
         self.__connected_instances = value
 
     # =========================================================================
@@ -91,15 +88,15 @@ class Manager:
             match request:
                 case "connect":
                     instance.client = ws
-                    self.connected_instances = set(
+                    self.connected_instances = {
                         i for i in self.instances if i.client and i.client.open
-                    )
+                    }
                     await self.check_transfer_of_power(instance)
 
                 case "disconnect":
-                    self.connected_instances = set(
+                    self.connected_instances = {
                         i for i in self.instances if i.client and i.client.open
-                    )
+                    }
 
     # =========================================================================
 
@@ -112,26 +109,26 @@ class Manager:
                     continue
 
                 async with ws_client.connect(instance.uri) as websocket:
-                    payload = json.dumps(self.forge_payload(
-                        "connect",
-                        data={
-                            "name": self.me.name,
-                            "alive": True,
-                            "ping": self.me.ping,
-                            "hostname": self.me.hostname,
-                            "port": self.me.port,
-                        }
-                    ))
+                    payload = json.dumps(
+                        self.forge_payload(
+                            "connect",
+                            data={
+                                "name": self.me.name,
+                                "alive": True,
+                                "ping": self.me.ping,
+                                "hostname": self.me.hostname,
+                                "port": self.me.port,
+                            },
+                        )
+                    )
                     await websocket.send(payload)
                     self.bot.logger.info(
-                        "[Manager] '%s' is up!",
-                        instance.name
+                        "[Manager] '%s' is up!", instance.name
                     )
 
             except (ConnectionRefusedError, ConnectionClosed):
                 self.bot.logger.warning(
-                    "[Manager] '%s' seems to be down...",
-                    instance.name
+                    "[Manager] '%s' seems to be down...", instance.name
                 )
 
     # =========================================================================
@@ -144,13 +141,10 @@ class Manager:
                 "[Manager] Passing power to '%s'!", instance.name
             )
             self.bot.change_running_state(False)
-            await instance.client.send(json.dumps(
-                self.forge_payload(
-                    "change_power",
-                    data={
-                        "state": True
-                    }
-                ))
+            await instance.client.send(
+                json.dumps(
+                    self.forge_payload("change_power", data={"state": True})
+                )
             )
 
     # =========================================================================
@@ -161,8 +155,8 @@ class Manager:
         payload = json.loads(message)
 
         if (
-                not (token := payload.get("__token"))
-                or token != self.bot.http.token
+            not (token := payload.get("__token"))
+            or token != self.bot.http.token
         ):
             raise ValueError("Improper token given")
 
@@ -190,13 +184,10 @@ class Manager:
     # =========================================================================
 
     def forge_payload(
-            self, request: str, data: dict, auth: bool = True
+        self, request: str, data: dict, auth: bool = True
     ) -> dict:
         """Forge json payload"""
-        payload = {
-            "request": request,
-            "data": data
-        }
+        payload = {"request": request, "data": data}
 
         if auth:
             payload["__token"] = self.bot.http.token

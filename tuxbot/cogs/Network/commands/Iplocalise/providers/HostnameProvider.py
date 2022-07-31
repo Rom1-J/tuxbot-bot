@@ -1,12 +1,11 @@
 import asyncio
 import socket
-from typing import Tuple
 
 from .abc import Provider
 
 
 class HostnameProvider(Provider):
-    async def fetch(self, ip: str) -> Tuple[str, str]:
+    async def fetch(self, ip: str) -> tuple[str, str]:
         def _get_hostname(_ip: str):
             try:
                 return socket.gethostbyaddr(_ip)[0]

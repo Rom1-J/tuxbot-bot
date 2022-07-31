@@ -8,7 +8,7 @@ Shows information about tuxbot
 import os
 import pathlib
 import platform
-from typing import Any, Dict
+from typing import Any
 
 import aiofiles
 import discord
@@ -26,7 +26,7 @@ class InfoCommand(commands.Cog):
     def __init__(self, bot: Tuxbot):
         self.bot = bot
 
-        self.stats: Dict[str, Any] = {}
+        self.stats: dict[str, Any] = {}
 
     async def cog_load(self) -> None:
         """Fetch bot stats"""
@@ -37,7 +37,7 @@ class InfoCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    async def __fetch_info(paths: dict) -> Dict[str, Any]:
+    async def __fetch_info(paths: dict) -> dict[str, Any]:
         """Fetch set of information about tuxbot"""
 
         total_lines = 0

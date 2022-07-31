@@ -7,7 +7,7 @@ Shows information from peeringdb about an ASN
 
 import asyncio
 from datetime import datetime
-from typing import Any, Dict, NoReturn, Union
+from typing import Any, NoReturn
 
 import aiohttp
 import discord
@@ -42,7 +42,7 @@ class PeeringdbCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    def __check_asn_or_raise(asn: str) -> Union[bool, NoReturn]:
+    def __check_asn_or_raise(asn: str) -> bool | NoReturn:
         """Validate asn format"""
 
         if asn.isdigit() and int(asn) < 4_294_967_295:
@@ -84,7 +84,7 @@ class PeeringdbCommand(commands.Cog):
 
         self.__check_asn_or_raise(str(asn))
 
-        data: Dict[str, Any] = {}
+        data: dict[str, Any] = {}
 
         if self._peeringdb_net is None or not self._peeringdb_net.get("data"):
             return await ctx.send("Please retry in few seconds.")

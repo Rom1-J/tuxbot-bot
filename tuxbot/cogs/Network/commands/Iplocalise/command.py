@@ -8,7 +8,6 @@ Shows information about given ip/domain
 import asyncio
 import json
 import socket
-from typing import Optional
 
 from discord.ext import commands
 
@@ -30,14 +29,11 @@ class IplocaliseCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    async def __get_ip(
-            ip: str, inet: Optional[int]
-    ) -> str:
+    async def __get_ip(ip: str, inet: int | None) -> str:
         """Get ip from domain"""
 
         throwable = VersionNotFound(
-            "Unable to collect information on this in the "
-            "given version"
+            "Unable to collect information on this in the given version"
         )
 
         def _get_ip(_ip: str):
@@ -70,10 +66,10 @@ class IplocaliseCommand(commands.Cog):
 
     @commands.command(name="iplocalise", aliases=["localiseip", "ipl"])
     async def _iplocalise(
-            self,
-            ctx: commands.Context,
-            domain: IPConverter,
-            inet: InetConverter = None,
+        self,
+        ctx: commands.Context,
+        domain: IPConverter,
+        inet: InetConverter = None,
     ):
         cache_key = self.bot.utils.gen_key(str(domain), str(inet))
 
@@ -82,11 +78,9 @@ class IplocaliseCommand(commands.Cog):
         else:
             ip = await self.__get_ip(str(domain), inet)
 
-            await self.bot.redis.set(
-                cache_key, json.dumps(ip), ex=3600
-            )
+            await self.bot.redis.set(cache_key, json.dumps(ip), ex=3600)
         await ViewController(
             ctx=ctx,
             config=self.bot.config["Network"],
-            data={"ip": ip, "domain": domain}
+            data={"ip": ip, "domain": domain},
         ).send()

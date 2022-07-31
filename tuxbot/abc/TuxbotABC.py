@@ -5,7 +5,6 @@ Contains all Tuxbot properties
 """
 
 from datetime import datetime
-from typing import Optional
 
 import aioredis
 from datadog import DogStatsd, statsd
@@ -29,8 +28,8 @@ class TuxbotABC(commands.AutoShardedBot):
     _db: Database  # type: ignore
     _redis: aioredis.Redis
 
-    _uptime: Optional[datetime] = None
-    _last_on_ready: Optional[datetime] = None
+    _uptime: datetime | None = None
+    _last_on_ready: datetime | None = None
 
     # =========================================================================
     # =========================================================================

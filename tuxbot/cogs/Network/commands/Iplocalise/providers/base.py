@@ -5,7 +5,6 @@ tuxbot.cogs.Network.functions.providers.base
 Global provider which uses all sub provider
 """
 import asyncio
-from typing import Dict
 
 from . import (
     HostnameProvider,
@@ -17,7 +16,7 @@ from . import (
 )
 
 
-def get_base_providers(config: Dict[str, str], data: dict) -> dict:
+def get_base_providers(config: dict[str, str], data: dict) -> dict:
     """Get result from base providers"""
 
     hostname = HostnameProvider()
@@ -35,7 +34,7 @@ def get_base_providers(config: Dict[str, str], data: dict) -> dict:
     return result
 
 
-def get_auxiliary_providers(config: Dict[str, str], data: dict) -> dict:
+def get_auxiliary_providers(config: dict[str, str], data: dict) -> dict:
     """Get result from auxiliary providers"""
 
     loc = data["ipinfo"].get("loc", "")

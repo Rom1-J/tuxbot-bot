@@ -38,14 +38,14 @@ class HTTPServerService(commands.Cog):
             return web.Response(text="I'm alive bitches 😎")
 
         app = web.Application()
-        app.router.add_get('/', _home)
+        app.router.add_get("/", _home)
         runner = web.AppRunner(app)
 
         await runner.setup()
         site = web.TCPSite(
             runner,
-            host=self.server_config.get("host", '127.0.0.1'),
-            port=self.server_config.get("port", 8080)
+            host=self.server_config.get("host", "127.0.0.1"),
+            port=self.server_config.get("port", 8080),
         )
         await site.start()
         self.bot.logger.info("[HTTPServerService] _http_monitoring started!")

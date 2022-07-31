@@ -32,11 +32,12 @@ class CommandError(commands.Cog):
         self, ctx: commands.Context, error: commands.CommandError
     ):
         if not isinstance(
-            error, (
-                        commands.CommandInvokeError,
-                        commands.ConversionError,
-                        commands.NotOwner
-                )
+            error,
+            (
+                commands.CommandInvokeError,
+                commands.ConversionError,
+                commands.NotOwner,
+            ),
         ):
             return
 
@@ -98,6 +99,7 @@ class CommandError(commands.Cog):
             e.set_footer(text=sentry_sdk.last_event_id())
         else:
             from rich.console import Console
+
             Console().print(error)
 
         await ctx.send(embed=e)

@@ -8,17 +8,7 @@ import os
 import sys
 import traceback
 from datetime import datetime
-from typing import (
-    Any,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Any, Iterable, Sequence
 
 import aiohttp
 import discord
@@ -138,7 +128,7 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
     # noinspection PyMethodOverriding  # pylint: disable=arguments-differ
     async def get_context(
-        self, message: discord.Message, *, cls: Type[ContextPlus] = None
+        self, message: discord.Message, *, cls: type[ContextPlus] = None
     ) -> ContextPlus:
         """Bind custom context"""
 
@@ -154,9 +144,7 @@ class Tuxbot(TuxbotABC):
 
     # =========================================================================
 
-    def dispatch(
-            self, event_name: str, /, *args: Any, **kwargs: Any
-    ) -> None:
+    def dispatch(self, event_name: str, /, *args: Any, **kwargs: Any) -> None:
         """Bind custom command invoker"""
         if self.running_instance:
             super().dispatch(event_name, *args, **kwargs)
@@ -166,8 +154,8 @@ class Tuxbot(TuxbotABC):
 
     @staticmethod
     async def fetch_member_or_none(
-            guild: discord.Guild, user_id: int
-    ) -> Optional[discord.Member]:
+        guild: discord.Guild, user_id: int
+    ) -> discord.Member | None:
         """fetch member and return None instead of raising NotFound"""
         try:
             return await guild.fetch_member(user_id)
@@ -176,7 +164,7 @@ class Tuxbot(TuxbotABC):
 
     # =========================================================================
 
-    async def fetch_user_or_none(self, user_id: int) -> Optional[discord.User]:
+    async def fetch_user_or_none(self, user_id: int) -> discord.User | None:
         """fetch user and return None instead of raising NotFound"""
         try:
             return await self.fetch_user(user_id)
@@ -210,8 +198,8 @@ class Tuxbot(TuxbotABC):
         self,
         route: Route,
         *,
-        files: Optional[Sequence[discord.File]] = None,
-        form: Optional[Iterable[Dict[str, Any]]] = None,
+        files: Sequence[discord.File] | None = None,
+        form: Iterable[dict[str, Any]] | None = None,
         **kwargs: Any,
     ) -> Any:
         """Proxy function for internal request manager of dpy"""
@@ -241,14 +229,14 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
 
     @staticmethod
-    async def post_webhook(webhook: str, payload: Union[dict, discord.Embed]):
+    async def post_webhook(webhook: str, payload: dict | discord.Embed):
         """Post webhook
 
         Parameters
         ----------
         webhook:str
             Webhook URL
-        payload:Union[dict, discord.Embed]
+        payload:dict | discord.Embed
             Webhook data
         """
         async with aiohttp.ClientSession() as session:
@@ -262,12 +250,12 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
 
     @staticmethod
-    def configure(options: dict) -> Tuple[dict, dict]:
+    def configure(options: dict) -> tuple[dict, dict]:
         """Configure Tuxbot"""
 
         async def get_prefix(
             bot: "Tuxbot", message: discord.Message
-        ) -> List[str]:
+        ) -> list[str]:
             """Get bot prefixes from config or set it as mentionable"""
             if not (prefixes := config.get("prefixes")):
                 prefixes = commands.when_mentioned(bot, message)

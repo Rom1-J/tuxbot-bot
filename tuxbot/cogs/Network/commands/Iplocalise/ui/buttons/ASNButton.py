@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import discord
 from jishaku.models import copy_context_with
@@ -13,10 +13,10 @@ if TYPE_CHECKING:
 class ASNButton(discord.ui.Button):
     disabled: bool
     label: str
-    emoji: Optional[discord.PartialEmoji]
+    emoji: discord.PartialEmoji | None
     row: int
 
-    def __init__(self, row: int, controller: "ViewController"):
+    def __init__(self, row: int, controller: ViewController):
         self.controller = controller
 
         super().__init__(

@@ -43,34 +43,35 @@ update-all:
 
 
 ########################################################################################################################
-# Blackify code
+# Style
 ########################################################################################################################
 
 .PHONY: lint
 lint:
-	$(PYTHON_PATH) -m pylint tuxbot --verbose --output-format=colorized
+	$(PYTHON_PATH) -m pylint tuxbot
+
+.PHONY: black
+black:
+	$(PYTHON_PATH) -m black tuxbot
 
 .PHONY: type
 type:
 	$(PYTHON_PATH) -m mypy tuxbot
 
-.PHONY: flake8
-flake8:
-	$(PYTHON_PATH) -m flake8 tuxbot
-
-.PHONY: isort
-isort:
-	$(PYTHON_PATH) -m isort tuxbot
-
 .PHONY: style
-style: isort lint type flake8
+style: black type lint
+
+.PHONY: pre_commit
+pre_commit:
+	./$(VIRTUAL_ENV)/bin/pre-commit run --all-files
+
 
 ########################################################################################################################
 # Rewrite
 ########################################################################################################################
 
 .PHONY: dev
-dev: update-all run
+dev: style update-all run
 
 .PHONY: run
 run:

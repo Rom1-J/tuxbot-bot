@@ -23,7 +23,7 @@ class TagEditionModal(discord.ui.Modal):
             style=discord.TextStyle.long,
             placeholder="Tag content here...",
             max_length=1900,
-            default=self.__tag.content
+            default=self.__tag.content,
         )
         self.add_item(self.content)
 
@@ -37,6 +37,5 @@ class TagEditionModal(discord.ui.Modal):
         await self.__tag.save()
 
         await interaction.response.send_message(
-            f"Tag '{self.__tag.name}' successfully edited!",
-            ephemeral=True
+            f"Tag '{self.__tag.name}' successfully edited!", ephemeral=True
         )

@@ -3,7 +3,6 @@ Useful generators
 """
 import asyncio
 import inspect
-from typing import Dict, Tuple
 
 import aiohttp
 
@@ -13,8 +12,8 @@ def gen_key(*args, **kwargs) -> str:
 
     Parameters
     ----------
-    args: Tuple[Any]
-    kwargs Dict[str, Any]
+    args: tuple[Any]
+    kwargs dict[str, Any]
 
     Returns
     -------
@@ -38,7 +37,7 @@ def gen_key(*args, **kwargs) -> str:
 
 async def shorten(
     text: str, length: int, fail: bool = False
-) -> Tuple[bool, dict]:
+) -> tuple[bool, dict]:
     """Return either paste url if text is too long,
     or given text if correct size
 
@@ -53,10 +52,10 @@ async def shorten(
 
     Returns
     -------
-    Dict[str, str]
+    tuple[bool, dict]
         trunked text and link if available
     """
-    output: Dict[str, str] = {"text": text[:length], "link": ""}
+    output: dict[str, str] = {"text": text[:length], "link": ""}
 
     if len(text) > length:
         output["text"] += "[...]"

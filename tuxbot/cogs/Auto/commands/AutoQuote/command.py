@@ -41,7 +41,8 @@ class AutoQuoteCommand(commands.Cog):
             title="Auto quote status",
             description=f"Active: {model.activated}",
             colour=self.bot.utils.colors.ONLINE.value
-            if model.activated else self.bot.utils.colors.DND.value
+            if model.activated
+            else self.bot.utils.colors.DND.value,
         )
 
         await ctx.send(embed=e)
@@ -61,7 +62,8 @@ class AutoQuoteCommand(commands.Cog):
         e = discord.Embed(
             description=f"Auto quote toggled to {model.activated}",
             colour=self.bot.utils.colors.ONLINE.value
-            if model.activated else self.bot.utils.colors.DND.value
+            if model.activated
+            else self.bot.utils.colors.DND.value,
         )
 
         await ctx.send(embed=e)

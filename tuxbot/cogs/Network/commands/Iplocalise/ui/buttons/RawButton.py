@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import io
 import json
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import discord
 
@@ -14,10 +14,10 @@ if TYPE_CHECKING:
 class RawButton(discord.ui.Button):
     disabled: bool
     label: str
-    emoji: Optional[discord.PartialEmoji]
+    emoji: discord.PartialEmoji | None
     row: int
 
-    def __init__(self, row: int, controller: "ViewController"):
+    def __init__(self, row: int, controller: ViewController):
         self.controller = controller
 
         super().__init__(
@@ -31,7 +31,7 @@ class RawButton(discord.ui.Button):
         await interaction.response.send_message(
             file=discord.File(
                 filename="output.json",
-                fp=io.BytesIO(json.dumps(self.controller.data).encode())
+                fp=io.BytesIO(json.dumps(self.controller.data).encode()),
             ),
-            ephemeral=True
+            ephemeral=True,
         )

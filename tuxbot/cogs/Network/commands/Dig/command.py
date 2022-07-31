@@ -4,10 +4,9 @@ tuxbot.cogs.Network.commands.Dig.command
 
 Shows dig information from dns.bortzmeyer.org about a domain
 """
-
 import asyncio
 import json
-from typing import Any, Dict
+from typing import Any
 
 import aiohttp
 import discord
@@ -27,7 +26,7 @@ class DigCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    def __parse_from_bortzmeyer(html: str) -> Dict[str, Any]:
+    def __parse_from_bortzmeyer(html: str) -> dict[str, Any]:
         """Parse HTML result as dict object"""
 
         soup = BeautifulSoup(html, "html.parser")
@@ -47,7 +46,7 @@ class DigCommand(commands.Cog):
 
     async def __get_from_bortzmeyer(
         self, domain: str, query_type: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get result from https://dns.bortzmeyer.org/"""
 
         try:

@@ -35,11 +35,11 @@ class AutoQuote:
             self.bot.cached_config[message.guild.id] = {}
 
             if model := await AutoQuoteModel.get_or_create(
-                    guild_id=message.guild.id
+                guild_id=message.guild.id
             ):
-                self.bot.cached_config[message.guild.id]["AutoQuote"] = (
-                    model[0].activated
-                )
+                self.bot.cached_config[message.guild.id]["AutoQuote"] = model[
+                    0
+                ].activated
 
         if self.bot.cached_config[message.guild.id]["AutoQuote"]:
             if not (ctx := await self.bot.get_context(message)):
@@ -52,10 +52,10 @@ class AutoQuote:
             embeds = []
 
             for message_link in quotes[:3]:
-                if not (
-                        referred_message := await commands.MessageConverter()
-                        .convert(ctx, message_link)
-                ) or not referred_message.content:
+                referred_message = await commands.MessageConverter().convert(
+                    ctx, message_link
+                )
+                if not referred_message or not referred_message.content:
                     return
 
                 if referred_message.channel.permissions_for(
@@ -63,13 +63,13 @@ class AutoQuote:
                 ).read_message_history:
                     embed = discord.Embed(
                         description=referred_message.content,
-                        colour=self.bot.utils.colors.EMBED_BORDER.value
+                        colour=self.bot.utils.colors.EMBED_BORDER.value,
                     )
                     embed.timestamp = referred_message.created_at
 
                     embed.set_footer(
                         text=referred_message.author.display_name,
-                        icon_url=referred_message.author.display_avatar
+                        icon_url=referred_message.author.display_avatar,
                     )
 
                     embeds.append(embed)

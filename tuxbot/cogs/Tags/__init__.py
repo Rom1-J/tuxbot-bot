@@ -18,9 +18,7 @@ from .commands.Tag.command import TagCommand
 # pylint: disable=wrong-import-order
 from discord.ext import commands  # isort: skip
 
-STANDARD_COMMANDS = (
-    TagCommand,
-)
+STANDARD_COMMANDS = (TagCommand,)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")

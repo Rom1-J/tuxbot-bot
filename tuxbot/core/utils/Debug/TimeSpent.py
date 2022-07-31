@@ -2,15 +2,14 @@
 Log time spent between each update
 """
 import time
-from typing import Dict, List
 
 
 class TimeSpent:
     """Log time spent between each update"""
 
     def __init__(self):
-        self.order: List[str] = []
-        self.times: Dict[str, List[float]] = {}
+        self.order: list[str] = []
+        self.times: dict[str, list[float]] = {}
 
     def start(self, name: str) -> None:
         """Start timer"""

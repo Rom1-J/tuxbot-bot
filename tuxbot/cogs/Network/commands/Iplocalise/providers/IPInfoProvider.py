@@ -1,5 +1,4 @@
 import asyncio
-from typing import Tuple
 
 import ipinfo
 from ipinfo.exceptions import RequestQuotaExceededError
@@ -8,7 +7,7 @@ from .abc import Provider
 
 
 class IPInfoProvider(Provider):
-    async def fetch(self, ip: str) -> Tuple[str, dict]:
+    async def fetch(self, ip: str) -> tuple[str, dict]:
         def _get_ipinfo_result(_ip: str) -> dict:
             """
             Q. Why no getHandlerAsync ?

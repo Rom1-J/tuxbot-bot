@@ -7,7 +7,7 @@ import glob
 import importlib.util
 import inspect
 import os
-from typing import TYPE_CHECKING, Dict, List, Type, Union
+from typing import TYPE_CHECKING, Union
 
 from discord.ext import commands
 
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 class ModuleCollection:
     """Tuxbot modules collection"""
 
-    _modules: Dict[str, List[commands.Cog]]
+    _modules: dict[str, list[commands.Cog]]
 
     def __init__(self, config, bot: "Tuxbot"):
         self.config = config
@@ -52,7 +52,7 @@ class ModuleCollection:
                 self.config["paths"]["python_cogs"] + f".{module_name}"
             )
 
-            module: Type[Union["ModuleABC", commands.Cog]] = getattr(
+            module: type[Union["ModuleABC", commands.Cog]] = getattr(
                 importlib.import_module(module_path, package="tuxbot"),
                 module_name,
             )
@@ -61,12 +61,12 @@ class ModuleCollection:
 
     # =========================================================================
 
-    async def register(self, _module: Type[commands.Cog]):
+    async def register(self, _module: type[commands.Cog]):
         """Register module
 
         Parameters
         ----------
-        _module: Type[commands.Cog]
+        _module: type[commands.Cog]
             Module class to register
         """
         if not isinstance(_module, commands.CogMeta):
@@ -104,12 +104,12 @@ class ModuleCollection:
 
     # =========================================================================
 
-    def register_models(self, models: List[str]):
+    def register_models(self, models: list[str]):
         """Register module models
 
         Parameters
         ----------
-        models:List[str]
+        models: list[str]
             Module models to register
         """
 

@@ -1,6 +1,4 @@
 """Simple paginator from embeds"""
-from typing import Union
-
 import discord
 from discord.ext import commands, menus  # type: ignore
 
@@ -20,9 +18,9 @@ class SimplePages(Pages):
             pages = []
 
             for index, entry in enumerate(
-                    entries, start=menu.current_page * self.per_page
+                entries, start=menu.current_page * self.per_page
             ):
-                pages.append(f'{index + 1}. {entry}')
+                pages.append(f"{index + 1}. {entry}")
 
             maximum = self.get_max_pages()
 
@@ -33,17 +31,17 @@ class SimplePages(Pages):
                 )
                 menu.embed.set_footer(text=footer)
 
-            menu.embed.description = '\n'.join(pages)
+            menu.embed.description = "\n".join(pages)
             return menu.embed
 
     def __init__(
-            self,
-            entries, *,
-            ctx: Union[commands.Context, discord.Interaction],
-            per_page: int = 12
+        self,
+        entries,
+        *,
+        ctx: commands.Context | discord.Interaction,
+        per_page: int = 12,
     ):
         super().__init__(
-            self.SimplePageSource(entries, per_page=per_page),
-            ctx=ctx
+            self.SimplePageSource(entries, per_page=per_page), ctx=ctx
         )
         self.embed = discord.Embed(colour=discord.Colour.blurple())

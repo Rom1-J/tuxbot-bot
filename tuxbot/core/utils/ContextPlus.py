@@ -1,7 +1,7 @@
 """
 Custom Context class
 """
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Sequence
 
 from discord import (
     AllowedMentions,
@@ -37,12 +37,12 @@ class ContextPlus(commands.Context):
             "kwargs=%s" % self.kwargs,
         )
 
-        return "<%s %s>" % (self.__class__.__name__, ", ".join(items))
+        return "<{} {}>".format(self.__class__.__name__, ", ".join(items))
 
     # =========================================================================
 
-    def _clean_message(self, kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        def clear_embeds(_embeds: List[Embed]):
+    def _clean_message(self, kwargs: dict[str, Any]) -> dict[str, Any]:
+        def clear_embeds(_embeds: list[Embed]):
             """Clear embed from sensitive data"""
 
             es = _embeds.copy()
@@ -79,22 +79,20 @@ class ContextPlus(commands.Context):
     # pylint: disable=too-many-locals
     async def send(
         self,
-        content: Optional[str] = None,
+        content: str | None = None,
         *,
         tts: bool = False,
-        embed: Optional[Embed] = None,
-        embeds: Optional[Sequence[Embed]] = None,
-        file: Optional[File] = None,
-        files: Optional[Sequence[File]] = None,
-        stickers: Optional[Sequence[Union[GuildSticker, StickerItem]]] = None,
-        delete_after: Optional[float] = None,
-        nonce: Optional[Union[str, int]] = None,
-        allowed_mentions: Optional[AllowedMentions] = None,
-        reference: Optional[
-            Union[Message, MessageReference, PartialMessage]
-        ] = None,
-        mention_author: Optional[bool] = None,
-        view: Optional[View] = None,
+        embed: Embed | None = None,
+        embeds: Sequence[Embed] | None = None,
+        file: File | None = None,
+        files: Sequence[File] | None = None,
+        stickers: Sequence[GuildSticker | StickerItem] | None = None,
+        delete_after: float | None = None,
+        nonce: str | int | None = None,
+        allowed_mentions: AllowedMentions | None = None,
+        reference: None | (Message | MessageReference | PartialMessage) = None,
+        mention_author: bool | None = None,
+        view: View | None = None,
         suppress_embeds: bool = False,
         ephemeral: bool = False,
     ) -> Message:

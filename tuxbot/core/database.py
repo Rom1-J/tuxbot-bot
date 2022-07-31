@@ -5,7 +5,7 @@ Manage database instance
 """
 import glob
 import importlib
-from typing import Any, Dict, List, Tuple, TypeVar
+from typing import Any, TypeVar
 
 from tortoise import ModelMeta, Tortoise
 
@@ -24,9 +24,9 @@ class Models:
     """Tuxbot models"""
 
     def __init__(self):
-        self.__models: Dict[str, Tuple[str, M]] = {}
+        self.__models: dict[str, tuple[str, M]] = {}
 
-    def __setitem__(self, key: str, value: Tuple[str, M]):
+    def __setitem__(self, key: str, value: tuple[str, M]):
         if self.check(value):
             logger.info("[Models] Adding model '%s'.", key)
             self.__models[key] = value
@@ -58,12 +58,12 @@ class Models:
 
     # =========================================================================
 
-    def to_list(self) -> List[M]:
+    def to_list(self) -> list[M]:
         """Return list of loaded models"""
 
         return [m[1] for m in self.__models.values()]
 
-    def to_str_list(self) -> List[str]:
+    def to_str_list(self) -> list[str]:
         """Return paths of loaded models"""
 
         return [m[0] for m in self.__models.values()]
@@ -74,7 +74,7 @@ class Database:
 
     models = Models()
 
-    def __init__(self, c: Dict[str, Any]):
+    def __init__(self, c: dict[str, Any]):
         self.config = c
 
     # =========================================================================

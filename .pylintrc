@@ -23,3 +23,12 @@ disable=
 	R0903,  # too-few-public-methods
 	R0913,  # too-many-arguments
 	E1136,  # unsubscriptable-object (false positive with python 3.9)
+
+[FORMAT]
+max-line-length=79
+
+[DESIGN]
+max-parents=13
+
+[TYPECHECK]
+generated-members=REQUEST,acl_users,aq_parent,"[a-zA-Z]+_set{1,2}",save,delete

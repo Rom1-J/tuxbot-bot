@@ -6,16 +6,15 @@ Abstract Class for providers.
 """
 
 from abc import ABC
-from typing import Optional, Tuple, Union
 
 
 class Provider(ABC):
     """Abstract Class for providers."""
 
-    def __init__(self, apikey: Optional[str] = None):
+    def __init__(self, apikey: str | None = None):
         self.apikey = apikey
 
     # pylint: disable=unused-argument
     # noinspection PyMissingOrEmptyDocstring
-    async def fetch(self, ip: str) -> Tuple[str, Union[dict, str]]:
+    async def fetch(self, ip: str) -> tuple[str, dict | str]:
         ...
