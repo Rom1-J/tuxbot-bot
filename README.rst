@@ -19,6 +19,18 @@ Basic Makefile Commands
 -----------------------
 
 
+Poetry
+~~~~~~
+
+Create Poetry venv for this project:
+
+.. code-block:: bash
+
+    $ poetry env use 3.10
+    $ poetry shell
+    $ poetry install
+
+
 Type checks
 ~~~~~~~~~~~
 

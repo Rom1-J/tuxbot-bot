@@ -117,7 +117,7 @@ class Database:
 
     def fetch_models(self):
         """fetch all models"""
-        core_models = self.config["paths"].get("base") / "core" / "models"
+        core_models = self.config["paths"]["base"] / "core" / "models"
 
         for model_path in glob.glob(f"{core_models}/*.py"):
             self.register_model(model_path)
@@ -126,7 +126,7 @@ class Database:
 
     def register_model(self, model_path):
         """register model"""
-        cwd = self.config["paths"].get("cwd")
+        cwd = self.config["paths"]["base"]
 
         model_path = (
             model_path.replace(str(cwd), "")[:-3].lstrip("/").replace("/", ".")

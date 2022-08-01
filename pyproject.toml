@@ -2,3 +2,54 @@
 line-length = 79
 target-version = ['py310']
 include = '\.pyi?$'
+
+[tool.poetry]
+name = "tuxbot"
+version = "4.0.0"
+description = "A discord bot made for GnousEU's guild and OpenSource"
+authors = ["Romain J. <romain@gnous.eu>"]
+license = "AGPL3"
+
+[tool.poetry.scripts]
+start = "tuxbot.start:start"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiofiles = ">=0.8.0"
+aioredis = ">=2.0.1"
+asyncpg = ">=0.21.0"
+"discord.py" = {git = "https://github.com/Rapptz/discord.py"}
+discord-ext-menus = ">=1.1"
+jishaku = {git = "https://github.com/Gorialis/jishaku"}
+python_json_logger = ">=2.0.2"
+PyYAML = ">=6.0"
+rich = ">=9.10.0"
+tortoise-orm = ">=0.16.17"
+websockets = ">=10.3"
+beautifulsoup4 = ">=4.9.3"
+graphviz = ">=0.16"
+humanize = ">=2.6.0"
+ipinfo = ">=4.1.0"
+ipwhois = ">=1.2.0"
+Pillow = ">=8.2.0"
+psutil = ">=5.7.2"
+pydig = ">=0.3.0"
+sympy = ">=1.8"
+wolframalpha = ">=5.0.0"
+datadog = ">=0.43.0"
+ddtrace = ">=0.60.0"
+sentry_sdk = ">=0.20.2"
+
+[tool.poetry.dev-dependencies]
+flake8 = "4.0.1"
+flake8-isort = "4.1.2.post0"
+coverage = "6.4.2"
+black = "22.6.0"
+pre-commit = "2.20.0"
+types-aiofiles = ">=0.8.3"
+types_PyYAML = ">=6.0.3"
+bpython = ">=0.22.1"
+
+[build-system]
+requires = ["poetry-core==1.0.0"]
+build-backend = "poetry.core.masonry.api"

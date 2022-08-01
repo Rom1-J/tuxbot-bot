@@ -9,7 +9,9 @@ from pathlib import Path
 import yaml
 
 
-cwd = Path().resolve().parent.resolve()
+if (cwd := Path().resolve()).name != "tuxbot":
+    os.chdir((cwd / "tuxbot").resolve())
+
 base_path = Path().resolve()
 python_base_path = ""
 

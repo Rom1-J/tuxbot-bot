@@ -5,7 +5,7 @@ Installation
 Prerequisites
 -------------
 
-* Python 3.10 interpreter
+* Python 3.10 interpreter (with poetry as package manager)
 * PostgreSQL server
 * Redis server
 * Datadog Agent
@@ -23,20 +23,17 @@ Assuming Ubuntu Server host and using PPA:
     $ sudo apt install software-properties-common -y
     $ sudo add-apt-repository ppa:deadsnakes/ppa
     $ sudo apt install python3.10
-    $ sudo apt install python3.10-venv
 
 
 Downloading dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Assuming PostgreSQL already installed and project cloned in /opt/tuxbot-bot:
+Assuming PostgreSQL already installed and project cloned in ``/opt/tuxbot-bot``:
 
 .. code-block:: bash
 
     $ cd /opt/tuxbot-bot
-    $ python3.10 -m venv venv
-    $ source venv/bin/activate
-    $ pip install -r requirements/base.txt
+    $ poetry install
 
 
 Configuration
