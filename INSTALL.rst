@@ -8,7 +8,7 @@ Prerequisites
 * Python 3.10 interpreter (with poetry as package manager)
 * PostgreSQL server
 * Redis server
-* Datadog Agent
+* Datadog Agent (optional)
 
 Python interpreter
 ^^^^^^^^^^^^^^^^^^

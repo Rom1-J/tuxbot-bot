@@ -8,6 +8,7 @@ import time
 
 import discord
 from discord.ext import commands
+from tortoise import Tortoise
 
 from tuxbot.core.Tuxbot import Tuxbot
 
@@ -33,6 +34,12 @@ class PingCommand(commands.Cog):
         end = time.perf_counter()
         redis = round((end - start) * 1000, 2)
 
+        connection = Tortoise.get_connection("default")
+        start = time.perf_counter()
+        await connection.execute_query("select 1;")
+        end = time.perf_counter()
+        postgres = round((end - start) * 1000, 2)
+
         latency = round(self.bot.latency * 1000, 2)
 
         e = discord.Embed(title="Ping", color=discord.Color.teal())
@@ -40,5 +47,6 @@ class PingCommand(commands.Cog):
         e.add_field(name="Websocket", value=f"{latency}ms")
         e.add_field(name="Typing", value=f"{typing}ms")
         e.add_field(name="Redis", value=f"{redis}ms")
+        e.add_field(name="Postgres", value=f"{postgres}ms")
 
         await ctx.send(embed=e)
