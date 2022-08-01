@@ -12,7 +12,6 @@ from discord.ext.commands import Context
 class MemberOrUserConverter(commands.Converter):
     """Gives either discord member or user format."""
 
-    # noinspection PyMissingOrEmptyDocstring
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         if argument:
             try:

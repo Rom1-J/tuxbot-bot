@@ -33,7 +33,6 @@ del global_dict["__builtins__"]
 class ExprConverter(commands.Converter):
     """Ensure passed data is HTTP code."""
 
-    # noinspection PyMissingOrEmptyDocstring
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         argument = argument.rstrip("`").lstrip("`")
 
@@ -41,7 +40,6 @@ class ExprConverter(commands.Converter):
             return argument, None
 
         def _parse_expr():
-            # noinspection PyBroadException
             try:
                 return parse_expr(
                     argument,

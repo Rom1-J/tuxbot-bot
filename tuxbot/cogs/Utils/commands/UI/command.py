@@ -69,7 +69,6 @@ class UICommand(commands.Cog):
                     value=f"> <t:{int(premium_since.timestamp())}:F>",
                 )
 
-            # noinspection PyUnresolvedReferences
             if (
                 status := user_id.status.value.upper()
             ) in self.bot.utils.colors.__members__:

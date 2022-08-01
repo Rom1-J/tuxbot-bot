@@ -43,7 +43,6 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-# noinspection PyMissingOrEmptyDocstring
 class Commands:
     def __init__(self, bot: Tuxbot):
         for command in STANDARD_COMMANDS:

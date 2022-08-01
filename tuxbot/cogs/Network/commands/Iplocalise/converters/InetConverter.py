@@ -12,7 +12,6 @@ from discord.ext.commands import Context
 class InetConverter(commands.Converter):
     """Clean and return inet."""
 
-    # noinspection PyMissingOrEmptyDocstring
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         if "6" in argument:
             return 6

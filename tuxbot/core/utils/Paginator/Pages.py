@@ -196,7 +196,6 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
-    # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     @discord.ui.button(label="≪", style=discord.ButtonStyle.grey)
     async def go_to_first_page(
@@ -207,7 +206,6 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
-    # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     @discord.ui.button(label="Back", style=discord.ButtonStyle.blurple)
     async def go_to_previous_page(
@@ -218,7 +216,6 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
-    # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     @discord.ui.button(
         label="Current", style=discord.ButtonStyle.grey, disabled=True
@@ -230,7 +227,6 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
-    # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     @discord.ui.button(label="Next", style=discord.ButtonStyle.blurple)
     async def go_to_next_page(
@@ -241,7 +237,6 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
-    # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     @discord.ui.button(label="≫", style=discord.ButtonStyle.grey)
     async def go_to_last_page(
@@ -252,7 +247,6 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
-    # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     @discord.ui.button(label="Quit", style=discord.ButtonStyle.red, row=1)
     async def stop_pages(

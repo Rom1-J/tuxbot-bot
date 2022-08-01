@@ -19,7 +19,6 @@ class QuoteMessage:
 class QuoteConverter(commands.Converter):
     """Gives either discord message link format, or text."""
 
-    # noinspection PyMissingOrEmptyDocstring
     async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
         try:
             if (

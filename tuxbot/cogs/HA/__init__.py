@@ -32,7 +32,6 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-# noinspection PyMissingOrEmptyDocstring
 class Services:
     def __init__(self, bot: Tuxbot):
         for service in STANDARD_SERVICES:

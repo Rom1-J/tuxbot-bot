@@ -8,6 +8,7 @@ import os
 import sys
 import traceback
 from datetime import datetime
+from distutils.util import strtobool
 from typing import Any, Iterable, Sequence
 
 import aiohttp
@@ -25,18 +26,20 @@ from tuxbot.core.config import config
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 
-initialize(
-    statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
-    statsd_port=8125,
-    statsd_namespace="tuxbot_metric",
-)
-patch(
-    aioredis=True,
-    asyncio=True,
-    requests=True,
-    asyncpg=True,
-    logging=True,
-)
+if strtobool(os.getenv("DD_ACTIVE")):
+    initialize(
+        statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
+        statsd_port=8125,
+        statsd_namespace="tuxbot_metric",
+    )
+
+    patch(
+        aioredis=True,
+        asyncio=True,
+        requests=True,
+        asyncpg=True,
+        logging=True,
+    )
 
 
 class Tuxbot(TuxbotABC):
@@ -126,7 +129,6 @@ class Tuxbot(TuxbotABC):
                 await guild_model.save()
 
     # =========================================================================
-    # noinspection PyMethodOverriding  # pylint: disable=arguments-differ
     async def get_context(
         self, message: discord.Message, *, cls: type[ContextPlus] = None
     ) -> ContextPlus:

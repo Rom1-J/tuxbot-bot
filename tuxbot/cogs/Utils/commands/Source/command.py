@@ -31,7 +31,6 @@ class SourceCommand(commands.Cog):
         cmd = self.bot.get_command(name)
 
         if cmd:
-            # noinspection PyUnresolvedReferences
             src = cmd.callback.__code__
             rpath = src.co_filename
         else:

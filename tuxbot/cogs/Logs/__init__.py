@@ -6,6 +6,7 @@ Set of useful statistics commands & workers.
 """
 import os
 from collections import namedtuple
+from distutils.util import strtobool
 
 import sentry_sdk
 
@@ -45,25 +46,25 @@ __version__ = "v{}.{}.{}-{}".format(
 ).replace("\n", "")
 
 
-# noinspection PyMissingOrEmptyDocstring
 class Commands:
     def __init__(self, bot: Tuxbot):
-        if os.getenv("PYTHON_ENV", "production") != "development":
-            # pylint: disable=abstract-class-instantiated
+        if os.getenv("PYTHON_ENV", "production") != "development" and (
+            dsn := bot.config["sentry"].get("dsn")
+        ):
             sentry_sdk.init(
-                dsn=bot.config["sentry"].get("dsn"),
+                dsn=dsn,
                 traces_sample_rate=1.0,
                 environment=os.getenv("CLUSTER_ID"),
                 debug=False,
                 attach_stacktrace=True,
             )
 
-        # noinspection PyTypeChecker
-        for command in STANDARD_COMMANDS:
-            bot.collection.add_module("Logs", command(bot=bot))
+        if strtobool(os.getenv("DD_ACTIVE")):
+            for command in STANDARD_COMMANDS:
+                bot.collection.add_module("Logs", command(bot=bot))
 
-        for listener in STANDARD_LISTENERS:
-            bot.collection.add_module("Logs", listener(bot=bot))
+            for listener in STANDARD_LISTENERS:
+                bot.collection.add_module("Logs", listener(bot=bot))
 
 
 class Logs(ModuleABC, Commands):  # type: ignore

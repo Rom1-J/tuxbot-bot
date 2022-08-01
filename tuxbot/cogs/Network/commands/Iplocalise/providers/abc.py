@@ -15,6 +15,5 @@ class Provider(ABC):
         self.apikey = apikey
 
     # pylint: disable=unused-argument
-    # noinspection PyMissingOrEmptyDocstring
     async def fetch(self, ip: str) -> tuple[str, dict | str]:
         ...

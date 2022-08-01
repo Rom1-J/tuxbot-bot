@@ -21,6 +21,7 @@ dev: pre_commit build run
 .PHONY: run
 run:
 	PYTHON_ENV=development \
+	DD_ACTIVE=False \
 	STATSD_HOST="192.168.1.175" \
 	DD_AGENT_HOST="192.168.1.175" \
 	DD_ENV="Tuxbot-dev" \

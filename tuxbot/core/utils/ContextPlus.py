@@ -118,5 +118,4 @@ class ContextPlus(commands.Context):
 
         kwargs = self._clean_message(kwargs)
 
-        # noinspection PyArgumentList
         return await super().send(**kwargs)
