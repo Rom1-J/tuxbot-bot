@@ -13,10 +13,7 @@ from tuxbot.core.Tuxbot import Tuxbot
 from ....commands.AutoQuote.models.AutoQuote import AutoQuoteModel
 
 
-REGEX = (
-    r"(https://((ptb|canary)\.)?discord\.com"
-    r"/channels/\d{18}/\d{18}/\d{18})"
-)
+REGEX = r"(https://((ptb|canary)\.)?discord\.com" r"/channels/\d+/\d+/\d+)"
 
 
 class AutoQuote:
@@ -52,27 +49,33 @@ class AutoQuote:
             embeds = []
 
             for message_link in quotes[:3]:
-                referred_message = await commands.MessageConverter().convert(
-                    ctx, message_link
-                )
-                if not referred_message or not referred_message.content:
-                    return
-
-                if referred_message.channel.permissions_for(
-                    ctx.author
-                ).read_message_history:
-                    embed = discord.Embed(
-                        description=referred_message.content,
-                        colour=self.bot.utils.colors.EMBED_BORDER.value,
-                    )
-                    embed.timestamp = referred_message.created_at
-
-                    embed.set_footer(
-                        text=referred_message.author.display_name,
-                        icon_url=referred_message.author.display_avatar,
+                try:
+                    referred_message = (
+                        await commands.MessageConverter().convert(
+                            ctx, message_link
+                        )
                     )
 
-                    embeds.append(embed)
+                    if not referred_message or not referred_message.content:
+                        return
+
+                    if referred_message.channel.permissions_for(
+                        ctx.author
+                    ).read_message_history:
+                        embed = discord.Embed(
+                            description=referred_message.content,
+                            colour=self.bot.utils.colors.EMBED_BORDER.value,
+                        )
+                        embed.timestamp = referred_message.created_at
+
+                        embed.set_footer(
+                            text=referred_message.author.display_name,
+                            icon_url=referred_message.author.display_avatar,
+                        )
+
+                        embeds.append(embed)
+                except commands.MessageNotFound:
+                    pass
 
             if embeds:
                 await ctx.send(embeds=embeds)
