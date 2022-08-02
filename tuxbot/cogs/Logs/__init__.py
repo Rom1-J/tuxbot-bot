@@ -59,7 +59,7 @@ class Commands:
                 attach_stacktrace=True,
             )
 
-        if strtobool(os.getenv("DD_ACTIVE")):
+        if strtobool(os.getenv("DD_ACTIVE", "false")):
             for command in STANDARD_COMMANDS:
                 bot.collection.add_module("Logs", command(bot=bot))
 

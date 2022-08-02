@@ -26,7 +26,7 @@ from tuxbot.core.config import config
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 
-if strtobool(os.getenv("DD_ACTIVE")):
+if strtobool(os.getenv("DD_ACTIVE", "false")):
     initialize(
         statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
         statsd_port=8125,

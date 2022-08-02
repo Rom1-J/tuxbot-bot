@@ -25,6 +25,12 @@ repos:
     hooks:
       - id: isort
 
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'tags/v0.971'
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-PyYAML, types-aiofiles]
+
   - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1
     hooks:
