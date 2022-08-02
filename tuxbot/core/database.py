@@ -126,7 +126,7 @@ class Database:
 
     def register_model(self, model_path):
         """register model"""
-        cwd = self.config["paths"]["base"]
+        cwd = self.config["paths"]["cwd"]
 
         model_path = (
             model_path.replace(str(cwd), "")[:-3].lstrip("/").replace("/", ".")

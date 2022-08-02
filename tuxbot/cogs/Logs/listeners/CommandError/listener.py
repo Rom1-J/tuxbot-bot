@@ -84,7 +84,7 @@ class CommandError(commands.Cog):
         e.description = f"```py\n{textwrap.shorten(exc, width=2035)}\n```"
         e.timestamp = datetime.datetime.utcnow()
 
-        await self.bot.post_webhook(webhook=self.error_webhook, payload=e)
+        full_e = e.copy()
 
         e.description = (
             "```An error occurred, the bot owner has been advertised...```"
@@ -95,11 +95,19 @@ class CommandError(commands.Cog):
         e.remove_field(1)
 
         if os.getenv("PYTHON_ENV", "production") != "development":
+            await self.bot.post_webhook(
+                webhook=self.error_webhook, payload=full_e
+            )
             sentry_sdk.capture_exception(error)
             e.set_footer(text=sentry_sdk.last_event_id())
         else:
             from rich.console import Console
 
-            Console().print(error)
+            # flake8: noqa
+            # noinspection PyBroadException
+            try:  # Re-inject error to sys
+                raise error
+            except:
+                Console().print_exception(width=None, show_locals=True)
 
         await ctx.send(embed=e)
