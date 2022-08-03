@@ -18,6 +18,7 @@ from .ui.modals.TagEditionModal import TagEditionModal
 from .ui.paginator import TagPages
 
 
+@app_commands.guild_only()
 class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     """Manage tags"""
 
@@ -115,6 +116,7 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     # =========================================================================
     # =========================================================================
 
+    # noinspection PyTypeChecker
     @app_commands.command(name="get", description="Print a tag")
     @app_commands.describe(name="Tag name")
     @app_commands.autocomplete(name=__tag_get_autocomplete)
