@@ -5,10 +5,8 @@ import textwrap
 from PIL import Image, ImageDraw, ImageFont
 
 
-FONT = ImageFont.truetype("./tuxbot/cogs/Utils/fonts/DejaVuSans.ttf", size=32)
-AUTHOR_FONT = ImageFont.truetype(
-    "./tuxbot/cogs/Utils/fonts/DejaVuSans-Oblique.ttf", size=26
-)
+FONT = ImageFont.truetype("DejaVuSans.ttf", size=32)
+AUTHOR_FONT = ImageFont.truetype("DejaVuSans-Oblique.ttf", size=26)
 
 PADDING = (42, 69)
 QUOTES = ("“", "”")

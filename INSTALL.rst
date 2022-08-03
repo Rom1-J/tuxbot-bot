@@ -9,6 +9,8 @@ Prerequisites
 * PostgreSQL server
 * Redis server
 * Datadog Agent (optional)
+* Sentry App (optional)
+
 
 Python interpreter
 ^^^^^^^^^^^^^^^^^^
@@ -28,12 +30,22 @@ Assuming Ubuntu Server host and using PPA:
 Downloading dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Assuming PostgreSQL already installed and project cloned in ``/opt/tuxbot-bot``:
+Assuming PostgreSQL already configured, and `Poetry <https://python-poetry.org/docs/#installation>`_ installed:
 
 .. code-block:: bash
 
+    $ git clone https://github.com/Rom1-J/tuxbot-bot /opt
     $ cd /opt/tuxbot-bot
+    $ git branch v4
+    $ poetry env use 3.10
+    $ poetry shell
     $ poetry install
+
+.. note:: ``wolf`` and ``quote`` commands both need DejaVu Sans font, make sure you have them:
+
+.. code-block:: bash
+
+    $ sudo apt install fonts-dejavu-core fonts-dejavu-extra
 
 
 Configuration
@@ -45,7 +57,11 @@ Copy the ``data.example`` directory and adjust for your settings in ``data/setti
 
     $ cp -R data.example data
 
-.. note:: If you don't want to use `Sentry <https://sentry.io>`_, do not fill in the corresponding key in the config file:
+.. note::
+
+    - If you don't want to use `Sentry <https://sentry.io>`_, do not fill in the corresponding key in the config file:
+
+    - If you don't want to use `Datadog <https://datadoghq.com>`_, do not fill in the corresponding key in the config file:
 
 
 Systemd
@@ -53,7 +69,7 @@ Systemd
 
 Create a systemd services.
 
-`/etc/systemd/system/tuxbot.socket`
+``/etc/systemd/system/tuxbot.service``
 
 .. code-block:: ini
 
@@ -69,9 +85,10 @@ Create a systemd services.
     Restart=always
     RestartSec=5
 
-    WorkingDirectory=/opt/tuxbot-bot/tuxbot
-    ExecStart=/opt/tuxbot-bot/venv/bin/ddtrace-run /opt/tuxbot-bot/venv/bin/python start.py
+    WorkingDirectory=/opt/tuxbot-bot
+    ExecStart=<poetry_venv>/bin/ddtrace-run <poetry_venv>/bin/python tuxbot/start.py
 
+    Environment=DD_ACTIVE=true
     Environment=DD_SERVICE="Tuxbot-bot"
     Environment=DD_ENV="Tuxbot-prod"
     Environment=DD_LOGS_INJECTION=true
@@ -92,3 +109,12 @@ Create a systemd services.
 
     [Install]
     WantedBy=multi-user.target
+
+
+.. note:: if you have not configured `Datadog <https://datadoghq.com>`_, replace the following lines:
+
+.. code-block:: ini
+
+    ExecStart=<poetry_venv>/bin/python tuxbot/start.py
+
+    Environment=DD_ACTIVE=false

@@ -12,9 +12,7 @@ import wolframalpha
 from PIL import Image, ImageDraw, ImageFont
 
 
-FONT = ImageFont.truetype(
-    "./tuxbot/cogs/Math/commands/Wolf/fonts/DejaVuSans.ttf", size=16
-)
+FONT = ImageFont.truetype("DejaVuSans.ttf", size=16)
 
 
 class WolframAlpha:
