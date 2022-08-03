@@ -4,6 +4,8 @@ tuxbot.cogs.Tags.commands.Tag.command
 
 Manage tags
 """
+import json
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -24,11 +26,16 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
 
         super().__init__()
 
+    # =========================================================================
+    # =========================================================================
+
     @staticmethod
     async def __get_tag(guild_id: int, name: str) -> TagsModel | None:
         return await TagsModel.get_or_none(
             guild_id=guild_id, name=name.lower()
         )
+
+    # =========================================================================
 
     @staticmethod
     async def __get_tags(
@@ -43,6 +50,34 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
             kwargs["name__icontains"] = query
 
         return await TagsModel.filter(**kwargs).all().order_by("-uses")
+
+    # =========================================================================
+
+    async def __tag_get_autocomplete(
+        self,
+        interaction: discord.Interaction,
+        current: str,
+    ) -> list[app_commands.Choice[str]]:
+        cache_key = self.bot.utils.gen_key(interaction.guild.id, current)
+
+        if data := await self.bot.redis.get(cache_key):
+            tags = json.loads(data) or []
+        else:
+            tags = [
+                t.name
+                for t in (
+                    await self.__get_tags(interaction.guild.id, query=current)
+                    or []
+                )
+            ]
+
+            await self.bot.redis.set(cache_key, json.dumps(tags), ex=3600)
+
+        return [
+            app_commands.Choice(name=tag, value=tag)
+            for tag in tags
+            if current.lower() in tag.lower()
+        ]
 
     # =========================================================================
     # =========================================================================
@@ -82,6 +117,7 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
 
     @app_commands.command(name="get", description="Print a tag")
     @app_commands.describe(name="Tag name")
+    @app_commands.autocomplete(name=__tag_get_autocomplete)
     async def _tag_get(
         self, interaction: discord.Interaction, name: str
     ) -> None:
