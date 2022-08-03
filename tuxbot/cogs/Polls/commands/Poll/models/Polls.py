@@ -1,5 +1,7 @@
 from tortoise import Model, fields
 
+from .Choices import ChoicesModel
+
 
 class PollsModel(Model):
     id = fields.BigIntField(pk=True)
@@ -14,10 +16,14 @@ class PollsModel(Model):
 
     # =========================================================================
 
+    choices: fields.ReverseRelation[ChoicesModel]
+
+    # =========================================================================
+
     class Meta:
         """Meta values"""
 
-        table = "polls"
+        table = "polls_message"
 
     # =========================================================================
 

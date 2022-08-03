@@ -9,7 +9,7 @@ class ChoicesModel(Model):
     )
 
     choice = fields.CharField(description="Poll choice", max_length=256)
-    uses = fields.IntField(default=0)
+    checked = fields.IntField(default=0)
 
     created_at = fields.DatetimeField(auto_now_add=True)
 
@@ -18,7 +18,7 @@ class ChoicesModel(Model):
     class Meta:
         """Meta values"""
 
-        table = "choices"
+        table = "polls_choices"
 
     # =========================================================================
 
@@ -27,7 +27,7 @@ class ChoicesModel(Model):
             f"<Choice id={self.id} "
             f"poll={self.poll} "
             f"choice='{self.choice}' "
-            f"uses={self.uses} "
+            f"checked={self.checked} "
             f"created_at={self.created_at}>"
         )
 

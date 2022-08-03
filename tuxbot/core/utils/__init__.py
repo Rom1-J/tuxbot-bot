@@ -15,6 +15,7 @@ class Utils:
     colors: type[colors] = colors  # noqa: F811
     gen_key: Callable = gen_key  # noqa: F811
     shorten: Callable[..., Coroutine[Any, Any, Any]] = shorten  # noqa: F811
+    emotes: list[str] = [chr(0x1F1E6 + i) for i in range(26)]
 
 
 utils = Utils()

@@ -202,7 +202,7 @@ class TuxbotABC(commands.AutoShardedBot):
         -------
         utils.Utils
         """
-        return utils  # type: ignore
+        return utils.utils  # type: ignore
 
     # =========================================================================
     # =========================================================================
