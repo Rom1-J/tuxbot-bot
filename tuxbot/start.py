@@ -4,6 +4,7 @@ Starter file
 import asyncio
 import os
 import traceback
+from distutils.util import strtobool
 
 from ddtrace.profiling import Profiler
 
@@ -23,7 +24,7 @@ async def run_bot(tuxbot: Tuxbot) -> None:
         Tuxbot instance
     """
     try:
-        if env != "development":
+        if env != "development" and strtobool(os.getenv("DD_ACTIVE", "false")):
             Profiler().start()
 
         await tuxbot.launch()
