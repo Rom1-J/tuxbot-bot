@@ -63,5 +63,6 @@ class Tags(ModuleABC, Commands):  # type: ignore
     async def _tag_deprecated(self, ctx: commands.Context):
         await ctx.send(
             "Deprecated command, use /tag instead "
-            "(reinvite the bot if application commands are not enabled)"
+            "(reinvite the bot if application commands are not enabled)",
+            delete_after=5,
         )

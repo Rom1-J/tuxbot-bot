@@ -8,7 +8,8 @@ class ChoicesModel(Model):
         "models.PollsModel", on_delete=fields.CASCADE, related_name="choices"
     )
 
-    choice = fields.CharField(description="Poll choice", max_length=256)
+    label = fields.CharField(description="Choice label", max_length=8)
+    choice = fields.CharField(description="Choice value", max_length=256)
     checked = fields.IntField(default=0)
 
     created_at = fields.DatetimeField(auto_now_add=True)

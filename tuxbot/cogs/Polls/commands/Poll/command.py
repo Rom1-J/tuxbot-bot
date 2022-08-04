@@ -4,9 +4,12 @@ tuxbot.cogs.Polls.commands.poll.command
 
 Manage polls
 """
+import json
+
 import discord
 from discord import app_commands
 from discord.ext import commands
+from yarl import URL
 
 from tuxbot.core.Tuxbot import Tuxbot
 
@@ -31,7 +34,7 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
         message_id: int,
         author_id: int,
         message: str,
-        choices: list[str],
+        choices: dict[str, str],
     ) -> PollsModel:
         poll = await PollsModel.create(
             channel_id=channel_id,
@@ -40,29 +43,68 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
             message=message,
         )
 
-        for choice in choices:
-            await ChoicesModel.create(poll=poll, choice=choice)
+        for label, choice in choices.items():
+            await ChoicesModel.create(poll=poll, label=label, choice=choice)
 
         return poll
 
     # =========================================================================
 
-    async def __build_embed(self, poll: PollsModel) -> discord.Embed:
+    @staticmethod
+    async def get_poll(message_id: int) -> PollsModel | None:
+        return await PollsModel.get_or_none(message_id=message_id)
+
+    # =========================================================================
+    @staticmethod
+    async def update_poll(
+        bot: Tuxbot, poll: PollsModel, message: discord.Message | None = None
+    ) -> discord.Message:
+        if not message:
+            channel = await bot.fetch_channel(poll.channel_id)
+            message = await channel.fetch_message(poll.message_id)
+
+        return await message.edit(
+            content="", embed=await PollCommand.build_embed(bot, poll)
+        )
+
+    # =========================================================================
+
+    @staticmethod
+    async def build_embed(bot: Tuxbot, poll: PollsModel) -> discord.Embed:
+        chart_base_url = "https://quickchart.io/chart?backgroundColor=white&c="
+        chart_labels = []
+        chart_data = []
+
         e = discord.Embed(description=f"**{poll.message}**")
 
         e.set_author(
-            name=await self.bot.fetch_user_or_none(poll.author_id)
-            or "Anonymous",
+            name=await bot.fetch_user_or_none(poll.author_id) or "Anonymous",
             icon_url="https://img.icons8.com/plasticine/100/000000/survey.png",
         )
 
-        for i, choice in enumerate(await poll.choices.all()):
+        for i, choice in enumerate(await poll.choices.order_by("label").all()):
+            chart_labels.append(choice.choice)
+            chart_data.append(choice.checked)
+
             e.add_field(
-                name=f"__{self.bot.utils.emotes[i]} - {choice.choice}__",
+                name=f"__{choice.label} - {choice.choice}__",
                 value=f"**{choice.checked}** "
                 f"{'votes' if choice.checked > 1 else 'vote'}",
             )
 
+        chart_url = URL(
+            chart_base_url
+            + json.dumps(
+                {
+                    "type": "pie",
+                    "data": {
+                        "labels": chart_labels,
+                        "datasets": [{"data": chart_data}],
+                    },
+                }
+            )
+        )
+        e.set_thumbnail(url=str(chart_url))
         e.set_footer(text=f"ID: #{poll.id}")
 
         return e
@@ -105,22 +147,27 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
         choice9: str | None = None,
         choice10: str | None = None,
     ) -> None:
-        choices = [
-            c
-            for c in (
-                choice1,
-                choice2,
-                choice3,
-                choice4,
-                choice5,
-                choice6,
-                choice7,
-                choice8,
-                choice9,
-                choice10,
+        choices = dict(
+            zip(
+                self.bot.utils.emotes,
+                [
+                    discord.utils.escape_mentions(c)
+                    for c in (
+                        choice1,
+                        choice2,
+                        choice3,
+                        choice4,
+                        choice5,
+                        choice6,
+                        choice7,
+                        choice8,
+                        choice9,
+                        choice10,
+                    )
+                    if c
+                ],
             )
-            if c
-        ]
+        )
 
         stmt: discord.Message = await interaction.channel.send(
             "**Preparing...**"
@@ -134,9 +181,11 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
             choices=choices,
         )
 
-        await stmt.edit(content="", embed=await self.__build_embed(poll))
+        await interaction.response.send_message(
+            "Your poll will be ready in a second", ephemeral=True
+        )
+
+        await self.update_poll(self.bot, poll, message=stmt)
 
         for i in range(len(choices)):
             await stmt.add_reaction(self.bot.utils.emotes[i])
-
-        await interaction.response.send_message("created", ephemeral=True)
