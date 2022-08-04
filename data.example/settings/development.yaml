@@ -57,6 +57,7 @@ modules:
   - Logs
   - Math
   - Network
+  - Polls
   - Random
   - Tags
   - Utils

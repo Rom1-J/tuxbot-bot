@@ -5,6 +5,7 @@ tuxbot.cogs.Polls.commands.poll.command
 Manage polls
 """
 import json
+import textwrap
 
 import discord
 from discord import app_commands
@@ -83,7 +84,7 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
         )
 
         for i, choice in enumerate(await poll.choices.order_by("label").all()):
-            chart_labels.append(choice.choice)
+            chart_labels.append(textwrap.shorten(choice.choice, width=42))
             chart_data.append(choice.checked)
 
             e.add_field(
@@ -106,6 +107,7 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
         )
         e.set_thumbnail(url=str(chart_url))
         e.set_footer(text=f"ID: #{poll.id}")
+        e.timestamp = poll.created_at
 
         return e
 
