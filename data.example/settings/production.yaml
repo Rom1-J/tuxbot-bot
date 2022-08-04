@@ -63,10 +63,10 @@ modules:
 
 # Cogs config
 Math:
-  wolframalpha_key: ''
+  wolframalpha_key: ''  # https://products.wolframalpha.com/api/
 
 Network:
-  ipinfo_key: ''
-  geoapify_key: ''
-  ipgeolocation_key: ''
-  opencagedata_key: ''
+  ipinfo_key: ''  # https://ipinfo.io/developers
+  geoapify_key: ''  # https://www.geoapify.com/get-started-with-maps-api
+  ipgeolocation_key: ''  # https://ipgeolocation.io/documentation.html
+  opencagedata_key: ''  # https://opencagedata.com/api
