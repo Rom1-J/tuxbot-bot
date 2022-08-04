@@ -10,6 +10,11 @@ Prerequisites
 * Redis server
 * Datadog Agent (optional)
 * Sentry App (optional)
+* Discord App with following enabled intents:
+
+    * PRESENCE
+    * SERVER MEMBERS
+    * MESSAGE CONTENT
 
 
 Python interpreter
@@ -36,7 +41,7 @@ Assuming PostgreSQL already configured, and `Poetry <https://python-poetry.org/d
 
     $ git clone https://github.com/Rom1-J/tuxbot-bot /opt
     $ cd /opt/tuxbot-bot
-    $ git branch v4
+    $ git checkout v4
     $ poetry env use 3.10
     $ poetry shell
     $ poetry install
