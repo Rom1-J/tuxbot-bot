@@ -1,7 +1,8 @@
 """
 Tuxbot model
 """
-from tortoise import Model, fields
+from tortoise import fields
+from tortoise.models import Model
 
 from tuxbot.core.models.fields.BigIntArrayField import BigIntArrayField
 

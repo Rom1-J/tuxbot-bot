@@ -3,17 +3,18 @@ Useful generators
 """
 import asyncio
 import inspect
+import typing
 
 import aiohttp
 
 
-def gen_key(*args, **kwargs) -> str:
+def gen_key(*args: tuple[typing.Any], **kwargs: dict[str, typing.Any]) -> str:
     """Generate key from args and kwargs used to be set as key name for redis
 
     Parameters
     ----------
     args: tuple[Any]
-    kwargs dict[str, Any]
+    kwargs dict[str, typing.Any]
 
     Returns
     -------
@@ -37,7 +38,7 @@ def gen_key(*args, **kwargs) -> str:
 
 async def shorten(
     text: str, length: int, fail: bool = False
-) -> tuple[bool, dict]:
+) -> tuple[bool, dict[str, str]]:
     """Return either paste url if text is too long,
     or given text if correct size
 

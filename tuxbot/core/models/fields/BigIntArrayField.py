@@ -4,13 +4,13 @@ Big Int Array field specifically for PostgreSQL.
 This field can store list of bigint values.
 """
 import json
-from typing import Any
+import typing
 
-from tortoise import Model
 from tortoise.fields import Field
+from tortoise.models import Model
 
 
-class BigIntArrayField(Field, list):
+class BigIntArrayField(Field[list[int]]):
     """
     Big Int Array field specifically for PostgreSQL.
 
@@ -19,7 +19,7 @@ class BigIntArrayField(Field, list):
 
     SQL_TYPE = "bigint[]"
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: typing.Any) -> None:
         super().__init__(**kwargs)
 
     def to_db_value(
@@ -29,11 +29,11 @@ class BigIntArrayField(Field, list):
 
         return value
 
-    def to_python_value(self, value: Any) -> list[int] | None:
+    def to_python_value(self, value: typing.Any) -> list[int] | None:
         """Convert db value to python"""
 
         if isinstance(value, str):
             array = json.loads(value.replace("'", '"'))
             return [int(x) for x in array]
 
-        return value
+        return None

@@ -5,9 +5,10 @@ Manage database instance
 """
 import glob
 import importlib
-from typing import Any, TypeVar
+import typing
 
-from tortoise import ModelMeta, Tortoise
+from tortoise import Tortoise
+from tortoise.models import ModelMeta
 
 from tuxbot.core.config import config
 from tuxbot.core.logger import logger
@@ -17,16 +18,16 @@ from tuxbot.core.models.Tuxbot import TuxbotModel
 
 # Note: adding models manually is not useful for the bot,
 # it is only useful for the type hinting
-M = TypeVar("M", TuxbotModel, GuildModel)
+M = typing.Union[TuxbotModel, GuildModel]
 
 
 class Models:
     """Tuxbot models"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__models: dict[str, tuple[str, M]] = {}
 
-    def __setitem__(self, key: str, value: tuple[str, M]):
+    def __setitem__(self, key: str, value: tuple[str, M]) -> None:
         if self.check(value):
             logger.info("[Models] Adding model '%s'.", key)
             self.__models[key] = value
@@ -40,7 +41,7 @@ class Models:
     # =========================================================================
 
     @staticmethod
-    def check(value: Any):
+    def check(value: typing.Any) -> bool:
         """Check for given value"""
         if (
             isinstance(value, tuple)
@@ -74,13 +75,13 @@ class Database:
 
     models = Models()
 
-    def __init__(self, c: dict[str, Any]):
+    def __init__(self, c: dict[str, typing.Any]) -> None:
         self.config = c
 
     # =========================================================================
     # =========================================================================
 
-    async def init(self):
+    async def init(self) -> None:
         """Init database"""
         self.fetch_models()
 
@@ -106,7 +107,7 @@ class Database:
     # =========================================================================
 
     @staticmethod
-    async def disconnect():
+    async def disconnect() -> None:
         """Disconnect database"""
 
         logger.info("[Database] Closing connections.")
@@ -115,7 +116,7 @@ class Database:
     # =========================================================================
     # =========================================================================
 
-    def fetch_models(self):
+    def fetch_models(self) -> None:
         """fetch all models"""
         core_models = self.config["paths"]["base"] / "core" / "models"
 
@@ -124,7 +125,7 @@ class Database:
 
     # =========================================================================
 
-    def register_model(self, model_path):
+    def register_model(self, model_path: str) -> None:
         """register model"""
         cwd = self.config["paths"]["cwd"]
 

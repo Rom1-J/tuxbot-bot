@@ -3,14 +3,14 @@ Tuxbot core module: redis
 
 Manage redis instances
 """
-import aioredis
+from aioredis.client import Redis
 
 
-async def connect() -> aioredis.Redis:
+def connect() -> Redis:
     """Connector for redis instance
 
     Returns
     -------
     aioredis.Redis
     """
-    return await aioredis.from_url("redis://localhost", db=1)
+    return Redis(db=1)

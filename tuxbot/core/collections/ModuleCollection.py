@@ -7,12 +7,12 @@ import glob
 import importlib.util
 import inspect
 import os
-from typing import TYPE_CHECKING, Union
+import typing
 
 from discord.ext import commands
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from tuxbot.abc.ModuleABC import ModuleABC
     from tuxbot.core.Tuxbot import Tuxbot
 
@@ -22,7 +22,7 @@ class ModuleCollection:
 
     _modules: dict[str, list[commands.Cog]]
 
-    def __init__(self, config, bot: "Tuxbot"):
+    def __init__(self, config: dict[str | int, typing.Any], bot: "Tuxbot"):
         self.config = config
         self.bot = bot
 
@@ -30,7 +30,7 @@ class ModuleCollection:
 
     # =========================================================================
 
-    def add_module(self, name: str, module: commands.Cog):
+    def add_module(self, name: str, module: commands.Cog) -> None:
         """Preload modules"""
 
         module.__cog_name__ = f"{name}_{module.__cog_name__}"
@@ -42,7 +42,7 @@ class ModuleCollection:
 
     # =========================================================================
 
-    async def load_modules(self):
+    async def load_modules(self) -> None:
         """Load all modules from config"""
         if not (modules := self.config["modules"]):
             return
@@ -52,7 +52,7 @@ class ModuleCollection:
                 self.config["paths"]["python_cogs"] + f".{module_name}"
             )
 
-            module: type[Union["ModuleABC", commands.Cog]] = getattr(
+            module: type[typing.Union["ModuleABC", commands.Cog]] = getattr(
                 importlib.import_module(module_path, package="tuxbot"),
                 module_name,
             )
@@ -61,7 +61,7 @@ class ModuleCollection:
 
     # =========================================================================
 
-    async def register(self, _module: type[commands.Cog]):
+    async def register(self, _module: type[commands.Cog]) -> None:
         """Register module
 
         Parameters
@@ -76,26 +76,24 @@ class ModuleCollection:
         module = _module(bot=self.bot)
         module_path = os.path.dirname(inspect.getfile(_module))
 
-        module.name = (
-            module.name if hasattr(module, "name") else module.__cog_name__
-        )
-        active_module = self.bot.cogs.get(module.name)
+        active_module = self.bot.cogs.get(module.qualified_name)
 
         if active_module:
             self.bot.logger.info(
-                "[ModuleCollection] Unloading module '%s'", module.name
+                "[ModuleCollection] Unloading module '%s'",
+                module.qualified_name,
             )
-            await self.bot.remove_cog(module.name)
+            await self.bot.remove_cog(module.qualified_name)
 
         self.bot.logger.info(
-            "[ModuleCollection] Registering module '%s'", module.name
+            "[ModuleCollection] Registering module '%s'", module.qualified_name
         )
 
         await self.bot.add_cog(module)
 
-        if sub_modules := self._modules.get(module.name):
+        if sub_modules := self._modules.get(module.qualified_name):
             for sub_module in sub_modules:
-                sub_module.cog_check = module.cog_check
+                sub_module.cog_check = module.cog_check  # type: ignore
                 await self.bot.add_cog(sub_module)
 
         self.register_models(
@@ -104,7 +102,7 @@ class ModuleCollection:
 
     # =========================================================================
 
-    def register_models(self, models: list[str]):
+    def register_models(self, models: list[str]) -> None:
         """Register module models
 
         Parameters
@@ -114,5 +112,4 @@ class ModuleCollection:
         """
 
         for model in models:
-            # type: ignore
             self.bot.db.register_model(model.split("site-packages/")[-1])

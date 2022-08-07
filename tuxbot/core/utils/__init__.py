@@ -2,19 +2,21 @@
 Set of utils functions and classes
 """
 
-from typing import Any, Callable, Coroutine
+import typing
 
-# noinspection PyPep8Naming
-from .Colors import Colors as colors  # noqa: F401
-from .Generators import gen_key, shorten  # noqa: F401
+from .Colors import Colors
+from .Generators import gen_key as _gen_key
+from .Generators import shorten as _shorten
 
 
 class Utils:
     """Set of utils functions and classes"""
 
-    colors: type[colors] = colors  # noqa: F811
-    gen_key: Callable = gen_key  # noqa: F811
-    shorten: Callable[..., Coroutine[Any, Any, Any]] = shorten  # noqa: F811
+    colors: type[Colors] = Colors
+    gen_key: typing.Callable[..., str] = _gen_key
+    shorten: typing.Callable[
+        ..., typing.Coroutine[typing.Any, typing.Any, typing.Any]
+    ] = _shorten
     emotes: list[str] = [chr(0x1F1E6 + i) for i in range(26)]
 
 

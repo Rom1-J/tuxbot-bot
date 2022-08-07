@@ -1,32 +1,23 @@
 """
 Custom Context class
 """
-from typing import TYPE_CHECKING, Any, Sequence
+import typing
 
-from discord import (
-    AllowedMentions,
-    Embed,
-    File,
-    GuildSticker,
-    Message,
-    MessageReference,
-    PartialMessage,
-    StickerItem,
-)
+import discord
 from discord.ext import commands
 from discord.ui import View
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
-class ContextPlus(commands.Context):
+class ContextPlus(commands.Context[TuxbotABC]):
     """Extended Context class with new/rewrote features"""
 
     bot: "TuxbotABC"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         items = (
             "message=%s" % self.message,
             "channel=%s" % self.channel,
@@ -41,23 +32,30 @@ class ContextPlus(commands.Context):
 
     # =========================================================================
 
-    def _clean_message(self, kwargs: dict[str, Any]) -> dict[str, Any]:
-        def clear_embeds(_embeds: list[Embed]):
+    def _clean_message(
+        self, kwargs: dict[str, typing.Any]
+    ) -> dict[str, typing.Any]:
+        if not self.bot.http.token:
+            return kwargs
+
+        def clear_embeds(_embeds: list[discord.Embed]) -> list[discord.Embed]:
             """Clear embed from sensitive data"""
+            if not self.bot.http.token:
+                return _embeds
 
             es = _embeds.copy()
 
             for i, e in enumerate(es):
-                e = e.to_dict()
+                e_dict = e.to_dict()
 
-                for key, value in e.items():
+                for key, value in e_dict.items():
                     if isinstance(value, str):
                         # noinspection PyTypedDict
-                        e[key] = value.replace(
+                        e_dict[key] = value.replace(  # type: ignore
                             self.bot.http.token, "[redacted]"
                         )
 
-                es[i] = Embed.from_dict(e)
+                es[i] = discord.Embed.from_dict(e_dict)
 
             return es
 
@@ -82,20 +80,24 @@ class ContextPlus(commands.Context):
         content: str | None = None,
         *,
         tts: bool = False,
-        embed: Embed | None = None,
-        embeds: Sequence[Embed] | None = None,
-        file: File | None = None,
-        files: Sequence[File] | None = None,
-        stickers: Sequence[GuildSticker | StickerItem] | None = None,
+        embed: discord.Embed | None = None,
+        embeds: typing.Sequence[discord.Embed] | None = None,
+        file: discord.File | None = None,
+        files: typing.Sequence[discord.File] | None = None,
+        stickers: typing.Sequence[discord.GuildSticker | discord.StickerItem]
+        | None = None,
         delete_after: float | None = None,
         nonce: str | int | None = None,
-        allowed_mentions: AllowedMentions | None = None,
-        reference: None | (Message | MessageReference | PartialMessage) = None,
+        allowed_mentions: discord.AllowedMentions | None = None,
+        reference: None
+        | (
+            discord.Message | discord.MessageReference | discord.PartialMessage
+        ) = None,
         mention_author: bool | None = None,
         view: View | None = None,
         suppress_embeds: bool = False,
         ephemeral: bool = False,
-    ) -> Message:
+    ) -> discord.Message:
         """Proxy function for internal ctx.`send` of dpy"""
 
         kwargs = {
@@ -118,4 +120,4 @@ class ContextPlus(commands.Context):
 
         kwargs = self._clean_message(kwargs)
 
-        return await super().send(**kwargs)
+        return await super().send(**kwargs)  # type: ignore

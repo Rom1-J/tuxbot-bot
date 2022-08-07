@@ -2,10 +2,12 @@
 Main paginator constructor
 """
 import asyncio
-from typing import Any
+import typing
 
 import discord
-from discord.ext import commands, menus  # type: ignore
+from discord.ext import commands, menus
+
+from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
 class Pages(discord.ui.View):
@@ -15,11 +17,11 @@ class Pages(discord.ui.View):
         self,
         source: menus.PageSource,
         *,
-        ctx: commands.Context | discord.Interaction,
+        ctx: commands.Context[TuxbotABC] | discord.Interaction,
     ):
         super().__init__()
         self.source: menus.PageSource = source
-        self.ctx: commands.Context | discord.Interaction = ctx
+        self.ctx: commands.Context[TuxbotABC] | discord.Interaction = ctx
 
         self.message: discord.Message | None = None
         self.author: discord.Member | discord.User | None = None
@@ -38,8 +40,8 @@ class Pages(discord.ui.View):
     def fill_items(self) -> None:
         """Generate items"""
 
-        if self.source.is_paginating():
-            max_pages = self.source.get_max_pages()
+        if self.source.is_paginating():  # type: ignore
+            max_pages = self.source.get_max_pages()  # type: ignore
             use_last_and_first = max_pages is not None and max_pages >= 2
 
             if use_last_and_first:
@@ -55,9 +57,9 @@ class Pages(discord.ui.View):
             if isinstance(self.ctx, commands.Context):
                 self.add_item(self.stop_pages)
 
-    async def _get_kwargs_from_page(self, page: int) -> dict[str, Any]:
-        value = await discord.utils.maybe_coroutine(
-            self.source.format_page, self, page
+    async def _get_kwargs_from_page(self, page: int) -> dict[str, typing.Any]:
+        value: typing.Any = await discord.utils.maybe_coroutine(
+            self.source.format_page, self, page  # type: ignore
         )
 
         if isinstance(value, dict):
@@ -76,7 +78,7 @@ class Pages(discord.ui.View):
     ) -> None:
         """Send page"""
 
-        page = await self.source.get_page(page_number)
+        page = await self.source.get_page(page_number)  # type: ignore
         self.current_page = page_number
 
         kwargs = await self._get_kwargs_from_page(page)
@@ -100,7 +102,7 @@ class Pages(discord.ui.View):
         self.go_to_next_page.label = str(page_number + 2)
         self.go_to_next_page.disabled = False
 
-        max_pages = self.source.get_max_pages()
+        max_pages = self.source.get_max_pages()  # type: ignore
 
         if max_pages is not None:
             self.go_to_last_page.disabled = (page_number + 1) >= max_pages
@@ -118,7 +120,7 @@ class Pages(discord.ui.View):
     ) -> None:
         """Check before show page"""
 
-        max_pages = self.source.get_max_pages()
+        max_pages = self.source.get_max_pages()  # type: ignore
 
         try:
             if max_pages is None:
@@ -156,7 +158,7 @@ class Pages(discord.ui.View):
         self,
         interaction: discord.Interaction,
         error: Exception,
-        item: discord.ui.Item,
+        item: discord.ui.Item["Pages"],
     ) -> None:
         """Unknown error occurred"""
 
@@ -176,8 +178,8 @@ class Pages(discord.ui.View):
         """Start paginator"""
 
         # noinspection PyProtectedMember
-        await self.source._prepare_once()  # pylint: disable=protected-access
-        page = await self.source.get_page(0)
+        await self.source._prepare_once()  # type: ignore
+        page = await self.source.get_page(0)  # type: ignore
         kwargs = await self._get_kwargs_from_page(page)
 
         if content:
@@ -190,7 +192,7 @@ class Pages(discord.ui.View):
             return
 
         if isinstance(self.ctx, discord.Interaction):
-            self.message = await self.ctx.response.send_message(
+            await self.ctx.response.send_message(
                 **kwargs, view=self, ephemeral=True
             )
 
@@ -199,8 +201,10 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="≪", style=discord.ButtonStyle.grey)
     async def go_to_first_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button["Pages"],
+    ) -> None:
         """Go to the first page"""
         await self.show_page(interaction, 0)
 
@@ -209,8 +213,10 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="Back", style=discord.ButtonStyle.blurple)
     async def go_to_previous_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button["Pages"],
+    ) -> None:
         """Go to the previous page"""
         await self.show_checked_page(interaction, self.current_page - 1)
 
@@ -221,8 +227,10 @@ class Pages(discord.ui.View):
         label="Current", style=discord.ButtonStyle.grey, disabled=True
     )
     async def go_to_current_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button["Pages"],
+    ) -> None:
         """Go to the current page"""
 
     # =========================================================================
@@ -230,8 +238,10 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="Next", style=discord.ButtonStyle.blurple)
     async def go_to_next_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button["Pages"],
+    ) -> None:
         """Go to the next page"""
         await self.show_checked_page(interaction, self.current_page + 1)
 
@@ -240,18 +250,22 @@ class Pages(discord.ui.View):
     # pylint: disable=unused-argument
     @discord.ui.button(label="≫", style=discord.ButtonStyle.grey)
     async def go_to_last_page(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button["Pages"],
+    ) -> None:
         """Go to the last page"""
-        await self.show_page(interaction, self.source.get_max_pages() - 1)
+        await self.show_page(interaction, self.source.get_max_pages() - 1)  # type: ignore
 
     # =========================================================================
 
     # pylint: disable=unused-argument
     @discord.ui.button(label="Quit", style=discord.ButtonStyle.red, row=1)
     async def stop_pages(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button["Pages"],
+    ) -> None:
         """Stop the paginator"""
         await interaction.response.defer()
         await interaction.delete_original_message()

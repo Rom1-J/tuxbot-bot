@@ -7,9 +7,9 @@ import json
 import os
 import sys
 import traceback
+import typing
 from datetime import datetime
 from distutils.util import strtobool
-from typing import Any, Iterable, Sequence
 
 import aiohttp
 import discord
@@ -19,10 +19,12 @@ from discord.ext import commands
 from discord.http import Route
 from jishaku import Jishaku
 
+from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core import redis
 from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
+from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 
@@ -47,7 +49,7 @@ class Tuxbot(TuxbotABC):
     Tuxbot client class
     """
 
-    def __init__(self, options):
+    def __init__(self, options: dict[str, typing.Any]) -> None:
         self._config = config
 
         options = options or {}
@@ -56,7 +58,7 @@ class Tuxbot(TuxbotABC):
         super().__init__(**self.client_options)
 
         self._internal_request = self.http.request
-        self.http.request = self._request
+        self.http.request = self._request  # type: ignore
 
         self.collection = ModuleCollection(self._config, self)
         self.running_instance = True
@@ -64,7 +66,7 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
     # =========================================================================
 
-    async def setup_hook(self):
+    async def setup_hook(self) -> None:
         """Load configurations"""
 
         await self.collection.register(Jishaku)
@@ -88,8 +90,12 @@ class Tuxbot(TuxbotABC):
 
     # =========================================================================
 
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         """Ready event handler"""
+
+        if not self.user:
+            return
+
         if self.uptime is not None and self.uptime.timestamp() > 0:
             self.last_on_ready = datetime.now()
             return
@@ -114,23 +120,28 @@ class Tuxbot(TuxbotABC):
             )
 
         for guild in self.guilds:
-            if guild_model := await self.models["Guild"].get_or_none(
-                id=guild.id
-            ):
+            guild_model: GuildModel | None = await self.models[
+                "Guild"
+            ].get_or_none(id=guild.id)
+
+            if guild_model:
                 guild_model.deleted = False
                 await guild_model.save()
-            else:
-                guild_model = await self.models["Guild"].create(
-                    id=guild.id,
-                    moderators=[],
-                    moderator_roles=[],
-                    deleted=False,
-                )
-                await guild_model.save()
+                return
+
+            await self.models["Guild"].create(
+                id=guild.id,
+                moderators=[],
+                moderator_roles=[],
+                deleted=False,
+            )
 
     # =========================================================================
-    async def get_context(
-        self, message: discord.Message, *, cls: type[ContextPlus] = None
+    async def get_context(  # type: ignore
+        self,
+        message: discord.Message,
+        *,
+        cls: type[ContextPlus] = None,  # type: ignore
     ) -> ContextPlus:
         """Bind custom context"""
 
@@ -138,7 +149,7 @@ class Tuxbot(TuxbotABC):
 
     # =========================================================================
 
-    async def invoke(self, ctx: ContextPlus) -> None:
+    async def invoke(self, ctx: ContextPlus) -> None:  # type: ignore
         """Bind custom command invoker"""
         if ctx.command is not None and await ctx.command.can_run(ctx):
             async with ctx.typing():
@@ -146,7 +157,9 @@ class Tuxbot(TuxbotABC):
 
     # =========================================================================
 
-    def dispatch(self, event_name: str, /, *args: Any, **kwargs: Any) -> None:
+    def dispatch(
+        self, event_name: str, /, *args: typing.Any, **kwargs: typing.Any
+    ) -> None:
         """Bind custom command invoker"""
         if self.running_instance:
             super().dispatch(event_name, *args, **kwargs)
@@ -179,7 +192,7 @@ class Tuxbot(TuxbotABC):
         """Login to discord"""
 
         try:
-            self.redis = await redis.connect()
+            self.redis = redis.connect()
             await self.redis.ping()
             self.logger.info("[Tuxbot] Redis connection established.")
         except Exception as e:
@@ -200,10 +213,10 @@ class Tuxbot(TuxbotABC):
         self,
         route: Route,
         *,
-        files: Sequence[discord.File] | None = None,
-        form: Iterable[dict[str, Any]] | None = None,
-        **kwargs: Any,
-    ) -> Any:
+        files: typing.Sequence[discord.File] | None = None,
+        form: typing.Iterable[dict[str, typing.Any]] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.Any:
         """Proxy function for internal request manager of dpy"""
 
         self.statsd.increment(
@@ -231,40 +244,45 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
 
     @staticmethod
-    async def post_webhook(webhook: str, payload: dict | discord.Embed):
+    async def post_webhook(
+        webhook: str, payload: dict[str, typing.Any] | discord.Embed
+    ) -> None:
         """Post webhook
 
         Parameters
         ----------
         webhook:str
             Webhook URL
-        payload:dict | discord.Embed
+        payload:dict[str, typing.Any] | discord.Embed
             Webhook data
         """
         async with aiohttp.ClientSession() as session:
             if isinstance(payload, discord.Embed):
-                await discord.Webhook.from_url(webhook, session=session).send(
-                    embed=payload
-                )
+                webhook = discord.Webhook.from_url(webhook, session=session)
+                await webhook.send(embed=payload)
             else:
                 await session.post(webhook, json=payload)
 
     # =========================================================================
 
     @staticmethod
-    def configure(options: dict) -> tuple[dict, dict]:
+    def configure(
+        options: dict[str, typing.Any]
+    ) -> tuple[dict[str, typing.Any], dict[str, typing.Any]]:
         """Configure Tuxbot"""
 
         async def get_prefix(
             bot: "Tuxbot", message: discord.Message
         ) -> list[str]:
             """Get bot prefixes from config or set it as mentionable"""
-            if not (prefixes := config.get("prefixes")):
+            prefixes: list[str] | None = config.get("prefixes")
+
+            if not prefixes or not isinstance(prefixes, list):
                 prefixes = commands.when_mentioned(bot, message)
 
             return prefixes
 
-        client_config = {
+        client_config: dict[str, typing.Any] = {
             "disable_events": {"TYPING_START": True},
             "allowed_mentions": discord.AllowedMentions(
                 everyone=(not config["client"]["disable_everyone"]) or False
@@ -291,7 +309,7 @@ class Tuxbot(TuxbotABC):
             "help_command": None,
         }
 
-        cluster_config = {
+        cluster_config: dict[str, typing.Any] = {
             "cluster_id": options.get("cluster_id"),
             "cluster_count": options.get("cluster_count"),
         }
@@ -311,7 +329,7 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
 
     @staticmethod
-    def crash_report(client: "Tuxbot", err: Exception):
+    def crash_report(client: "Tuxbot", err: Exception) -> None:
         """Generate crash report file and exit
 
         Parameters
@@ -323,7 +341,7 @@ class Tuxbot(TuxbotABC):
 
         Returns
         -------
-        NoReturn
+        typing.NoReturn
         """
         cluster_id = f"C{client.cluster_options.get('cluster_id')}"
         time = datetime.utcnow().isoformat()
@@ -360,7 +378,9 @@ class Tuxbot(TuxbotABC):
         report += "\n\nCogs crash reports:"
 
         for module in client.cogs:
-            if hasattr(module, "crash_report"):
+            if isinstance(module, ModuleABC) and hasattr(
+                module, "crash_report"
+            ):
                 report += f"\n{module.crash_report()}\n"
 
         with open(str(crash_path), "w", encoding="UTF-8") as f:

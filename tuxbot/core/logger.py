@@ -40,7 +40,7 @@ class Logger(logging.Logger):
         "dd.span_id",
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             "tuxbot", level=config.get("log_level", "info").upper()
         )

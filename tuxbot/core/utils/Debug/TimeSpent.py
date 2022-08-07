@@ -7,7 +7,7 @@ import time
 class TimeSpent:
     """Log time spent between each update"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.order: list[str] = []
         self.times: dict[str, list[float]] = {}
 

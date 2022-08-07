@@ -1,7 +1,8 @@
 """
 Guild model
 """
-from tortoise import Model, fields
+from tortoise import fields
+from tortoise.models import Model
 
 from tuxbot.core.models.fields.BigIntArrayField import BigIntArrayField
 
@@ -30,8 +31,8 @@ class GuildModel(Model):
 
     # =========================================================================
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.id)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Server id={self.id}>"
