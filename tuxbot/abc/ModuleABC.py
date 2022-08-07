@@ -3,8 +3,10 @@ Tuxbot abstract class module: ModuleABC
 
 Contains all Module properties
 """
+import typing
 
 from discord.ext import commands
+from tortoise.models import ModelMeta
 
 from tuxbot.core.Tuxbot import Tuxbot
 
@@ -13,7 +15,8 @@ class ModuleABC(commands.Cog):
     """Module Abstract Class"""
 
     bot: Tuxbot
-    modules: list
+    models: ModelMeta
+    config: dict[str, typing.Any]
 
     def crash_report(self) -> str:
         """Generate crash report"""
