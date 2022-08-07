@@ -6,7 +6,7 @@ import os
 import traceback
 from distutils.util import strtobool
 
-from ddtrace.profiling import Profiler
+from ddtrace.profiling.profiler import Profiler
 
 from tuxbot.core.logger import logger
 from tuxbot.core.Tuxbot import Tuxbot
@@ -25,7 +25,7 @@ async def run_bot(tuxbot: Tuxbot) -> None:
     """
     try:
         if env != "development" and strtobool(os.getenv("DD_ACTIVE", "false")):
-            Profiler().start()
+            Profiler().start()  # type: ignore
 
         await tuxbot.launch()
     except Exception as e:
@@ -35,7 +35,7 @@ async def run_bot(tuxbot: Tuxbot) -> None:
         Tuxbot.crash_report(tuxbot, e)
 
 
-def start():
+def start() -> None:
     """Start function"""
     with open("misc/logo.txt", encoding="UTF-8") as f:
         logo = f.read()
@@ -45,7 +45,7 @@ def start():
         "[C%s] Process %d online.", os.getenv("CLUSTER_ID"), os.getpid()
     )
 
-    options = {}
+    options: dict[str, str | int | None] = {}
 
     if shard_id := os.getenv("SHARD_ID"):
         options["shard_id"] = int(shard_id)
@@ -83,7 +83,8 @@ def start():
         if env == "development":
             traceback.print_exc()
 
-        Tuxbot.crash_report(tuxbot, e)
+        if tuxbot:
+            Tuxbot.crash_report(tuxbot, e)
 
 
 if __name__ == "__main__":
