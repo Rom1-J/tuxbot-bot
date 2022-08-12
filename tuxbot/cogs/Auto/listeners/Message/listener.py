@@ -15,7 +15,7 @@ from .workers import Worker
 class Message(commands.Cog):
     """Listener whenever message is sent"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
         self.worker = Worker(self.bot)
 
@@ -23,5 +23,5 @@ class Message(commands.Cog):
     # =========================================================================
 
     @commands.Cog.listener(name="on_message")
-    async def _on_message(self, message: discord.Message):
+    async def _on_message(self, message: discord.Message) -> None:
         await self.worker.runs(message)

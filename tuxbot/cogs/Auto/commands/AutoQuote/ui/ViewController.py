@@ -1,25 +1,29 @@
 """
 Page view controller
 """
-from typing import Union
+import typing
 
 import discord
 from discord.ext import commands
+
+from tuxbot.abc.TuxbotABC import TuxbotABC
 
 from ..models.AutoQuote import AutoQuoteModel
 from .pages.GlobalEmbed import GlobalEmbed
 from .panels import ViewPanel
 
 
-DATA_TYPE = Union[str, int, float, dict, list]
+DATA_TYPE = typing.Union[str, int, float, dict, list]
 
 
 class ViewController(discord.ui.View):
     """View controller"""
 
-    __message: discord.Message = None
+    __message: discord.Message | None = None
 
-    def __init__(self, ctx: commands.Context, model: AutoQuoteModel):
+    def __init__(
+        self, ctx: commands.Context[TuxbotABC], model: AutoQuoteModel
+    ):
         super().__init__(timeout=60)
 
         self.ctx = ctx
@@ -65,20 +69,25 @@ class ViewController(discord.ui.View):
     # =========================================================================
     # =========================================================================
 
-    def get_button(self, name: str) -> discord.ui.Item | None:
+    def get_button(
+        self, name: str
+    ) -> discord.ui.Button["ViewController"] | None:
         """Get view button"""
 
-        for button in self.children:  # type: ignore
-            if (button.label == name) or (  # type: ignore
-                button.emoji and button.emoji.name == name  # type: ignore
-            ):  # type: ignore
+        for button in self.children:
+            if not isinstance(button, discord.ui.Button):
+                continue
+
+            if (button.label == name) or (
+                button.emoji and button.emoji.name == name
+            ):
                 return button
 
         return None
 
     # =========================================================================
 
-    async def change_state(self, interaction: discord.Interaction):
+    async def change_state(self, interaction: discord.Interaction) -> None:
         """Change current page"""
 
         self.model.activated = not self.model.activated
@@ -91,14 +100,14 @@ class ViewController(discord.ui.View):
     # =========================================================================
     # =========================================================================
 
-    async def send(self):
+    async def send(self) -> None:
         """Send selected embed"""
 
         await self.edit()
 
     # =========================================================================
 
-    async def edit(self):
+    async def edit(self) -> None:
         """Edit sent message"""
         embed = self.embed.rebuild()
 
@@ -118,8 +127,11 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    async def cache(self):
+    async def cache(self) -> None:
         """Cache result"""
+        if not self.ctx.guild:
+            return
+
         if not self.ctx.bot.cached_config.get(self.ctx.guild.id):
             self.ctx.bot.cached_config[self.ctx.guild.id] = {}
 
@@ -129,7 +141,9 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete controller"""
         self.stop()
-        await self.__message.delete()
+
+        if self.__message:
+            await self.__message.delete()

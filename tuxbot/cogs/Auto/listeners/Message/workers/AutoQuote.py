@@ -13,19 +13,19 @@ from tuxbot.core.Tuxbot import Tuxbot
 from ....commands.AutoQuote.models.AutoQuote import AutoQuoteModel
 
 
-REGEX = r"(https://((ptb|canary)\.)?discord\.com" r"/channels/\d+/\d+/\d+)"
+REGEX = r"(https://((ptb|canary)\.)?discord\.com/channels/\d+/\d+/\d+)"
 
 
 class AutoQuote:
     """Automatically send message link content"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
-    async def process(self, message: discord.Message):
+    async def process(self, message: discord.Message) -> None:
         """Process worker"""
 
-        if message.guild is None or message.author.bot:
+        if not message.guild or message.author.bot:
             return
 
         if not self.bot.cached_config.get(message.guild.id):
@@ -45,6 +45,9 @@ class AutoQuote:
             if ctx.command is not None:
                 return
 
+            if not isinstance(ctx.author, discord.Member):
+                return
+
             quotes = [q[0] for q in re.findall(REGEX, message.content)]
             embeds = []
 
@@ -60,7 +63,7 @@ class AutoQuote:
                         return
 
                     if referred_message.channel.permissions_for(
-                        ctx.author
+                        ctx.author  # type: ignore
                     ).read_message_history:
                         embed = discord.Embed(
                             description=referred_message.content,

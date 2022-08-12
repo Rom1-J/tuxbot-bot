@@ -1,8 +1,8 @@
-from .buttons import DeleteButton, ToggleButton
+from .buttons import ButtonType, DeleteButton, ToggleButton
 
 
 class Panel:
-    buttons: list
+    buttons: list[list[ButtonType]]
 
 
 class ViewPanel(Panel):

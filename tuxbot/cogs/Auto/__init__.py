@@ -6,7 +6,10 @@ Set of useful automatic workers.
 """
 from collections import namedtuple
 
+import discord
+
 from tuxbot.abc.ModuleABC import ModuleABC
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.AutoQuote.command import AutoQuoteCommand
@@ -24,7 +27,7 @@ STANDARD_COMMANDS = (AutoQuoteCommand,)
 STANDARD_LISTENERS = (Message,)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=0, micro=0, release_level="beta")
+version_info = VersionInfo(major=1, minor=1, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -35,7 +38,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Auto", command(bot=bot))
 
@@ -43,18 +46,20 @@ class Commands:
             bot.collection.add_module("Auto", listener(bot=bot))
 
 
-class Auto(ModuleABC, Commands):  # type: ignore
+class Auto(ModuleABC, Commands):
     """Set of useful automatic workers."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
 
     # =========================================================================
 
-    # pylint: disable=invalid-overridden-method
-    async def cog_check(self, ctx: commands.Context):
-        """Ensure author is owner"""
+    async def cog_check(  # type: ignore[override]
+        self, ctx: commands.Context[TuxbotABC]
+    ) -> bool:
+        if ctx.guild and isinstance(ctx.author, discord.Member):
+            return bool(ctx.author.guild_permissions.administrator)
 
-        return ctx.author.guild_permissions.administrator
+        return False

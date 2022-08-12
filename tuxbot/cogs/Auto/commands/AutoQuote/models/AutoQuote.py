@@ -1,7 +1,8 @@
 """
 AutoQuote model
 """
-from tortoise import Model, fields
+from tortoise import fields
+from tortoise.models import Model
 
 
 class AutoQuoteModel(Model):
@@ -23,7 +24,7 @@ class AutoQuoteModel(Model):
 
     # =========================================================================
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<AutoQuote id={self.id} "
             f"guild_id={self.guild_id} "

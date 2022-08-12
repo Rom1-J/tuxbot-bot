@@ -1,12 +1,12 @@
 """
 Base embed page
 """
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from ..ViewController import ViewController
 
 
