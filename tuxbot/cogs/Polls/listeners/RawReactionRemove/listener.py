@@ -15,7 +15,7 @@ from ...commands.Poll.command import PollCommand
 class RawReactionRemove(commands.Cog):
     """Listener whenever a reaction is removed"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -24,7 +24,7 @@ class RawReactionRemove(commands.Cog):
     @commands.Cog.listener(name="on_raw_reaction_remove")
     async def _on_raw_reaction_remove(
         self, pld: discord.RawReactionActionEvent
-    ):
+    ) -> None:
         if pld.member == self.bot.user:
             return
 

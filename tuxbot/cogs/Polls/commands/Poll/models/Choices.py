@@ -1,10 +1,17 @@
-from tortoise import Model, fields
+import typing
+
+from tortoise import fields
+from tortoise.models import Model
+
+
+if typing.TYPE_CHECKING:
+    from .Polls import PollsModel
 
 
 class ChoicesModel(Model):
     id = fields.BigIntField(pk=True)
 
-    poll = fields.ForeignKeyField(
+    poll: fields.ForeignKeyRelation["PollsModel"] = fields.ForeignKeyField(
         "models.PollsModel", on_delete=fields.CASCADE, related_name="choices"
     )
 
@@ -23,7 +30,7 @@ class ChoicesModel(Model):
 
     # =========================================================================
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<Choice id={self.id} "
             f"poll={self.poll} "

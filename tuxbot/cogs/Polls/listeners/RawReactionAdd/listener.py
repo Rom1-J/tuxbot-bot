@@ -15,14 +15,16 @@ from ...commands.Poll.command import PollCommand
 class RawReactionAdd(commands.Cog):
     """Listener whenever a reaction is added"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.Cog.listener(name="on_raw_reaction_add")
-    async def _on_raw_reaction_add(self, pld: discord.RawReactionActionEvent):
+    async def _on_raw_reaction_add(
+        self, pld: discord.RawReactionActionEvent
+    ) -> None:
         if pld.member == self.bot.user:
             return
 

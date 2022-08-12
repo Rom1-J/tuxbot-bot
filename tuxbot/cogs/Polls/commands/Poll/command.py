@@ -19,10 +19,10 @@ from .models.Polls import PollsModel
 
 
 @app_commands.guild_only()
-class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
+class PollCommand(commands.GroupCog, name="poll"):
     """Manage polls"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__()
@@ -59,14 +59,20 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
     @staticmethod
     async def update_poll(
         bot: Tuxbot, poll: PollsModel, message: discord.Message | None = None
-    ) -> discord.Message:
+    ) -> discord.Message | None:
         if not message:
             channel = await bot.fetch_channel(poll.channel_id)
-            message = await channel.fetch_message(poll.message_id)
+            message = await channel.fetch_message(  # type: ignore
+                poll.message_id
+            )
 
-        return await message.edit(
+        if not message:
+            return None
+
+        m: discord.Message = await message.edit(
             content="", embed=await PollCommand.build_embed(bot, poll)
         )
+        return m
 
     # =========================================================================
 
@@ -149,6 +155,9 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
         choice9: str | None = None,
         choice10: str | None = None,
     ) -> None:
+        if not interaction.channel:
+            return
+
         choices = dict(
             zip(
                 self.bot.utils.emotes,
@@ -171,7 +180,7 @@ class PollCommand(commands.GroupCog, name="poll"):  # type: ignore
             )
         )
 
-        stmt: discord.Message = await interaction.channel.send(
+        stmt: discord.Message = await interaction.channel.send(  # type: ignore
             "**Preparing...**"
         )
 

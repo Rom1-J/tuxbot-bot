@@ -7,6 +7,7 @@ Set of useful commands for polls.
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.exceptions import PollsException
@@ -19,6 +20,7 @@ from .listeners.RawReactionRemove.listener import RawReactionRemove
 # If it isn't, commands is bind on tuxbot.cogs.Utils.commands ¯\_(ツ)_/¯
 # pylint: disable=wrong-import-order
 from discord.ext import commands  # isort: skip
+
 
 STANDARD_COMMANDS = (PollCommand,)
 
@@ -39,7 +41,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Polls", command(bot=bot))
 
@@ -50,7 +52,7 @@ class Commands:
 class Polls(ModuleABC, Commands):
     """Set of useful commands for polls."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -59,7 +61,7 @@ class Polls(ModuleABC, Commands):
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context, error: Exception
+        self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
         """Send errors raised by commands"""
 
@@ -70,7 +72,7 @@ class Polls(ModuleABC, Commands):
     # =========================================================================
 
     @commands.command(name="poll")
-    async def _poll_deprecated(self, ctx: commands.Context):
+    async def _poll_deprecated(self, ctx: commands.Context[TuxbotABC]) -> None:
         await ctx.send(
             "Deprecated command, use /poll instead "
             "(reinvite the bot if application commands are not enabled)",

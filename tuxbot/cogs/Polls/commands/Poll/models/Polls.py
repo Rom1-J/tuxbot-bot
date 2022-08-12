@@ -1,4 +1,5 @@
-from tortoise import Model, fields
+from tortoise import fields
+from tortoise.models import Model
 
 from .Choices import ChoicesModel
 
@@ -27,7 +28,7 @@ class PollsModel(Model):
 
     # =========================================================================
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<Poll id={self.id} "
             f"channel_id={self.channel_id} "
