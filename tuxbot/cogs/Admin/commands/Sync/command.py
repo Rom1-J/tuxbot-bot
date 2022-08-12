@@ -4,18 +4,19 @@ tuxbot.cogs.Admin.commands.Sync.command
 
 Command to sync Tuxbot
 """
-from typing import Literal
+import typing
 
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class SyncCommand(commands.Cog):
     """Sync tuxbot"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -24,13 +25,13 @@ class SyncCommand(commands.Cog):
     @commands.command("sync")
     async def _sync(
         self,
-        ctx: commands.Context,
+        ctx: commands.Context[TuxbotABC],
         guilds: commands.Greedy[discord.Object],
-        spec: Literal["~"] | None = None,
+        spec: typing.Literal["~"] | None = None,
     ) -> None:
-        if not guilds:
+        if not guilds and ctx.guild:
             if spec == "~":
-                fmt = await ctx.bot.tree.sync(guild=ctx.guild)
+                fmt = await ctx.bot.tree.sync(guild=ctx.guild)  # type: ignore
             else:
                 fmt = await ctx.bot.tree.sync()
 
@@ -40,15 +41,16 @@ class SyncCommand(commands.Cog):
             )
             return
 
-        assert guilds is not None
+        if not guilds:
+            return
 
-        fmt = 0
+        i = 0
         for guild in guilds:
             try:
                 await ctx.bot.tree.sync(guild=guild)
             except discord.HTTPException:
                 pass
             else:
-                fmt += 1
+                i += 1
 
-        await ctx.send(f"Synced the tree to {fmt}/{len(guilds)} guilds.")
+        await ctx.send(f"Synced the tree to {i}/{len(guilds)} guilds.")
