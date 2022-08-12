@@ -7,6 +7,7 @@ Set of random commands for tuxbot.
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.Cat.command import CatCommand
@@ -33,7 +34,7 @@ STANDARD_COMMANDS = (
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=2, micro=0, release_level="stable")
+version_info = VersionInfo(major=1, minor=3, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -44,15 +45,15 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Random", command(bot=bot))
 
 
-class Random(ModuleABC, Commands):  # type: ignore
+class Random(ModuleABC, Commands):
     """Set of random commands for tuxbot."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -61,7 +62,7 @@ class Random(ModuleABC, Commands):  # type: ignore
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context, error: Exception
+        self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
         """Send errors raised by commands"""
 

@@ -5,11 +5,13 @@ tuxbot.cogs.Random.commands.Koala.command
 Get a random picture of koala
 """
 import asyncio
+import typing
 
 import aiohttp
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from ..exceptions import APIException
@@ -18,19 +20,20 @@ from ..exceptions import APIException
 class KoalaCommand(commands.Cog):
     """Random koala picture"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @staticmethod
-    async def __get_koala() -> dict:
+    async def __get_koala() -> dict[str, typing.Any]:
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
                 "https://some-random-api.ml/animal/koala"
             ) as s:
-                return await s.json()
+                if isinstance(res := await s.json(), dict):
+                    return res
 
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
@@ -41,7 +44,7 @@ class KoalaCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="koala", aliases=["randomkoala"])
-    async def _koala(self, ctx: commands.Context):
+    async def _koala(self, ctx: commands.Context[TuxbotABC]) -> None:
         koala = await self.__get_koala()
 
         e = discord.Embed(

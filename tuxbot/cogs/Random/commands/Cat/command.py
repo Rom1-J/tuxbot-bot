@@ -6,11 +6,13 @@ Get a random picture of cat
 """
 import asyncio
 import random
+import typing
 
 import aiohttp
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from ..exceptions import APIException
@@ -19,7 +21,7 @@ from ..exceptions import APIException
 class CatCommand(commands.Cog):
     """Random cat picture"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.cataas_url = "https://cataas.com"
@@ -27,7 +29,7 @@ class CatCommand(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    async def __get_cat(self) -> dict:
+    async def __get_cat(self) -> dict[str, typing.Any]:
         try:
             endpoint = random.choices(
                 ["cat", "cat/gif"], weights=[0.8, 0.2], k=1
@@ -36,7 +38,8 @@ class CatCommand(commands.Cog):
             async with aiohttp.ClientSession() as cs, cs.get(
                 f"{self.cataas_url}/{endpoint}?json=true"
             ) as s:
-                return await s.json()
+                if isinstance(res := await s.json(), dict):
+                    return res
 
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
@@ -47,7 +50,7 @@ class CatCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="cat", aliases=["randomcat"])
-    async def _cat(self, ctx: commands.Context):
+    async def _cat(self, ctx: commands.Context[TuxbotABC]) -> None:
         cat = await self.__get_cat()
 
         e = discord.Embed(
