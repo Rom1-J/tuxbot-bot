@@ -7,20 +7,21 @@ Gives tuxbot invite links
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class InviteCommand(commands.Cog):
     """Gives tuxbot invite links"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="invite")
-    async def _invite(self, ctx: commands.Context):
+    async def _invite(self, ctx: commands.Context[TuxbotABC]) -> None:
         basic_perms = discord.Permissions(
             add_reactions=True,
             read_messages=True,
@@ -64,7 +65,8 @@ class InviteCommand(commands.Cog):
                 "[Add!]"
                 "({})".format(
                     discord.utils.oauth_url(
-                        self.bot.user.id, permissions=basic_perms
+                        self.bot.config["client"].get("id"),
+                        permissions=basic_perms,
                     )
                 )
             ),
@@ -78,7 +80,8 @@ class InviteCommand(commands.Cog):
                 "[Add!]"
                 "({})".format(
                     discord.utils.oauth_url(
-                        self.bot.user.id, permissions=admin_perms
+                        self.bot.config["client"].get("id"),
+                        permissions=admin_perms,
                     )
                 )
             ),

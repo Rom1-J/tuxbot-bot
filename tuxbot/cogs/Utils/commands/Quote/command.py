@@ -7,6 +7,7 @@ Send message as quote format
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .converters.QuoteConverter import QuoteConverter
@@ -16,15 +17,18 @@ from .Quote import Quote
 class QuoteCommand(commands.Cog):
     """Quote a message"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="quote")
-    async def _quote(self, ctx: commands.Context, *, message: QuoteConverter):
-        # noinspection PyUnresolvedReferences
+    async def _quote(
+        self, ctx: commands.Context[TuxbotABC], *, argument: str
+    ) -> None:
+        message = await QuoteConverter().convert(ctx, argument)
+
         quote = Quote(message.content, str(message.author))
 
         quote_bytes = await quote.generate()

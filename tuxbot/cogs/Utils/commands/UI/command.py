@@ -8,6 +8,7 @@ Gives information about a user
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from ...converters.MemberOrUserConverter import MemberOrUserConverter
@@ -17,7 +18,7 @@ from ..exceptions import UserNotFound
 class UICommand(commands.Cog):
     """Shows user information"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -26,55 +27,57 @@ class UICommand(commands.Cog):
     @commands.command(name="ui", aliases=["user_info"])
     async def _ui(
         self,
-        ctx: commands.Context,
+        ctx: commands.Context[TuxbotABC],
         *,
-        user_id: MemberOrUserConverter = "me",  # type: ignore
-    ):
-        if user_id is None:
+        argument: str | None = None,
+    ) -> None:
+        if not argument:
+            user = ctx.author
+        elif not (_u := await MemberOrUserConverter().convert(ctx, argument)):
             raise UserNotFound("Unable to find this user")
-
-        if user_id == "me":
-            user_id = ctx.author
+        else:
+            user = _u
 
         e = discord.Embed(color=self.bot.utils.colors.EMBED_BORDER.value)
 
-        if isinstance(user_id, (discord.User, discord.Member)):
-            e.set_author(name=user_id, icon_url=user_id.display_avatar.url)
-            e.set_thumbnail(url=user_id.display_avatar.url)
-            e.set_footer(text=f"ID: {user_id.id}")
+        if isinstance(user, (discord.User, discord.Member)):
+            e.set_author(name=user, icon_url=user.display_avatar.url)
+            e.set_thumbnail(url=user.display_avatar.url)
+            e.set_footer(text=f"ID: {user.id}")
 
             e.add_field(
                 name="Created at",
-                value=f"> <t:{int(user_id.created_at.timestamp())}:F>",
+                value=f"> <t:{int(user.created_at.timestamp())}:F>",
                 inline=True,
             )
 
-        if isinstance(user_id, discord.Member):
-            e.add_field(
-                name="Joined at",
-                value=f"> <t:{int(user_id.joined_at.timestamp())}:F>",
-                inline=True,
-            )
+        if isinstance(user, discord.Member):
+            if user.joined_at:
+                e.add_field(
+                    name="Joined at",
+                    value=f"> <t:{int(user.joined_at.timestamp())}:F>",
+                    inline=True,
+                )
 
-            if roles := user_id.roles[1:]:
+            if roles := user.roles[1:]:
                 e.add_field(
                     name=f"Roles ({len(roles)})",
                     value=" ".join(role.mention for role in roles),
                     inline=False,
                 )
 
-            if premium_since := user_id.premium_since:
+            if premium_since := user.premium_since:
                 e.add_field(
                     name="Premium since",
                     value=f"> <t:{int(premium_since.timestamp())}:F>",
                 )
 
             if (
-                status := user_id.status.value.upper()
+                status := user.status.value.upper()
             ) in self.bot.utils.colors.__members__:
                 e.colour = getattr(self.bot.utils.colors, status).value
 
-            if activity := user_id.activity:
+            if activity := user.activity:
                 e.description = activity.name
 
         await ctx.send(embed=e)

@@ -19,23 +19,25 @@ class Quote:
     text_width: int = 0
     text_height: int = 0
 
-    def __init__(self, content, author, wrap_length=50):
+    def __init__(
+        self, content: str, author: str, wrap_length: int = 50
+    ) -> None:
         self.loop = asyncio.get_running_loop()
 
         self.content = QUOTES[0] + content + QUOTES[1]
         self.author = "– " + author
 
         self.wrap_length = wrap_length
-        self.wrapped_content = []
+        self.wrapped_content: list[str] = []
 
         self.wrap()
         self.get_size()
 
-    def wrap(self):
+    def wrap(self) -> None:
         wrapper = textwrap.TextWrapper(width=self.wrap_length)
         self.wrapped_content = wrapper.wrap(text=self.content)
 
-    def get_size(self):
+    def get_size(self) -> None:
         text_width, text_height = 0, 0
 
         for row in self.wrapped_content:

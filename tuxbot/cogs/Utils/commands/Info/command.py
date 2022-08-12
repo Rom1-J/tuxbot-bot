@@ -8,7 +8,7 @@ Shows information about tuxbot
 import os
 import pathlib
 import platform
-from typing import Any
+import typing
 
 import aiofiles
 import discord
@@ -17,27 +17,30 @@ import psutil
 from discord.ext import commands
 
 import tuxbot
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class InfoCommand(commands.Cog):
     """Shows tuxbot's information"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
-        self.stats: dict[str, Any] = {}
+        self.stats: dict[str, typing.Any] = {}
 
     async def cog_load(self) -> None:
         """Fetch bot stats"""
-        self.stats = await self.__fetch_info(self.bot.config["paths"])
+        self.stats = await self.__fetch_info(
+            self.bot.config["paths"].get("base", "./")
+        )
         self.bot.logger.info("[InfoCommand] '__fetch_info' done!")
 
     # =========================================================================
     # =========================================================================
 
     @staticmethod
-    async def __fetch_info(paths: dict) -> dict[str, Any]:
+    async def __fetch_info(path: str) -> dict[str, typing.Any]:
         """Fetch set of information about tuxbot"""
 
         total_lines = 0
@@ -50,7 +53,7 @@ class InfoCommand(commands.Cog):
         file_amount = 0
         python_file_amount = 0
 
-        for path, _, files in os.walk(paths.get("base", "./")):
+        for path, _, files in os.walk(path):
             for name in files:
                 file_dir = str(pathlib.PurePath(path, name))
                 if "env" in file_dir:
@@ -90,11 +93,13 @@ class InfoCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="info", aliases=["about"])
-    async def _info(self, ctx: commands.Context):
+    async def _info(self, ctx: commands.Context[TuxbotABC]) -> None:
         proc = psutil.Process()
 
         if not self.stats:
-            self.stats = await self.__fetch_info(self.bot.config["paths"])
+            self.stats = await self.__fetch_info(
+                self.bot.config["paths"].get("base", "./")
+            )
 
         with proc.oneshot():
             mem = proc.memory_full_info()

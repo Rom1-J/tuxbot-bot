@@ -1,4 +1,4 @@
-from typing import TypeVar
+import typing
 
 from .DeleteButton import DeleteButton
 from .GIFButton import GIFButton
@@ -16,12 +16,10 @@ __all__ = [
     "DeleteButton",
 ]
 
-
-ButtonType = TypeVar(
-    "ButtonType",
-    GIFButton,
-    JPGButton,
-    PNGButton,
-    WEBPButton,
-    DeleteButton,
-)
+ButtonType = typing.Union[
+    type[GIFButton],
+    type[JPGButton],
+    type[PNGButton],
+    type[WEBPButton],
+    type[DeleteButton],
+]

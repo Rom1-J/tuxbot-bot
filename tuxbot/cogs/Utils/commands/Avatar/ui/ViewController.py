@@ -1,24 +1,23 @@
-from typing import TYPE_CHECKING, Union
+import typing
 
 import discord
 from discord.ext import commands
 
-from .buttons import ButtonType
+from tuxbot.abc.TuxbotABC import TuxbotABC
+
 from .panels import ViewPanel
 
 
-if TYPE_CHECKING:
-    Author = Union[discord.User, discord.Member]
+if typing.TYPE_CHECKING:
+    Author = typing.Union[discord.User, discord.Member]
 
 
 class ViewController(discord.ui.View):
-    children: list[ButtonType]  # type: ignore
-
     sent_message = None
 
     def __init__(
         self,
-        ctx: commands.Context,
+        ctx: commands.Context[TuxbotABC],
         data: "Author",
     ):
         super().__init__(timeout=60)
@@ -30,7 +29,7 @@ class ViewController(discord.ui.View):
         panel = ViewPanel.buttons
 
         for x, row in enumerate(panel):
-            for button in row:  # type: ignore
+            for button in row:
                 self.add_item(button(row=x, controller=self))
 
     # =========================================================================
@@ -45,7 +44,7 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    async def send(self):
+    async def send(self) -> None:
         """Send selected embed"""
 
         embed = discord.Embed(

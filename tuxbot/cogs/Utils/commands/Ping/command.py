@@ -10,20 +10,21 @@ import discord
 from discord.ext import commands
 from tortoise import Tortoise
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class PingCommand(commands.Cog):
     """Shows tuxbot's ping"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="ping")
-    async def _ping(self, ctx: commands.Context):
+    async def _ping(self, ctx: commands.Context[TuxbotABC]) -> None:
         start = time.perf_counter()
         await ctx.typing()
         end = time.perf_counter()

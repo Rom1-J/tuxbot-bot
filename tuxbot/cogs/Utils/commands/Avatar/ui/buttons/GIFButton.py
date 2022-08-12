@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
-    from ..view import ViewController
+if typing.TYPE_CHECKING:
+    from ..ViewController import ViewController
 
 
-class GIFButton(discord.ui.Button):
+class GIFButton(discord.ui.Button[ViewController]):
     disabled: bool
     label: str
     emoji: discord.PartialEmoji | None
@@ -17,16 +17,14 @@ class GIFButton(discord.ui.Button):
 
     def __init__(self, row: int, controller: ViewController):
         self.controller = controller
+        asset: discord.Asset = self.controller.data.display_avatar
 
-        is_animated = self.controller.data.display_avatar.is_animated()
+        is_animated = asset.is_animated()
 
-        # noinspection PyTypeChecker
         super().__init__(
             label="GIF",
             style=discord.ButtonStyle.link,
             row=row,
             disabled=not is_animated,
-            url=self.controller.data.display_avatar.with_format(
-                "png" if not is_animated else "gif"
-            ).url,
+            url=asset.url,
         )

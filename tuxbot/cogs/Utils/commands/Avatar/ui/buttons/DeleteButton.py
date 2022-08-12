@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
-    from ..view import ViewController
+if typing.TYPE_CHECKING:
+    from ..ViewController import ViewController
 
 
-class DeleteButton(discord.ui.Button):
+class DeleteButton(discord.ui.Button[ViewController]):
     disabled: bool
     label: str
     emoji: discord.PartialEmoji | None
@@ -25,7 +25,7 @@ class DeleteButton(discord.ui.Button):
             label="delete",
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if (
             interaction.user == self.controller.ctx.author
         ) and self.controller.sent_message:

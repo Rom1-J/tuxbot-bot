@@ -4,15 +4,23 @@ tuxbot.cogs.Utils.converters
 
 Gives discord member or user
 """
+import typing
 
+import discord
 from discord.ext import commands
-from discord.ext.commands import Context
+
+from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
-class MemberOrUserConverter(commands.Converter):
+ConvertType = typing.Union[discord.Member, discord.User, None]
+
+
+class MemberOrUserConverter(commands.Converter[ConvertType]):
     """Gives either discord member or user format."""
 
-    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+    async def convert(  # type: ignore[override]
+        self, ctx: commands.Context[TuxbotABC], argument: str
+    ) -> ConvertType:
         if argument:
             try:
                 return await commands.MemberConverter().convert(ctx, argument)

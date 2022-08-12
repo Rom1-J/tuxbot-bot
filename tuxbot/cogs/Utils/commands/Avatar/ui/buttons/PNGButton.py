@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
-    from ..view import ViewController
+if typing.TYPE_CHECKING:
+    from ..ViewController import ViewController
 
 
-class PNGButton(discord.ui.Button):
+class PNGButton(discord.ui.Button[ViewController]):
     disabled: bool
     label: str
     emoji: discord.PartialEmoji | None
@@ -17,10 +17,13 @@ class PNGButton(discord.ui.Button):
 
     def __init__(self, row: int, controller: ViewController):
         self.controller = controller
+        asset: discord.Asset = self.controller.data.display_avatar.with_format(
+            "png"
+        )
 
         super().__init__(
             label="PNG",
             style=discord.ButtonStyle.link,
             row=row,
-            url=self.controller.data.display_avatar.with_format("png").url,
+            url=asset.url,
         )

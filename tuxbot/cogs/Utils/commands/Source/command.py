@@ -9,13 +9,14 @@ import os
 
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class SourceCommand(commands.Cog):
     """Gives tuxbot sources"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.github_url = self.bot.config["urls"].get("github", "")
@@ -24,9 +25,12 @@ class SourceCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="source", aliases=["sources"])
-    async def _source(self, ctx: commands.Context, *, name=None):
+    async def _source(
+        self, ctx: commands.Context[TuxbotABC], *, name: str | None = None
+    ) -> None:
         if not name:
-            return await ctx.send(self.github_url)
+            await ctx.send(self.github_url)
+            return
 
         cmd = self.bot.get_command(name)
 
@@ -34,12 +38,14 @@ class SourceCommand(commands.Cog):
             src = cmd.callback.__code__
             rpath = src.co_filename
         else:
-            return await ctx.send(f"Unable to find `{name}`")
+            await ctx.send(f"Unable to find `{name}`")
+            return
 
         try:
             lines, start_line = inspect.getsourcelines(src)
         except OSError:
-            return await ctx.send(f"Unable to fetch lines for `{name}`")
+            await ctx.send(f"Unable to fetch lines for `{name}`")
+            return
 
         if "venv" in rpath:
             location = (

@@ -1,12 +1,15 @@
-from .buttons import DeleteButton, GIFButton, JPGButton, PNGButton, WEBPButton
+from .buttons import (
+    ButtonType,
+    DeleteButton,
+    GIFButton,
+    JPGButton,
+    PNGButton,
+    WEBPButton,
+)
 
 
-class Panel:
-    buttons: list
-
-
-class ViewPanel(Panel):
-    buttons = [
+class ViewPanel:
+    buttons: list[list[ButtonType]] = [
         [GIFButton, JPGButton, PNGButton, WEBPButton],
         [DeleteButton],
     ]
