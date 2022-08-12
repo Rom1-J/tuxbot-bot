@@ -8,6 +8,7 @@ Command to show doc about HTTP code
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .converters.HttpCodeConverter import HttpCodeConverter
@@ -17,14 +18,16 @@ from .HTTPs import HttpCode
 class HTTPCommand(commands.Cog):
     """Shows HTTP code doc"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="http")
-    async def _http(self, ctx: commands.Context, http_code: HttpCodeConverter):
+    async def _http(
+        self, ctx: commands.Context[TuxbotABC], http_code: HttpCodeConverter
+    ) -> None:
         if isinstance(http_code, HttpCode):
             e = discord.Embed(
                 title=f"{http_code.value} {http_code.name}", color=0x2F3136
