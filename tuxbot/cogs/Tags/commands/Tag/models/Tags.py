@@ -1,7 +1,8 @@
 """
 Tags model
 """
-from tortoise import Model, fields
+from tortoise import fields
+from tortoise.models import Model
 
 
 class TagsModel(Model):
@@ -29,7 +30,7 @@ class TagsModel(Model):
 
     # =========================================================================
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<Tag id={self.id} "
             f"guild_id={self.guild_id} "

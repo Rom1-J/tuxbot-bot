@@ -18,7 +18,9 @@ class TagEditionModal(discord.ui.Modal):
 
         self.__tag = tag
 
-        self.content = discord.ui.TextInput(
+        self.content: discord.ui.TextInput[
+            TagEditionModal
+        ] = discord.ui.TextInput(
             label="Content",
             style=discord.TextStyle.long,
             placeholder="Tag content here...",
@@ -33,7 +35,9 @@ class TagEditionModal(discord.ui.Modal):
     async def on_submit(self, interaction: discord.Interaction) -> None:
         """Save tag on submit"""
 
-        self.__tag.content = discord.utils.escape_mentions(self.content.value)
+        self.__tag.content = discord.utils.escape_mentions(
+            self.content.value or ""
+        )
         await self.__tag.save()
 
         await interaction.response.send_message(

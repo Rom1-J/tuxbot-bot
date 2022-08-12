@@ -7,6 +7,7 @@ Set of useful commands for tags.
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.exceptions import TagsException
@@ -21,7 +22,7 @@ from discord.ext import commands  # isort: skip
 STANDARD_COMMANDS = (TagCommand,)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")
+version_info = VersionInfo(major=2, minor=1, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -32,15 +33,15 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Tags", command(bot=bot))
 
 
-class Tags(ModuleABC, Commands):  # type: ignore
+class Tags(ModuleABC, Commands):
     """Set of useful commands for tags."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -49,7 +50,7 @@ class Tags(ModuleABC, Commands):  # type: ignore
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context, error: Exception
+        self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
         """Send errors raised by commands"""
 
@@ -60,7 +61,7 @@ class Tags(ModuleABC, Commands):  # type: ignore
     # =========================================================================
 
     @commands.command(name="tag")
-    async def _tag_deprecated(self, ctx: commands.Context):
+    async def _tag_deprecated(self, ctx: commands.Context[TuxbotABC]) -> None:
         await ctx.send(
             "Deprecated command, use /tag instead "
             "(reinvite the bot if application commands are not enabled)",

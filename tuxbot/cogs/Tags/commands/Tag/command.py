@@ -19,10 +19,10 @@ from .ui.paginator import TagPages
 
 
 @app_commands.guild_only()
-class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
+class TagCommand(commands.GroupCog, name="tag"):
     """Manage tags"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__()
@@ -59,6 +59,9 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
         interaction: discord.Interaction,
         current: str,
     ) -> list[app_commands.Choice[str]]:
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
         cache_key = self.bot.utils.gen_key(interaction.guild.id, current)
 
         if data := await self.bot.redis.get(cache_key):
@@ -123,7 +126,10 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_get(
         self, interaction: discord.Interaction, name: str
     ) -> None:
-        if tag := await self.__get_tag(interaction.guild_id, name):
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        if tag := await self.__get_tag(interaction.guild.id, name):
             await interaction.response.send_message(tag.content)
 
             tag.uses += 1
@@ -142,7 +148,10 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_raw(
         self, interaction: discord.Interaction, name: str
     ) -> None:
-        if tag := await self.__get_tag(interaction.guild_id, name):
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        if tag := await self.__get_tag(interaction.guild.id, name):
             await interaction.response.send_message(
                 discord.utils.escape_markdown(tag.content)
             )
@@ -169,7 +178,10 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_delete(
         self, interaction: discord.Interaction, name: str
     ) -> None:
-        if tag := await self.__get_tag(interaction.guild_id, name):
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        if tag := await self.__get_tag(interaction.guild.id, name):
             if tag.author_id == interaction.user.id:
                 await tag.delete()
 
@@ -195,7 +207,10 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_edit(
         self, interaction: discord.Interaction, name: str
     ) -> None:
-        if tag := await self.__get_tag(interaction.guild_id, name):
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        if tag := await self.__get_tag(interaction.guild.id, name):
             if tag.author_id == interaction.user.id:
                 await interaction.response.send_modal(TagEditionModal(tag))
 
@@ -218,7 +233,10 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_info(
         self, interaction: discord.Interaction, name: str
     ) -> None:
-        if tag := await self.__get_tag(interaction.guild_id, name):
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        if tag := await self.__get_tag(interaction.guild.id, name):
             e = discord.Embed(color=discord.Colour.blue())
 
             user = await self.bot.fetch_member_or_none(
@@ -250,10 +268,16 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
         interaction: discord.Interaction,
         member: discord.Member | None = None,
     ) -> None:
-        member = member or interaction.user
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        _member = member or interaction.user
+
+        if not _member:
+            raise commands.MemberNotFound("")
 
         tags = await self.__get_tags(
-            guild_id=interaction.guild_id, member_id=member.id
+            guild_id=interaction.guild.id, member_id=_member.id
         )
 
         if tags:
@@ -262,14 +286,17 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
             return
 
         await interaction.response.send_message(
-            f"No tags found for {member}...", ephemeral=True
+            f"No tags found for {_member}...", ephemeral=True
         )
 
     # =========================================================================
 
     @app_commands.command(name="all", description="List all tags")
     async def _tag_all(self, interaction: discord.Interaction) -> None:
-        tags = await self.__get_tags(guild_id=interaction.guild_id)
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        tags = await self.__get_tags(guild_id=interaction.guild.id)
 
         if tags:
             p = TagPages(tags, ctx=interaction)
@@ -287,7 +314,10 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_claim(
         self, interaction: discord.Interaction, name: str
     ) -> None:
-        if tag := await self.__get_tag(interaction.guild_id, name):
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
+        if tag := await self.__get_tag(interaction.guild.id, name):
             if (
                 await self.bot.fetch_member_or_none(
                     interaction.guild, tag.author_id
@@ -318,8 +348,11 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore
     async def _tag_search(
         self, interaction: discord.Interaction, query: str
     ) -> None:
+        if not interaction.guild:
+            raise commands.GuildNotFound("")
+
         tags = await self.__get_tags(
-            guild_id=interaction.guild_id, query=query
+            guild_id=interaction.guild.id, query=query
         )
 
         if tags:

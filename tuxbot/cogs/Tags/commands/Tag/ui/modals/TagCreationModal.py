@@ -13,16 +13,23 @@ class TagCreationModal(discord.ui.Modal):
 
     title = "Create a tag"
 
-    name = discord.ui.TextInput(
-        label="Name", placeholder="Tag name here...", max_length=20
-    )
+    def __init__(self) -> None:
+        super().__init__()
 
-    content = discord.ui.TextInput(
-        label="Content",
-        style=discord.TextStyle.long,
-        placeholder="Tag content here...",
-        max_length=1900,
-    )
+        self.name: discord.ui.TextInput[
+            TagCreationModal
+        ] = discord.ui.TextInput(
+            label="Name", placeholder="Tag name here...", max_length=20
+        )
+
+        self.content: discord.ui.TextInput[
+            TagCreationModal
+        ] = discord.ui.TextInput(
+            label="Content",
+            style=discord.TextStyle.long,
+            placeholder="Tag content here...",
+            max_length=1900,
+        )
 
     # =========================================================================
     # =========================================================================
@@ -30,8 +37,8 @@ class TagCreationModal(discord.ui.Modal):
     async def on_submit(self, interaction: discord.Interaction) -> None:
         """Save tag on submit"""
 
-        name = self.name.value.lower()
-        content = self.content.value
+        name = (self.name.value or "").lower()
+        content = self.content.value or ""
 
         if await TagsModel.exists(name=name, guild_id=interaction.guild_id):
             await interaction.response.send_message(
