@@ -1,4 +1,5 @@
 import asyncio
+import typing
 
 import ipinfo
 from ipinfo.exceptions import RequestQuotaExceededError
@@ -7,8 +8,8 @@ from .abc import Provider
 
 
 class IPInfoProvider(Provider):
-    async def fetch(self, ip: str) -> tuple[str, dict]:
-        def _get_ipinfo_result(_ip: str) -> dict:
+    async def fetch(self, ip: str) -> tuple[str, dict[str, typing.Any]]:
+        def _get_ipinfo_result(_ip: str) -> dict[str, typing.Any]:
             """
             Q. Why no getHandlerAsync ?
             A. Use of this return "Unclosed client session" and
@@ -16,7 +17,7 @@ class IPInfoProvider(Provider):
             """
             try:
                 handler = ipinfo.getHandler(self.apikey)
-                return (handler.getDetails(ip)).all
+                return (handler.getDetails(ip)).all  # type: ignore
             except RequestQuotaExceededError:
                 return {}
 

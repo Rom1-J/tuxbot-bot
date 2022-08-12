@@ -6,14 +6,15 @@ Shows information from peeringdb about an ASN
 """
 
 import asyncio
+import typing
 from datetime import datetime
-from typing import Any, NoReturn
 
 import aiohttp
 import discord
 from aiohttp import TCPConnector
-from discord.ext import commands, tasks  # type: ignore
+from discord.ext import commands, tasks
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .converters.ASConverter import ASConverter
@@ -23,7 +24,7 @@ from .exceptions import InvalidAsn
 class PeeringdbCommand(commands.Cog):
     """Shows information about given ASN"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self._peeringdb_net = None
@@ -31,7 +32,7 @@ class PeeringdbCommand(commands.Cog):
 
     # =========================================================================
 
-    async def cog_unload(self):
+    async def cog_unload(self) -> None:
         """Stop task updater"""
         self.bot.logger.info(
             "[PeeringdbCommand] Canceling '_update_peering_db'"
@@ -42,7 +43,7 @@ class PeeringdbCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    def __check_asn_or_raise(asn: str) -> bool | NoReturn:
+    def __check_asn_or_raise(asn: str) -> bool | typing.NoReturn:
         """Validate asn format"""
 
         if asn.isdigit() and int(asn) < 4_294_967_295:
@@ -54,7 +55,7 @@ class PeeringdbCommand(commands.Cog):
     # =========================================================================
 
     @tasks.loop(hours=6.00)
-    async def _update_peering_db(self):
+    async def _update_peering_db(self) -> None:
         try:
             async with aiohttp.ClientSession(
                 connector=TCPConnector(verify_ssl=False)
@@ -74,7 +75,9 @@ class PeeringdbCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="peeringdb", aliases=["peer", "peering"])
-    async def _peeringdb(self, ctx: commands.Context, asn: ASConverter):
+    async def _peeringdb(
+        self, ctx: commands.Context[TuxbotABC], argument: str
+    ) -> None:
         if (
             # pylint: disable=no-member
             not self._update_peering_db.is_running()
@@ -82,12 +85,14 @@ class PeeringdbCommand(commands.Cog):
             self._peeringdb_net = None
             self._update_peering_db.start()  # pylint: disable=no-member
 
-        self.__check_asn_or_raise(str(asn))
+        asn = await ASConverter().convert(ctx, argument)
+        self.__check_asn_or_raise(asn)
 
-        data: dict[str, Any] = {}
+        data: dict[str, typing.Any] = {}
 
         if self._peeringdb_net is None or not self._peeringdb_net.get("data"):
-            return await ctx.send("Please retry in few seconds.")
+            await ctx.send("Please retry in few seconds.")
+            return
 
         for _data in self._peeringdb_net["data"]:
             if _data.get("asn", None) == int(str(asn)):
@@ -95,9 +100,10 @@ class PeeringdbCommand(commands.Cog):
                 break
 
         if not data:
-            return await ctx.send(
+            await ctx.send(
                 f"AS{asn} could not be found in PeeringDB's database."
             )
+            return
 
         filtered = {
             "info_type": "Type",

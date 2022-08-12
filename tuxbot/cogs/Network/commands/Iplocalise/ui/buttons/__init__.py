@@ -1,4 +1,4 @@
-from typing import TypeVar
+import typing
 
 from .ASNButton import ASNButton
 from .BGPButton import BGPButton
@@ -23,14 +23,13 @@ __all__ = [
 ]
 
 
-ButtonType = TypeVar(
-    "ButtonType",
-    GlobalButton,
-    GeoButton,
-    RawButton,
-    WhoisButton,
-    ASNButton,
-    IPInfoButton,
-    BGPButton,
-    DeleteButton,
-)
+ButtonType = typing.Union[
+    type[GlobalButton],
+    type[GeoButton],
+    type[RawButton],
+    type[WhoisButton],
+    type[ASNButton],
+    type[IPInfoButton],
+    type[BGPButton],
+    type[DeleteButton],
+]

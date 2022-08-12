@@ -2,22 +2,22 @@ from __future__ import annotations
 
 import io
 import json
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from ..ViewController import ViewController
 
 
-class RawButton(discord.ui.Button):
+class RawButton(discord.ui.Button[ViewController]):
     disabled: bool
     label: str
     emoji: discord.PartialEmoji | None
     row: int
 
-    def __init__(self, row: int, controller: ViewController):
+    def __init__(self, row: int, controller: ViewController) -> None:
         self.controller = controller
 
         super().__init__(
@@ -27,7 +27,7 @@ class RawButton(discord.ui.Button):
             label="raw",
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             file=discord.File(
                 filename="output.json",

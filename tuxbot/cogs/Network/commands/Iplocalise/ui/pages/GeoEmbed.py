@@ -2,7 +2,7 @@
 Geo embed page
 """
 
-from typing import Any
+import typing
 
 import discord
 
@@ -22,10 +22,13 @@ class GeoEmbed(Embed):
             ),
         )
 
-        if self.controller.get_data("opencage") != "Pending..." and (
-            results := self.controller.get_data("opencage", "results")
+        if (
+            self.controller.get_data("opencage") != "Pending..."
+            and (results := self.controller.get_data("opencage", "results"))
+            and isinstance(results, list)
+            and results
         ):
-            result: dict[str, Any] = results[0]  # type: ignore
+            result: dict[str, typing.Any] = results[0]
             annotations = result["annotations"]
             timezone = annotations["timezone"]
 

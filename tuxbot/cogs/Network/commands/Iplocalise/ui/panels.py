@@ -1,6 +1,7 @@
 from .buttons import (
     ASNButton,
     BGPButton,
+    ButtonType,
     DeleteButton,
     GeoButton,
     GlobalButton,
@@ -10,12 +11,8 @@ from .buttons import (
 )
 
 
-class Panel:
-    buttons: list
-
-
-class ViewPanel(Panel):
-    buttons = [
+class ViewPanel:
+    buttons: list[list[ButtonType]] = [
         [GlobalButton, GeoButton, RawButton, IPInfoButton, BGPButton],
         [WhoisButton, ASNButton, DeleteButton],
     ]

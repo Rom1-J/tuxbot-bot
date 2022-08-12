@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from ..ViewController import ViewController
 
 
-class BGPButton(discord.ui.Button):
+class BGPButton(discord.ui.Button[ViewController]):
     disabled: bool
     label: str
     emoji: discord.PartialEmoji | None

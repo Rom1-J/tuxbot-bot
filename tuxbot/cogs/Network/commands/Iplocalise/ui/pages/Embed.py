@@ -1,19 +1,19 @@
 """
 Base embed page
 """
-from typing import TYPE_CHECKING
+import typing
 
 import discord
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from ..ViewController import ViewController
 
 
 class Embed:
     """Base embed page"""
 
-    def __init__(self, controller: "ViewController"):
+    def __init__(self, controller: "ViewController") -> None:
         self.controller = controller
         self.data = self.controller.data
 
@@ -22,7 +22,7 @@ class Embed:
     # =========================================================================
     # =========================================================================
 
-    def update(self, controller: "ViewController"):
+    def update(self, controller: "ViewController") -> None:
         """Update loaded data"""
         self.controller = controller
         self.data = self.controller.data

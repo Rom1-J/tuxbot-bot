@@ -6,38 +6,50 @@ Shows dig information from dns.bortzmeyer.org about a domain
 """
 import asyncio
 import json
-from typing import Any
+import typing
 
 import aiohttp
+import bs4
 import discord
 from bs4 import BeautifulSoup
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class DigCommand(commands.Cog):
     """Shows dig information about given domain"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @staticmethod
-    def __parse_from_bortzmeyer(html: str) -> dict[str, Any]:
+    def __parse_from_bortzmeyer(html: str) -> dict[str, typing.Any]:
         """Parse HTML result as dict object"""
 
         soup = BeautifulSoup(html, "html.parser")
 
-        body = soup.find(class_="body")
+        header = "N/A"
+        if _h := soup.find(name="h1"):
+            header = _h.text
+
+        body = []
+        footer = "N/A"
+        if (_b := soup.find(class_="body")) and isinstance(_b, bs4.Tag):
+            body = list(map(lambda el: el.text, _b.select("li>span")))
+
+            if _f := _b.find(name="p"):
+                footer = _f.text
 
         try:
             return {
-                "header": soup.find(name="h1").text,
-                "body": list(map(lambda el: el.text, body.select("li>span"))),
-                "footer": body.find(name="p").text,
+                "header": header,
+                "body": body,
+                "footer": footer,
             }
         except AttributeError:
             return {}
@@ -46,7 +58,7 @@ class DigCommand(commands.Cog):
 
     async def __get_from_bortzmeyer(
         self, domain: str, query_type: str
-    ) -> dict[str, Any]:
+    ) -> dict[str, typing.Any]:
         """Get result from https://dns.bortzmeyer.org/"""
 
         try:
@@ -64,7 +76,9 @@ class DigCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="dig")
-    async def _dig(self, ctx: commands.Context, domain: str, query_type: str):
+    async def _dig(
+        self, ctx: commands.Context[TuxbotABC], domain: str, query_type: str
+    ) -> None:
         if result := (
             await self.bot.redis.get(
                 self.bot.utils.gen_key(domain, query_type)

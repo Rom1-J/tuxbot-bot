@@ -3,27 +3,36 @@ Page view controller
 """
 import asyncio
 import json
-from typing import Union
+import typing
 
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
+
 from ..providers.base import get_auxiliary_providers, get_base_providers
+from .buttons import ButtonType
 from .pages.GeoEmbed import GeoEmbed
 from .pages.GlobalEmbed import GlobalEmbed
 from .panels import ViewPanel
 
 
-DATA_TYPE = Union[str, int, float, dict, list]
+DATA_TYPE = typing.Union[str, int, float, dict, list]
 
 
 class ViewController(discord.ui.View):
     """View controller"""
 
-    __message: discord.Message = None
+    __message: discord.Message | None = None
     __page: int = 0
+    children: list[ButtonType]  # type: ignore
 
-    def __init__(self, ctx: commands.Context, config: dict, data: dict):
+    def __init__(
+        self,
+        ctx: commands.Context[TuxbotABC],
+        config: dict[str, typing.Any],
+        data: dict[str, typing.Any],
+    ):
         super().__init__(timeout=60)
 
         self.ctx = ctx
@@ -77,7 +86,7 @@ class ViewController(discord.ui.View):
     # =========================================================================
     # =========================================================================
 
-    async def __run_batch(self, batch):
+    async def __run_batch(self, batch: dict[str, DATA_TYPE]) -> None:
         tasks = []
 
         for name, provider in batch.items():
@@ -92,14 +101,14 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    def get_data(self, provider: str, *args) -> DATA_TYPE:
+    def get_data(self, provider: str, *args: typing.Any) -> DATA_TYPE:
         """Get data if available"""
 
-        data = self.data.get(provider, "Pending...")
+        data: DATA_TYPE = self.data.get(provider, "Pending...")
 
         if data != "Pending...":
             for arg in args:
-                if arg in data:
+                if isinstance(data, (list, dict)) and arg in data:
                     data = data[arg]
                     continue
 
@@ -110,13 +119,13 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    def get_button(self, name: str) -> discord.ui.Item | None:
+    def get_button(self, name: str) -> ButtonType | None:
         """Get view button"""
 
-        for button in self.children:  # type: ignore
-            if (button.label == name) or (  # type: ignore
-                button.emoji and button.emoji.name == name  # type: ignore
-            ):  # type: ignore
+        for button in self.children:
+            if (button.label == name) or (
+                button.emoji and button.emoji.name == name
+            ):
                 return button
 
         return None
@@ -125,7 +134,7 @@ class ViewController(discord.ui.View):
 
     async def change_page(
         self, new_page: int, interaction: discord.Interaction
-    ):
+    ) -> None:
         """Change current page"""
         self.__page = new_page
 
@@ -135,7 +144,7 @@ class ViewController(discord.ui.View):
     # =========================================================================
     # =========================================================================
 
-    async def update(self, result: tuple[str, dict]):
+    async def update(self, result: tuple[str, dict[str, DATA_TYPE]]) -> None:
         """Update embed"""
 
         name, data = result
@@ -148,7 +157,7 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    async def send(self):
+    async def send(self) -> None:
         """Send selected embed"""
 
         if data := await self.ctx.bot.redis.get(self.__cache_key):
@@ -162,21 +171,23 @@ class ViewController(discord.ui.View):
             )
             await self.cache()
 
-        bgp_button = self.get_button("BGP toolkit")
-        bgp_button.disabled = False
-        bgp_button.url = "https://bgp.he.net/AS" + self.get_data(
-            "ipwhois", "asn"
-        )
+        if bgp_button := self.get_button("BGP toolkit"):
+            bgp_button.disabled = False
+            bgp_button.url = "https://bgp.he.net/AS" + str(  # type: ignore
+                self.get_data("ipwhois", "asn")
+            )
 
-        ipinfo_button = self.get_button("ipinfo.io")
-        ipinfo_button.disabled = False
-        ipinfo_button.url = "https://ipinfo.io/" + self.get_data("ip")
+        if ipinfo_button := self.get_button("ipinfo.io"):
+            ipinfo_button.disabled = False
+            ipinfo_button.url = "https://ipinfo.io/" + str(  # type: ignore
+                self.get_data("ip")
+            )
 
         await self.edit()
 
     # =========================================================================
 
-    async def edit(self):
+    async def edit(self) -> None:
         """Edit sent message"""
         embeds = [e.rebuild() for e in self.embeds]
         embed = embeds[self.__page]
@@ -189,7 +200,7 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    async def cache(self):
+    async def cache(self) -> None:
         """Cache result"""
         await self.ctx.bot.redis.set(
             self.__cache_key, json.dumps(self.data), ex=3600 * 24
@@ -197,7 +208,9 @@ class ViewController(discord.ui.View):
 
     # =========================================================================
 
-    async def delete(self):
+    async def delete(self) -> None:
         """Delete controller"""
         self.stop()
-        await self.__message.delete()
+
+        if self.__message:
+            await self.__message.delete()

@@ -1,4 +1,5 @@
 import asyncio
+import typing
 
 import aiohttp
 
@@ -7,7 +8,7 @@ from .abc import Provider
 
 class OpenCageDataProvider(Provider):
     # pylint: disable=arguments-renamed
-    async def fetch(self, latlon: str) -> tuple[str, dict]:
+    async def fetch(self, latlon: str) -> tuple[str, dict[str, typing.Any]]:
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
                 f"https://api.opencagedata.com/geocode/v1/json"

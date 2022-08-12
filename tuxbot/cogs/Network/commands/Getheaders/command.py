@@ -7,6 +7,7 @@ Shows address headers.
 
 import asyncio
 import socket
+import typing
 from urllib.parse import urlparse
 
 import aiohttp
@@ -15,6 +16,7 @@ import ipwhois
 from discord.ext import commands
 from ipwhois import IPWhois
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from ..exceptions import RFC1918
@@ -24,7 +26,7 @@ from .exceptions import UnreachableAddress
 class GetheadersCommand(commands.Cog):
     """Shows address headers"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -48,7 +50,7 @@ class GetheadersCommand(commands.Cog):
         try:
             return await asyncio.wait_for(
                 asyncio.get_running_loop().run_in_executor(
-                    None, _check_for_rfc1918_or_raise, str(ip)  # type: ignore
+                    None, _check_for_rfc1918_or_raise, str(ip)
                 ),
                 timeout=2,
             )
@@ -58,7 +60,9 @@ class GetheadersCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    async def __get_headers(ip: str, user_agent: str) -> tuple:
+    async def __get_headers(
+        ip: str, user_agent: str
+    ) -> tuple[int, dict[str, typing.Any]]:
         """Retrieve address headers"""
 
         req_headers = {}
@@ -76,21 +80,25 @@ class GetheadersCommand(commands.Cog):
             headers.pop("Set-Cookie", headers)
             headers.pop("X-Client-IP", headers)
 
-            return s, headers
+            return s.status, headers
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="getheaders", aliases=["headers"])
     async def _getheaders(
-        self, ctx: commands.Context, ip: str, *, user_agent: str = ""
-    ):
+        self,
+        ctx: commands.Context[TuxbotABC],
+        ip: str,
+        *,
+        user_agent: str = "",
+    ) -> None:
         if not ip.startswith("http"):
             ip = f"http://{ip}"
 
         await self.__check_for_rfc1918_or_raise(ip)
 
-        session, headers = await self.__get_headers(ip, user_agent)
+        status, headers = await self.__get_headers(ip, user_agent)
         colors = {
             "1": 0x17A2B8,
             "2": 0x28A745,
@@ -101,12 +109,10 @@ class GetheadersCommand(commands.Cog):
 
         e = discord.Embed(
             title=f"Headers : {ip}",
-            color=colors.get(str(session.status)[0], 0x6C757D),
+            color=colors.get(str(status)[0], 0x6C757D),
         )
-        e.add_field(
-            name="Status", value=f"```{session.status}```", inline=True
-        )
-        e.set_thumbnail(url=f"https://http.cat/{session.status}")
+        e.add_field(name="Status", value=f"```{status}```", inline=True)
+        e.set_thumbnail(url=f"https://http.cat/{status}")
 
         for key, value in headers.items():
             _, output = await self.bot.utils.shorten(value, 50)

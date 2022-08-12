@@ -11,6 +11,7 @@ import socket
 
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .converters.InetConverter import InetConverter
@@ -22,7 +23,7 @@ from .ui.ViewController import ViewController
 class IplocaliseCommand(commands.Cog):
     """Shows information about given ip/domain"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -36,7 +37,7 @@ class IplocaliseCommand(commands.Cog):
             "Unable to collect information on this in the given version"
         )
 
-        def _get_ip(_ip: str):
+        def _get_ip(_ip: str) -> str:
             try:
                 key = -1
                 kwargs = {}
@@ -67,11 +68,12 @@ class IplocaliseCommand(commands.Cog):
     @commands.command(name="iplocalise", aliases=["localiseip", "ipl"])
     async def _iplocalise(
         self,
-        ctx: commands.Context,
+        ctx: commands.Context[TuxbotABC],
         domain: IPConverter,
-        inet: InetConverter = None,
-    ):
-        cache_key = self.bot.utils.gen_key(str(domain), str(inet))
+        argument: str | None = None,
+    ) -> None:
+        inet = await InetConverter().convert(ctx, argument)
+        cache_key = self.bot.utils.gen_key(str(domain), inet)
 
         if data := await self.bot.redis.get(cache_key):
             ip = json.loads(data)

@@ -4,19 +4,31 @@ tuxbot.cogs.Network.converters.InetConverter
 
 Converter to inet.
 """
+import typing
 
 from discord.ext import commands
-from discord.ext.commands import Context
+
+from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
-class InetConverter(commands.Converter):
+ConvertType = typing.Optional[int]
+
+
+class InetConverter(commands.Converter[ConvertType]):
     """Clean and return inet."""
 
-    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+    async def convert(  # type: ignore
+        self, ctx: commands.Context[TuxbotABC], argument: str | None
+    ) -> ConvertType:
+        res = None
+
+        if not argument:
+            return res
+
         if "6" in argument:
-            return 6
+            res = 6
 
         if "4" in argument:
-            return 4
+            res = 4
 
-        return None
+        return res

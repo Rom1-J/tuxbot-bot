@@ -6,11 +6,17 @@ Converter to ip or domain.
 """
 
 from discord.ext import commands
-from discord.ext.commands import Context
+
+from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
-class ASConverter(commands.Converter):
+ConvertType = str
+
+
+class ASConverter(commands.Converter[ConvertType]):
     """Clean user input by removing proto."""
 
-    async def convert(self, ctx: Context, argument: str):  # skipcq: PYL-W0613
+    async def convert(  # type: ignore
+        self, ctx: commands.Context[TuxbotABC], argument: str
+    ) -> ConvertType:
         return argument.lower().lstrip("as")

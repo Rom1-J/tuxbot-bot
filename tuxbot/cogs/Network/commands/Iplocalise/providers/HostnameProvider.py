@@ -6,7 +6,7 @@ from .abc import Provider
 
 class HostnameProvider(Provider):
     async def fetch(self, ip: str) -> tuple[str, str]:
-        def _get_hostname(_ip: str):
+        def _get_hostname(_ip: str) -> str:
             try:
                 return socket.gethostbyaddr(_ip)[0]
             except (socket.gaierror, socket.herror, UnicodeError):

@@ -1,9 +1,11 @@
+import typing
+
 from .abc import Provider
 
 
 class MapProvider(Provider):
     # pylint: disable=arguments-renamed
-    async def fetch(self, latlon: str) -> tuple[str, dict]:
+    async def fetch(self, latlon: str) -> tuple[str, dict[str, typing.Any]]:
         url = (
             "https://maps.geoapify.com/v1/staticmap"
             "?style=osm-carto"

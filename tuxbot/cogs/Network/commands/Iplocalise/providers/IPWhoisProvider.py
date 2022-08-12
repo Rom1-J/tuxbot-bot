@@ -1,4 +1,5 @@
 import asyncio
+import typing
 
 import ipwhois
 from ipwhois import IPWhois
@@ -8,11 +9,11 @@ from .abc import Provider
 
 
 class IPWhoisProvider(Provider):
-    async def fetch(self, ip: str) -> tuple[str, dict]:
-        def _get_ipwhois_result(_ip: str) -> dict:
+    async def fetch(self, ip: str) -> tuple[str, dict[str, typing.Any]]:
+        def _get_ipwhois_result(_ip: str) -> dict[str, typing.Any]:
             try:
                 obj = IPWhois(ip)
-                return obj.lookup_whois()
+                return obj.lookup_whois()  # type: ignore
 
             except ipwhois.exceptions.ASNRegistryError:
                 return {}

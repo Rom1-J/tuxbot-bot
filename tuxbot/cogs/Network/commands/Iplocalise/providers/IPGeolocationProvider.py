@@ -1,4 +1,5 @@
 import asyncio
+import typing
 
 import aiohttp
 
@@ -6,7 +7,7 @@ from .abc import Provider
 
 
 class IPGeolocationProvider(Provider):
-    async def fetch(self, ip: str) -> tuple[str, dict]:
+    async def fetch(self, ip: str) -> tuple[str, dict[str, typing.Any]]:
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
                 f"https://api.ipgeolocation.io/ipgeo"
