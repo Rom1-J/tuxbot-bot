@@ -35,7 +35,7 @@ STANDARD_LISTENERS = (
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=2, minor=1, micro=0, release_level="stable")
+version_info = VersionInfo(major=2, minor=2, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -46,7 +46,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         if os.getenv("PYTHON_ENV", "production") != "development" and (
             dsn := bot.config["sentry"].get("dsn")
         ):
@@ -65,10 +65,10 @@ class Commands:
             bot.collection.add_module("Logs", listener(bot=bot))
 
 
-class Logs(ModuleABC, Commands):  # type: ignore
+class Logs(ModuleABC, Commands):
     """Set of useful statistics commands & workers."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)

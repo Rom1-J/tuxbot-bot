@@ -8,13 +8,14 @@ Send Datadog dashboard link
 import discord
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class StatsCommand(commands.Cog):
     """Send Datadog dashboard link"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.datadog_url = (
@@ -26,7 +27,7 @@ class StatsCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="stats", aliases=["statistics"])
-    async def _stats(self, ctx: commands.Context):
+    async def _stats(self, ctx: commands.Context[TuxbotABC]) -> None:
         e = discord.Embed(title="Tuxbot statistics")
 
         e.add_field(

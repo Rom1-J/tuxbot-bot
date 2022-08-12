@@ -13,13 +13,14 @@ import discord
 import sentry_sdk
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 
 class CommandError(commands.Cog):
     """Listener whenever a command fails"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.error_webhook: str = self.bot.config["error_webhook"]
@@ -29,20 +30,22 @@ class CommandError(commands.Cog):
 
     @commands.Cog.listener(name="on_command_error")
     async def _on_command_error(
-        self, ctx: commands.Context, error: commands.CommandError
-    ):
+        self, ctx: commands.Context[TuxbotABC], error: commands.CommandError
+    ) -> None:
         if not isinstance(
             error,
             (
                 commands.CommandInvokeError,
                 commands.ConversionError,
-                commands.NotOwner,
             ),
         ):
             return
 
-        error = error.original
-        if isinstance(error, (discord.Forbidden, discord.NotFound)):
+        original_error = error.original
+        if isinstance(original_error, (discord.Forbidden, discord.NotFound)):
+            return
+
+        if not ctx.command:
             return
 
         command = ctx.command.name
@@ -78,7 +81,10 @@ class CommandError(commands.Cog):
 
         exc = "".join(
             traceback.format_exception(
-                type(error), error, error.__traceback__, chain=False
+                type(original_error),
+                original_error,
+                original_error.__traceback__,
+                chain=False,
             )
         )
         e.description = f"```py\n{textwrap.shorten(exc, width=2035)}\n```"
@@ -98,7 +104,7 @@ class CommandError(commands.Cog):
             await self.bot.post_webhook(
                 webhook=self.error_webhook, payload=full_e
             )
-            sentry_sdk.capture_exception(error)
+            sentry_sdk.capture_exception(original_error)
             e.set_footer(text=sentry_sdk.last_event_id())
         else:
             from rich.console import Console
@@ -106,7 +112,7 @@ class CommandError(commands.Cog):
             # flake8: noqa
             # noinspection PyBroadException
             try:  # Re-inject error to sys
-                raise error
+                raise original_error
             except:
                 Console().print_exception(width=None, show_locals=True)
 

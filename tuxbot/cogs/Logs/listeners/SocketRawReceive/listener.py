@@ -13,14 +13,14 @@ from tuxbot.core.Tuxbot import Tuxbot
 class SocketRawReceive(commands.Cog):
     """Listener whenever websocket message is sent/received"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.Cog.listener(name="on_socket_event_type")
-    async def _on_socket_event_type(self, msg):
+    async def _on_socket_event_type(self, msg: str) -> None:
         if msg not in self.bot.config["disable_events"]:
             self.bot.statsd.increment(
                 "socket_event_type", value=1, tags=[f"event_type:{msg}"]
