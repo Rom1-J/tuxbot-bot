@@ -7,6 +7,7 @@ Set of useful commands for GNU/Linux users.
 from collections import namedtuple
 
 from tuxbot.abc.ModuleABC import ModuleABC
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.CNF.command import CNFCommand
@@ -21,7 +22,7 @@ from discord.ext import commands  # isort: skip
 STANDARD_COMMANDS = (CNFCommand,)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=2, minor=0, micro=0, release_level="alpha")
+version_info = VersionInfo(major=2, minor=1, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -32,15 +33,15 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Linux", command(bot=bot))
 
 
-class Linux(ModuleABC, Commands):  # type: ignore
+class Linux(ModuleABC, Commands):
     """Set of useful commands for GNU/Linux users."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -49,7 +50,7 @@ class Linux(ModuleABC, Commands):  # type: ignore
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context, error: Exception
+        self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
         """Send errors raised by commands"""
 

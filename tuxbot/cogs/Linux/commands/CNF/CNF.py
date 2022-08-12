@@ -5,9 +5,10 @@ tuxbot.cogs.Linux.commands.CNF
 Command-not-found scrapper and parser
 """
 import asyncio
-from typing import Any
+import typing
 
 import aiohttp
+import bs4
 from bs4 import BeautifulSoup
 
 from .exceptions import CNFException
@@ -17,13 +18,13 @@ class CNF:
     """command-not-found scrapper"""
 
     _url = "https://command-not-found.com/{}"
-    _content: BeautifulSoup = None
+    _content: BeautifulSoup | None = None
 
     command: str
 
     description: str = ""
-    meta: dict[str, Any] | None = None
-    distro: dict[str, Any] | None = None
+    meta: dict[str, typing.Any] | None = None
+    distro: dict[str, typing.Any] | None = None
 
     def __init__(self, command: str):
         self.command = command
@@ -35,7 +36,7 @@ class CNF:
     # =========================================================================
     # =========================================================================
 
-    async def fetch(self):
+    async def fetch(self) -> None:
         """Fetch from https://command-not-found.com/"""
 
         try:
@@ -56,43 +57,46 @@ class CNF:
 
     # =========================================================================
 
-    def parse(self):
+    def parse(self) -> None:
         """Parse page content to extract needed packages"""
+        if not self._content:
+            raise ValueError
 
         info = self._content.find("div", class_="row-command-info")
         distro = self._content.find_all("div", class_="command-install")
 
-        try:
-            self.description = info.find("p", class_="my-0").text.strip()
-        except AttributeError:
-            self.description = "N/A"
+        self.description = "N/A"
+        self.meta = {}
+        self.distro = {}
 
-        try:
-            for m in info.find("ul", class_="list-group").find_all("li"):
-                row = m.text.strip().split("\n")
+        if isinstance(info, bs4.Tag):
+            if res := info.find("p", class_="my-0"):
+                self.description = res.text.strip()
 
-                self.meta[row[0].lower()[:-1]] = row[1]
-        except AttributeError:
-            self.meta = {}
+            if (res := info.find("ul", class_="list-group")) and isinstance(
+                res, bs4.Tag
+            ):
+                for m in res.find_all("li"):
+                    row = m.text.strip().split("\n")
 
-        try:
+                    self.meta[row[0].lower()[:-1]] = row[1]
+
+        if len(distro) > 1:
             del distro[0]  # unused row
 
             for d in distro:
                 self.distro[
                     d.find("dt").text.strip().split("\n")[-1].strip()
                 ] = d.find("code").text
-        except (AttributeError, IndexError):
-            self.distro = {}
 
     # =========================================================================
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, typing.Any]:
         """Return result as dict
 
         Returns
         -------
-        dict[str, Any]
+        dict[str, typing.Any]
         """
 
         return {
@@ -103,7 +107,7 @@ class CNF:
         }
 
 
-async def get_from_cnf(command: str) -> dict[str, str | dict]:
+async def get_from_cnf(command: str) -> dict[str, typing.Any]:
     """Simple function to use CNF class
 
     Parameters
@@ -113,7 +117,7 @@ async def get_from_cnf(command: str) -> dict[str, str | dict]:
 
     Returns
     -------
-    dict[str, str | dict]
+    dict[str, typing.Any]
     """
     cnf = CNF(command)
     await cnf.fetch()

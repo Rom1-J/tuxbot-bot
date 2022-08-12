@@ -9,6 +9,7 @@ import discord
 import yaml
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .CNF import get_from_cnf
@@ -17,14 +18,16 @@ from .CNF import get_from_cnf
 class CNFCommand(commands.Cog):
     """Shows required package for command"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="cnf")
-    async def _cnf(self, ctx: commands.Context, command: str):
+    async def _cnf(
+        self, ctx: commands.Context[TuxbotABC], command: str
+    ) -> None:
         if cnf := await self.bot.redis.get(self.bot.utils.gen_key(command)):
             from_cache = True
             cnf = yaml.load(cnf, Loader=yaml.Loader)
@@ -61,6 +64,7 @@ class CNFCommand(commands.Cog):
             for k, v in distro.items():
                 e.add_field(name=f"**__{k}__**", value=f"```{v}```")
 
-            return await ctx.send(embed=e)
+            await ctx.send(embed=e)
+            return
 
         await ctx.send("No result found")
