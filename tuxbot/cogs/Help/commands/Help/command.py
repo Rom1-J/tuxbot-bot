@@ -4,14 +4,18 @@ tuxbot.cogs.Help.commands.Help.command
 
 Command to restart Tuxbot
 """
+import typing
+
 import discord
 from discord.ext import commands
+
+from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
 class HelpCommand(commands.HelpCommand):
     """Tuxbot help command"""
 
-    def __init__(self, urls: dict[str, str]):
+    def __init__(self, urls: dict[str, str]) -> None:
         super().__init__()
 
         self.wiki_url = urls.get("wiki", "")
@@ -20,8 +24,9 @@ class HelpCommand(commands.HelpCommand):
 
     # =========================================================================
 
-    # pylint: disable=arguments-differ
-    async def on_help_command_error(self, ctx, error):
+    async def on_help_command_error(  # type: ignore
+        self, ctx: commands.Context[TuxbotABC], error: commands.CommandError
+    ) -> None:
         """Shows error if happens"""
 
         if isinstance(error, commands.CommandInvokeError):
@@ -30,8 +35,9 @@ class HelpCommand(commands.HelpCommand):
     # =========================================================================
     # =========================================================================
 
-    # pylint: disable=arguments-differ
-    async def send_bot_help(self, mapping: dict):  # skipcq: PYL-W0613
+    async def send_bot_help(
+        self, mapping: typing.Any
+    ) -> None:  # skipcq: PYL-W0613
         """Send global bot help"""
 
         e = discord.Embed(title="Tuxbot Wiki!", color=0x2F3136)
@@ -52,7 +58,7 @@ class HelpCommand(commands.HelpCommand):
     # =========================================================================
 
     # pylint: disable=arguments-differ
-    async def send_cog_help(self, cog: commands.Cog):
+    async def send_cog_help(self, cog: commands.Cog) -> None:
         """Send specific cog help"""
 
         url = self.wiki_url + f"/{cog.qualified_name}"
@@ -65,7 +71,9 @@ class HelpCommand(commands.HelpCommand):
     # =========================================================================
 
     # pylint: disable=arguments-differ
-    async def send_command_help(self, command: commands.Command):
+    async def send_command_help(
+        self, command: commands.Command  # type: ignore
+    ) -> None:
         """Send specific command help"""
 
         url = self.wiki_url + f"/{command.cog_name}#{command.name}"
@@ -78,7 +86,9 @@ class HelpCommand(commands.HelpCommand):
     # =========================================================================
 
     # pylint: disable=arguments-differ
-    async def send_group_help(self, group: commands.Group):
+    async def send_group_help(
+        self, group: commands.Group  # type: ignore
+    ) -> None:
         """Send specific command group help"""
 
         url = self.wiki_url + f"/{group.cog_name}#{group.name}"
