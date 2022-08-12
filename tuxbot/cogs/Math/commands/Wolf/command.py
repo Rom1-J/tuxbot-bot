@@ -12,6 +12,7 @@ import discord
 import yaml
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .WolframAlpha import WolframAlpha
@@ -20,7 +21,7 @@ from .WolframAlpha import WolframAlpha
 class WolfCommand(commands.Cog):
     """Shows WolframAlpha result"""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.WA = WolframAlpha(self.bot.config["Math"].get("wolframalpha_key"))
@@ -30,8 +31,10 @@ class WolfCommand(commands.Cog):
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="wolf", aliases=["wolfram"])
-    async def _wolf(self, ctx: commands.Context, *, query: str):
-        await self.WA.get_client()
+    async def _wolf(
+        self, ctx: commands.Context[TuxbotABC], *, query: str
+    ) -> None:
+        await self.WA.set_client()
 
         if cache := await self.bot.redis.get(self.bot.utils.gen_key(query)):
             res = yaml.load(cache, Loader=yaml.Loader)
@@ -42,7 +45,8 @@ class WolfCommand(commands.Cog):
             q, result = await self.WA.query(query)
 
             if result is None:
-                return await ctx.send("No results found...")
+                await ctx.send("No results found...")
+                return
 
             images = await self.WA.get_images(result)
             image = await self.WA.merge_images(images, self.WA.width(result))

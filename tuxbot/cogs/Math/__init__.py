@@ -18,7 +18,7 @@ from .commands.Wolf.command import WolfCommand
 STANDARD_COMMANDS = (FactorCommand, WolfCommand, GraphCommand)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=2, minor=1, micro=0, release_level="stable")
+version_info = VersionInfo(major=2, minor=2, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
@@ -29,15 +29,15 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Math", command(bot=bot))
 
 
-class Math(ModuleABC, Commands):  # type: ignore
+class Math(ModuleABC, Commands):
     """Set of useful commands for maths."""
 
-    def __init__(self, bot: Tuxbot):
+    def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)

@@ -18,18 +18,18 @@ FONT = ImageFont.truetype("DejaVuSans.ttf", size=16)
 class WolframAlpha:
     """WolframAlpha api"""
 
-    client: wolframalpha.Client = None
+    client: wolframalpha.Client | None = None
 
     def __init__(self, api_key: str):
         self.loop = asyncio.get_running_loop()
         self.api_key = api_key
 
-    async def get_client(self):
+    async def set_client(self) -> None:
         """Retrieve client if not already done"""
 
         if self.client is None:
 
-            def _get_client():
+            def _get_client() -> wolframalpha.Client:
                 return wolframalpha.Client(self.api_key)
 
             self.client = await self.loop.run_in_executor(None, _get_client)
@@ -39,7 +39,10 @@ class WolframAlpha:
     ) -> tuple[str, wolframalpha.Result | None]:
         """Get query result from WolframAlpha"""
 
-        def _query():
+        def _query() -> wolframalpha.Result | None:
+            if not self.client:
+                raise ValueError("WA Client not set")
+
             return self.client.query(query)
 
         result: wolframalpha.Result = await self.loop.run_in_executor(
@@ -60,7 +63,7 @@ class WolframAlpha:
         return await self.query(query)
 
     @staticmethod
-    async def get_image(link) -> io.BytesIO | None:
+    async def get_image(link: str) -> io.BytesIO | None:
         """Get image result from query link"""
 
         try:
@@ -99,7 +102,7 @@ class WolframAlpha:
     ) -> io.BytesIO:
         """Merge all images as single one"""
 
-        def _merge_images():
+        def _merge_images() -> io.BytesIO:
             height = self.height(images)
 
             background = Image.new(
@@ -132,9 +135,12 @@ class WolframAlpha:
     def width(result: wolframalpha.Result) -> int:
         """Get the highest image width"""
 
-        def width_pod(pod):
+        def width_pod(pod: wolframalpha.Pod) -> int:
             """Get width of actual pod"""
-            return pod.img.width
+            if isinstance(width := pod.img.width, int):
+                return width
+
+            return 0
 
         width = width_pod(
             max(
