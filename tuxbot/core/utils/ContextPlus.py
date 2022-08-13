@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
     from tuxbot.abc.TuxbotABC import TuxbotABC
 
 
-class ContextPlus(commands.Context[TuxbotABC]):
+class ContextPlus(commands.Context["TuxbotABC"]):
     """Extended Context class with new/rewrote features"""
 
     bot: "TuxbotABC"

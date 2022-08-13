@@ -8,13 +8,15 @@ import typing
 from discord.ext import commands
 from tortoise.models import ModelMeta
 
-from tuxbot.core.Tuxbot import Tuxbot
+
+if typing.TYPE_CHECKING:
+    from tuxbot.core.Tuxbot import Tuxbot
 
 
 class ModuleABC(commands.Cog):
     """Module Abstract Class"""
 
-    bot: Tuxbot
+    bot: "Tuxbot"
     models: ModelMeta
     config: dict[str, typing.Any]
 

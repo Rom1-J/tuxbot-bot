@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
     from ..ViewController import ViewController
 
 
-class WEBPButton(discord.ui.Button[ViewController]):
+class WEBPButton(discord.ui.Button["ViewController"]):
     disabled: bool
     label: str
     emoji: discord.PartialEmoji | None

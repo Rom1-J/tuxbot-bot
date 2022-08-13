@@ -209,4 +209,4 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     async def is_owner(self, user: discord.abc.User, /) -> bool:
-        ...
+        return await super().is_owner(user)

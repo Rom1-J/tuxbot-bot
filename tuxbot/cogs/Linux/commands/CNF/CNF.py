@@ -85,9 +85,10 @@ class CNF:
             del distro[0]  # unused row
 
             for d in distro:
-                self.distro[
-                    d.find("dt").text.strip().split("\n")[-1].strip()
-                ] = d.find("code").text
+                if _c := d.find("code"):
+                    self.distro[
+                        d.find("dt").text.strip().split("\n")[-1].strip()
+                    ] = _c.text
 
     # =========================================================================
 
