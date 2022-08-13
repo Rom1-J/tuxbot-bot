@@ -255,7 +255,9 @@ class Pages(discord.ui.View):
         button: discord.ui.Button["Pages"],
     ) -> None:
         """Go to the last page"""
-        await self.show_page(interaction, self.source.get_max_pages() - 1)  # type: ignore
+        await self.show_page(
+            interaction, self.source.get_max_pages() - 1  # type: ignore
+        )
 
     # =========================================================================
 
@@ -268,6 +270,6 @@ class Pages(discord.ui.View):
     ) -> None:
         """Stop the paginator"""
         await interaction.response.defer()
-        await interaction.delete_original_message()
+        await interaction.delete_original_response()
 
         self.stop()

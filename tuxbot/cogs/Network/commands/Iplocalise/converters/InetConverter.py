@@ -17,7 +17,7 @@ ConvertType = typing.Optional[int]
 class InetConverter(commands.Converter[ConvertType]):
     """Clean and return inet."""
 
-    async def convert(  # type: ignore
+    async def convert(  # type: ignore[override]
         self, ctx: commands.Context[TuxbotABC], argument: str | None
     ) -> ConvertType:
         res = None

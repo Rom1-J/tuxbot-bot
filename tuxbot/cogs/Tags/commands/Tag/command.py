@@ -32,9 +32,10 @@ class TagCommand(commands.GroupCog, name="tag"):
 
     @staticmethod
     async def __get_tag(guild_id: int, name: str) -> TagsModel | None:
-        return await TagsModel.get_or_none(
+        tags: TagsModel | None = await TagsModel.get_or_none(
             guild_id=guild_id, name=name.lower()
         )
+        return tags
 
     # =========================================================================
 
@@ -50,7 +51,11 @@ class TagCommand(commands.GroupCog, name="tag"):
         if query is not None:
             kwargs["name__icontains"] = query
 
-        return await TagsModel.filter(**kwargs).all().order_by("-uses")
+        tags: list[TagsModel] | None = (
+            await TagsModel.filter(**kwargs).all().order_by("-uses")
+        )
+
+        return tags
 
     # =========================================================================
 

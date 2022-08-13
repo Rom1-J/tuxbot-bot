@@ -6,9 +6,9 @@ Listener whenever command is completed
 """
 from datetime import datetime, timezone
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
 from discord.ext import commands
 
+from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 

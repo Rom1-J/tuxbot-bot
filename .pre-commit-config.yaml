@@ -29,7 +29,23 @@ repos:
     rev: 'tags/v0.971'
     hooks:
       - id: mypy
-        additional_dependencies: [types-PyYAML, types-aiofiles]
+        args: ["--strict", "--namespace-packages", "--ignore-missing-imports", "--show-error-codes"]
+        additional_dependencies:
+          - types-PyYAML
+          - types-aiofiles
+          - types-beautifulsoup4
+          - types-boto
+          - types-protobuf
+          - types-pytz
+          - types-requests
+          - types-setuptools
+          - types-six
+          - types-tabulate
+          - git+https://github.com/Rapptz/discord.py
+          - discord-ext-menus
+          - tortoise-orm
+          - sympy
+          - ddtrace
 
   - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1

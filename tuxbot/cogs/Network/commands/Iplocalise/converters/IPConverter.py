@@ -16,7 +16,7 @@ ConvertType = str
 class IPConverter(commands.Converter[ConvertType]):
     """Clean user input by removing proto."""
 
-    async def convert(  # type: ignore
+    async def convert(  # type: ignore[override]
         self, ctx: commands.Context[TuxbotABC], argument: str
     ) -> ConvertType:
         argument = argument.replace("http://", "").replace("https://", "")

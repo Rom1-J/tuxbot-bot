@@ -22,10 +22,13 @@ class AutoQuoteCommand(commands.Cog):
 
     @staticmethod
     async def __get_model(guild_id: int) -> AutoQuoteModel:
-        model = await AutoQuoteModel.get_or_none(guild_id=guild_id)
+        model: AutoQuoteModel | None = await AutoQuoteModel.get_or_none(
+            guild_id=guild_id
+        )
 
         if not isinstance(model, AutoQuoteModel):
-            model = await AutoQuoteModel.create(guild_id=guild_id)
+            _m: AutoQuoteModel = await AutoQuoteModel.create(guild_id=guild_id)
+            return _m
 
         return model
 

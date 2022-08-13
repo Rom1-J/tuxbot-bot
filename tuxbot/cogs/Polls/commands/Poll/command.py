@@ -37,7 +37,7 @@ class PollCommand(commands.GroupCog, name="poll"):
         message: str,
         choices: dict[str, str],
     ) -> PollsModel:
-        poll = await PollsModel.create(
+        poll: PollsModel = await PollsModel.create(
             channel_id=channel_id,
             message_id=message_id,
             author_id=author_id,
@@ -53,7 +53,10 @@ class PollCommand(commands.GroupCog, name="poll"):
 
     @staticmethod
     async def get_poll(message_id: int) -> PollsModel | None:
-        return await PollsModel.get_or_none(message_id=message_id)
+        poll: PollsModel | None = await PollsModel.get_or_none(
+            message_id=message_id
+        )
+        return poll
 
     # =========================================================================
     @staticmethod
