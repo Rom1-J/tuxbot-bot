@@ -24,7 +24,6 @@ from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core import redis
 from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
-from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 

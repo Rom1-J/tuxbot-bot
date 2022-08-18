@@ -22,9 +22,7 @@ class Utils:
         return await _shorten(text=text, length=length)
 
     @staticmethod
-    def gen_key(
-        *args: tuple[typing.Any], **kwargs: dict[str, typing.Any]
-    ) -> str:
+    def gen_key(*args: typing.Any, **kwargs: typing.Any) -> str:
         return _gen_key(*args, **kwargs)
 
 

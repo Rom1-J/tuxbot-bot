@@ -9,19 +9,7 @@ import typing
 import aiohttp
 
 
-def gen_key(*args: tuple[typing.Any], **kwargs: dict[str, typing.Any]) -> str:
-    """Generate key from args and kwargs used to be set as key name for redis
-
-    Parameters
-    ----------
-    args: tuple[Any]
-    kwargs dict[str, typing.Any]
-
-    Returns
-    -------
-    str
-    """
-
+def gen_key(*args: typing.Any, **kwargs: typing.Any) -> str:
     frame = inspect.stack()[1]
     file = "/tuxbot/" + frame.filename.split("/tuxbot/")[-1]
 
