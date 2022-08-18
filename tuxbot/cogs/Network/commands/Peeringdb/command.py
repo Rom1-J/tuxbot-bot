@@ -135,7 +135,7 @@ class PeeringdbCommand(commands.Cog):
                 )
 
         if data["notes"]:
-            output = (await self.bot.utils.shorten(data["notes"], 550))[1]
+            output = await self.bot.utils.shorten(data["notes"], 550)
             e.description = output["text"]
         if data["created"]:
             e.timestamp = datetime.strptime(

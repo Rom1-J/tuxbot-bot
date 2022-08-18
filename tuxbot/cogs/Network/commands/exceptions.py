@@ -12,5 +12,5 @@ class NetworkException(commands.BadArgument):
     """Base Network module exceptions"""
 
 
-class RFC1918(NetworkException):
-    """Ip reserved as local use"""
+class RFCReserved(NetworkException):
+    """Ip reserved as special use"""

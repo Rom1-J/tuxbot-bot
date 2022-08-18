@@ -35,4 +35,4 @@ class GuildModel(Model):
         return str(self.id)
 
     def __repr__(self) -> str:
-        return f"<Server id={self.id}>"
+        return f"<Guild id={self.id}>"

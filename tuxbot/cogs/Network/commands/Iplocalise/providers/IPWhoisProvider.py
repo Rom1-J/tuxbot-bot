@@ -4,7 +4,7 @@ import typing
 import ipwhois
 from ipwhois import IPWhois
 
-from ...exceptions import RFC1918
+from ...exceptions import RFCReserved
 from .abc import Provider
 
 
@@ -19,7 +19,7 @@ class IPWhoisProvider(Provider):
                 return {}
 
             except ipwhois.exceptions.IPDefinedError as e:
-                raise RFC1918(
+                raise RFCReserved(
                     "This IP address defined as Private-Use Networks via "
                     "RFC 1918."
                 ) from e

@@ -3,6 +3,7 @@ Useful generators
 """
 import asyncio
 import inspect
+import textwrap
 import typing
 
 import aiohttp
@@ -36,42 +37,23 @@ def gen_key(*args: tuple[typing.Any], **kwargs: dict[str, typing.Any]) -> str:
     return f"{base_key}({params})"
 
 
-async def shorten(
-    text: str, length: int, fail: bool = False
-) -> tuple[bool, dict[str, str]]:
-    """Return either paste url if text is too long,
-    or given text if correct size
+async def shorten(text: str, length: int) -> dict[str, str]:
+    output: dict[str, str] = {
+        "text": textwrap.shorten(text, length),
+        "link": "",
+    }
 
-    Parameters
-    ----------
-    text: str
-        Text to shorten
-    length: int
-        Max length
-    fail: bool
-        True if failed to send to paste link
+    if output["text"] != text:
+        try:
+            async with aiohttp.ClientSession() as cs, cs.post(
+                "https://paste.ramle.be/documents",
+                data=text.encode(),
+                timeout=aiohttp.ClientTimeout(total=0.300),
+            ) as r:
+                output[
+                    "link"
+                ] = f"https://paste.ramle.be/{(await r.json())['key']}"
+        except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
+            pass
 
-    Returns
-    -------
-    tuple[bool, dict]
-        trunked text and link if available
-    """
-    output: dict[str, str] = {"text": text[:length], "link": ""}
-
-    if len(text) > length:
-        output["text"] += "[...]"
-
-        if not fail:
-            try:
-                async with aiohttp.ClientSession() as cs, cs.post(
-                    "https://paste.ramle.be/documents",
-                    data=text.encode(),
-                    timeout=aiohttp.ClientTimeout(total=0.300),
-                ) as r:
-                    output[
-                        "link"
-                    ] = f"https://paste.ramle.be/{(await r.json())['key']}"
-            except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
-                fail = True
-
-    return fail, output
+    return output

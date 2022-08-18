@@ -19,7 +19,7 @@ from ipwhois import IPWhois
 from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
-from ..exceptions import RFC1918
+from ..exceptions import RFCReserved
 from .exceptions import UnreachableAddress
 
 
@@ -33,24 +33,21 @@ class GetheadersCommand(commands.Cog):
     # =========================================================================
 
     @staticmethod
-    async def __check_for_rfc1918_or_raise(ip: str) -> None:
-        """Check for RFC1918 or raise"""
+    async def __check_for_rfc_reserved_or_raise(ip: str) -> None:
+        """Check for RFC reserved or raise"""
 
-        def _check_for_rfc1918_or_raise(_ip: str) -> None:
+        def _check_for_rfc_reserved_or_raise(_ip: str) -> None:
             try:
                 IPWhois(
                     socket.getaddrinfo(urlparse(_ip).netloc, None)[1][4][0]
                 ).lookup_whois()
             except ipwhois.exceptions.IPDefinedError as e:
-                raise RFC1918(
-                    "This IP address defined as Private-Use Networks "
-                    "via RFC 1918."
-                ) from e
+                raise RFCReserved(str(e)) from e
 
         try:
             return await asyncio.wait_for(
                 asyncio.get_running_loop().run_in_executor(
-                    None, _check_for_rfc1918_or_raise, str(ip)
+                    None, _check_for_rfc_reserved_or_raise, str(ip)
                 ),
                 timeout=2,
             )
@@ -96,7 +93,7 @@ class GetheadersCommand(commands.Cog):
         if not ip.startswith("http"):
             ip = f"http://{ip}"
 
-        await self.__check_for_rfc1918_or_raise(ip)
+        await self.__check_for_rfc_reserved_or_raise(ip)
 
         status, headers = await self.__get_headers(ip, user_agent)
         colors = {
@@ -115,7 +112,7 @@ class GetheadersCommand(commands.Cog):
         e.set_thumbnail(url=f"https://http.cat/{status}")
 
         for key, value in headers.items():
-            _, output = await self.bot.utils.shorten(value, 50)
+            output = await self.bot.utils.shorten(str(value), 50)
 
             if output["link"]:
                 value = f"[show all]({output['link']})"

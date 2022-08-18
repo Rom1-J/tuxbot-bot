@@ -13,11 +13,19 @@ class Utils:
     """Set of utils functions and classes"""
 
     colors: type[Colors] = Colors
-    gen_key: typing.Callable[..., str] = _gen_key
-    shorten: typing.Callable[
-        ..., typing.Coroutine[typing.Any, typing.Any, typing.Any]
-    ] = _shorten
     emotes: list[str] = [chr(0x1F1E6 + i) for i in range(26)]
+
+    # =========================================================================
+
+    @staticmethod
+    async def shorten(text: str, length: int) -> dict[str, str]:
+        return await _shorten(text=text, length=length)
+
+    @staticmethod
+    def gen_key(
+        *args: tuple[typing.Any], **kwargs: dict[str, typing.Any]
+    ) -> str:
+        return _gen_key(*args, **kwargs)
 
 
 utils = Utils()
