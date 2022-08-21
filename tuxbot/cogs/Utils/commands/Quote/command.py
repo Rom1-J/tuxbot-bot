@@ -55,6 +55,12 @@ class QuoteCommand(commands.Cog):
     async def _quote_context_menu(
         interaction: discord.Interaction, message: discord.Message
     ) -> None:
+        if not message.content:
+            await interaction.response.send_message(
+                "This message has no content...", ephemeral=True
+            )
+            return
+
         quote = Quote(message.content, str(message.author))
 
         quote_bytes = await quote.generate()
