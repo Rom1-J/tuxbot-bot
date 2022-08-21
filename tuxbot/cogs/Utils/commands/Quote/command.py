@@ -26,8 +26,6 @@ class QuoteCommand(commands.Cog):
         )
         self.bot.tree.add_command(self.quote_context_menu)
 
-        self.bot.logger.debug(self.quote_context_menu)
-
     # =========================================================================
 
     async def cog_unload(self) -> None:
