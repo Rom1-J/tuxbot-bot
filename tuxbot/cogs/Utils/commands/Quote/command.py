@@ -5,6 +5,7 @@ tuxbot.cogs.Utils.commands.Quote.command
 Send message as quote format
 """
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
@@ -19,6 +20,20 @@ class QuoteCommand(commands.Cog):
 
     def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
+
+        self.quote_context_menu = app_commands.ContextMenu(
+            name="quote", callback=self._quote_context_menu
+        )
+        self.bot.tree.add_command(self.quote_context_menu)
+
+        self.bot.logger.debug(self.quote_context_menu)
+
+    # =========================================================================
+
+    async def cog_unload(self) -> None:
+        self.bot.tree.remove_command(
+            self.quote_context_menu.name, type=self.quote_context_menu.type
+        )
 
     # =========================================================================
     # =========================================================================
@@ -35,3 +50,16 @@ class QuoteCommand(commands.Cog):
         file = discord.File(quote_bytes, "quote.png")
 
         await ctx.send(file=file)
+
+    # =========================================================================
+
+    @staticmethod
+    async def _quote_context_menu(
+        interaction: discord.Interaction, message: discord.Message
+    ) -> None:
+        quote = Quote(message.content, str(message.author))
+
+        quote_bytes = await quote.generate()
+        file = discord.File(quote_bytes, "quote.png")
+
+        await interaction.response.send_message(file=file)
