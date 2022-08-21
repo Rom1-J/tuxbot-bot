@@ -22,7 +22,7 @@ class QuoteCommand(commands.Cog):
         self.bot = bot
 
         self.quote_context_menu = app_commands.ContextMenu(
-            name="quote", callback=self._quote_context_menu
+            name="Turn into a quote", callback=self._quote_context_menu
         )
         self.bot.tree.add_command(self.quote_context_menu)
 
