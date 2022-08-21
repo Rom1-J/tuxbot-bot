@@ -97,8 +97,6 @@ class PeeringdbCommand(commands.Cog):
 
         data: dict[str, typing.Any] = {}
 
-        self.bot.logger.debug(self._peeringdb_net)
-
         if self._peeringdb_net is None or not self._peeringdb_net.get("data"):
             await ctx.send("Please retry in few seconds.")
             return
