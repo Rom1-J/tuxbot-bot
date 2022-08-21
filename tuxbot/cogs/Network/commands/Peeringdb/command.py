@@ -60,8 +60,6 @@ class PeeringdbCommand(commands.Cog):
         if key := self.bot.config["Network"].get("peeringdb_key"):
             headers["Authorization"] = f"Api-Key {key}"
 
-        self.bot.logger.debug(headers)
-
         try:
             async with aiohttp.ClientSession(
                 connector=TCPConnector(verify_ssl=False)
