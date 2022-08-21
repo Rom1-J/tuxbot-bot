@@ -41,7 +41,6 @@ Assuming PostgreSQL already configured, and `Poetry <https://python-poetry.org/d
 
     $ git clone https://github.com/Rom1-J/tuxbot-bot /opt/tuxbot-bot
     $ cd /opt/tuxbot-bot
-    $ git checkout v4
     $ poetry env use 3.10
     $ poetry shell
     $ poetry install
