@@ -56,16 +56,25 @@ class PeeringdbCommand(commands.Cog):
 
     @tasks.loop(hours=6.00)
     async def _update_peering_db(self) -> None:
+        headers = {}
+        if key := self.bot.config["Network"].get("peeringdb_key"):
+            headers["Authorization"] = f"Api-Key {key}"
+
+        self.bot.logger.debug(headers)
+
         try:
             async with aiohttp.ClientSession(
                 connector=TCPConnector(verify_ssl=False)
             ) as cs, cs.get(
                 "https://peeringdb.com/api/net",
                 timeout=aiohttp.ClientTimeout(total=60),
+                headers=headers,
             ) as s:
                 self._peeringdb_net = await s.json()
         except asyncio.exceptions.TimeoutError:
-            pass
+            self.bot.logger.error(
+                "[PeeringdbCommand] '_update_peering_db' failed!"
+            )
         else:
             self.bot.logger.info(
                 "[PeeringdbCommand] '_update_peering_db' done!"
@@ -89,6 +98,8 @@ class PeeringdbCommand(commands.Cog):
         self.__check_asn_or_raise(asn)
 
         data: dict[str, typing.Any] = {}
+
+        self.bot.logger.debug(self._peeringdb_net)
 
         if self._peeringdb_net is None or not self._peeringdb_net.get("data"):
             await ctx.send("Please retry in few seconds.")

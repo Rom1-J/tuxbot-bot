@@ -31,7 +31,7 @@ class SyncCommand(commands.Cog):
     ) -> None:
         if not guilds and ctx.guild:
             if spec == "~":
-                fmt = await ctx.bot.tree.sync(guild=ctx.guild)  # type: ignore
+                fmt = await ctx.bot.tree.sync(guild=ctx.guild)
             else:
                 fmt = await ctx.bot.tree.sync()
 

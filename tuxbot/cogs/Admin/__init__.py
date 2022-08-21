@@ -54,4 +54,4 @@ class Admin(ModuleABC, Commands):
     async def cog_check(  # type: ignore[override]
         self, ctx: commands.Context[TuxbotABC]
     ) -> bool:
-        return bool(await self.bot.is_owner(ctx.author))  # type: ignore
+        return bool(await self.bot.is_owner(ctx.author))

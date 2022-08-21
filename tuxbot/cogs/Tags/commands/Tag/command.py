@@ -52,7 +52,7 @@ class TagCommand(commands.GroupCog, name="tag"):
             kwargs["name__icontains"] = query
 
         tags: list[TagsModel] | None = (
-            await TagsModel.filter(**kwargs).all().order_by("-uses")
+            await TagsModel.filter(**kwargs).limit(25).order_by("-uses")
         )
 
         return tags

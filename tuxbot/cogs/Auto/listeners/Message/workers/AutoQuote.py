@@ -63,7 +63,7 @@ class AutoQuote:
                         return
 
                     if referred_message.channel.permissions_for(
-                        ctx.author  # type: ignore
+                        ctx.author
                     ).read_message_history:
                         embed = discord.Embed(
                             description=referred_message.content,
