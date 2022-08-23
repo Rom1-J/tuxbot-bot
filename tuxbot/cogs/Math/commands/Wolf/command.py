@@ -75,7 +75,7 @@ class WolfCommand(commands.Cog):
             text=str(ctx.author), icon_url=ctx.author.display_avatar.url
         )
         e.add_field(
-            name="<:wolframalpha:851473526992797756> WolframAlpha",
+            name=f"{self.bot.utils.emotes.WOLFRAMALPHA} WolframAlpha",
             value=(
                 f"[{discord.utils.escape_markdown(query)}]"
                 f"(https://www.wolframalpha.com/input/?i="

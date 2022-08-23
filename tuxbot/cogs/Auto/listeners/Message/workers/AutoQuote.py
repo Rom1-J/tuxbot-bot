@@ -67,7 +67,7 @@ class AutoQuote:
                     ).read_message_history:
                         embed = discord.Embed(
                             description=referred_message.content,
-                            colour=self.bot.utils.colors.EMBED_BORDER.value,
+                            colour=self.bot.utils.colors.EMBED_BORDER,
                         )
                         embed.timestamp = referred_message.created_at
 

@@ -54,7 +54,7 @@ class InviteCommand(commands.Cog):
         )
 
         e = discord.Embed(
-            title="Invite", color=self.bot.utils.colors.EMBED_BORDER.value
+            title="Invite", color=self.bot.utils.colors.EMBED_BORDER
         )
 
         e.add_field(

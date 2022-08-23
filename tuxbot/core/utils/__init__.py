@@ -5,6 +5,7 @@ Set of utils functions and classes
 import typing
 
 from .Colors import Colors
+from .Emotes import Emotes
 from .Generators import gen_key as _gen_key
 from .Generators import shorten as _shorten
 
@@ -13,7 +14,7 @@ class Utils:
     """Set of utils functions and classes"""
 
     colors: type[Colors] = Colors
-    emotes: list[str] = [chr(0x1F1E6 + i) for i in range(26)]
+    emotes: type[Emotes] = Emotes
 
     # =========================================================================
 

@@ -2,12 +2,10 @@
 Discord status colors
 """
 
-from enum import Enum
-
 import discord
 
 
-class Colors(Enum):
+class Colors:
     """Enum of all different discord status colors"""
 
     ONLINE: discord.Color = discord.Color(0x3BA55D)

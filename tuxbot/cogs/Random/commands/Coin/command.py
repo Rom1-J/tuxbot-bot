@@ -26,7 +26,7 @@ class CoinCommand(commands.Cog):
     async def _coin(self, ctx: commands.Context[TuxbotABC]) -> None:
         e = discord.Embed(
             title=random.choice(["Tail", "Head"]),
-            color=self.bot.utils.colors.EMBED_BORDER.value,
+            color=self.bot.utils.colors.EMBED_BORDER,
         )
 
         await ctx.send(embed=e)

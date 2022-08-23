@@ -163,7 +163,7 @@ class PollCommand(commands.GroupCog, name="poll"):
 
         choices = dict(
             zip(
-                self.bot.utils.emotes,
+                self.bot.utils.emotes.ALPHABET,
                 [
                     discord.utils.escape_mentions(c)
                     for c in (
@@ -202,4 +202,4 @@ class PollCommand(commands.GroupCog, name="poll"):
         await self.update_poll(self.bot, poll, message=stmt)
 
         for i in range(len(choices)):
-            await stmt.add_reaction(self.bot.utils.emotes[i])
+            await stmt.add_reaction(self.bot.utils.emotes.ALPHABET[i])

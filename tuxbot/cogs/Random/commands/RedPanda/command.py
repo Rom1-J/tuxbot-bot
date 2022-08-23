@@ -49,7 +49,7 @@ class RedPandaCommand(commands.Cog):
 
         e = discord.Embed(
             title="Here's your red panda",
-            color=self.bot.utils.colors.EMBED_BORDER.value,
+            color=self.bot.utils.colors.EMBED_BORDER,
         )
 
         e.set_image(url=redpanda["image"])

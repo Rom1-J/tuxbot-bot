@@ -49,7 +49,7 @@ class KoalaCommand(commands.Cog):
 
         e = discord.Embed(
             title="Here's your koala",
-            color=self.bot.utils.colors.EMBED_BORDER.value,
+            color=self.bot.utils.colors.EMBED_BORDER,
         )
 
         e.set_image(url=koala["image"])

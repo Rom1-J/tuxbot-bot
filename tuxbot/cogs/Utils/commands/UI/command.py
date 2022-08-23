@@ -38,7 +38,7 @@ class UICommand(commands.Cog):
         else:
             user = _u
 
-        e = discord.Embed(color=self.bot.utils.colors.EMBED_BORDER.value)
+        e = discord.Embed(color=self.bot.utils.colors.EMBED_BORDER)
 
         if isinstance(user, (discord.User, discord.Member)):
             e.set_author(name=user, icon_url=user.display_avatar.url)
@@ -72,9 +72,9 @@ class UICommand(commands.Cog):
                     value=f"> <t:{int(premium_since.timestamp())}:F>",
                 )
 
-            if (
-                status := user.status.value.upper()
-            ) in self.bot.utils.colors.__members__:
+            if hasattr(
+                self.bot.utils.colors, (status := user.status.value.upper())
+            ):
                 e.colour = getattr(self.bot.utils.colors, status).value
 
             if activity := user.activity:

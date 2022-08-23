@@ -28,13 +28,16 @@ class RawReactionRemove(commands.Cog):
         if pld.member == self.bot.user:
             return
 
-        if pld.emoji.name not in self.bot.utils.emotes:
+        if pld.emoji.name not in self.bot.utils.emotes.ALPHABET:
             return
 
         if poll := await PollCommand.get_poll(pld.message_id):
             choices = await poll.choices.all()
 
-            if pld.emoji.name not in self.bot.utils.emotes[: len(choices)]:
+            if (
+                pld.emoji.name
+                not in self.bot.utils.emotes.ALPHABET[: len(choices)]
+            ):
                 return
 
             if not (

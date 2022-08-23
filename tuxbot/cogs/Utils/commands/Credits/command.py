@@ -27,7 +27,7 @@ class CreditsCommand(commands.Cog):
     async def _credits(self, ctx: commands.Context[TuxbotABC]) -> None:
         e = discord.Embed(
             title="Contributors",
-            color=self.bot.utils.colors.EMBED_BORDER.value,
+            color=self.bot.utils.colors.EMBED_BORDER,
         )
 
         e.add_field(

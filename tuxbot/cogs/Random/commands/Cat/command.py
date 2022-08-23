@@ -55,7 +55,7 @@ class CatCommand(commands.Cog):
 
         e = discord.Embed(
             title="Here's your cat",
-            color=self.bot.utils.colors.EMBED_BORDER.value,
+            color=self.bot.utils.colors.EMBED_BORDER,
         )
 
         e.set_image(url=f"{self.cataas_url}/{cat['url']}")

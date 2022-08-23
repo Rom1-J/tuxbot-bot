@@ -119,7 +119,7 @@ class InfoCommand(commands.Cog):
                 inline=True,
             )
             e.add_field(
-                name="__<:python:596577462335307777> Python__",
+                name=f"__{self.bot.utils.emotes.PYTHON} Python__",
                 value=(
                     f"**python** `{platform.python_version()}`\n"
                     f"**{self.bot.config['lib']}** `{discord.__version__}`"
@@ -156,7 +156,7 @@ class InfoCommand(commands.Cog):
                 name="__:file_folder: Files__",
                 value=f"{self.stats.get('file_amount')} "
                 f"*({self.stats.get('python_file_amount')}"
-                f" <:python:596577462335307777>)*",
+                f" {self.bot.utils.emotes.PYTHON})*",
                 inline=True,
             )
             e.add_field(

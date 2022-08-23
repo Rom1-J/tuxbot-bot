@@ -41,7 +41,7 @@ class AvatarCommand(commands.Cog):
 
         e = discord.Embed(
             title=f"Avatar of {user}",
-            color=self.bot.utils.colors.EMBED_BORDER.value,
+            color=self.bot.utils.colors.EMBED_BORDER,
         )
         e.set_image(url=user.display_avatar.url)
 

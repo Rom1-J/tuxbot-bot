@@ -49,7 +49,7 @@ class ViewController(discord.ui.View):
 
         embed = discord.Embed(
             title=f"Avatar of {self.data}",
-            color=self.ctx.bot.utils.colors.EMBED_BORDER.value,
+            color=self.ctx.bot.utils.colors.EMBED_BORDER,
         )
         embed.set_image(url=self.data.display_avatar.url)
 

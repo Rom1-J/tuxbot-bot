@@ -15,9 +15,9 @@ class GlobalEmbed(Embed):
 
         e = discord.Embed(
             description=f"Auto quote toggled to `{self.model.activated}`",
-            colour=self.controller.ctx.bot.utils.colors.ONLINE.value
+            colour=self.controller.ctx.bot.utils.colors.ONLINE
             if self.model.activated
-            else self.controller.ctx.bot.utils.colors.DND.value,
+            else self.controller.ctx.bot.utils.colors.DND,
         )
 
         return e
