@@ -53,9 +53,9 @@ class InfoCommand(commands.Cog):
         file_amount = 0
         python_file_amount = 0
 
-        for path, _, files in os.walk(path):
+        for p, _, files in os.walk(path):
             for name in files:
-                file_dir = str(pathlib.PurePath(path, name))
+                file_dir = str(pathlib.PurePath(p, name))
                 if "env" in file_dir:
                     continue
 

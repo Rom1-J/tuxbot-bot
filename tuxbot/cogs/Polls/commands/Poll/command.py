@@ -92,7 +92,7 @@ class PollCommand(commands.GroupCog, name="poll"):
             icon_url="https://img.icons8.com/plasticine/100/000000/survey.png",
         )
 
-        for i, choice in enumerate(await poll.choices.order_by("label").all()):
+        for choice in await poll.choices.order_by("label").all():
             chart_labels.append(textwrap.shorten(choice.choice, width=42))
             chart_data.append(choice.checked)
 

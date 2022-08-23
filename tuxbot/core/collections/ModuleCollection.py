@@ -4,7 +4,7 @@ Tuxbot collections module: ModuleCollection
 Contains all module collections
 """
 import glob
-import importlib.util
+import importlib
 import inspect
 import os
 import typing
