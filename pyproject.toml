@@ -59,7 +59,7 @@ types-protobuf = "^3.19.22"
 types-pytz = "^2022.1.2"
 types-requests = "^2.28.8"
 types-setuptools = "^63.4.0"
-types-six = "^1.16.18"
+types-six = "^1.16.19"
 types-tabulate = "^0.8.11"
 
 [build-system]
