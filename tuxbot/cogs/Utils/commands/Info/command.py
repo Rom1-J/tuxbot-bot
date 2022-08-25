@@ -182,7 +182,7 @@ class InfoCommand(commands.Cog):
                 value=(
                     "[tuxbot.gnous.eu](https://tuxbot.gnous.eu/) "
                     "| [gnous.eu](https://gnous.eu/) "
-                    "| [git](https://gitlab.gnous.eu/gnouseu/tuxbot-bot) "
+                    "| [git](https://github.com/rom1-j/tuxbot-bot) "
                     "| [status](https://status.gnous.eu/check/154250) "
                     "| [Invite]"
                     "(https://discordapp.com/oauth2/authorize?client_id="
