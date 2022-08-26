@@ -1029,7 +1029,7 @@ types-six = "*"
 
 [[package]]
 name = "types-protobuf"
-version = "3.19.22"
+version = "3.20.0"
 description = "Typing stubs for protobuf"
 category = "dev"
 optional = false
@@ -1188,7 +1188,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "bbd6c7bdd90a465bae5387365d08adfcf3231fdcc17f98a83501f7e23b59faea"
+content-hash = "45cca58ffe3b641bd285de6994d8ad0575709dcfe90d2b01b0d0bdc293d89acc"
 
 [metadata.files]
 aiofiles = [
@@ -2158,8 +2158,8 @@ types-boto = [
     {file = "types_boto-2.49.17-py3-none-any.whl", hash = "sha256:d639c1306a8f8e19e06a486d30c7aeadc82e0a84a3996745ce95cd185fe0d1d5"},
 ]
 types-protobuf = [
-    {file = "types-protobuf-3.19.22.tar.gz", hash = "sha256:d2b26861b0cb46a3c8669b0df507b7ef72e487da66d61f9f3576aa76ce028a83"},
-    {file = "types_protobuf-3.19.22-py3-none-any.whl", hash = "sha256:d291388678af91bb045fafa864f142dc4ac22f5d4cdca097c7d8d8a32fa9b3ab"},
+    {file = "types-protobuf-3.20.0.tar.gz", hash = "sha256:ffcfe1cf2bf5aa703d0b466a5e54d077f562164a7f5220b91632cd355e4dc360"},
+    {file = "types_protobuf-3.20.0-py3-none-any.whl", hash = "sha256:249e0f476a3db6067e55c646a91a1148a7495634016f08eb9450d983720f82c3"},
 ]
 types-psutil = [
     {file = "types-psutil-5.9.5.tar.gz", hash = "sha256:bef91de096b77ff7bc3a92bafe466ee55f842286c1d734658b7c26b259078253"},
