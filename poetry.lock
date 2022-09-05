@@ -1080,7 +1080,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-six"
-version = "1.16.18"
+version = "1.16.19"
 description = "Typing stubs for six"
 category = "dev"
 optional = false
@@ -1188,7 +1188,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "bbd6c7bdd90a465bae5387365d08adfcf3231fdcc17f98a83501f7e23b59faea"
+content-hash = "6df439eb548793313ba6625d1288d4b4744a1dd1d863c6d75dbfe38ef3487c29"
 
 [metadata.files]
 aiofiles = [
@@ -2182,8 +2182,8 @@ types-setuptools = [
     {file = "types_setuptools-63.4.1-py3-none-any.whl", hash = "sha256:8781e2fe71fd2885b085f2eeaad099468cda791b383ccbc735d9aad0c44f5355"},
 ]
 types-six = [
-    {file = "types-six-1.16.18.tar.gz", hash = "sha256:26f481fabb65321ba428bdfb82c97fc638e00be6b20efa83915b007cf3893e28"},
-    {file = "types_six-1.16.18-py3-none-any.whl", hash = "sha256:4f8be25faaa0a3088d6380ab7f27b4c7bc74ba81b2c7a351729f5be4af438290"},
+    {file = "types-six-1.16.19.tar.gz", hash = "sha256:5bd851a00d761c5b5df78a379cb174a9aa63defc8d967600bbb37df607099ed2"},
+    {file = "types_six-1.16.19-py3-none-any.whl", hash = "sha256:c9892951c3fd39e193aa35952049c48b31b56bd9c0bf104eb9735de030f20c8d"},
 ]
 types-tabulate = [
     {file = "types-tabulate-0.8.11.tar.gz", hash = "sha256:17a5fa3b5ca453815778fc9865e8ecd0118b07b2b9faff3e2b06fe448174dd5e"},
