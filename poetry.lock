@@ -1047,7 +1047,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-beautifulsoup4"
-version = "4.11.5"
+version = "4.11.6"
 description = "Typing stubs for beautifulsoup4"
 category = "dev"
 optional = false
@@ -1244,7 +1244,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "6df439eb548793313ba6625d1288d4b4744a1dd1d863c6d75dbfe38ef3487c29"
+content-hash = "f0552922686de5084861eb32537b2efcced3b25f5ece2fd697fead7b694d937f"
 
 [metadata.files]
 aiofiles = [
@@ -2217,8 +2217,8 @@ types-aiofiles = [
     {file = "types_aiofiles-0.8.10-py3-none-any.whl", hash = "sha256:ced29372faf9fe95a5b617c844b3c10db3b288c85f8fabdd8b58f4cdb0101bcd"},
 ]
 types-beautifulsoup4 = [
-    {file = "types-beautifulsoup4-4.11.5.tar.gz", hash = "sha256:645963117b0f03f4a44bda36cf3da50cc0e25001e4d19c044d1e323a37c69d73"},
-    {file = "types_beautifulsoup4-4.11.5-py3-none-any.whl", hash = "sha256:4b97fce9049e5367ddf45333c8c7224e57d71a3f93162c714be52bf1aa538f0a"},
+    {file = "types-beautifulsoup4-4.11.6.tar.gz", hash = "sha256:2670dd71995df464041e2941fa9bbb694795271e3dedd7262b4766649a1cbe82"},
+    {file = "types_beautifulsoup4-4.11.6-py3-none-any.whl", hash = "sha256:ac9dd1383481201ea07f27c5a43e7b1ee71caf9c720b7ae951db15d60d126e80"},
 ]
 types-boto = [
     {file = "types-boto-2.49.17.tar.gz", hash = "sha256:7a7df004a05e58c60468a4f69a0d7e6a38b303f7f567ea4f518d6c53d7f3371a"},
