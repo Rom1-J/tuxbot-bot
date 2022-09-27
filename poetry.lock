@@ -1039,7 +1039,7 @@ psycopg = ["psycopg[binary,pool]"]
 
 [[package]]
 name = "types-aiofiles"
-version = "0.8.10"
+version = "22.1.0"
 description = "Typing stubs for aiofiles"
 category = "dev"
 optional = false
@@ -2220,8 +2220,8 @@ tortoise-orm = [
     {file = "tortoise_orm-0.19.2-py3-none-any.whl", hash = "sha256:a99b8c9f42d5cd49493c70471b5c9a5df8ecf49cc624f2f41b9dc75bba993ac5"},
 ]
 types-aiofiles = [
-    {file = "types-aiofiles-0.8.10.tar.gz", hash = "sha256:d006ed6894c1da9ed148325b80f3b13c45332474ec31335e6342493cf134e6d4"},
-    {file = "types_aiofiles-0.8.10-py3-none-any.whl", hash = "sha256:ced29372faf9fe95a5b617c844b3c10db3b288c85f8fabdd8b58f4cdb0101bcd"},
+    {file = "types-aiofiles-22.1.0.tar.gz", hash = "sha256:8ae2e1d2f99b62754cffe6a8761fd6eeb8a0675569dc73818248e5bc30cb9074"},
+    {file = "types_aiofiles-22.1.0-py3-none-any.whl", hash = "sha256:460c3b1c7fa24ec5f2c7d46cf3a849f07c7007a57fc19884be17e5159351fc39"},
 ]
 types-beautifulsoup4 = [
     {file = "types-beautifulsoup4-4.11.6.tar.gz", hash = "sha256:2670dd71995df464041e2941fa9bbb694795271e3dedd7262b4766649a1cbe82"},
