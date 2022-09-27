@@ -1066,7 +1066,7 @@ types-six = "*"
 
 [[package]]
 name = "types-protobuf"
-version = "3.19.22"
+version = "3.20.4"
 description = "Typing stubs for protobuf"
 category = "dev"
 optional = false
@@ -1098,7 +1098,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-requests"
-version = "2.28.9"
+version = "2.28.10"
 description = "Typing stubs for requests"
 category = "dev"
 optional = false
@@ -2232,8 +2232,8 @@ types-boto = [
     {file = "types_boto-2.49.17-py3-none-any.whl", hash = "sha256:d639c1306a8f8e19e06a486d30c7aeadc82e0a84a3996745ce95cd185fe0d1d5"},
 ]
 types-protobuf = [
-    {file = "types-protobuf-3.19.22.tar.gz", hash = "sha256:d2b26861b0cb46a3c8669b0df507b7ef72e487da66d61f9f3576aa76ce028a83"},
-    {file = "types_protobuf-3.19.22-py3-none-any.whl", hash = "sha256:d291388678af91bb045fafa864f142dc4ac22f5d4cdca097c7d8d8a32fa9b3ab"},
+    {file = "types-protobuf-3.20.4.tar.gz", hash = "sha256:0dad3a5009895c985a56e2837f61902bad9594151265ac0ee907bb16d0b01eb7"},
+    {file = "types_protobuf-3.20.4-py3-none-any.whl", hash = "sha256:5082437afe64ce3b31c8db109eae86e02fda11e4d5f9ac59cb8578a8a138aa70"},
 ]
 types-psutil = [
     {file = "types-psutil-5.9.5.tar.gz", hash = "sha256:bef91de096b77ff7bc3a92bafe466ee55f842286c1d734658b7c26b259078253"},
@@ -2248,8 +2248,8 @@ types-pyyaml = [
     {file = "types_PyYAML-6.0.11-py3-none-any.whl", hash = "sha256:8f890028123607379c63550179ddaec4517dc751f4c527a52bb61934bf495989"},
 ]
 types-requests = [
-    {file = "types-requests-2.28.9.tar.gz", hash = "sha256:feaf581bd580497a47fe845d506fa3b91b484cf706ff27774e87659837de9962"},
-    {file = "types_requests-2.28.9-py3-none-any.whl", hash = "sha256:86cb66d3de2f53eac5c09adc42cf6547eefbd0c7e1210beca1ee751c35d96083"},
+    {file = "types-requests-2.28.10.tar.gz", hash = "sha256:97d8f40aa1ffe1e58c3726c77d63c182daea9a72d9f1fa2cafdea756b2a19f2c"},
+    {file = "types_requests-2.28.10-py3-none-any.whl", hash = "sha256:45b485725ed58752f2b23461252f1c1ad9205b884a1e35f786bb295525a3e16a"},
 ]
 types-setuptools = [
     {file = "types-setuptools-63.4.1.tar.gz", hash = "sha256:6aad80dd16bb5ee5c78260d7b5536ddbb95470ed8cc3dab19027802a7f8dc362"},
