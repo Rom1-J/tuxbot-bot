@@ -67,17 +67,20 @@ class GetheadersCommand(commands.Cog):
         if user_agent:
             req_headers["User-Agent"] = user_agent
 
-        async with aiohttp.ClientSession() as cs, cs.get(
-            str(ip),
-            headers=req_headers,
-            timeout=aiohttp.ClientTimeout(total=8),
-        ) as s:
-            # noinspection PyTypeChecker
-            headers = dict(s.headers.items())
-            headers.pop("Set-Cookie", headers)
-            headers.pop("X-Client-IP", headers)
+        try:
+            async with aiohttp.ClientSession() as cs, cs.get(
+                str(ip),
+                headers=req_headers,
+                timeout=aiohttp.ClientTimeout(total=8),
+            ) as s:
+                # noinspection PyTypeChecker
+                headers = dict(s.headers.items())
+                headers.pop("Set-Cookie", headers)
+                headers.pop("X-Client-IP", headers)
 
-            return s.status, headers
+                return s.status, headers
+        except (asyncio.exceptions.TimeoutError, socket.gaierror):
+            raise UnreachableAddress("Failed to reach this address.")
 
     # =========================================================================
     # =========================================================================

@@ -1,3 +1,6 @@
+include .env
+export
+
 ########################################################################################################################
 # Style
 ########################################################################################################################
@@ -20,15 +23,4 @@ dev: pre_commit build run
 
 .PHONY: run
 run:
-	PYTHON_ENV=development \
-	DD_ACTIVE=False \
-	STATSD_HOST="192.168.1.175" \
-	DD_AGENT_HOST="192.168.1.175" \
-	DD_ENV="Tuxbot-dev" \
-	CLUSTER_ID=1 \
-	CLUSTER_COUNT=1 \
-	SHARD_ID=0 \
-	SHARD_COUNT=1 \
-	FIRST_SHARD_ID=0 \
-	LAST_SHARD_ID=0 \
 	poetry run start

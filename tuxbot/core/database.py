@@ -98,7 +98,7 @@ class Database:
                 },
                 "use_tz": False,
                 "timezone": "UTC",
-            },
+            }
         )
 
         logger.info("[Database] Generating schemas.")

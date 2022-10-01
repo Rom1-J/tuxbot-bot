@@ -45,7 +45,7 @@ class ExprConverter(commands.Converter[ConvertType]):
 
         def _parse_expr() -> typing.Any | None:
             try:
-                return parse_expr(  # type: ignore[no-untyped-call]
+                return parse_expr(
                     argument,
                     transformations=(
                         standard_transformations

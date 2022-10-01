@@ -51,9 +51,11 @@ class QuoteCommand(commands.Cog):
 
     # =========================================================================
 
-    @staticmethod
+    # noinspection PyMethodMayBeStatic
     async def _quote_context_menu(
-        interaction: discord.Interaction, message: discord.Message
+        self,
+        interaction: discord.Interaction,
+        message: discord.Message,
     ) -> None:
         if not message.content:
             await interaction.response.send_message(
