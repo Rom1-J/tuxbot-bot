@@ -77,7 +77,12 @@ class AutoQuote:
                         )
 
                         embeds.append(embed)
-                except commands.MessageNotFound:
+                except (
+                    commands.MessageNotFound,
+                    commands.ChannelNotFound,
+                    commands.ChannelNotReadable,
+                    commands.GuildNotFound,
+                ):
                     pass
 
             if embeds:
