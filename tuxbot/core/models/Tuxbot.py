@@ -15,9 +15,15 @@ class TuxbotModel(Model):
     id = fields.BigIntField(pk=True, description="Client ID")
     prefix = fields.TextField(default=".", description="Tuxbot prefix")
 
-    ignored_users = BigIntArrayField(description="Tuxbot ignored users")
-    ignored_channels = BigIntArrayField(description="Tuxbot ignored channels")
-    ignored_guilds = BigIntArrayField(description="Tuxbot ignored guilds")
+    ignored_users = BigIntArrayField(
+        description="Tuxbot ignored users", default=None, null=True
+    )
+    ignored_channels = BigIntArrayField(
+        description="Tuxbot ignored channels", default=None, null=True
+    )
+    ignored_guilds = BigIntArrayField(
+        description="Tuxbot ignored guilds", default=None, null=True
+    )
 
     # =========================================================================
 

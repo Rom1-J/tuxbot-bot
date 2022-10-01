@@ -24,6 +24,7 @@ from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core import redis
 from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
+from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 
@@ -120,25 +121,22 @@ class Tuxbot(TuxbotABC):
                 status=discord.Status.online, activity=discord.Game(game)
             )
 
-        # todo: fix this
-        #  (IntegrityError: null value in column "moderators" of relation
-        #  "guild" violates not-null constraint)
-        # for guild in self.guilds:
-        #     guild_model: GuildModel | None = await self.models[
-        #         "Guild"
-        #     ].get_or_none(id=guild.id)
-        #
-        #     if guild_model:
-        #         guild_model.deleted = False
-        #         await guild_model.save()
-        #         return
-        #
-        #     await self.models["Guild"].create(
-        #         id=guild.id,
-        #         moderators=[],
-        #         moderator_roles=[],
-        #         deleted=False,
-        #     )
+        for guild in self.guilds:
+            guild_model: GuildModel | None = await self.models[
+                "Guild"
+            ].get_or_none(id=guild.id)
+
+            if guild_model:
+                guild_model.deleted = False
+                await guild_model.save()
+                return
+
+            await self.models["Guild"].create(
+                id=guild.id,
+                moderators=[],
+                moderator_roles=[],
+                deleted=False,
+            )
 
     # =========================================================================
     async def get_context(  # type: ignore

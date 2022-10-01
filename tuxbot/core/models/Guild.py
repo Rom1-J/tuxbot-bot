@@ -15,8 +15,12 @@ class GuildModel(Model):
     id = fields.BigIntField(pk=True, description="Guild ID")
     prefix = fields.TextField(default=".", description="Guild prefix")
 
-    moderators = BigIntArrayField(description="Guild moderators")
-    moderator_roles = BigIntArrayField(description="Guild moderator roles")
+    moderators = BigIntArrayField(
+        description="Guild moderators", default=None, null=True
+    )
+    moderator_roles = BigIntArrayField(
+        description="Guild moderator roles", default=None, null=True
+    )
 
     deleted = fields.BooleanField(
         default=True, description="Either the bot is on this guild"
