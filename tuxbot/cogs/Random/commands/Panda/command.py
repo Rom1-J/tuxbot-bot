@@ -5,7 +5,6 @@ tuxbot.cogs.Random.commands.Panda.command
 Get a random picture of panda
 """
 import asyncio
-import random
 import typing
 
 import aiohttp
