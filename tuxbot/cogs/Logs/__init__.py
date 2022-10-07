@@ -13,6 +13,8 @@ from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .commands.Stats.command import StatsCommand
+from .listeners.AppCommandCompletion.listener import AppCommandCompletion
+from .listeners.AppCommandError.listener import AppCommandError
 from .listeners.CommandCompletion.listener import CommandCompletion
 from .listeners.CommandError.listener import CommandError
 from .listeners.GuildJoin.listener import GuildJoin
@@ -25,8 +27,10 @@ from .listeners.SocketRawReceive.listener import SocketRawReceive
 STANDARD_COMMANDS = (StatsCommand,)
 
 STANDARD_LISTENERS = (
+    AppCommandCompletion,
     CommandCompletion,
     CommandError,
+    AppCommandError,
     GuildJoin,
     GuildRemove,
     Message,
