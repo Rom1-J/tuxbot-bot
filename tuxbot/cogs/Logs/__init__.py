@@ -39,7 +39,7 @@ STANDARD_LISTENERS = (
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=2, minor=2, micro=0, release_level="stable")
+version_info = VersionInfo(major=2, minor=3, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
