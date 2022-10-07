@@ -1139,7 +1139,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-psutil"
-version = "5.9.5"
+version = "5.9.5.1"
 description = "Typing stubs for psutil"
 category = "dev"
 optional = false
@@ -1309,7 +1309,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "045f2ddc329ff8344f2d28d327ffd76eabf1ab2bcfa1535aad1456219e09416e"
+content-hash = "2cc0b3c20f922abf20aa9033fcffb3c275dd916b32c960ff49ec7cbde0c64005"
 
 [metadata.files]
 aiofiles = [
@@ -2322,6 +2322,10 @@ setuptools = [
     {file = "setuptools-65.4.1-py3-none-any.whl", hash = "sha256:1b6bdc6161661409c5f21508763dc63ab20a9ac2f8ba20029aaaa7fdb9118012"},
     {file = "setuptools-65.4.1.tar.gz", hash = "sha256:3050e338e5871e70c72983072fe34f6032ae1cdeeeb67338199c2f74e083a80e"},
 ]
+setuptools = [
+    {file = "setuptools-65.4.1-py3-none-any.whl", hash = "sha256:1b6bdc6161661409c5f21508763dc63ab20a9ac2f8ba20029aaaa7fdb9118012"},
+    {file = "setuptools-65.4.1.tar.gz", hash = "sha256:3050e338e5871e70c72983072fe34f6032ae1cdeeeb67338199c2f74e083a80e"},
+]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
@@ -2371,8 +2375,8 @@ types-protobuf = [
     {file = "types_protobuf-3.20.4-py3-none-any.whl", hash = "sha256:5082437afe64ce3b31c8db109eae86e02fda11e4d5f9ac59cb8578a8a138aa70"},
 ]
 types-psutil = [
-    {file = "types-psutil-5.9.5.tar.gz", hash = "sha256:bef91de096b77ff7bc3a92bafe466ee55f842286c1d734658b7c26b259078253"},
-    {file = "types_psutil-5.9.5-py3-none-any.whl", hash = "sha256:c188ec98cadbc6d96f4b03e4c1e920195c51590923e7f928be3a6d5810a1d356"},
+    {file = "types-psutil-5.9.5.1.tar.gz", hash = "sha256:d1a157fd132aa34be544fa9e09dc5c37b92c9d3a2917bce9c564354f50e71ffb"},
+    {file = "types_psutil-5.9.5.1-py3-none-any.whl", hash = "sha256:ded6b69503b6387fb99b9da958a6353b4b46eb4457343bb2cd0cbac5c4d5473d"},
 ]
 types-pytz = [
     {file = "types-pytz-2022.2.1.0.tar.gz", hash = "sha256:47cfb19c52b9f75896440541db392fd312a35b279c6307a531db71152ea63e2b"},
