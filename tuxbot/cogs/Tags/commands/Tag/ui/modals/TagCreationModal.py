@@ -31,16 +31,22 @@ class TagCreationModal(discord.ui.Modal):
             max_length=1900,
         )
 
+        self.add_item(self.name)
+        self.add_item(self.content)
+
     # =========================================================================
     # =========================================================================
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
         """Save tag on submit"""
 
+        if not (guild := interaction.guild):
+            return
+
         name = (self.name.value or "").lower()
         content = self.content.value or ""
 
-        if await TagsModel.exists(name=name, guild_id=interaction.guild_id):
+        if await TagsModel.exists(name=name, guild_id=guild.id):
             await interaction.response.send_message(
                 f"Tag '{name}' already exists.\n\n"
                 "Your content: (in case you did not copy it)\n"
@@ -50,7 +56,7 @@ class TagCreationModal(discord.ui.Modal):
             return
 
         tag = await TagsModel.create(
-            guild_id=interaction.guild_id,
+            guild_id=guild.id,
             author_id=interaction.user.id,
             name=name,
             content=discord.utils.escape_mentions(content),

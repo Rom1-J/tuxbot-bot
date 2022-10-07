@@ -16,6 +16,7 @@ from .commands.Dog.command import DogCommand
 from .commands.Duck.command import DuckCommand
 from .commands.exceptions import RandomException
 from .commands.Koala.command import KoalaCommand
+from .commands.Panda.command import PandaCommand
 from .commands.RedPanda.command import RedPandaCommand
 
 
@@ -30,6 +31,7 @@ STANDARD_COMMANDS = (
     DogCommand,
     DuckCommand,
     KoalaCommand,
+    PandaCommand,
     RedPandaCommand,
 )
 
