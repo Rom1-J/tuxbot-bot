@@ -40,6 +40,7 @@ datadog = ">=0.43.0"
 ddtrace = ">=0.60.0"
 sentry_sdk = ">=0.20.2"
 lxml = "^4.9.1"
+replicate = "^0.4.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "5.0.4"

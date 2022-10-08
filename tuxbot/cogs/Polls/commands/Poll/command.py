@@ -123,25 +123,6 @@ class PollCommand(commands.GroupCog, name="poll"):
     # =========================================================================
     # =========================================================================
 
-    async def on_error(
-        self,
-        interaction: discord.Interaction,
-        error: app_commands.AppCommandError,
-    ) -> None:
-        """Whenever this command raise an error"""
-
-        if isinstance(error, app_commands.CheckFailure):
-            return
-
-        await interaction.response.send_message(
-            "Oops! Something went wrong.", ephemeral=True
-        )
-
-        self.bot.logger.error(error)
-
-    # =========================================================================
-    # =========================================================================
-
     @app_commands.command(name="create", description="Create a poll")
     async def _poll_create(
         self,

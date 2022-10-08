@@ -18,6 +18,7 @@ from .commands.exceptions import RandomException
 from .commands.Koala.command import KoalaCommand
 from .commands.Panda.command import PandaCommand
 from .commands.RedPanda.command import RedPandaCommand
+from .commands.Waifu.command import WaifuCommand
 
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
@@ -33,10 +34,11 @@ STANDARD_COMMANDS = (
     KoalaCommand,
     PandaCommand,
     RedPandaCommand,
+    WaifuCommand,
 )
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=3, micro=0, release_level="stable")
+version_info = VersionInfo(major=1, minor=4, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,
