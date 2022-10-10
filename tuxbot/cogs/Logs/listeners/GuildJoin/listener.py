@@ -42,3 +42,5 @@ class GuildJoin(commands.Cog):
                 id=guild.id, moderators=[], moderator_roles=[], deleted=False
             )
             await guild_model.save()
+
+        self.bot.cached_config[guild.id] = {}

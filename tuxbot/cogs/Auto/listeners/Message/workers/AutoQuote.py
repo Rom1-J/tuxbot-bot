@@ -1,6 +1,6 @@
 """
-tuxbot.cogs.Logs.listeners.Message.workers.auto_quote
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Auto.listeners.Message.workers.AutoQuote
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
 import re
@@ -28,17 +28,15 @@ class AutoQuote:
         if not message.guild or message.author.bot:
             return
 
-        if not self.bot.cached_config.get(message.guild.id):
-            self.bot.cached_config[message.guild.id] = {}
-
+        if not self.bot.cached_config[message.guild.id].get("AutoQuote"):
             if model := await AutoQuoteModel.get_or_create(
                 guild_id=message.guild.id
             ):
-                self.bot.cached_config[message.guild.id]["AutoQuote"] = model[
-                    0
-                ].activated
+                self.bot.cached_config[message.guild.id]["AutoQuote"] = {
+                    "activated": model[0].activated
+                }
 
-        if self.bot.cached_config[message.guild.id]["AutoQuote"]:
+        if self.bot.cached_config[message.guild.id]["AutoQuote"]["activated"]:
             if not (ctx := await self.bot.get_context(message)):
                 return
 

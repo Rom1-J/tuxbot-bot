@@ -1,5 +1,5 @@
 """
-tuxbot.cogs.Logs.listeners.Message.listener
+tuxbot.cogs.Auto.listeners.Message.listener
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """

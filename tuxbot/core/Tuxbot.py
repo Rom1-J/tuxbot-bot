@@ -28,6 +28,18 @@ from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 
+VocalGuildChannel = typing.Union[discord.VoiceChannel, discord.StageChannel]
+GuildChannel = typing.Union[
+    VocalGuildChannel,
+    discord.ForumChannel,
+    discord.TextChannel,
+    discord.CategoryChannel,
+]
+
+DiscordChannel = typing.Union[
+    GuildChannel, discord.abc.PrivateChannel, discord.Thread
+]
+
 if strtobool(os.getenv("DD_ACTIVE", "false")):
     initialize(
         statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
@@ -103,6 +115,29 @@ class Tuxbot(TuxbotABC):
         self.uptime = datetime.now()
         self.last_on_ready = self.uptime
 
+        if game := self.config["client"].get("game"):
+            await self.change_presence(
+                status=discord.Status.online, activity=discord.Game(game)
+            )
+
+        async for guild in self.fetch_guilds():
+            self.cached_config[guild.id] = {}
+            guild_model: GuildModel | None = await self.models[
+                "Guild"
+            ].get_or_none(id=guild.id)
+
+            if guild_model:
+                guild_model.deleted = False
+                await guild_model.save()
+                continue
+
+            await self.models["Guild"].create(
+                id=guild.id,
+                moderators=[],
+                moderator_roles=[],
+                deleted=False,
+            )
+
         self.logger.info(
             "[Tuxbot] %s "
             "ready with %d guilds, "
@@ -115,28 +150,6 @@ class Tuxbot(TuxbotABC):
             len(tuple(self.walk_commands())),
             len(tuple(self.tree.walk_commands())),
         )
-
-        if game := self.config["client"].get("game"):
-            await self.change_presence(
-                status=discord.Status.online, activity=discord.Game(game)
-            )
-
-        for guild in self.guilds:
-            guild_model: GuildModel | None = await self.models[
-                "Guild"
-            ].get_or_none(id=guild.id)
-
-            if guild_model:
-                guild_model.deleted = False
-                await guild_model.save()
-                return
-
-            await self.models["Guild"].create(
-                id=guild.id,
-                moderators=[],
-                moderator_roles=[],
-                deleted=False,
-            )
 
     # =========================================================================
     async def get_context(  # type: ignore
@@ -170,10 +183,24 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
 
     @staticmethod
+    async def fetch_message_or_none(
+        channel: discord.abc.Messageable, message_id: int
+    ) -> discord.Message | None:
+        """fetch message and return None instead of raising NotFound"""
+
+        try:
+            return await channel.fetch_message(message_id)
+        except discord.NotFound:
+            return None
+
+    # =========================================================================
+
+    @staticmethod
     async def fetch_member_or_none(
         guild: discord.Guild, user_id: int
     ) -> discord.Member | None:
         """fetch member and return None instead of raising NotFound"""
+
         try:
             return await guild.fetch_member(user_id)
         except discord.NotFound:
@@ -183,8 +210,21 @@ class Tuxbot(TuxbotABC):
 
     async def fetch_user_or_none(self, user_id: int) -> discord.User | None:
         """fetch user and return None instead of raising NotFound"""
+
         try:
             return await self.fetch_user(user_id)
+        except discord.NotFound:
+            return None
+
+    # =========================================================================
+
+    async def fetch_channel_or_none(
+        self, channel_id: int
+    ) -> DiscordChannel | None:
+        """fetch channel and return None instead of raising NotFound"""
+
+        try:
+            return await self.fetch_channel(channel_id)
         except discord.NotFound:
             return None
 
@@ -293,6 +333,7 @@ class Tuxbot(TuxbotABC):
                 int(config["client"]["max_cached_messages"]) or 10000
             ),
             "command_prefix": get_prefix,
+            "id": config["client"]["id"],
             "owner_ids": config["client"]["owners_id"],
             "first_shard_id": (
                 options.get("first_shard_id")

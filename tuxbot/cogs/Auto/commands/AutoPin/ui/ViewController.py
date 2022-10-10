@@ -8,7 +8,8 @@ from discord.ext import commands
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
 
-from ..models.AutoQuote import AutoQuoteModel
+from ..models.AutoPin import AutoPinModel
+from .modals.PinThresholdModal import PinThresholdModal
 from .pages.GlobalEmbed import GlobalEmbed
 from .panels import ViewPanel
 
@@ -21,9 +22,7 @@ class ViewController(discord.ui.View):
 
     __message: discord.Message | None = None
 
-    def __init__(
-        self, ctx: commands.Context[TuxbotABC], model: AutoQuoteModel
-    ):
+    def __init__(self, ctx: commands.Context[TuxbotABC], model: AutoPinModel):
         super().__init__(timeout=60)
 
         self.ctx = ctx
@@ -98,6 +97,13 @@ class ViewController(discord.ui.View):
         await interaction.response.defer()
 
     # =========================================================================
+
+    async def set_threshold(self, interaction: discord.Interaction) -> None:
+        """Change current threshold"""
+
+        await interaction.response.send_modal(PinThresholdModal(self))
+
+    # =========================================================================
     # =========================================================================
 
     async def send(self) -> None:
@@ -132,8 +138,9 @@ class ViewController(discord.ui.View):
         if not self.ctx.guild:
             return
 
-        self.ctx.bot.cached_config[self.ctx.guild.id]["AutoQuote"] = {
-            "activated": self.model.activated
+        self.ctx.bot.cached_config[self.ctx.guild.id]["AutoPin"] = {
+            "activated": self.model.activated,
+            "threshold": self.model.threshold,
         }
 
     # =========================================================================

@@ -1,13 +1,13 @@
 """
-tuxbot.cogs.Auto.listeners.Message.workers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tuxbot.cogs.Auto.listeners.RawReactionAdd.workers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
 import discord
 
 from tuxbot.core.Tuxbot import Tuxbot
 
-from .AutoQuote import AutoQuote
+from .AutoPin import AutoPin
 
 
 class Worker:
@@ -17,11 +17,11 @@ class Worker:
         self.bot = bot
 
         self.__workers = [
-            AutoQuote(self.bot),
+            AutoPin(self.bot),
         ]
 
-    async def runs(self, message: discord.Message) -> None:
+    async def runs(self, payload: discord.RawReactionActionEvent) -> None:
         """Run all automatics workers"""
 
         for worker in self.__workers:
-            await worker.process(message)
+            await worker.process(payload)

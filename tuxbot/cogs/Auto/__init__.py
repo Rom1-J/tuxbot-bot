@@ -12,8 +12,10 @@ from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.abc.TuxbotABC import TuxbotABC
 from tuxbot.core.Tuxbot import Tuxbot
 
+from .commands.AutoPin.command import AutoPinCommand
 from .commands.AutoQuote.command import AutoQuoteCommand
 from .listeners.Message.listener import Message
+from .listeners.RawReactionAdd.listener import RawReactionAdd
 
 
 # Note: for some reasons, this import must be done after tuxbot.* imports.
@@ -22,9 +24,9 @@ from .listeners.Message.listener import Message
 from discord.ext import commands  # isort: skip
 
 
-STANDARD_COMMANDS = (AutoQuoteCommand,)
+STANDARD_COMMANDS = (AutoPinCommand, AutoQuoteCommand)
 
-STANDARD_LISTENERS = (Message,)
+STANDARD_LISTENERS = (Message, RawReactionAdd)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
 version_info = VersionInfo(major=1, minor=1, micro=0, release_level="stable")
