@@ -1,0 +1,9 @@
+.github
+.gitignore
+.idea
+.pre-commit-config.yaml
+.isort.cfg
+.pylintrc
+dump.rdb
+Tuxbot_bot.egg-info
+.mypy_cache

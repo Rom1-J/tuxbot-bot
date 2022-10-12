@@ -32,7 +32,7 @@ __pycache__/
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
-venv
+.venv
 dist
 build
 *.egg
@@ -42,11 +42,8 @@ build
 .ipython/
 .env
 .envs/*
-!.envs/.local/
 
 
-data/settings/*
-data/logs/*
 dump.rdb
 profiling.prof
 

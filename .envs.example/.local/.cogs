@@ -1,0 +1,12 @@
+# Math
+# ------------------------------------------------------------------------------
+COGS_WOLFRAMALPHA_KEY=
+
+
+# Network
+# ------------------------------------------------------------------------------
+COGS_IPINFO_KEY=
+COGS_GEOAPIFY_KEY=
+COGS_IPGEOLOCATION_KEY=
+COGS_OPENCAGEDATA_KEY=
+COGS_PEERINGDB_KEY=

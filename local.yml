@@ -1,0 +1,39 @@
+version: '3'
+
+volumes:
+  tuxbot_local_postgres_data: {}
+  tuxbot_local_postgres_data_backups: {}
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: ./compose/local/bot/Dockerfile
+    image: tuxbot_local_bot
+    container_name: tuxbot_local_bot
+    platform: linux/x86_64
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.bot
+      - ./.envs/.local/.postgres
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: tuxbot_production_postgres
+    container_name: tuxbot_local_postgres
+    volumes:
+      - tuxbot_local_postgres_data:/var/lib/postgresql/data:Z
+      - tuxbot_local_postgres_data_backups:/backups:z
+    env_file:
+      - ./.envs/.local/.postgres
+
+  redis:
+    image: redis:7
+    container_name: tuxbot_local_redis

@@ -29,7 +29,7 @@ STANDARD_COMMANDS = (AutoPinCommand, AutoQuoteCommand)
 STANDARD_LISTENERS = (Message, RawReactionAdd)
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
-version_info = VersionInfo(major=1, minor=1, micro=0, release_level="stable")
+version_info = VersionInfo(major=1, minor=2, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
     version_info.major,

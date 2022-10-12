@@ -4,17 +4,13 @@ Tuxbot core module: Tuxbot
 Client class instance for Tuxbot
 """
 import json
-import os
 import sys
 import traceback
 import typing
 from datetime import datetime
-from distutils.util import strtobool
 
 import aiohttp
 import discord
-from datadog import initialize
-from ddtrace import patch
 from discord.ext import commands
 from discord.http import Route
 from jishaku import Jishaku
@@ -39,21 +35,6 @@ GuildChannel = typing.Union[
 DiscordChannel = typing.Union[
     GuildChannel, discord.abc.PrivateChannel, discord.Thread
 ]
-
-if strtobool(os.getenv("DD_ACTIVE", "false")):
-    initialize(
-        statsd_host=os.getenv("STATSD_HOST", "127.0.0.1"),
-        statsd_port=8125,
-        statsd_namespace="tuxbot_metric",
-    )
-
-    patch(
-        aioredis=True,
-        asyncio=True,
-        requests=True,
-        asyncpg=True,
-        logging=True,
-    )
 
 
 class Tuxbot(TuxbotABC):
@@ -300,8 +281,10 @@ class Tuxbot(TuxbotABC):
         """
         async with aiohttp.ClientSession() as session:
             if isinstance(payload, discord.Embed):
-                webhook = discord.Webhook.from_url(webhook, session=session)
-                await webhook.send(embed=payload)
+                w: discord.Webhook = discord.Webhook.from_url(
+                    webhook, session=session
+                )
+                await w.send(embed=payload)
             else:
                 await session.post(webhook, json=payload)
 

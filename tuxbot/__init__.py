@@ -16,7 +16,7 @@ VersionInfo = namedtuple(
     "VersionInfo", "major minor micro releaselevel build, info"
 )
 version_info = VersionInfo(
-    major=4, minor=1, micro=1, releaselevel="beta", build=build, info=info
+    major=4, minor=2, micro=0, releaselevel="stable", build=build, info=info
 )
 
 __version__ = "v{}.{}.{}-{}+{}".format(
