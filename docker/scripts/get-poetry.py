@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# isort: skip_file
+# type: ignore
 r"""
 This script will install Poetry and its dependencies in an isolated fashion.
 
@@ -266,7 +268,7 @@ POST_MESSAGE_CONFIGURE_WINDOWS = """"""
 
 
 class PoetryInstallationError(RuntimeError):
-    def __init__(self, return_code: int = 0, log: Optional[str] = None):
+    def __init__(self, return_code: int = 0, log: str | None = None):
         super().__init__()
         self.return_code = return_code
         self.log = log
@@ -469,12 +471,12 @@ class Installer:
 
     def __init__(
         self,
-        version: Optional[str] = None,
+        version: str | None = None,
         preview: bool = False,
         force: bool = False,
         accept_all: bool = False,
-        git: Optional[str] = None,
-        path: Optional[str] = None,
+        git: str | None = None,
+        path: str | None = None,
     ) -> None:
         self._version = version
         self._preview = preview
@@ -710,7 +712,7 @@ class Installer:
             )
         )
 
-    def get_windows_path_var(self) -> Optional[str]:
+    def get_windows_path_var(self) -> str | None:
         import winreg
 
         with winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER) as root:

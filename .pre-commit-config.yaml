@@ -19,6 +19,7 @@ repos:
     rev: 22.3.0
     hooks:
       - id: black
+        exclude: ^docker/scripts/
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
@@ -51,6 +52,7 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
+        exclude: ^docker/scripts/
         args: ["--config=setup.cfg"]
         additional_dependencies: [flake8-isort]
 
