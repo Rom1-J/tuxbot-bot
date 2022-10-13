@@ -1,12 +1,46 @@
-# General
+# Tuxbot
 # ------------------------------------------------------------------------------
+TUXBOT_LOG_LEVEL=
+TUXBOT_CLUSTER_COUNT=
+TUXBOT_SHARDING_STRATEGY=
+TUXBOT_FIRST_SHARD_ID=
+TUXBOT_LAST_SHARD_ID=
+TUXBOT_SHARD_COUNT=
+TUXBOT_CLUSTER_ID=
+TUXBOT_SHARD_ID=
 
 
-# Sentry
-# ------------------------------------------------------------------------------
-SENTRY_DSN=
+# Client
+# -----------------------------------------------------------------------------
+TUXBOT_CLIENT_ID=
+TUXBOT_CLIENT_TOKEN=
+TUXBOT_CLIENT_GAME=
+TUXBOT_CLIENT_DISABLE_EVERYONE=
+TUXBOT_CLIENT_DISABLE_HELP=
+TUXBOT_CLIENT_DISABLED_EVENTS=
+TUXBOT_CLIENT_MAX_CACHED_MESSAGES=
+TUXBOT_CLIENT_OWNERS_ID=
 
 
 # Redis
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
+
+
+# Logging
+# -----------------------------------------------------------------------------
+TUXBOT_WEBHOOK_SHARD=
+TUXBOT_WEBHOOK_ERROR=
+TUXBOT_WEBHOOK_CLUSTER=
+SENTRY_DSN=
+SENTRY_LOG_LEVEL=
+
+DD_ACTIVE=
+STATSD_HOST=
+STATSD_PORT=
+STATSD_NAMESPACE=
+
+
+# Cogs
+# -----------------------------------------------------------------------------
+TUXBOT_LOADED_COGS=

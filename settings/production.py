@@ -12,7 +12,9 @@ SENTRY_LOG_LEVEL = env.int("SENTRY_LOG_LEVEL", logging.INFO)
 
 # Datadog
 # -----------------------------------------------------------------------------
-STATSD_HOST = env.str("STATSD_HOST", "")
+STATSD_HOST = env.str("STATSD_HOST", "127.0.0.1")
+STATSD_PORT = env.int("STATSD_PORT", 8125)
+STATSD_NAMESPACE = env.str("STATSD_NAMESPACE", "tuxbot_metric")
 
 if env.bool("DD_ACTIVE", False):
     from datadog import initialize
@@ -20,8 +22,8 @@ if env.bool("DD_ACTIVE", False):
 
     initialize(
         statsd_host=STATSD_HOST,
-        statsd_port=8125,
-        statsd_namespace="tuxbot_metric",
+        statsd_port=STATSD_PORT,
+        statsd_namespace=STATSD_NAMESPACE,
     )
 
     patch(

@@ -8,7 +8,7 @@ services:
   bot:
     build:
       context: .
-      dockerfile: ./compose/local/bot/Dockerfile
+      dockerfile: docker/local/bot/Dockerfile
     image: tuxbot_local_bot
     container_name: tuxbot_local_bot
     platform: linux/x86_64
@@ -19,13 +19,14 @@ services:
       - .:/app:z
     env_file:
       - ./.envs/.local/.bot
+      - ./.envs/.local/.cogs
       - ./.envs/.local/.postgres
     command: /start
 
   postgres:
     build:
       context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
+      dockerfile: docker/production/postgres/Dockerfile
     image: tuxbot_production_postgres
     container_name: tuxbot_local_postgres
     volumes:

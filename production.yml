@@ -8,7 +8,7 @@ services:
   bot:
     build:
       context: .
-      dockerfile: ./compose/production/bot/Dockerfile
+      dockerfile: docker/production/bot/Dockerfile
     image: tuxbot_production_bot
     container_name: tuxbot_production_bot
     platform: linux/x86_64
@@ -17,13 +17,14 @@ services:
       - redis
     env_file:
       - ./.envs/.production/.bot
+      - ./.envs/.production/.cogs
       - ./.envs/.production/.postgres
     command: /start
 
   postgres:
     build:
       context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
+      dockerfile: docker/production/postgres/Dockerfile
     image: tuxbot_production_postgres
     container_name: tuxbot_production_postgres
     volumes:

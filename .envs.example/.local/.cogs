@@ -1,12 +1,22 @@
 # Math
 # ------------------------------------------------------------------------------
+# https://products.wolframalpha.com/api/
 COGS_WOLFRAMALPHA_KEY=
 
 
 # Network
 # ------------------------------------------------------------------------------
+# https://ipinfo.io/developers
 COGS_IPINFO_KEY=
+
+# https://www.geoapify.com/get-started-with-maps-api
 COGS_GEOAPIFY_KEY=
+
+# https://ipgeolocation.io/documentation.html
 COGS_IPGEOLOCATION_KEY=
+
+# https://opencagedata.com/api
 COGS_OPENCAGEDATA_KEY=
+
+# https://www.peeringdb.com/profile
 COGS_PEERINGDB_KEY=

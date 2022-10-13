@@ -20,27 +20,42 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
+    \
+    # poetry
+    POETRY_VERSION=1.2.2 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=false \
+    POETRY_NO_INTERACTION=1
 
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
+ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+
+# Install essentials
+RUN apt update \
+    && apt install --no-install-recommends -y \
         git \
         curl \
         libpq-dev \
         build-essential
 
-RUN curl -sSL https://install.python-poetry.org | python -
+COPY ./docker/scripts/get-poetry.py /tmp/get-poetry.py
+RUN python /tmp/get-poetry.py
 
 WORKDIR /app
 COPY . ${APP_HOME}
 
-RUN poetry export --without-hashes -f requirements.txt -o /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt
+RUN poetry config virtualenvs.create false
+RUN poetry install --only main
 
-COPY ./compose/production/bot/entrypoint /entrypoint
+# Cleanup installation
+RUN apt remove -y build-essential
+RUN apt autoremove -y
+RUN rm -rf /var/lib/apt/lists/*
+
+COPY ./docker/production/bot/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
-COPY ./compose/local/bot/start /start
+COPY ./docker/local/bot/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
