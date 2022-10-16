@@ -49,3 +49,6 @@ profiling.prof
 
 cogs.back/
 data/
+logs/
+!logs/.gitignore
+.env*

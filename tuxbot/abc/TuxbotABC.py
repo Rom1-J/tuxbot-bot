@@ -19,10 +19,8 @@ from tuxbot.core.logger import Logger, logger
 class TuxbotABC(commands.AutoShardedBot):
     """Tuxbot Abstract Class"""
 
-    _config: dict[str | int, typing.Any] = {}
     _cached_config: dict[str | int, typing.Any] = {}
 
-    _cluster_options: dict[str, typing.Any] = {}
     _client_options: dict[str, typing.Any] = {}
 
     _logger: Logger
@@ -33,22 +31,6 @@ class TuxbotABC(commands.AutoShardedBot):
     _last_on_ready: datetime | None = None
 
     # =========================================================================
-    # =========================================================================
-
-    @property
-    def config(self) -> dict[str | int, typing.Any]:
-        """Tuxbot configuration
-
-        Returns
-        -------
-        dict[str | int, typing.Any]
-        """
-        return self._config
-
-    @config.setter
-    def config(self, value: dict[str | int, typing.Any]) -> None:
-        self._config = value
-
     # =========================================================================
 
     @property
@@ -64,22 +46,6 @@ class TuxbotABC(commands.AutoShardedBot):
     @cached_config.setter
     def cached_config(self, value: dict[str | int, typing.Any]) -> None:
         self._cached_config = value
-
-    # =========================================================================
-
-    @property
-    def cluster_options(self) -> dict[str, typing.Any]:
-        """Tuxbot cluster options
-
-        Returns
-        -------
-        dict[str, typing.Any]
-        """
-        return self._cluster_options
-
-    @cluster_options.setter
-    def cluster_options(self, value: dict[str, typing.Any]) -> None:
-        self._cluster_options = value
 
     # =========================================================================
 

@@ -15,6 +15,7 @@ from aiohttp import TCPConnector
 from discord.ext import commands, tasks
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.core.config import config
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .converters.ASConverter import ASConverter
@@ -57,7 +58,7 @@ class PeeringdbCommand(commands.Cog):
     @tasks.loop(hours=6.00)
     async def _update_peering_db(self) -> None:
         headers = {}
-        if key := self.bot.config["Network"].get("peeringdb_key"):
+        if key := config.PEERINGDB_KEY:
             headers["Authorization"] = f"Api-Key {key}"
 
         try:

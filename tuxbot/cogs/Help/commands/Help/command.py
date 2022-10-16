@@ -15,12 +15,12 @@ from tuxbot.abc.TuxbotABC import TuxbotABC
 class HelpCommand(commands.HelpCommand):
     """Tuxbot help command"""
 
-    def __init__(self, urls: dict[str, str]) -> None:
+    def __init__(self) -> None:
         super().__init__()
 
-        self.wiki_url = urls.get("wiki", "")
-        self.site_url = urls.get("site", "")
-        self.discord_url = urls.get("discord", "")
+        self.site_url = "https://tuxbot.gnous.eu"
+        self.wiki_url = self.site_url + "/wiki"
+        self.discord_url = "https://discord.gg/QXmESeghBP"
 
     # =========================================================================
 

@@ -14,6 +14,7 @@ import sentry_sdk
 from discord import app_commands
 from discord.ext import commands
 
+from tuxbot.core.config import config
 from tuxbot.core.Tuxbot import Tuxbot
 
 
@@ -24,7 +25,7 @@ class AppCommandError(commands.Cog):
         self.bot = bot
         self.bot.tree.on_error = self._on_app_command_error  # type: ignore[assignment]
 
-        self.error_webhook: str = self.bot.config["error_webhook"]
+        self.error_webhook: str = config.WEBHOOKS["error"]
 
     # =========================================================================
     # =========================================================================

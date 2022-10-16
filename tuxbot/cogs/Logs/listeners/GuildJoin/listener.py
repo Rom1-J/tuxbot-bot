@@ -7,6 +7,7 @@ Listener whenever a guild is joined
 import discord
 from discord.ext import commands
 
+from tuxbot.core.models.Guild import GuildModel
 from tuxbot.core.Tuxbot import Tuxbot
 
 
@@ -32,13 +33,11 @@ class GuildJoin(commands.Cog):
             "[GuildJoin] Tuxbot added to the guild '%s'.", guild.name
         )
 
-        if guild_model := await self.bot.models["Guild"].get_or_none(
-            id=guild.id
-        ):
+        if guild_model := await GuildModel.get_or_none(id=guild.id):
             guild_model.deleted = False
             await guild_model.save()
         else:
-            guild_model = await self.bot.models["Guild"].create(
+            guild_model = await GuildModel.create(
                 id=guild.id, moderators=[], moderator_roles=[], deleted=False
             )
             await guild_model.save()

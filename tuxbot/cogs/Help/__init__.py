@@ -29,7 +29,7 @@ class Help(ModuleABC):
 
     def __init__(self, bot: Tuxbot) -> None:
         self.old_help_command = bot.help_command
-        bot.help_command = HelpCommand(urls=bot.config["urls"])
+        bot.help_command = HelpCommand()
         bot.help_command.cog = self
 
     # =========================================================================

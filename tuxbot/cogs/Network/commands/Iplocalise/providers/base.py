@@ -7,6 +7,8 @@ Global provider which uses all sub provider
 import asyncio
 import typing
 
+from tuxbot.core.config import config
+
 from . import (
     HostnameProvider,
     IPGeolocationProvider,
@@ -17,14 +19,12 @@ from . import (
 )
 
 
-def get_base_providers(
-    config: dict[str, str], data: dict[str, typing.Any]
-) -> dict[str, typing.Any]:
+def get_base_providers(data: dict[str, typing.Any]) -> dict[str, typing.Any]:
     """Get result from base providers"""
 
     hostname = HostnameProvider()
-    ipgeo = IPGeolocationProvider(config["ipgeolocation_key"])
-    ipinfo = IPInfoProvider(config["ipinfo_key"])
+    ipgeo = IPGeolocationProvider(config.IPGEOLOCATION_KEY)
+    ipinfo = IPInfoProvider(config.IPINFO_KEY)
     ipwhois = IPWhoisProvider()
 
     result = {
@@ -38,14 +38,14 @@ def get_base_providers(
 
 
 def get_auxiliary_providers(
-    config: dict[str, str], data: dict[str, typing.Any]
+    data: dict[str, typing.Any]
 ) -> dict[str, typing.Any]:
     """Get result from auxiliary providers"""
 
     loc = data["ipinfo"].get("loc", "")
 
-    map_location = MapProvider(config["geoapify_key"])
-    opencage = OpenCageDataProvider(config["opencagedata_key"])
+    map_location = MapProvider(config.GEOAPIFY_KEY)
+    opencage = OpenCageDataProvider(config.OPENCAGEDATA_KEY)
 
     result = {
         "map": asyncio.create_task(map_location.fetch(loc)),

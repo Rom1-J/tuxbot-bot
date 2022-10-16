@@ -47,6 +47,7 @@ KEY_MIGRATION: dict[str, dict[str, str]] = {
         "TUXBOT_CLIENT_DISABLED_EVENTS": "disable_events",
         "TUXBOT_CLIENT_MAX_CACHED_MESSAGES": "client.max_cached_messages",
         "TUXBOT_CLIENT_OWNERS_ID": "client.owners_id",
+        "TUXBOT_CLIENT_PREFIXES": "prefixes",
         # Redis
         "REDIS_URL": "custom:redis_converter(config)",
         # Logging

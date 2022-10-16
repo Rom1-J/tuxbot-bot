@@ -13,7 +13,6 @@ import aiohttp
 import discord
 from discord.ext import commands
 from discord.http import Route
-from jishaku import Jishaku
 
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.abc.TuxbotABC import TuxbotABC
@@ -21,6 +20,7 @@ from tuxbot.core import redis
 from tuxbot.core.collections.ModuleCollection import ModuleCollection
 from tuxbot.core.config import config
 from tuxbot.core.models.Guild import GuildModel
+from tuxbot.core.models.Tuxbot import TuxbotModel
 from tuxbot.core.utils.ContextPlus import ContextPlus
 
 
@@ -42,18 +42,14 @@ class Tuxbot(TuxbotABC):
     Tuxbot client class
     """
 
-    def __init__(self, options: dict[str, typing.Any]) -> None:
-        self._config = config
-
-        options = options or {}
-
-        self.client_options, self.cluster_options = self.configure(options)
+    def __init__(self) -> None:
+        self.client_options = self.configure()
         super().__init__(**self.client_options)
 
         self._internal_request = self.http.request
         self.http.request = self._request  # type: ignore
 
-        self.collection = ModuleCollection(self._config, self)
+        self.collection = ModuleCollection(self)
         self.running_instance = True
 
     # =========================================================================
@@ -62,20 +58,13 @@ class Tuxbot(TuxbotABC):
     async def setup_hook(self) -> None:
         """Load configurations"""
 
-        await self.collection.register(Jishaku)
         await self.collection.load_modules()
 
         await self.db.init()
 
-        db_config = await self.models["Tuxbot"].get_or_none(
-            id=self.config["client"].get("id")
-        )
-
-        if db_config:
-            self.config |= db_config
-        else:
-            await self.models["Tuxbot"].create(
-                id=self.config["client"].get("id"),
+        if not await TuxbotModel.get_or_none(id=config.CLIENT["id"]):
+            await TuxbotModel.create(
+                id=config.CLIENT["id"],
                 ignored_users=[],
                 ignored_channels=[],
                 ignored_guilds=[],
@@ -96,7 +85,7 @@ class Tuxbot(TuxbotABC):
         self.uptime = datetime.now()
         self.last_on_ready = self.uptime
 
-        if game := self.config["client"].get("game"):
+        if game := config.CLIENT["game"]:
             await self.change_presence(
                 status=discord.Status.online, activity=discord.Game(game)
             )
@@ -112,7 +101,7 @@ class Tuxbot(TuxbotABC):
                 await guild_model.save()
                 continue
 
-            await self.models["Guild"].create(
+            await GuildModel.create(
                 id=guild.id,
                 moderators=[],
                 moderator_roles=[],
@@ -221,7 +210,7 @@ class Tuxbot(TuxbotABC):
         except Exception as e:
             self.logger.error(e)
 
-        await super().start(config["client"]["token"])
+        await super().start(config.CLIENT["token"])
 
     # =========================================================================
 
@@ -291,16 +280,14 @@ class Tuxbot(TuxbotABC):
     # =========================================================================
 
     @staticmethod
-    def configure(
-        options: dict[str, typing.Any]
-    ) -> tuple[dict[str, typing.Any], dict[str, typing.Any]]:
+    def configure() -> dict[str, typing.Any]:
         """Configure Tuxbot"""
 
         async def get_prefix(
             bot: "Tuxbot", message: discord.Message
         ) -> list[str]:
             """Get bot prefixes from config or set it as mentionable"""
-            prefixes: list[str] | None = config.get("prefixes")
+            prefixes: list[str] | None = config.CLIENT["prefixes"]
 
             if not prefixes or not isinstance(prefixes, list):
                 prefixes = commands.when_mentioned(bot, message)
@@ -310,47 +297,28 @@ class Tuxbot(TuxbotABC):
         client_config: dict[str, typing.Any] = {
             "disable_events": {"TYPING_START": True},
             "allowed_mentions": discord.AllowedMentions(
-                everyone=(not config["client"]["disable_everyone"]) or False
+                everyone=(not config.CLIENT["disable_everyone"]) or False
             ),
             "max_messages": (
-                int(config["client"]["max_cached_messages"]) or 10000
+                int(config.CLIENT["max_cached_messages"]) or 10000
             ),
             "command_prefix": get_prefix,
-            "id": config["client"]["id"],
-            "owner_ids": config["client"]["owners_id"],
-            "first_shard_id": (
-                options.get("first_shard_id")
-                or options.get("custer_id")
-                or options.get("shard_id")
-                or 0
-            ),
-            "last_shard_id": (
-                options.get("last_shard_id")
-                or options.get("custer_id")
-                or options.get("shard_id")
-                or 0
-            ),
-            "max_shards": options.get("shard_count") or 1,
-            "intents": config["client"].get("intents", discord.Intents.all()),
+            "id": config.CLIENT["id"],
+            "owner_ids": config.CLIENT["owners_id"],
+            "first_shard_id": (config.FIRST_SHARD_ID or config.SHARD_ID or 0),
+            "last_shard_id": (config.LAST_SHARD_ID or config.SHARD_ID or 0),
+            "max_shards": config.SHARD_COUNT or 1,
+            "intents": config.CLIENT.get("intents", discord.Intents.all()),
             "help_command": None,
         }
 
-        cluster_config: dict[str, typing.Any] = {
-            "cluster_id": options.get("cluster_id"),
-            "cluster_count": options.get("cluster_count"),
-        }
+        client_config["disable_events"]["PRESENCE_UPDATE"] = True
 
-        if not config["test"]:
-            client_config["disable_events"]["PRESENCE_UPDATE"] = True
-
-        if config.get("disable_events"):
-            for event in config["disable_events"]:
+        if disabled_events := config.CLIENT["disabled_events"]:
+            for event in disabled_events:
                 client_config["disable_events"][event] = True
 
-        config["client_options"] = client_config
-        config["cluster_config"] = cluster_config
-
-        return client_config, cluster_config
+        return client_config
 
     # =========================================================================
 
@@ -369,11 +337,11 @@ class Tuxbot(TuxbotABC):
         -------
         typing.NoReturn
         """
-        cluster_id = f"C{client.cluster_options.get('cluster_id')}"
+        cluster_id = f"C{config.CLUSTER_ID}"
         time = datetime.utcnow().isoformat()
 
         crash_name = f"crashreport_{cluster_id}_{time}.txt"
-        crash_path = config["paths"]["cwd"] / "data" / "logs" / crash_name
+        crash_path = f"logs/{crash_name}"
 
         trace = "".join(
             traceback.TracebackException.from_exception(err).format()
@@ -385,21 +353,12 @@ class Tuxbot(TuxbotABC):
             sort_keys=True,
             default=lambda o: f"<<non-serializable: {repr(o)}>>",
         )
-        cluster_options = json.dumps(
-            client.cluster_options,
-            indent=4,
-            sort_keys=True,
-            default=lambda o: f"<<non-serializable: {repr(o)}>>",
-        )
 
         report = f"Crash Report [{cluster_id}] {time}:\n\n"
         report += trace
 
         report += "\n\nClient Options:"
         report += f"\n{client_options}"
-
-        report += "\n\nCluster Options:"
-        report += f"\n{cluster_options}"
 
         report += "\n\nCogs crash reports:"
 

@@ -12,6 +12,7 @@ import sentry_sdk
 from tuxbot.abc.ModuleABC import ModuleABC
 from tuxbot.core.Tuxbot import Tuxbot
 
+from ...core.config import config
 from .commands.Stats.command import StatsCommand
 from .listeners.AppCommandCompletion.listener import AppCommandCompletion
 from .listeners.AppCommandError.listener import AppCommandError
@@ -52,7 +53,7 @@ __version__ = "v{}.{}.{}-{}".format(
 class Commands:
     def __init__(self, bot: Tuxbot) -> None:
         if os.getenv("PYTHON_ENV", "production") != "development" and (
-            dsn := bot.config["sentry"].get("dsn")
+            dsn := config.SENTRY_DSN
         ):
             sentry_sdk.init(
                 dsn=dsn,

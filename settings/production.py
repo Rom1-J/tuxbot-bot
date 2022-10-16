@@ -1,13 +1,5 @@
-import logging
-
 from .base import *  # noqa
 from .base import env
-
-
-# Sentry
-# -----------------------------------------------------------------------------
-SENTRY_DSN = env.str("SENTRY_DSN")
-SENTRY_LOG_LEVEL = env.int("SENTRY_LOG_LEVEL", logging.INFO)
 
 
 # Datadog
@@ -33,3 +25,16 @@ if env.bool("DD_ACTIVE", False):
         asyncpg=True,
         logging=True,
     )
+
+
+# Cogs
+# -----------------------------------------------------------------------------
+# Math
+WOLFRAMALPHA_KEY = env.str("COGS_WOLFRAMALPHA_KEY")
+
+# Network
+IPINFO_KEY = env.str("COGS_IPINFO_KEY")
+GEOAPIFY_KEY = env.str("COGS_GEOAPIFY_KEY")
+IPGEOLOCATION_KEY = env.str("COGS_IPGEOLOCATION_KEY")
+OPENCAGEDATA_KEY = env.str("COGS_OPENCAGEDATA_KEY")
+PEERINGDB_KEY = env.str("COGS_PEERINGDB_KEY")

@@ -7,6 +7,7 @@ Listener whenever websocket message is sent/received
 
 from discord.ext import commands
 
+from tuxbot.core.config import config
 from tuxbot.core.Tuxbot import Tuxbot
 
 
@@ -21,7 +22,7 @@ class SocketRawReceive(commands.Cog):
 
     @commands.Cog.listener(name="on_socket_event_type")
     async def _on_socket_event_type(self, msg: str) -> None:
-        if msg not in self.bot.config["disable_events"]:
+        if msg not in config.CLIENT["disabled_events"]:
             self.bot.statsd.increment(
                 "socket_event_type", value=1, tags=[f"event_type:{msg}"]
             )

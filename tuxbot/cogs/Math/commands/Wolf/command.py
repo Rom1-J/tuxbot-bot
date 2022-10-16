@@ -13,6 +13,7 @@ import yaml
 from discord.ext import commands
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.core.config import config
 from tuxbot.core.Tuxbot import Tuxbot
 
 from .WolframAlpha import WolframAlpha
@@ -24,7 +25,7 @@ class WolfCommand(commands.Cog):
     def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
-        self.WA = WolframAlpha(self.bot.config["Math"].get("wolframalpha_key"))
+        self.WA = WolframAlpha(config.WOLFRAMALPHA_KEY)
 
     # =========================================================================
     # =========================================================================
@@ -83,6 +84,4 @@ class WolfCommand(commands.Cog):
             ),
         )
 
-        file = discord.File(image, "output.png")
-
-        await ctx.send(embed=e, file=file)
+        await ctx.send(embed=e, file=discord.File(image, "output.png"))

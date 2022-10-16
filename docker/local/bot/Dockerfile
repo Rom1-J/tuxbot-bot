@@ -36,6 +36,7 @@ RUN apt update \
         curl \
         libpq-dev \
         build-essential
+RUN apt install --no-install-recommends -y fonts-dejavu-core fonts-dejavu-extra
 
 COPY ./docker/scripts/get-poetry.py /tmp/get-poetry.py
 RUN python /tmp/get-poetry.py
@@ -51,7 +52,7 @@ RUN apt remove -y build-essential
 RUN apt autoremove -y
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY ./docker/production/bot/entrypoint /entrypoint
+COPY ./docker/local/bot/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 

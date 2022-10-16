@@ -36,6 +36,7 @@ RUN apt update \
         curl \
         libpq-dev \
         build-essential
+RUN apt install --no-install-recommends -y fonts-dejavu-core fonts-dejavu-extra
 
 COPY ./docker/scripts/get-poetry.py /tmp/get-poetry.py
 RUN python /tmp/get-poetry.py

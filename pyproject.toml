@@ -14,6 +14,7 @@ license = "AGPL3"
 start = "tuxbot.start:start"
 test-database="scripts.test_database:test"
 migrate-to-envs="scripts.migrate_yaml_to_envs:main"
+merge-dotenvs-to-dotenv="scripts.merge_dotenvs_to_dotenv:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

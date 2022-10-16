@@ -83,6 +83,5 @@ class IplocaliseCommand(commands.Cog):
             await self.bot.redis.set(cache_key, json.dumps(ip), ex=3600)
         await ViewController(
             ctx=ctx,
-            config=self.bot.config["Network"],
             data={"ip": ip, "domain": domain},
         ).send()

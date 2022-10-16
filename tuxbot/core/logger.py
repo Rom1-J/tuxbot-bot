@@ -7,6 +7,7 @@ import logging
 
 import sentry_sdk
 from pythonjsonlogger import jsonlogger
+from rich.console import Console
 from rich.logging import RichHandler
 
 from tuxbot.core.config import config
@@ -41,8 +42,8 @@ class Logger(logging.Logger):
     ]
 
     def __init__(self) -> None:
-        log_level = config.get("log_level", "info").upper()
-        log_path = config["paths"]["cwd"] / "data" / "logs"
+        log_level = config.LOG_LEVEL
+        log_path = "logs"
 
         super().__init__("tuxbot", level=log_level)
 
@@ -52,18 +53,19 @@ class Logger(logging.Logger):
         custom_format = " ".join([f"%({i:s})s" for i in self.keys])
         formatter = jsonlogger.JsonFormatter(custom_format)
 
-        bot_handler = logging.FileHandler(filename=str(log_path / "logs.json"))
+        bot_handler = logging.FileHandler(filename=f"{log_path}/logs.json")
         bot_handler.setFormatter(formatter)
         self.addHandler(bot_handler)
 
         discord_handler = logging.FileHandler(
-            filename=str(log_path / "discord.json")
+            filename=f"{log_path}/discord.json"
         )
         discord_handler.setFormatter(formatter)
         discord_logger.addHandler(discord_handler)
 
-        if config["test"]:
+        if log_level == logging.DEBUG:
             test_handler = RichHandler(
+                console=Console(width=206),
                 rich_tracebacks=True,
                 tracebacks_show_locals=True,
                 tracebacks_width=None,
@@ -72,7 +74,7 @@ class Logger(logging.Logger):
             self.addHandler(test_handler)
             discord_logger.addHandler(test_handler)
             discord_logger.addHandler(discord_handler)
-        elif dsn := config["sentry"].get("dsn"):
+        elif dsn := config.SENTRY_DSN:
             # pylint: disable=abstract-class-instantiated
             sentry_sdk.init(dsn=dsn)
 

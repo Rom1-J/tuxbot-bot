@@ -19,7 +19,7 @@ class SourceCommand(commands.Cog):
     def __init__(self, bot: Tuxbot) -> None:
         self.bot = bot
 
-        self.github_url = self.bot.config["urls"].get("github", "")
+        self.github_url = "https://github.com/Rom1-J/tuxbot-bot/"
 
     # =========================================================================
     # =========================================================================

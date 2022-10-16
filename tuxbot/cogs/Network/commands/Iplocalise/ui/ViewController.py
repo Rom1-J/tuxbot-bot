@@ -30,7 +30,6 @@ class ViewController(discord.ui.View):
     def __init__(
         self,
         ctx: commands.Context[TuxbotABC],
-        config: dict[str, typing.Any],
         data: dict[str, typing.Any],
     ):
         super().__init__(timeout=60)
@@ -46,8 +45,6 @@ class ViewController(discord.ui.View):
         self.__cache_key = self.ctx.bot.utils.gen_key(
             self.get_data("domain"), self.get_data("ip")
         )
-        self.__config = config
-
         panel = ViewPanel.buttons
 
         for x, row in enumerate(panel):
@@ -163,12 +160,8 @@ class ViewController(discord.ui.View):
         if data := await self.ctx.bot.redis.get(self.__cache_key):
             self.data = json.loads(data)
         else:
-            await self.__run_batch(
-                get_base_providers(self.__config, self.data)
-            )
-            await self.__run_batch(
-                get_auxiliary_providers(self.__config, self.data)
-            )
+            await self.__run_batch(get_base_providers(self.data))
+            await self.__run_batch(get_auxiliary_providers(self.data))
             await self.cache()
 
         if bgp_button := self.get_button("BGP toolkit"):

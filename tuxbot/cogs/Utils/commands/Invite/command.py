@@ -8,6 +8,7 @@ import discord
 from discord.ext import commands
 
 from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.core.config import config
 from tuxbot.core.Tuxbot import Tuxbot
 
 
@@ -65,7 +66,7 @@ class InviteCommand(commands.Cog):
                 "[Add!]"
                 "({})".format(
                     discord.utils.oauth_url(
-                        self.bot.config["client"].get("id"),
+                        config.CLIENT["id"],
                         permissions=basic_perms,
                     )
                 )
@@ -80,7 +81,7 @@ class InviteCommand(commands.Cog):
                 "[Add!]"
                 "({})".format(
                     discord.utils.oauth_url(
-                        self.bot.config["client"].get("id"),
+                        config.CLIENT["id"],
                         permissions=admin_perms,
                     )
                 )

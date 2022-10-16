@@ -11,6 +11,8 @@ import typing
 
 from discord.ext import commands
 
+from tuxbot.core.config import config
+
 
 if typing.TYPE_CHECKING:
     from tuxbot.abc.ModuleABC import ModuleABC
@@ -22,8 +24,7 @@ class ModuleCollection:
 
     _modules: dict[str, list[commands.Cog]]
 
-    def __init__(self, config: dict[str | int, typing.Any], bot: "Tuxbot"):
-        self.config = config
+    def __init__(self, bot: "Tuxbot"):
         self.bot = bot
 
         self._modules = {}
@@ -44,16 +45,14 @@ class ModuleCollection:
 
     async def load_modules(self) -> None:
         """Load all modules from config"""
-        if not (modules := self.config["modules"]):
+        if not (modules := config.INSTALLED_COGS):
             return
 
-        for module_name in modules:
-            module_path = (
-                self.config["paths"]["python_cogs"] + f".{module_name}"
-            )
+        for module_path in modules:
+            module_name = module_path.split(".")[-1].title()
 
             module: type[typing.Union["ModuleABC", commands.Cog]] = getattr(
-                importlib.import_module(module_path, package="tuxbot"),
+                importlib.import_module(module_path),
                 module_name,
             )
 

@@ -28,12 +28,11 @@ class InfoCommand(commands.Cog):
         self.bot = bot
 
         self.stats: dict[str, typing.Any] = {}
+        self.app_path = "tuxbot"
 
     async def cog_load(self) -> None:
         """Fetch bot stats"""
-        self.stats = await self.__fetch_info(
-            self.bot.config["paths"].get("base", "./")
-        )
+        self.stats = await self.__fetch_info(self.app_path)
         self.bot.logger.info("[InfoCommand] '__fetch_info' done!")
 
     # =========================================================================
@@ -69,14 +68,19 @@ class InfoCommand(commands.Cog):
                     ) as file:
                         async for line in file:
                             line = line.strip()
+
                             if line.startswith("class"):
                                 total_python_class += 1
+
                             if line.startswith("def"):
                                 total_python_functions += 1
+
                             if line.startswith("async def"):
                                 total_python_coroutines += 1
+
                             if "#" in line:
                                 total_python_comments += 1
+
                             total_lines += 1
 
         return {
@@ -97,9 +101,7 @@ class InfoCommand(commands.Cog):
         proc = psutil.Process()
 
         if not self.stats:
-            self.stats = await self.__fetch_info(
-                self.bot.config["paths"].get("base", "./")
-            )
+            self.stats = await self.__fetch_info(self.app_path)
 
         with proc.oneshot():
             mem = proc.memory_full_info()
@@ -122,7 +124,7 @@ class InfoCommand(commands.Cog):
                 name=f"__{self.bot.utils.emotes.PYTHON} Python__",
                 value=(
                     f"**python** `{platform.python_version()}`\n"
-                    f"**{self.bot.config['lib']}** `{discord.__version__}`"
+                    f"**discord.py** `{discord.__version__}`"
                 ),
                 inline=True,
             )

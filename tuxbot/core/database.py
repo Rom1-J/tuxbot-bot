@@ -5,6 +5,7 @@ Manage database instance
 """
 import glob
 import importlib
+import os
 import typing
 
 from tortoise import Tortoise
@@ -75,9 +76,6 @@ class Database:
 
     models = Models()
 
-    def __init__(self, c: dict[str, typing.Any]) -> None:
-        self.config = c
-
     # =========================================================================
     # =========================================================================
 
@@ -87,9 +85,7 @@ class Database:
 
         await Tortoise.init(
             config={
-                "connections": {
-                    "default": self.config["postgres"].get("dsn"),
-                },
+                "connections": config.DATABASES,
                 "apps": {
                     "models": {
                         "models": self.models.to_str_list(),
@@ -118,19 +114,18 @@ class Database:
 
     def fetch_models(self) -> None:
         """fetch all models"""
-        core_models = self.config["paths"]["base"] / "core" / "models"
 
-        for model_path in glob.glob(f"{core_models}/*.py"):
+        for model_path in glob.glob("tuxbot/core/models/*.py"):
             self.register_model(model_path)
 
     # =========================================================================
 
     def register_model(self, model_path: str) -> None:
         """register model"""
-        cwd = self.config["paths"]["cwd"]
-
         model_path = (
-            model_path.replace(str(cwd), "")[:-3].lstrip("/").replace("/", ".")
+            model_path.replace(str(os.getcwd()), "")[:-3]
+            .lstrip("/")
+            .replace("/", ".")
         )
         module_name = model_path.split(".")[-1]
 
@@ -140,4 +135,4 @@ class Database:
             self.models[module_name] = (model_path, model)
 
 
-db = Database(config)
+db = Database()

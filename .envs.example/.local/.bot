@@ -20,11 +20,12 @@ TUXBOT_CLIENT_DISABLE_HELP=
 TUXBOT_CLIENT_DISABLED_EVENTS=
 TUXBOT_CLIENT_MAX_CACHED_MESSAGES=
 TUXBOT_CLIENT_OWNERS_ID=
+TUXBOT_CLIENT_PREFIXES=
 
 
 # Redis
 # -----------------------------------------------------------------------------
-REDIS_URL=redis://redis:6379/0
+REDIS_URL=
 
 
 # Logging
