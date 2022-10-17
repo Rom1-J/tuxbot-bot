@@ -68,7 +68,7 @@ ARG gid=1000
 RUN groupadd -g ${gid} ${group}
 RUN useradd -u ${uid} -g ${group} -s /bin/nologin -m ${user}
 
-RUN chown ${user}:${group} -R ${APP_HOME}/logs
+RUN chown ${user}:${group} -R ${APP_HOME}
 USER ${user}:${group}
 
 RUN poetry config virtualenvs.create false

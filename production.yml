@@ -19,6 +19,7 @@ services:
       - ./.envs/.production/.bot
       - ./.envs/.production/.cogs
       - ./.envs/.production/.postgres
+    user: tuxbot
     command: /start
 
   postgres:
