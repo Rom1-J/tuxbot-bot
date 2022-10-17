@@ -1135,7 +1135,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-boto"
-version = "2.49.18"
+version = "2.49.18.1"
 description = "Typing stubs for boto"
 category = "dev"
 optional = false
@@ -2394,8 +2394,8 @@ types-beautifulsoup4 = [
     {file = "types_beautifulsoup4-4.11.6-py3-none-any.whl", hash = "sha256:ac9dd1383481201ea07f27c5a43e7b1ee71caf9c720b7ae951db15d60d126e80"},
 ]
 types-boto = [
-    {file = "types-boto-2.49.18.tar.gz", hash = "sha256:e857119c23a15767b21ca6814ca18be22d8ee59d13253b1ea3bdda622ea931d1"},
-    {file = "types_boto-2.49.18-py3-none-any.whl", hash = "sha256:192620119ee9acb4ee98b9c73dcb9ceb839362add888c7f15de7e08757cbc5c4"},
+    {file = "types-boto-2.49.18.1.tar.gz", hash = "sha256:8f66af3c5c79da36e980fbf2a0b5c87f7e7a5234df6da7c314c99167d1522da9"},
+    {file = "types_boto-2.49.18.1-py3-none-any.whl", hash = "sha256:984669cd0704d8db5c0a8819cc871168e12e3a1ff39bbbeeeddda7cb08f45ed4"},
 ]
 types-protobuf = [
     {file = "types-protobuf-3.20.4.tar.gz", hash = "sha256:0dad3a5009895c985a56e2837f61902bad9594151265ac0ee907bb16d0b01eb7"},
