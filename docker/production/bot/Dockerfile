@@ -60,4 +60,16 @@ COPY ./docker/local/bot/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+ARG user=tuxbot
+ARG group=tuxbot
+ARG uid=1000
+ARG gid=1000
+RUN groupadd -g ${gid} ${group}
+RUN useradd -u ${uid} -g ${group} -s /bin/nologin -m ${user}
+
+RUN chown ${user}:${group} -R ${APP_HOME}/logs
+USER ${user}:${group}
+
+RUN poetry config virtualenvs.create false
+
 ENTRYPOINT ["/entrypoint"]

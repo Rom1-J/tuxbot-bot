@@ -21,6 +21,7 @@ services:
       - ./.envs/.local/.bot
       - ./.envs/.local/.cogs
       - ./.envs/.local/.postgres
+    user: tuxbot
     command: /start
 
   postgres:

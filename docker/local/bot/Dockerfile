@@ -41,7 +41,7 @@ RUN apt install --no-install-recommends -y fonts-dejavu-core fonts-dejavu-extra
 COPY ./docker/scripts/get-poetry.py /tmp/get-poetry.py
 RUN python /tmp/get-poetry.py
 
-WORKDIR /app
+WORKDIR ${APP_HOME}
 COPY . ${APP_HOME}
 
 RUN poetry config virtualenvs.create false
@@ -51,6 +51,7 @@ RUN poetry install --only main
 RUN apt remove -y build-essential
 RUN apt autoremove -y
 RUN rm -rf /var/lib/apt/lists/*
+RUN rm /tmp/get-poetry.py
 
 COPY ./docker/local/bot/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
@@ -59,5 +60,17 @@ RUN chmod +x /entrypoint
 COPY ./docker/local/bot/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
+
+ARG user=tuxbot
+ARG group=tuxbot
+ARG uid=1000
+ARG gid=1000
+RUN groupadd -g ${gid} ${group}
+RUN useradd -u ${uid} -g ${group} -s /bin/nologin -m ${user}
+
+RUN chown ${user}:${group} -R ${APP_HOME}/logs
+USER ${user}:${group}
+
+RUN poetry config virtualenvs.create false
 
 ENTRYPOINT ["/entrypoint"]
