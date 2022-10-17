@@ -373,7 +373,7 @@ python-versions = ">=3.5.3"
 
 [[package]]
 name = "discord.py"
-version = "2.1.0a4620+gd0625154"
+version = "2.1.0a4621+g3bca4035"
 description = "A Python wrapper for the Discord API"
 category = "main"
 optional = false
@@ -393,7 +393,7 @@ voice = ["PyNaCl (>=1.3.0,<1.6)"]
 type = "git"
 url = "https://github.com/Rapptz/discord.py"
 reference = "master"
-resolved_reference = "d0625154edeed584853c2a2c3871b612c127d4c4"
+resolved_reference = "3bca40352ecfa5b219bae0527252ee5d296113e7"
 
 [[package]]
 name = "distlib"
@@ -1118,7 +1118,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-boto"
-version = "2.49.18"
+version = "2.49.18.1"
 description = "Typing stubs for boto"
 category = "dev"
 optional = false
@@ -1134,7 +1134,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-psutil"
-version = "5.9.5.1"
+version = "5.9.5.2"
 description = "Typing stubs for psutil"
 category = "dev"
 optional = false
@@ -1169,7 +1169,7 @@ types-urllib3 = "<1.27"
 
 [[package]]
 name = "types-setuptools"
-version = "65.4.0.0"
+version = "65.5.0.1"
 description = "Typing stubs for setuptools"
 category = "dev"
 optional = false
@@ -1193,7 +1193,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-urllib3"
-version = "1.26.25"
+version = "1.26.25.1"
 description = "Typing stubs for urllib3"
 category = "dev"
 optional = false
@@ -1293,7 +1293,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "281ebb49616c816d85e27ec77db1e67986732b4fabe73b45e8b6293ff996595d"
+content-hash = "9cf96a7dd7fac813a8de7dab9fba48858fb4865a550fa5c59633a7701ce388e7"
 
 [metadata.files]
 aiofiles = [
@@ -2355,16 +2355,16 @@ types-beautifulsoup4 = [
     {file = "types_beautifulsoup4-4.11.6-py3-none-any.whl", hash = "sha256:ac9dd1383481201ea07f27c5a43e7b1ee71caf9c720b7ae951db15d60d126e80"},
 ]
 types-boto = [
-    {file = "types-boto-2.49.18.tar.gz", hash = "sha256:e857119c23a15767b21ca6814ca18be22d8ee59d13253b1ea3bdda622ea931d1"},
-    {file = "types_boto-2.49.18-py3-none-any.whl", hash = "sha256:192620119ee9acb4ee98b9c73dcb9ceb839362add888c7f15de7e08757cbc5c4"},
+    {file = "types-boto-2.49.18.1.tar.gz", hash = "sha256:8f66af3c5c79da36e980fbf2a0b5c87f7e7a5234df6da7c314c99167d1522da9"},
+    {file = "types_boto-2.49.18.1-py3-none-any.whl", hash = "sha256:984669cd0704d8db5c0a8819cc871168e12e3a1ff39bbbeeeddda7cb08f45ed4"},
 ]
 types-protobuf = [
     {file = "types-protobuf-3.20.4.tar.gz", hash = "sha256:0dad3a5009895c985a56e2837f61902bad9594151265ac0ee907bb16d0b01eb7"},
     {file = "types_protobuf-3.20.4-py3-none-any.whl", hash = "sha256:5082437afe64ce3b31c8db109eae86e02fda11e4d5f9ac59cb8578a8a138aa70"},
 ]
 types-psutil = [
-    {file = "types-psutil-5.9.5.1.tar.gz", hash = "sha256:d1a157fd132aa34be544fa9e09dc5c37b92c9d3a2917bce9c564354f50e71ffb"},
-    {file = "types_psutil-5.9.5.1-py3-none-any.whl", hash = "sha256:ded6b69503b6387fb99b9da958a6353b4b46eb4457343bb2cd0cbac5c4d5473d"},
+    {file = "types-psutil-5.9.5.2.tar.gz", hash = "sha256:dc1ecbb5f5612d0de650c579a5834f225e16faf4c2b198d3bc53d3349ace939c"},
+    {file = "types_psutil-5.9.5.2-py3-none-any.whl", hash = "sha256:3c89fc3c7111bf5d87998a28ffcd7cdb3906acf17dfd8d61eee719af42e61604"},
 ]
 types-pytz = [
     {file = "types-pytz-2022.4.0.0.tar.gz", hash = "sha256:17d66e4b16e80ceae0787726f3a22288df7d3f9fdebeb091dc64b92c0e4ea09d"},
@@ -2379,8 +2379,8 @@ types-requests = [
     {file = "types_requests-2.28.11.2-py3-none-any.whl", hash = "sha256:14941f8023a80b16441b3b46caffcbfce5265fd14555844d6029697824b5a2ef"},
 ]
 types-setuptools = [
-    {file = "types-setuptools-65.4.0.0.tar.gz", hash = "sha256:d9021d6a70690b34e7bd2947e7ab10167c646fbf062508cb56581be2e2a1615e"},
-    {file = "types_setuptools-65.4.0.0-py3-none-any.whl", hash = "sha256:ce178b3f7dbd6c0e67f8eee7ae29c1be280ade7e5188bdd9e620843de4060d85"},
+    {file = "types-setuptools-65.5.0.1.tar.gz", hash = "sha256:5b297081c8f1fbd992cd8b305a97ed96ee6ffc765e9115124029597dd10b8a71"},
+    {file = "types_setuptools-65.5.0.1-py3-none-any.whl", hash = "sha256:601d45b5e9979d2b931de5403aa11153626a1eadd1ce9727b21f24673ced5ceb"},
 ]
 types-six = [
     {file = "types-six-1.16.21.tar.gz", hash = "sha256:562b036de1a837eafe164827c5c53d7a8d703a44bb211642932dcd59e9e0f7c9"},
@@ -2391,8 +2391,8 @@ types-tabulate = [
     {file = "types_tabulate-0.9.0.0-py3-none-any.whl", hash = "sha256:a1cc2aa52d2a9abfe0acbb361ccd49e3400794086a41626ce8784ed2e1ec0b0d"},
 ]
 types-urllib3 = [
-    {file = "types-urllib3-1.26.25.tar.gz", hash = "sha256:5aef0e663724eef924afa8b320b62ffef2c1736c1fa6caecfc9bc6c8ae2c3def"},
-    {file = "types_urllib3-1.26.25-py3-none-any.whl", hash = "sha256:c1d78cef7bd581e162e46c20a57b2e1aa6ebecdcf01fd0713bb90978ff3e3427"},
+    {file = "types-urllib3-1.26.25.1.tar.gz", hash = "sha256:a948584944b2412c9a74b9cf64f6c48caf8652cb88b38361316f6d15d8a184cd"},
+    {file = "types_urllib3-1.26.25.1-py3-none-any.whl", hash = "sha256:f6422596cc9ee5fdf68f9d547f541096a20c2dcfd587e37c804c9ea720bf5cb2"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
