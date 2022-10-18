@@ -2,8 +2,64 @@
 Installation
 ============
 
-Prerequisites
--------------
+* `Prerequisites (docker installation)`_
+* `Prerequisites (bare metal installation)`_
+
+
+Prerequisites (docker installation)
+=====================================
+
+* Docker
+* Datadog Agent (optional)
+* Sentry App (optional)
+* Discord App with following enabled intents:
+
+    * PRESENCE
+    * SERVER MEMBERS
+    * MESSAGE CONTENT
+
+Docker interpreter
+^^^^^^^^^^^^^^^^^^
+
+Refer to `https://docs.docker.com/get-docker/ <https://docs.docker.com/get-docker/>`_
+
+Downloading dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+    $ git clone https://github.com/Rom1-J/tuxbot-bot /opt/tuxbot-bot
+    $ cd /opt/tuxbot-bot
+
+
+Configuration
+^^^^^^^^^^^^^
+
+Copy the ``.envs.example`` directory and adjust for your settings in ``.envs/``.
+
+.. code-block:: bash
+
+    $ cp -R .envs.example .envs
+
+.. note::
+
+    - If you don't want to use `Sentry <https://sentry.io>`_, do not fill in the corresponding key in the config file:
+
+    - If you don't want to use `Datadog <https://datadoghq.com>`_, do not fill in the corresponding key in the config file:
+
+
+Run
+^^^
+
+Run the container using ``production.yml``
+
+.. code-block:: bash
+
+    $ sudo docker compose -f production.yml up -d
+
+
+Prerequisites (bare metal installation)
+=========================================
 
 * Python 3.10 interpreter (with poetry as package manager)
 * PostgreSQL server
@@ -55,11 +111,11 @@ Assuming PostgreSQL already configured, and `Poetry <https://python-poetry.org/d
 Configuration
 ^^^^^^^^^^^^^
 
-Copy the ``data.example`` directory and adjust for your settings in ``data/settings/{development,production}.yaml``.
+Copy the ``.envs.example`` directory and adjust for your settings in ``.envs/``.
 
 .. code-block:: bash
 
-    $ cp -R data.example data
+    $ cp -R .envs.example .envs
 
 .. note::
 
