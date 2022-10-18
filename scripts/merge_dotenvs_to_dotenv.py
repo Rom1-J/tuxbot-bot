@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 
@@ -23,7 +22,7 @@ def main() -> None:
     for environment in ENVS_NAME:
         merge(
             ROOT_DIR_PATH / ".envs" / environment,
-            ROOT_DIR_PATH / f".env{environment}"
+            ROOT_DIR_PATH / f".env{environment}",
         )
 
 

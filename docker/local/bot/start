@@ -5,5 +5,4 @@ set -o pipefail
 set -o nounset
 
 
-/bin/bash
 poetry run start
