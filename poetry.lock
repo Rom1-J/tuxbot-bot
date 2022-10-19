@@ -1151,7 +1151,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-psutil"
-version = "5.9.5.2"
+version = "5.9.5.3"
 description = "Typing stubs for psutil"
 category = "dev"
 optional = false
@@ -2402,8 +2402,8 @@ types-protobuf = [
     {file = "types_protobuf-3.20.4-py3-none-any.whl", hash = "sha256:5082437afe64ce3b31c8db109eae86e02fda11e4d5f9ac59cb8578a8a138aa70"},
 ]
 types-psutil = [
-    {file = "types-psutil-5.9.5.2.tar.gz", hash = "sha256:dc1ecbb5f5612d0de650c579a5834f225e16faf4c2b198d3bc53d3349ace939c"},
-    {file = "types_psutil-5.9.5.2-py3-none-any.whl", hash = "sha256:3c89fc3c7111bf5d87998a28ffcd7cdb3906acf17dfd8d61eee719af42e61604"},
+    {file = "types-psutil-5.9.5.3.tar.gz", hash = "sha256:7c955c5f7137a5d2e8d571febd215b960edd8c38dd23f451de16da01376827b1"},
+    {file = "types_psutil-5.9.5.3-py3-none-any.whl", hash = "sha256:b0c20c8a39eaf633376d4dff570faaf8cb077f7d39f6800c7a2f62c52b6f0f12"},
 ]
 types-pytz = [
     {file = "types-pytz-2022.5.0.0.tar.gz", hash = "sha256:0c163b15d3e598e6cc7074a99ca9ec72b25dc1b446acc133b827667af0b7b09a"},
