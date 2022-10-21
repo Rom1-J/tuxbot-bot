@@ -1143,7 +1143,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-protobuf"
-version = "3.20.4"
+version = "3.20.4.1"
 description = "Typing stubs for protobuf"
 category = "dev"
 optional = false
@@ -2402,8 +2402,8 @@ types-boto = [
     {file = "types_boto-2.49.18.1-py3-none-any.whl", hash = "sha256:984669cd0704d8db5c0a8819cc871168e12e3a1ff39bbbeeeddda7cb08f45ed4"},
 ]
 types-protobuf = [
-    {file = "types-protobuf-3.20.4.tar.gz", hash = "sha256:0dad3a5009895c985a56e2837f61902bad9594151265ac0ee907bb16d0b01eb7"},
-    {file = "types_protobuf-3.20.4-py3-none-any.whl", hash = "sha256:5082437afe64ce3b31c8db109eae86e02fda11e4d5f9ac59cb8578a8a138aa70"},
+    {file = "types-protobuf-3.20.4.1.tar.gz", hash = "sha256:67df7cc7ec85d114db2664a8ae8905543e75fb5edbed437dabc9e9fb8f8fcf9e"},
+    {file = "types_protobuf-3.20.4.1-py3-none-any.whl", hash = "sha256:c227975ffd0f6a1eb1754e9a3aa9ca3b12265e63b462e9761e824c41fd25331c"},
 ]
 types-psutil = [
     {file = "types-psutil-5.9.5.4.tar.gz", hash = "sha256:aa09102b80c65a3b4573216614372398dab78972d650488eaff1ff05482cc18f"},
