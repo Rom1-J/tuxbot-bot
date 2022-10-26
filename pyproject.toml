@@ -27,7 +27,7 @@ jishaku = {git = "https://github.com/Gorialis/jishaku"}
 PyYAML = "^6.0"
 rich = "^12.6.0"
 tortoise-orm = "^0.19.2"
-websockets = "^10.3"
+websockets = "^10.4"
 beautifulsoup4 = "^4.11.1"
 graphviz = "^0.20.1"
 humanize = "^4.4.0"
