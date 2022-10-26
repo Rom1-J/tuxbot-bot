@@ -1143,7 +1143,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-protobuf"
-version = "3.20.4.1"
+version = "3.20.4.2"
 description = "Typing stubs for protobuf"
 category = "dev"
 optional = false
@@ -1186,7 +1186,7 @@ types-urllib3 = "<1.27"
 
 [[package]]
 name = "types-setuptools"
-version = "65.5.0.1"
+version = "65.5.0.2"
 description = "Typing stubs for setuptools"
 category = "dev"
 optional = false
@@ -2402,8 +2402,8 @@ types-boto = [
     {file = "types_boto-2.49.18.1-py3-none-any.whl", hash = "sha256:984669cd0704d8db5c0a8819cc871168e12e3a1ff39bbbeeeddda7cb08f45ed4"},
 ]
 types-protobuf = [
-    {file = "types-protobuf-3.20.4.1.tar.gz", hash = "sha256:67df7cc7ec85d114db2664a8ae8905543e75fb5edbed437dabc9e9fb8f8fcf9e"},
-    {file = "types_protobuf-3.20.4.1-py3-none-any.whl", hash = "sha256:c227975ffd0f6a1eb1754e9a3aa9ca3b12265e63b462e9761e824c41fd25331c"},
+    {file = "types-protobuf-3.20.4.2.tar.gz", hash = "sha256:fd65ab8502f9a08e089f2cad26d52fab04cd57322cf896c570ab3391ca760bae"},
+    {file = "types_protobuf-3.20.4.2-py3-none-any.whl", hash = "sha256:329bec368fd11a8cb95192b33aa61e59e0b30f659ec14be75301c651026c4cc1"},
 ]
 types-psutil = [
     {file = "types-psutil-5.9.5.4.tar.gz", hash = "sha256:aa09102b80c65a3b4573216614372398dab78972d650488eaff1ff05482cc18f"},
@@ -2422,8 +2422,8 @@ types-requests = [
     {file = "types_requests-2.28.11.2-py3-none-any.whl", hash = "sha256:14941f8023a80b16441b3b46caffcbfce5265fd14555844d6029697824b5a2ef"},
 ]
 types-setuptools = [
-    {file = "types-setuptools-65.5.0.1.tar.gz", hash = "sha256:5b297081c8f1fbd992cd8b305a97ed96ee6ffc765e9115124029597dd10b8a71"},
-    {file = "types_setuptools-65.5.0.1-py3-none-any.whl", hash = "sha256:601d45b5e9979d2b931de5403aa11153626a1eadd1ce9727b21f24673ced5ceb"},
+    {file = "types-setuptools-65.5.0.2.tar.gz", hash = "sha256:9847de6d7087fb1dd4a88c2a21543d1b86a6179c36744f081974303fe2f30f50"},
+    {file = "types_setuptools-65.5.0.2-py3-none-any.whl", hash = "sha256:2d33e4ef0d35cd2da48a143eb02184f58398381ddb1f772eff20ccc4126fec13"},
 ]
 types-six = [
     {file = "types-six-1.16.21.tar.gz", hash = "sha256:562b036de1a837eafe164827c5c53d7a8d703a44bb211642932dcd59e9e0f7c9"},
