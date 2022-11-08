@@ -1159,7 +1159,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-pytz"
-version = "2022.5.0.0"
+version = "2022.6.0.1"
 description = "Typing stubs for pytz"
 category = "dev"
 optional = false
@@ -1321,7 +1321,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "40961416a7a1f4e1646524ab62e6b7d5344a0f3214206dd6d5fc7c652f3422d5"
+content-hash = "5771837cbe3be363e25db2e8df20254a23d765aca6e0ddfd1150f81e272b21b4"
 
 [metadata.files]
 aiofiles = [
@@ -2421,8 +2421,8 @@ types-psutil = [
     {file = "types_psutil-5.9.5.4-py3-none-any.whl", hash = "sha256:28e59764630187e462d43788efa16d59d5e77b510115f9e25901b2d4007fca62"},
 ]
 types-pytz = [
-    {file = "types-pytz-2022.5.0.0.tar.gz", hash = "sha256:0c163b15d3e598e6cc7074a99ca9ec72b25dc1b446acc133b827667af0b7b09a"},
-    {file = "types_pytz-2022.5.0.0-py3-none-any.whl", hash = "sha256:a8e1fe6a1b270fbfaf2553b20ad0f1316707cc320e596da903bb17d7373fed2d"},
+    {file = "types-pytz-2022.6.0.1.tar.gz", hash = "sha256:d078196374d1277e9f9984d49373ea043cf2c64d5d5c491fbc86c258557bd46f"},
+    {file = "types_pytz-2022.6.0.1-py3-none-any.whl", hash = "sha256:bea605ce5d5a5d52a8e1afd7656c9b42476e18a0f888de6be91587355313ddf4"},
 ]
 types-pyyaml = [
     {file = "types-PyYAML-6.0.12.1.tar.gz", hash = "sha256:70ccaafcf3fb404d57bffc1529fdd86a13e8b4f2cf9fc3ee81a6408ce0ad59d2"},
