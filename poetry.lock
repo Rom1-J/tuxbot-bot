@@ -581,7 +581,7 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "ipinfo"
-version = "4.3.1"
+version = "4.4.2"
 description = "Official Python library for IPInfo"
 category = "main"
 optional = false
@@ -1923,8 +1923,8 @@ import-expression = [
     {file = "import_expression-1.1.4.tar.gz", hash = "sha256:06086a6ab3bfa528b1c478e633d6adf2b3a990e31440f6401b0f3ea12b0659a9"},
 ]
 ipinfo = [
-    {file = "ipinfo-4.3.1-py3-none-any.whl", hash = "sha256:3e29633e7b35b1fb9f0a2cc260a09a0f8120d55f429a302e8000ea9026fa5269"},
-    {file = "ipinfo-4.3.1.tar.gz", hash = "sha256:005c6f0d111291474f46cd9413cb2e4792da87fe023ef19b0c84272d467b2967"},
+    {file = "ipinfo-4.4.2-py3-none-any.whl", hash = "sha256:30717a1866140f74e93aacbebeb962a7c7e39551521d03acafa89bd3b42b9226"},
+    {file = "ipinfo-4.4.2.tar.gz", hash = "sha256:30fe65e50fc8896c5e3adae7548f971c52e1cb7646e5088c35cca2f0a23f3be8"},
 ]
 ipwhois = [
     {file = "ipwhois-1.2.0-py2.py3-none-any.whl", hash = "sha256:9f14dfafb5d9eb7c7f56ab34cfad9868b5e453ab4161a90d69fb714fe712056a"},
