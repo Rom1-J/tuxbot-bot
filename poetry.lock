@@ -361,14 +361,14 @@ wcwidth = ">=0.1.4"
 
 [[package]]
 name = "bpython"
-version = "0.23"
+version = "0.24"
 description = ""
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "bpython-0.23-py3-none-any.whl", hash = "sha256:72aab438052439ac89b471c4ee2a8fba6a0a082a51b0f70826e88cc0e7723298"},
-    {file = "bpython-0.23.tar.gz", hash = "sha256:9f0078abc887c48af088691e2f64797d6ca994ac0f4bc03c38d06f657d7c052a"},
+    {file = "bpython-0.24-py3-none-any.whl", hash = "sha256:0d196ae3d1ce3dcd559a3fb89ed2c468dfbd1504af0d680b906dd65a9c7a32eb"},
+    {file = "bpython-0.24.tar.gz", hash = "sha256:98736ffd7a8c48fd2bfb53d898a475f4241bde0b672125706af04d9d08fd3dbd"},
 ]
 
 [package.dependencies]
@@ -2629,4 +2629,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "242ea5bc62584e44c82f5c84c1ee1d8bb264f158525f3f1d8ee98a4576500136"
+content-hash = "213544986cbc50090e9fd9140be1bb4cf2235527eae2ebdad82e786d27234f9e"
