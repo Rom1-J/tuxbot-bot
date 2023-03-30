@@ -2267,14 +2267,14 @@ files = [
 
 [[package]]
 name = "types-psutil"
-version = "5.9.5.5"
+version = "5.9.5.11"
 description = "Typing stubs for psutil"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-psutil-5.9.5.5.tar.gz", hash = "sha256:4f26fdb2cb064b274cbc6359fba4abf3b3a2993d7d4abc336ad0947568212c62"},
-    {file = "types_psutil-5.9.5.5-py3-none-any.whl", hash = "sha256:e576bb81c74f7443b067e94f92435894d5dd561161bec3d6401727b63df009f0"},
+    {file = "types-psutil-5.9.5.11.tar.gz", hash = "sha256:3d59da0758f056bfb59fef757366e538c5dd5473d81c35b38956624ae2484f31"},
+    {file = "types_psutil-5.9.5.11-py3-none-any.whl", hash = "sha256:01cc541b187a11e758d336c4cc89abf71d0098627fa95d5cfaca536be31a7d1a"},
 ]
 
 [[package]]
@@ -2629,4 +2629,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "213544986cbc50090e9fd9140be1bb4cf2235527eae2ebdad82e786d27234f9e"
+content-hash = "1bd3554b0ddc697311528e68bc37c658b4547132479c8eba545d1a229a0a0e6d"
