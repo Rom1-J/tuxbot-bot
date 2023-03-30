@@ -18,7 +18,7 @@ merge-dotenvs-to-dotenv="scripts.merge_dotenvs_to_dotenv:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-aiofiles = "^22.1.0"
+aiofiles = "^23.1.0"
 aioredis = "^2.0.1"
 asyncpg = "^0.27.0"
 "discord.py" = {git = "https://github.com/Rapptz/discord.py"}
