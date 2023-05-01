@@ -2236,15 +2236,18 @@ files = [
 
 [[package]]
 name = "types-beautifulsoup4"
-version = "4.11.6"
+version = "4.12.0.4"
 description = "Typing stubs for beautifulsoup4"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-beautifulsoup4-4.11.6.tar.gz", hash = "sha256:2670dd71995df464041e2941fa9bbb694795271e3dedd7262b4766649a1cbe82"},
-    {file = "types_beautifulsoup4-4.11.6-py3-none-any.whl", hash = "sha256:ac9dd1383481201ea07f27c5a43e7b1ee71caf9c720b7ae951db15d60d126e80"},
+    {file = "types-beautifulsoup4-4.12.0.4.tar.gz", hash = "sha256:977e808b3e4fac0a25126d9f6c738886813862f840167a87c34df00b60154c8f"},
+    {file = "types_beautifulsoup4-4.12.0.4-py3-none-any.whl", hash = "sha256:f5acd76487f220aa8b9906b29e60d6e833379788aca5ffb703d3ea4f7e1d31fb"},
 ]
+
+[package.dependencies]
+types-html5lib = "*"
 
 [[package]]
 name = "types-boto"
@@ -2256,6 +2259,18 @@ python-versions = "*"
 files = [
     {file = "types-boto-2.49.18.3.tar.gz", hash = "sha256:08555d67c30a3a9bb3f91473086b4a77a1a27bcce542515cba55a6b8f0e48034"},
     {file = "types_boto-2.49.18.3-py3-none-any.whl", hash = "sha256:6f1cc2f5e573091dc399eceecdeb81d1690340136ac88baa010cdd412edf846c"},
+]
+
+[[package]]
+name = "types-html5lib"
+version = "1.1.11.13"
+description = "Typing stubs for html5lib"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-html5lib-1.1.11.13.tar.gz", hash = "sha256:2a5ced934bcc7b47800b88ddb2541bbdf5bded7fb6d421693c978228e1fe631d"},
+    {file = "types_html5lib-1.1.11.13-py3-none-any.whl", hash = "sha256:d01603307f3bb39af9712e72eda5aa498420fe12179411533a54b2b03f6531eb"},
 ]
 
 [[package]]
@@ -2634,4 +2649,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0eac80b1eee8dc9abd8298e3cc06d9fc277d61e9f8663383f96a4515b1c0bc70"
+content-hash = "ce062aa0d00f42bc1d59d212db67628ce5cd0565230ee3e1a8f89f8c1b7f5226"
