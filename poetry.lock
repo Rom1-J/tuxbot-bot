@@ -2260,14 +2260,14 @@ files = [
 
 [[package]]
 name = "types-protobuf"
-version = "3.20.4.2"
+version = "4.23.0.0"
 description = "Typing stubs for protobuf"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-protobuf-3.20.4.2.tar.gz", hash = "sha256:fd65ab8502f9a08e089f2cad26d52fab04cd57322cf896c570ab3391ca760bae"},
-    {file = "types_protobuf-3.20.4.2-py3-none-any.whl", hash = "sha256:329bec368fd11a8cb95192b33aa61e59e0b30f659ec14be75301c651026c4cc1"},
+    {file = "types-protobuf-4.23.0.0.tar.gz", hash = "sha256:4996ebf9e07aec9e4aa452040cec1d03301f75a32b07433e89a1ebadf214124f"},
+    {file = "types_protobuf-4.23.0.0-py3-none-any.whl", hash = "sha256:2f940bf39cfefd81df1177fd58f5406d53fa7ce189f6bf56e06b2468c4ff2ec0"},
 ]
 
 [[package]]
@@ -2634,4 +2634,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0eac80b1eee8dc9abd8298e3cc06d9fc277d61e9f8663383f96a4515b1c0bc70"
+content-hash = "a6a9c053d3d265af8b330e301ee84f306dd6810f72090b7fe754c803168c3b64"
