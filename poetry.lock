@@ -2224,14 +2224,14 @@ psycopg = ["psycopg[binary,pool]"]
 
 [[package]]
 name = "types-aiofiles"
-version = "22.1.0.4"
+version = "23.1.0.3"
 description = "Typing stubs for aiofiles"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-aiofiles-22.1.0.4.tar.gz", hash = "sha256:54465417fdfafc723e6f0fca66de5498866f1cf2595b72c9da35c96d1c3e9fce"},
-    {file = "types_aiofiles-22.1.0.4-py3-none-any.whl", hash = "sha256:3c3d389ceec04c78bd33d13304332dcc46856a418d7d4ebf95e398f1efa3a3b7"},
+    {file = "types-aiofiles-23.1.0.3.tar.gz", hash = "sha256:ccd7b4db06c66cb7145802b1d9cf33bd6d8e88c7fe63a3ba5551671faac32648"},
+    {file = "types_aiofiles-23.1.0.3-py3-none-any.whl", hash = "sha256:9634f06c5fc331ec660d1e80faa031aa2e0aa388fbb6312f936c7076ac8a9fd3"},
 ]
 
 [[package]]
@@ -2634,4 +2634,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0eac80b1eee8dc9abd8298e3cc06d9fc277d61e9f8663383f96a4515b1c0bc70"
+content-hash = "a82618be3665b6542f168038668ee2f77d745d4398fe7b7bd586bc1f898fe5ac"
