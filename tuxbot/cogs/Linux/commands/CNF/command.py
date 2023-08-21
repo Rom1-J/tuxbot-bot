@@ -1,24 +1,25 @@
 """
 tuxbot.cogs.Linux.commands.CNF.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows which package to install when `command not found`
 """
+import typing
 
 import discord
 import yaml
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
-from .CNF import get_from_cnf
+from .cnf import get_from_cnf
 
 
 class CNFCommand(commands.Cog):
-    """Shows required package for command"""
+    """Shows required package for command."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -26,11 +27,11 @@ class CNFCommand(commands.Cog):
 
     @commands.command(name="cnf")
     async def _cnf(
-        self, ctx: commands.Context[TuxbotABC], command: str
+        self: typing.Self, ctx: commands.Context[TuxbotABC], command: str
     ) -> None:
         if cnf := await self.bot.redis.get(self.bot.utils.gen_key(command)):
             from_cache = True
-            cnf = yaml.load(cnf, Loader=yaml.Loader)
+            cnf = yaml.safe_load(cnf)
         else:
             from_cache = False
             cnf = await get_from_cnf(command)

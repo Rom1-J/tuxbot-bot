@@ -1,18 +1,18 @@
 """
 tuxbot.cogs.Logs
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~.
 
 Set of useful statistics commands & workers.
 """
 import os
-from collections import namedtuple
+import typing
 
 import sentry_sdk
 
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.core.config import config
+from tuxbot.core.tuxbot import Tuxbot
 
-from ...core.config import config
 from .commands.Stats.command import StatsCommand
 from .listeners.AppCommandCompletion.listener import AppCommandCompletion
 from .listeners.AppCommandError.listener import AppCommandError
@@ -39,7 +39,14 @@ STANDARD_LISTENERS = (
     SocketRawReceive,
 )
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=2, minor=3, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -51,7 +58,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         if os.getenv("PYTHON_ENV", "production") != "development" and (
             dsn := config.SENTRY_DSN
         ):
@@ -73,7 +80,7 @@ class Commands:
 class Logs(ModuleABC, Commands):
     """Set of useful statistics commands & workers."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)

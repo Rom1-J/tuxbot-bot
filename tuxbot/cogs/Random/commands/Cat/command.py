@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Random.commands.Cat.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Get a random picture of cat
 """
@@ -12,16 +12,15 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ..exceptions import APIException
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Random.commands.exceptions import APIException
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class CatCommand(commands.Cog):
-    """Random cat picture"""
+    """Random cat picture."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.cataas_url = "https://cataas.com"
@@ -29,9 +28,9 @@ class CatCommand(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    async def __get_cat(self) -> dict[str, typing.Any]:
+    async def __get_cat(self: typing.Self) -> dict[str, typing.Any]:
         try:
-            endpoint = random.choices(
+            endpoint = random.choices(  # noqa: S311
                 ["cat", "cat/gif"], weights=[0.8, 0.2], k=1
             )[0]
 
@@ -44,13 +43,16 @@ class CatCommand(commands.Cog):
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
-        raise APIException("Something went wrong ...")
+        msg = "Something went wrong ..."
+        raise APIException(msg)
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="cat", aliases=["randomcat"])
-    async def _cat(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _cat(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         cat = await self.__get_cat()
 
         e = discord.Embed(

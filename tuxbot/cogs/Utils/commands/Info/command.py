@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Utils.commands.Info.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows information about tuxbot
 """
@@ -17,21 +17,21 @@ import psutil
 from discord.ext import commands
 
 import tuxbot
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class InfoCommand(commands.Cog):
-    """Shows tuxbot's information"""
+    """Shows tuxbot's information."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.stats: dict[str, typing.Any] = {}
         self.app_path = "tuxbot"
 
-    async def cog_load(self) -> None:
-        """Fetch bot stats"""
+    async def cog_load(self: typing.Self) -> None:
+        """Fetch bot stats."""
         self.stats = await self.__fetch_info(self.app_path)
         self.bot.logger.info("[InfoCommand] '__fetch_info' done!")
 
@@ -40,8 +40,7 @@ class InfoCommand(commands.Cog):
 
     @staticmethod
     async def __fetch_info(path: str) -> dict[str, typing.Any]:
-        """Fetch set of information about tuxbot"""
-
+        """Fetch set of information about tuxbot."""
         total_lines = 0
 
         total_python_class = 0
@@ -67,18 +66,18 @@ class InfoCommand(commands.Cog):
                         file_dir, "r", encoding="utf-8"
                     ) as file:
                         async for line in file:
-                            line = line.strip()
+                            _line = line.strip()
 
-                            if line.startswith("class"):
+                            if _line.startswith("class"):
                                 total_python_class += 1
 
-                            if line.startswith("def"):
+                            if _line.startswith("def"):
                                 total_python_functions += 1
 
-                            if line.startswith("async def"):
+                            if _line.startswith("async def"):
                                 total_python_coroutines += 1
 
-                            if "#" in line:
+                            if "#" in _line:
                                 total_python_comments += 1
 
                             total_lines += 1
@@ -97,7 +96,9 @@ class InfoCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="info", aliases=["about"])
-    async def _info(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _info(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         proc = psutil.Process()
 
         if not self.stats:
@@ -115,8 +116,8 @@ class InfoCommand(commands.Cog):
             e.add_field(
                 name="__:busts_in_silhouette: Development__",
                 value=(
-                    "**Romain#5117:** [git](https://github.com/Rom1-J)\n"
-                    "**Outout#4039:** [git](https://git.gnous.eu/mael)\n"
+                    "**aspheric_:** [git](https://github.com/Rom1-J)\n"
+                    "**outout:** [git](https://git.gnous.eu/mael)\n"
                 ),
                 inline=True,
             )

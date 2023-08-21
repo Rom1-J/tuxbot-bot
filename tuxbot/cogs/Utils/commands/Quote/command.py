@@ -1,24 +1,26 @@
 """
 tuxbot.cogs.Utils.commands.Quote.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Send message as quote format
 """
+import typing
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
-from .converters.QuoteConverter import QuoteConverter
-from .Quote import Quote
+from .converters.quote_converter import QuoteConverter
+from .quote import Quote
 
 
 class QuoteCommand(commands.Cog):
-    """Quote a message"""
+    """Quote a message."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.quote_context_menu = app_commands.ContextMenu(
@@ -28,7 +30,7 @@ class QuoteCommand(commands.Cog):
 
     # =========================================================================
 
-    async def cog_unload(self) -> None:
+    async def cog_unload(self: typing.Self) -> None:
         self.bot.tree.remove_command(
             self.quote_context_menu.name, type=self.quote_context_menu.type
         )
@@ -38,7 +40,7 @@ class QuoteCommand(commands.Cog):
 
     @commands.command(name="quote")
     async def _quote(
-        self, ctx: commands.Context[TuxbotABC], *, argument: str
+        self: typing.Self, ctx: commands.Context[TuxbotABC], *, argument: str
     ) -> None:
         message = await QuoteConverter().convert(ctx, argument)
 
@@ -53,7 +55,7 @@ class QuoteCommand(commands.Cog):
 
     # noinspection PyMethodMayBeStatic
     async def _quote_context_menu(
-        self,
+        self: typing.Self,
         interaction: discord.Interaction,
         message: discord.Message,
     ) -> None:

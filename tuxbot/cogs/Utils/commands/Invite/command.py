@@ -1,28 +1,32 @@
 """
 tuxbot.cogs.Utils.commands.Invite.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Gives tuxbot invite links
 """
+import typing
+
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
 from tuxbot.core.config import config
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class InviteCommand(commands.Cog):
-    """Gives tuxbot invite links"""
+    """Gives tuxbot invite links."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="invite")
-    async def _invite(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _invite(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         basic_perms = discord.Permissions(
             add_reactions=True,
             read_messages=True,

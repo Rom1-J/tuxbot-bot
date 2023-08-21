@@ -1,3 +1,1 @@
-"""
-Set of global fields for tuxbot models
-"""
+"""Set of global fields for tuxbot models."""

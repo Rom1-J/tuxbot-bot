@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Random.commands.Duck.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Get a random picture of duck
 """
@@ -11,16 +11,15 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ..exceptions import APIException
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Random.commands.exceptions import APIException
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class DuckCommand(commands.Cog):
-    """Random duck picture"""
+    """Random duck picture."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -38,13 +37,16 @@ class DuckCommand(commands.Cog):
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
-        raise APIException("Something went wrong ...")
+        msg = "Something went wrong ..."
+        raise APIException(msg)
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="duck", aliases=["randomduck"])
-    async def _duck(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _duck(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         duck = await self.__get_duck()
 
         e = discord.Embed(

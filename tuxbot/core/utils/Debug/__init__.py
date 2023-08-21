@@ -1,3 +1,1 @@
-"""
-Set of utils debugging functions and classes
-"""
+"""Set of utils debugging functions and classes."""

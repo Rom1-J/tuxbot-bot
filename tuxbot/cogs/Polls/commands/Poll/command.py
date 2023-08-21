@@ -1,28 +1,29 @@
 """
 tuxbot.cogs.Polls.commands.poll.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Manage polls
 """
 import json
 import textwrap
+import typing
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 from yarl import URL
 
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
-from .models.Choices import ChoicesModel
-from .models.Polls import PollsModel
+from .models.choices import ChoicesModel
+from .models.polls import PollsModel
 
 
 @app_commands.guild_only()
 class PollCommand(commands.GroupCog, name="poll"):
-    """Manage polls"""
+    """Manage polls."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__()
@@ -65,9 +66,7 @@ class PollCommand(commands.GroupCog, name="poll"):
     ) -> discord.Message | None:
         if not message:
             channel = await bot.fetch_channel(poll.channel_id)
-            message = await channel.fetch_message(  # type: ignore
-                poll.message_id
-            )
+            message = await channel.fetch_message(poll.message_id)
 
         if not message:
             return None
@@ -124,8 +123,8 @@ class PollCommand(commands.GroupCog, name="poll"):
     # =========================================================================
 
     @app_commands.command(name="create", description="Create a poll")
-    async def _poll_create(
-        self,
+    async def _poll_create(  # noqa: PLR0913
+        self: typing.Self,
         interaction: discord.Interaction,
         message: str,
         choice1: str,
@@ -161,10 +160,11 @@ class PollCommand(commands.GroupCog, name="poll"):
                     )
                     if c
                 ],
+                strict=True,
             )
         )
 
-        stmt: discord.Message = await interaction.channel.send(  # type: ignore
+        stmt: discord.Message = await interaction.channel.send(
             "**Preparing...**"
         )
 

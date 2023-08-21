@@ -1,27 +1,28 @@
 """
 tuxbot.cogs.Auto.listeners.Message.workers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 """
+import typing
+
 import discord
 
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
-from .AutoQuote import AutoQuote
+from .auto_quote import AutoQuote
 
 
 class Worker:
-    """Autoworker"""
+    """Autoworker."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.__workers = [
             AutoQuote(self.bot),
         ]
 
-    async def runs(self, message: discord.Message) -> None:
-        """Run all automatics workers"""
-
+    async def runs(self: typing.Self, message: discord.Message) -> None:
+        """Run all automatics workers."""
         for worker in self.__workers:
             await worker.process(message)

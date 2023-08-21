@@ -1,8 +1,6 @@
-import typing
-
-from .DeleteButton import DeleteButton
-from .ThresholdButton import ThresholdButton
-from .ToggleButton import ToggleButton
+from .delete_button import DeleteButton
+from .threshold_button import ThresholdButton
+from .toggle_button import ToggleButton
 
 
 __all__ = [
@@ -13,6 +11,4 @@ __all__ = [
 ]
 
 
-ButtonType = typing.Union[
-    type[DeleteButton], type[ThresholdButton], type[ToggleButton]
-]
+ButtonType = type[DeleteButton] | type[ThresholdButton] | type[ToggleButton]

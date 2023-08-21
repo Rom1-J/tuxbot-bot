@@ -1,16 +1,15 @@
 """
 tuxbot.cogs.Admin
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~.
 
 Set of owner only command.
 """
+import typing
 
-from collections import namedtuple
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ...abc.TuxbotABC import TuxbotABC
 from .commands.Restart.command import RestartCommand
 from .commands.Sync.command import SyncCommand
 from .commands.Update.command import UpdateCommand
@@ -24,7 +23,14 @@ from discord.ext import commands  # isort: skip
 
 STANDARD_COMMANDS = (RestartCommand, SyncCommand, UpdateCommand)
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=3, minor=1, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -36,7 +42,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Admin", command(bot=bot))
 
@@ -44,14 +50,14 @@ class Commands:
 class Admin(ModuleABC, Commands):
     """Set of owner only commands."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
 
     # =========================================================================
 
-    async def cog_check(  # type: ignore[override]
-        self, ctx: commands.Context[TuxbotABC]
+    async def cog_check(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
     ) -> bool:
         return bool(await self.bot.is_owner(ctx.author))

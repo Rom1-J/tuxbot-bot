@@ -1,3 +1,1 @@
-"""
-Set of collections for Tuxbot
-"""
+"""Set of collections for Tuxbot."""

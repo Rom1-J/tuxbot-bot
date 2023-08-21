@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Network.commands.Getheaders.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows address headers.
 """
@@ -16,17 +16,26 @@ import ipwhois
 from discord.ext import commands
 from ipwhois import IPWhois
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Network.commands.exceptions import RFCReserved
+from tuxbot.core.tuxbot import Tuxbot
 
-from ..exceptions import RFCReserved
 from .exceptions import UnreachableAddress
 
 
-class GetheadersCommand(commands.Cog):
-    """Shows address headers"""
+def _check_for_rfc_reserved_or_raise(_ip: str) -> None:
+    try:
+        IPWhois(
+            socket.getaddrinfo(urlparse(_ip).netloc, None)[1][4][0]
+        ).lookup_whois()
+    except ipwhois.exceptions.IPDefinedError as e:
+        raise RFCReserved(str(e)) from e
 
-    def __init__(self, bot: Tuxbot) -> None:
+
+class GetheadersCommand(commands.Cog):
+    """Shows address headers."""
+
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -34,16 +43,7 @@ class GetheadersCommand(commands.Cog):
 
     @staticmethod
     async def __check_for_rfc_reserved_or_raise(ip: str) -> None:
-        """Check for RFC reserved or raise"""
-
-        def _check_for_rfc_reserved_or_raise(_ip: str) -> None:
-            try:
-                IPWhois(
-                    socket.getaddrinfo(urlparse(_ip).netloc, None)[1][4][0]
-                ).lookup_whois()
-            except ipwhois.exceptions.IPDefinedError as e:
-                raise RFCReserved(str(e)) from e
-
+        """Check for RFC reserved or raise."""
         try:
             return await asyncio.wait_for(
                 asyncio.get_running_loop().run_in_executor(
@@ -51,8 +51,9 @@ class GetheadersCommand(commands.Cog):
                 ),
                 timeout=2,
             )
-        except (asyncio.exceptions.TimeoutError, socket.gaierror):
-            raise UnreachableAddress("Failed to reach this address.")
+        except (asyncio.exceptions.TimeoutError, socket.gaierror) as e:
+            msg = "Failed to reach this address."
+            raise UnreachableAddress(msg) from e
 
     # =========================================================================
 
@@ -60,8 +61,7 @@ class GetheadersCommand(commands.Cog):
     async def __get_headers(
         ip: str, user_agent: str
     ) -> tuple[int, dict[str, typing.Any]]:
-        """Retrieve address headers"""
-
+        """Retrieve address headers."""
         req_headers = {}
 
         if user_agent:
@@ -79,15 +79,16 @@ class GetheadersCommand(commands.Cog):
                 headers.pop("X-Client-IP", headers)
 
                 return s.status, headers
-        except (asyncio.exceptions.TimeoutError, socket.gaierror):
-            raise UnreachableAddress("Failed to reach this address.")
+        except (asyncio.exceptions.TimeoutError, socket.gaierror) as e:
+            msg = "Failed to reach this address."
+            raise UnreachableAddress(msg) from e
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="getheaders", aliases=["headers"])
     async def _getheaders(
-        self,
+        self: typing.Self,
         ctx: commands.Context[TuxbotABC],
         ip: str,
         *,
@@ -118,10 +119,10 @@ class GetheadersCommand(commands.Cog):
             output = await self.bot.utils.shorten(str(value), 50)
 
             if output["link"]:
-                value = f"[show all]({output['link']})"
+                _value = f"[show all]({output['link']})"
             else:
-                value = f"```\n{output['text']}```"
+                _value = f"```\n{output['text']}```"
 
-            e.add_field(name=key, value=value, inline=True)
+            e.add_field(name=key, value=_value, inline=True)
 
         await ctx.send(embed=e)

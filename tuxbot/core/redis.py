@@ -1,5 +1,5 @@
 """
-Tuxbot core module: redis
+Tuxbot core module: redis.
 
 Manage redis instances
 """
@@ -9,7 +9,8 @@ from tuxbot.core.config import config
 
 
 def connect() -> Redis:
-    """Connector for redis instance
+    """
+    Connector for redis instance.
 
     Returns
     -------

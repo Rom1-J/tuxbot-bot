@@ -1,21 +1,22 @@
 """
 tuxbot.cogs.Polls.listeners.RawReactionAdd.listener
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Listener whenever a reaction is added
 """
+import typing
+
 import discord
 from discord.ext import commands
 
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ...commands.Poll.command import PollCommand
+from tuxbot.cogs.Polls.commands.Poll.command import PollCommand
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class RawReactionAdd(commands.Cog):
-    """Listener whenever a reaction is added"""
+    """Listener whenever a reaction is added."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -23,7 +24,7 @@ class RawReactionAdd(commands.Cog):
 
     @commands.Cog.listener(name="on_raw_reaction_add")
     async def _on_raw_reaction_add(
-        self, pld: discord.RawReactionActionEvent
+        self: typing.Self, pld: discord.RawReactionActionEvent
     ) -> None:
         if pld.member == self.bot.user:
             return

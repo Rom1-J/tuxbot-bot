@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Network.commands.Dig.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows dig information from dns.bortzmeyer.org about a domain
 """
@@ -14,14 +14,14 @@ import discord
 from bs4 import BeautifulSoup
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class DigCommand(commands.Cog):
-    """Shows dig information about given domain"""
+    """Shows dig information about given domain."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -29,8 +29,7 @@ class DigCommand(commands.Cog):
 
     @staticmethod
     def __parse_from_bortzmeyer(html: str) -> dict[str, typing.Any]:
-        """Parse HTML result as dict object"""
-
+        """Parse HTML result as dict object."""
         soup = BeautifulSoup(html, "html.parser")
 
         header = "N/A"
@@ -40,7 +39,7 @@ class DigCommand(commands.Cog):
         body = []
         footer = "N/A"
         if (_b := soup.find(class_="body")) and isinstance(_b, bs4.Tag):
-            body = list(map(lambda el: el.text, _b.select("li>span")))
+            body = [el.text for el in _b.select("li>span")]
 
             if _f := _b.find(name="p"):
                 footer = _f.text
@@ -57,10 +56,9 @@ class DigCommand(commands.Cog):
     # =========================================================================
 
     async def __get_from_bortzmeyer(
-        self, domain: str, query_type: str
+        self: typing.Self, domain: str, query_type: str
     ) -> dict[str, typing.Any]:
-        """Get result from https://dns.bortzmeyer.org/"""
-
+        """Get result from https://dns.bortzmeyer.org/."""
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
                 f"https://dns.bortzmeyer.org/{domain}/{query_type}",
@@ -77,7 +75,10 @@ class DigCommand(commands.Cog):
 
     @commands.command(name="dig")
     async def _dig(
-        self, ctx: commands.Context[TuxbotABC], domain: str, query_type: str
+        self: typing.Self,
+        ctx: commands.Context[TuxbotABC],
+        domain: str,
+        query_type: str,
     ) -> None:
         if result := (
             await self.bot.redis.get(

@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Random.commands.Panda.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Get a random picture of panda
 """
@@ -11,16 +11,15 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ..exceptions import APIException
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Random.commands.exceptions import APIException
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class PandaCommand(commands.Cog):
-    """Random panda picture"""
+    """Random panda picture."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -38,13 +37,16 @@ class PandaCommand(commands.Cog):
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
-        raise APIException("Something went wrong ...")
+        msg = "Something went wrong ..."
+        raise APIException(msg)
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="panda", aliases=["randompanda"])
-    async def _panda(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _panda(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         panda = await self.__get_panda()
 
         e = discord.Embed(

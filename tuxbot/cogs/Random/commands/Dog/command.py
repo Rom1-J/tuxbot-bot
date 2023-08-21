@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Random.commands.Dog.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Get a random picture of dog
 """
@@ -11,22 +11,21 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ..exceptions import APIException
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Random.commands.exceptions import APIException
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class DogCommand(commands.Cog):
-    """Random dog picture"""
+    """Random dog picture."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
-    async def __get_dog(self) -> dict[str, typing.Any]:
+    async def __get_dog(self: typing.Self) -> dict[str, typing.Any]:
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
                 "https://dog.ceo/api/breeds/image/random"
@@ -37,13 +36,16 @@ class DogCommand(commands.Cog):
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 
-        raise APIException("Something went wrong ...")
+        msg = "Something went wrong ..."
+        raise APIException(msg)
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="dog", aliases=["randomdog"])
-    async def _dog(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _dog(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         dog = await self.__get_dog()
 
         e = discord.Embed(

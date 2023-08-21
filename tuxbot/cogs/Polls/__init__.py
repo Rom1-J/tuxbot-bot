@@ -1,14 +1,14 @@
 """
 tuxbot.cogs.Polls
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~.
 
 Set of useful commands for polls.
 """
-from collections import namedtuple
+import typing
 
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 from .commands.exceptions import PollsException
 from .commands.Poll.command import PollCommand
@@ -29,7 +29,14 @@ STANDARD_LISTENERS = (
     RawReactionRemove,
 )
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=3, minor=0, micro=0, release_level="alpha")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -41,7 +48,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Polls", command(bot=bot))
 
@@ -52,7 +59,7 @@ class Commands:
 class Polls(ModuleABC, Commands):
     """Set of useful commands for polls."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -61,10 +68,9 @@ class Polls(ModuleABC, Commands):
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context[TuxbotABC], error: Exception
+        self: typing.Self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
-        """Send errors raised by commands"""
-
+        """Send errors raised by commands."""
         if isinstance(error, PollsException):
             await ctx.send(str(error))
 
@@ -72,7 +78,9 @@ class Polls(ModuleABC, Commands):
     # =========================================================================
 
     @commands.command(name="poll")
-    async def _poll_deprecated(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _poll_deprecated(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         await ctx.send(
             "Deprecated command, use /poll instead "
             "(reinvite the bot if application commands are not enabled)",

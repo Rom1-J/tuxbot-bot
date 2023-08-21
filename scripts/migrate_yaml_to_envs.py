@@ -1,10 +1,10 @@
 import logging
 import typing
-from distutils.dir_util import copy_tree
 from pathlib import Path
 
 import environ
 import yaml
+from distutils.dir_util import copy_tree
 from rich.logging import RichHandler
 
 
@@ -93,9 +93,7 @@ def get_old_conf(env: str) -> yaml.Loader:
     log.info("Retrieving old configuration for '%s'" % env)
 
     with open(str(SETTINGS_PATH / f"{env}.yaml"), encoding="UTF-8") as f:
-        return yaml.load(  # type: ignore[no-any-return]
-            f, Loader=yaml.SafeLoader
-        )
+        return yaml.load(f, Loader=yaml.SafeLoader)
 
 
 def postgres_converter(config: typing.Any, field: str) -> str:
@@ -103,17 +101,17 @@ def postgres_converter(config: typing.Any, field: str) -> str:
 
     match field:
         case "host":
-            return postgres_dsn["HOST"]  # type: ignore[no-any-return]
+            return postgres_dsn["HOST"]
         case "port":
-            return postgres_dsn["PORT"]  # type: ignore[no-any-return]
+            return postgres_dsn["PORT"]
         case "db":
-            return postgres_dsn["NAME"]  # type: ignore[no-any-return]
+            return postgres_dsn["NAME"]
         case "user":
-            return postgres_dsn["USER"]  # type: ignore[no-any-return]
+            return postgres_dsn["USER"]
         case "password":
-            return postgres_dsn["PASSWORD"]  # type: ignore[no-any-return]
+            return postgres_dsn["PASSWORD"]
 
-    return config["postgres"]["dsn"]  # type: ignore[no-any-return]
+    return config["postgres"]["dsn"]
 
 
 def redis_converter(config: typing.Any) -> str:
@@ -139,21 +137,14 @@ def migrate(config: yaml.Loader, output: str) -> None:
             for key, value in values.items():
                 if len(s := value.split(":")) > 1:
                     func, arg = s
-                    new_value = custom_keys[func](
-                        arg
-                    )  # type: ignore[no-untyped-call]
-                elif (
-                    len(s := value.split("(")) > 1
-                    and s[0] in custom_keys.keys()
-                ):
-                    new_value = custom_keys[s[0]](
-                        value
-                    )  # type: ignore[no-untyped-call]
+                    new_value = custom_keys[func](arg)
+                elif len(s := value.split("(")) > 1 and s[0] in custom_keys:
+                    new_value = custom_keys[s[0]](value)
                 else:
                     recursion = config
 
                     for field in value.split("."):
-                        recursion = recursion[field]  # type: ignore[index]
+                        recursion = recursion[field]
 
                     new_value = recursion
 

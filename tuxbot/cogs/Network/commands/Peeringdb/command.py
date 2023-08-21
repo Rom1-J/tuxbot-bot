@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Network.commands.Peeringdb.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows information from peeringdb about an ASN
 """
@@ -14,18 +14,18 @@ import discord
 from aiohttp import TCPConnector
 from discord.ext import commands, tasks
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
 from tuxbot.core.config import config
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
-from .converters.ASConverter import ASConverter
+from .converters.as_converter import ASConverter
 from .exceptions import InvalidAsn
 
 
 class PeeringdbCommand(commands.Cog):
-    """Shows information about given ASN"""
+    """Shows information about given ASN."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self._peeringdb_net = None
@@ -33,8 +33,8 @@ class PeeringdbCommand(commands.Cog):
 
     # =========================================================================
 
-    async def cog_unload(self) -> None:
-        """Stop task updater"""
+    async def cog_unload(self: typing.Self) -> None:
+        """Stop task updater."""
         self.bot.logger.info(
             "[PeeringdbCommand] Canceling '_update_peering_db'"
         )
@@ -45,18 +45,18 @@ class PeeringdbCommand(commands.Cog):
 
     @staticmethod
     def __check_asn_or_raise(asn: str) -> bool | typing.NoReturn:
-        """Validate asn format"""
-
+        """Validate asn format."""
         if asn.isdigit() and int(asn) < 4_294_967_295:
             return True
 
-        raise InvalidAsn("Invalid ASN provided")
+        msg = "Invalid ASN provided"
+        raise InvalidAsn(msg)
 
     # =========================================================================
     # =========================================================================
 
     @tasks.loop(hours=6.00)
-    async def _update_peering_db(self) -> None:
+    async def _update_peering_db(self: typing.Self) -> None:
         headers = {}
         if key := config.PEERINGDB_KEY:
             headers["Authorization"] = f"Api-Key {key}"
@@ -71,7 +71,7 @@ class PeeringdbCommand(commands.Cog):
             ) as s:
                 self._peeringdb_net = await s.json()
         except asyncio.exceptions.TimeoutError:
-            self.bot.logger.error(
+            self.bot.logger.exception(
                 "[PeeringdbCommand] '_update_peering_db' failed!"
             )
         else:
@@ -83,8 +83,8 @@ class PeeringdbCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="peeringdb", aliases=["peer", "peering"])
-    async def _peeringdb(
-        self, ctx: commands.Context[TuxbotABC], argument: str
+    async def _peeringdb(  # noqa: C901
+        self: typing.Self, ctx: commands.Context[TuxbotABC], argument: str
     ) -> None:
         if (
             # pylint: disable=no-member

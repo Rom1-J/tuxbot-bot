@@ -52,3 +52,6 @@ data/
 logs/
 !logs/.gitignore
 .env*
+.ruff_cache
+.mypy_cache
+venv

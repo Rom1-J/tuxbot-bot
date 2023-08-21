@@ -1,14 +1,12 @@
-import typing
-
-from .DeleteButton import DeleteButton
-from .ToggleButton import ToggleButton
+from .delete_button import DeleteButton
+from .toggle_button import ToggleButton
 
 
-__all__ = [
+__all__ = (
     "ButtonType",
     "DeleteButton",
     "ToggleButton",
-]
+)
 
 
-ButtonType = typing.Union[type[DeleteButton], type[ToggleButton]]
+ButtonType = type[DeleteButton] | type[ToggleButton]

@@ -1,24 +1,25 @@
 """
 tuxbot.cogs.Dev.commands.HTTP.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Command to show doc about HTTP code
 """
+import typing
 
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
-from .converters.HttpCodeConverter import HttpCodeConverter
+from .converters.http_code_converter import HttpCodeConverter
 from .HTTPs import HttpCode
 
 
 class HTTPCommand(commands.Cog):
-    """Shows HTTP code doc"""
+    """Shows HTTP code doc."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -26,7 +27,9 @@ class HTTPCommand(commands.Cog):
 
     @commands.command(name="http")
     async def _http(
-        self, ctx: commands.Context[TuxbotABC], http_code: HttpCodeConverter
+        self: typing.Self,
+        ctx: commands.Context[TuxbotABC],
+        http_code: HttpCodeConverter,
     ) -> None:
         if isinstance(http_code, HttpCode):
             e = discord.Embed(

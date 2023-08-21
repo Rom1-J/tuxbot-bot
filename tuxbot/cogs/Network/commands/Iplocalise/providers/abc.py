@@ -1,18 +1,21 @@
 """
 tuxbot.cogs.Network.functions.providers.abc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Abstract Class for providers.
 """
 import typing
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class Provider(ABC):
     """Abstract Class for providers."""
 
-    def __init__(self, apikey: str | None = None):
+    def __init__(self: typing.Self, apikey: str | None = None) -> None:
         self.apikey = apikey
 
-    async def fetch(self, ip: str) -> tuple[str, dict[str, typing.Any] | str]:
+    @abstractmethod
+    async def fetch(
+        self: typing.Self, ip: str
+    ) -> tuple[str, dict[str, typing.Any] | str]:
         ...

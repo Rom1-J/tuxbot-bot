@@ -1,10 +1,8 @@
-import typing
-
-from .DeleteButton import DeleteButton
-from .GIFButton import GIFButton
-from .JPGButton import JPGButton
-from .PNGButton import PNGButton
-from .WEBPButton import WEBPButton
+from .delete_button import DeleteButton
+from .gif_button import GIFButton
+from .jpg_button import JPGButton
+from .png_button import PNGButton
+from .webp_button import WEBPButton
 
 
 __all__ = [
@@ -16,10 +14,10 @@ __all__ = [
     "DeleteButton",
 ]
 
-ButtonType = typing.Union[
-    type[GIFButton],
-    type[JPGButton],
-    type[PNGButton],
-    type[WEBPButton],
-    type[DeleteButton],
-]
+ButtonType = (
+    type[GIFButton]
+    | type[JPGButton]
+    | type[PNGButton]
+    | type[WEBPButton]
+    | type[DeleteButton]
+)

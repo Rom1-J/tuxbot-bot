@@ -13,15 +13,15 @@ import discord
 import sentry_sdk
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
 from tuxbot.core.config import config
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class CommandError(commands.Cog):
     """Listener whenever a command fails"""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.error_webhook: str = config.WEBHOOKS["error"]
@@ -31,7 +31,9 @@ class CommandError(commands.Cog):
 
     @commands.Cog.listener(name="on_command_error")
     async def _on_command_error(
-        self, ctx: commands.Context[TuxbotABC], error: commands.CommandError
+        self: typing.Self,
+        ctx: commands.Context[TuxbotABC],
+        error: commands.CommandError,
     ) -> None:
         if not isinstance(
             error,
@@ -58,7 +60,7 @@ class CommandError(commands.Cog):
             "command_error", value=1, tags=[f"command:{command}"]
         )
 
-        self.bot.logger.error(
+        self.bot.logger.exception(
             "[CommandError] '%s' raises unknown error.", ctx.command.name
         )
 

@@ -1,29 +1,29 @@
 """
 tuxbot.cogs.Logs.listeners.GuildJoin.listener
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Listener whenever a guild is joined
 """
+import typing
+
 import discord
 from discord.ext import commands
 
-from tuxbot.core.models.Guild import GuildModel
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.models.guild import GuildModel
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class GuildJoin(commands.Cog):
-    """Listener whenever a guild is joined"""
+    """Listener whenever a guild is joined."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.Cog.listener(name="on_guild_join")
-    async def _on_guild_join(
-        self, guild: discord.Guild
-    ) -> None:  # pylint: disable=unused-argument
+    async def _on_guild_join(self: typing.Self, guild: discord.Guild) -> None:
         self.bot.statsd.gauge(
             "guilds",
             value=len(self.bot.guilds),

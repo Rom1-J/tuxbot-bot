@@ -12,11 +12,14 @@
       <excludeFolder url="file://$MODULE_DIR$/venv3.11" />
       <excludeFolder url="file://$MODULE_DIR$/Tuxbot_bot.egg-info" />
     </content>
-    <orderEntry type="jdk" jdkName="Poetry (tuxbot_bot)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="NUMPY" />
     <option name="myDocStringFormat" value="NumPy" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="a4138456-baea-4099-8dc6-aa1377fa40d5" />
   </component>
 </module>

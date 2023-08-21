@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Network.commands.Iplocalise.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows information about given ip/domain
 """
@@ -8,22 +8,23 @@ Shows information about given ip/domain
 import asyncio
 import json
 import socket
+import typing
 
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
-from .converters.InetConverter import InetConverter
-from .converters.IPConverter import IPConverter
+from .converters.inet_converter import InetConverter
+from .converters.ip_converter import IPConverter
 from .exceptions import VersionNotFound
-from .ui.ViewController import ViewController
+from .ui.view_controller import ViewController
 
 
 class IplocaliseCommand(commands.Cog):
-    """Shows information about given ip/domain"""
+    """Shows information about given ip/domain."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -31,8 +32,7 @@ class IplocaliseCommand(commands.Cog):
 
     @staticmethod
     async def __get_ip(ip: str, inet: int | None) -> str:
-        """Get ip from domain"""
-
+        """Get ip from domain."""
         throwable = VersionNotFound(
             "Unable to collect information on this in the given version"
         )
@@ -47,10 +47,9 @@ class IplocaliseCommand(commands.Cog):
                 elif inet == 6:
                     kwargs["family"] = socket.AF_INET6
 
-                addr = socket.getaddrinfo(_ip, None, **kwargs)[key][4][0]
-                return addr
-            except (socket.gaierror, UnicodeError):
-                raise throwable
+                return socket.getaddrinfo(_ip, None, **kwargs)[key][4][0]
+            except (socket.gaierror, UnicodeError) as e:
+                raise throwable from e
 
         try:
             return await asyncio.wait_for(
@@ -59,15 +58,15 @@ class IplocaliseCommand(commands.Cog):
                 ),
                 timeout=2,
             )
-        except asyncio.exceptions.TimeoutError:
-            raise throwable
+        except asyncio.exceptions.TimeoutError as e:
+            raise throwable from e
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="iplocalise", aliases=["localiseip", "ipl"])
     async def _iplocalise(
-        self,
+        self: typing.Self,
         ctx: commands.Context[TuxbotABC],
         domain: IPConverter,
         argument: str | None = None,

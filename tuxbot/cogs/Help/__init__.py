@@ -1,19 +1,24 @@
 """
 tuxbot.cogs.Help
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~.
 
 Tuxbot help command.
 """
+import typing
 
-from collections import namedtuple
-
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.core.tuxbot import Tuxbot
 
 from .commands.Help.command import HelpCommand
 
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=2, minor=1, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -27,13 +32,13 @@ __version__ = "v{}.{}.{}-{}".format(
 class Help(ModuleABC):
     """Tuxbot help command."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.old_help_command = bot.help_command
         bot.help_command = HelpCommand()
         bot.help_command.cog = self
 
     # =========================================================================
 
-    async def cog_unload(self) -> None:
-        """Rebind native dpy help command before unload"""
+    async def cog_unload(self: typing.Self) -> None:
+        """Rebind native dpy help command before unload."""
         self.bot.help_command = self.old_help_command

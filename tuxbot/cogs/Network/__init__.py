@@ -1,14 +1,14 @@
 """
 tuxbot.cogs.Network
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~.
 
 Set of useful commands for networking.
 """
-from collections import namedtuple
+import typing
 
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 from .commands.Dig.command import DigCommand
 from .commands.exceptions import NetworkException
@@ -29,7 +29,14 @@ STANDARD_COMMANDS = (
     GetheadersCommand,
 )
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=3, minor=4, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -41,7 +48,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Network", command(bot=bot))
 
@@ -49,7 +56,7 @@ class Commands:
 class Network(ModuleABC, Commands):
     """Set of useful commands for networking."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -58,9 +65,8 @@ class Network(ModuleABC, Commands):
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context[TuxbotABC], error: Exception
+        self: typing.Self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
-        """Send errors raised by commands"""
-
+        """Send errors raised by commands."""
         if isinstance(error, NetworkException):
             await ctx.send(str(error))

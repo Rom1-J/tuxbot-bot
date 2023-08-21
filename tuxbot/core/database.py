@@ -1,39 +1,34 @@
 """
-Tuxbot core module: database
+Tuxbot core module: database.
 
 Manage database instance
 """
-import glob
 import importlib
-import os
 import typing
+from pathlib import Path
 
 from tortoise import Tortoise
 from tortoise.models import ModelMeta
 
 from tuxbot.core.config import config
 from tuxbot.core.logger import logger
-from tuxbot.core.models.Guild import GuildModel
-from tuxbot.core.models.Tuxbot import TuxbotModel
 
 
-# Note: adding models manually is not useful for the bot,
-# it is only useful for the type hinting
-M = typing.Union[TuxbotModel, GuildModel]
+M = typing.TypeVar("M")
 
 
 class Models:
-    """Tuxbot models"""
+    """Tuxbot models."""
 
-    def __init__(self) -> None:
+    def __init__(self: typing.Self) -> None:
         self.__models: dict[str, tuple[str, M]] = {}
 
-    def __setitem__(self, key: str, value: tuple[str, M]) -> None:
+    def __setitem__(self: typing.Self, key: str, value: tuple[str, M]) -> None:
         if self.check(value):
             logger.info("[Models] Adding model '%s'.", key)
             self.__models[key] = value
 
-    def __getitem__(self, key: str) -> M:
+    def __getitem__(self: typing.Self, key: str) -> M:
         if model := self.__models.get(key):
             return model[1]
 
@@ -43,7 +38,7 @@ class Models:
 
     @staticmethod
     def check(value: typing.Any) -> bool:
-        """Check for given value"""
+        """Check for given value."""
         if (
             isinstance(value, tuple)
             and len(value) == 2
@@ -53,34 +48,32 @@ class Models:
         ):
             return True
 
-        logger.error(
+        logger.exception(
             "[Models] Improper model value given (passed: %s).", value[1]
         )
         return False
 
     # =========================================================================
 
-    def to_list(self) -> list[M]:
-        """Return list of loaded models"""
-
+    def to_list(self: typing.Self) -> list[M]:
+        """Return list of loaded models."""
         return [m[1] for m in self.__models.values()]
 
-    def to_str_list(self) -> list[str]:
-        """Return paths of loaded models"""
-
+    def to_str_list(self: typing.Self) -> list[str]:
+        """Return paths of loaded models."""
         return [m[0] for m in self.__models.values()]
 
 
 class Database:
-    """Tuxbot database"""
+    """Tuxbot database."""
 
     models = Models()
 
     # =========================================================================
     # =========================================================================
 
-    async def init(self) -> None:
-        """Init database"""
+    async def init(self: typing.Self) -> None:
+        """Init database."""
         self.fetch_models()
 
         await Tortoise.init(
@@ -104,28 +97,24 @@ class Database:
 
     @staticmethod
     async def disconnect() -> None:
-        """Disconnect database"""
-
+        """Disconnect database."""
         logger.info("[Database] Closing connections.")
         await Tortoise.close_connections()
 
     # =========================================================================
     # =========================================================================
 
-    def fetch_models(self) -> None:
-        """fetch all models"""
-
-        for model_path in glob.glob("tuxbot/core/models/*.py"):
+    def fetch_models(self: typing.Self) -> None:
+        """Fetch all models."""
+        for model_path in Path("tuxbot/core/models/").glob("*.py"):
             self.register_model(model_path)
 
     # =========================================================================
 
-    def register_model(self, model_path: str) -> None:
-        """register model"""
+    def register_model(self: typing.Self, model_path: Path) -> None:
+        """Register model."""
         model_path = (
-            model_path.replace(str(os.getcwd()), "")[:-3]
-            .lstrip("/")
-            .replace("/", ".")
+            model_path.relative_to(".")[:-3].lstrip("/").replace("/", ".")
         )
         module_name = model_path.split(".")[-1]
 

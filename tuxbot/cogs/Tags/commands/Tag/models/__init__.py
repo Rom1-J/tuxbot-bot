@@ -1,3 +1,1 @@
-"""
-Set of Tags models for tuxbot
-"""
+"""Set of Tags models for tuxbot."""

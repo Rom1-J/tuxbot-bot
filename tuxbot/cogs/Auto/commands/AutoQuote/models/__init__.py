@@ -1,3 +1,1 @@
-"""
-Set of Settings models for AutoQuote
-"""
+"""Set of Settings models for AutoQuote."""

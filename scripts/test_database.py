@@ -27,6 +27,6 @@ def test() -> None:
                 sys.stderr.write(
                     "  This is taking longer than expected. "
                     "The following exception may be indicative of an "
-                    "unrecoverable error: '{}'\n".format(error)
+                    f"unrecoverable error: '{error}'\n"
                 )
         time.sleep(1)

@@ -8,6 +8,7 @@ import datetime
 import os
 import textwrap
 import traceback
+import typing
 
 import discord
 import sentry_sdk
@@ -15,15 +16,15 @@ from discord import app_commands
 from discord.ext import commands
 
 from tuxbot.core.config import config
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class AppCommandError(commands.Cog):
     """Listener whenever an app command fails"""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
-        self.bot.tree.on_error = self._on_app_command_error  # type: ignore[assignment]
+        self.bot.tree.on_error = self._on_app_command_error
 
         self.error_webhook: str = config.WEBHOOKS["error"]
 
@@ -32,7 +33,7 @@ class AppCommandError(commands.Cog):
 
     @commands.Cog.listener(name="cog_app_command_error")
     async def _on_app_command_error(
-        self,
+        self: typing.Self,
         interaction: discord.Interaction,
         error: app_commands.AppCommandError,
     ) -> None:
@@ -48,7 +49,7 @@ class AppCommandError(commands.Cog):
             tags=[f"command:{command.qualified_name}"],
         )
 
-        self.bot.logger.error(
+        self.bot.logger.exception(
             "[CommandError] '%s' raises unknown error.", command.qualified_name
         )
 

@@ -1,23 +1,20 @@
-"""
-Starter file
-"""
+"""Starter file."""
 import asyncio
 import os
 import traceback
-from distutils.util import strtobool
-
-from ddtrace.profiling.profiler import Profiler
+from pathlib import Path
 
 from tuxbot.core.config import config
 from tuxbot.core.logger import logger
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
 
 env = os.getenv("PYTHON_ENV", "production")
 
 
 async def run_bot(tuxbot: Tuxbot) -> None:
-    """Run the instance
+    """
+    Run the instance.
 
     Parameters
     ----------
@@ -25,11 +22,8 @@ async def run_bot(tuxbot: Tuxbot) -> None:
         Tuxbot instance
     """
     try:
-        if env != "development" and strtobool(os.getenv("DD_ACTIVE", "false")):
-            Profiler().start()  # type: ignore
-
         await tuxbot.launch()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         if env == "development":
             traceback.print_exc()
 
@@ -37,11 +31,11 @@ async def run_bot(tuxbot: Tuxbot) -> None:
 
 
 def start() -> None:
-    """Start function"""
-    with open("tuxbot/misc/logo.txt", encoding="UTF-8") as f:
+    """Start function."""
+    with Path.open(Path("tuxbot/misc/logo.txt")) as f:
         logo = f.read()
 
-    print(logo)
+    logger.info(logo)
     logger.info("[C%s] Process %d online.", config.CLUSTER_ID, os.getpid())
 
     if env == "development":
@@ -60,7 +54,7 @@ def start() -> None:
     except KeyboardInterrupt:
         if tuxbot is not None:
             loop.run_until_complete(tuxbot.shutdown())
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         if env == "development":
             traceback.print_exc()
 

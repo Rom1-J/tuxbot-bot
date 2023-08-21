@@ -1,23 +1,24 @@
 """
 tuxbot.cogs.Auto.commands.AutoQuote.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Toggle auto quotes
 """
+import typing
 
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
-from .models.AutoQuote import AutoQuoteModel
-from .ui.ViewController import ViewController
+from .models.auto_quote import AutoQuoteModel
+from .ui.view_controller import ViewController
 
 
 class AutoQuoteCommand(commands.Cog):
-    """Toggle auto quotes"""
+    """Toggle auto quotes."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     @staticmethod
@@ -37,7 +38,9 @@ class AutoQuoteCommand(commands.Cog):
 
     @commands.group(name="auto_quote")
     @commands.guild_only()
-    async def _auto_quote(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _auto_quote(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         if not ctx.guild:
             return
 

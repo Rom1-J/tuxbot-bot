@@ -1,28 +1,31 @@
 """
 tuxbot.cogs.Admin.commands.Update.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Command to update Tuxbot
 """
+import typing
 
 from discord.ext import commands
 from jishaku.models import copy_context_with
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class UpdateCommand(commands.Cog):
-    """Update tuxbot"""
+    """Update tuxbot."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command("update")
-    async def _update(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _update(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         sh = "jsk sh"
         prefix = ctx.prefix or (
             f"<@{ctx.bot.user.id}>" if ctx.bot.user else ""

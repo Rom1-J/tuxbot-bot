@@ -1,22 +1,23 @@
 """
 tuxbot.cogs.Utils.commands.Source.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Gives tuxbot sources
 """
 import inspect
 import os
+import typing
 
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class SourceCommand(commands.Cog):
-    """Gives tuxbot sources"""
+    """Gives tuxbot sources."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.github_url = "https://github.com/Rom1-J/tuxbot-bot/"
@@ -26,7 +27,10 @@ class SourceCommand(commands.Cog):
 
     @commands.command(name="source", aliases=["sources"])
     async def _source(
-        self, ctx: commands.Context[TuxbotABC], *, name: str | None = None
+        self: typing.Self,
+        ctx: commands.Context[TuxbotABC],
+        *,
+        name: str | None = None,
     ) -> None:
         if not name:
             await ctx.send(self.github_url)

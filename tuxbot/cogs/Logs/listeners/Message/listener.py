@@ -1,26 +1,28 @@
 """
 tuxbot.cogs.Logs.listeners.Message.listener
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Listener whenever message is sent
 """
+import typing
+
 import discord
 from discord.ext import commands
 
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class Message(commands.Cog):
-    """Listener whenever message is sent"""
+    """Listener whenever message is sent."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.Cog.listener(name="on_message")
-    async def _on_message(self, message: discord.Message) -> None:
+    async def _on_message(self: typing.Self, message: discord.Message) -> None:
         if message.guild:
             tags = [f"guild:{message.guild.id}"]
         else:

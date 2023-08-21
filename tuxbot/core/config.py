@@ -1,5 +1,5 @@
 """
-Tuxbot core module: config
+Tuxbot core module: config.
 
 Contains all config workers
 """

@@ -1,16 +1,16 @@
 """
 tuxbot.cogs.Auto
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~.
 
 Set of useful automatic workers.
 """
-from collections import namedtuple
+import typing
 
 import discord
 
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 from .commands.AutoPin.command import AutoPinCommand
 from .commands.AutoQuote.command import AutoQuoteCommand
@@ -28,7 +28,14 @@ STANDARD_COMMANDS = (AutoPinCommand, AutoQuoteCommand)
 
 STANDARD_LISTENERS = (Message, RawReactionAdd)
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=1, minor=2, micro=0, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -40,7 +47,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Auto", command(bot=bot))
 
@@ -51,15 +58,15 @@ class Commands:
 class Auto(ModuleABC, Commands):
     """Set of useful automatic workers."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
 
     # =========================================================================
 
-    async def cog_check(  # type: ignore[override]
-        self, ctx: commands.Context[TuxbotABC]
+    async def cog_check(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
     ) -> bool:
         if ctx.guild and isinstance(ctx.author, discord.Member):
             return bool(ctx.author.guild_permissions.administrator)

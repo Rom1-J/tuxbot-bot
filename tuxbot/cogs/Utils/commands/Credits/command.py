@@ -1,21 +1,22 @@
 """
 tuxbot.cogs.Utils.commands.Credits.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows information about tuxbot creators
 """
+import typing
 
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class CreditsCommand(commands.Cog):
-    """Shows tuxbot's creators"""
+    """Shows tuxbot's creators."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -24,23 +25,25 @@ class CreditsCommand(commands.Cog):
     @commands.command(
         name="credits", aliases=["contributors", "authors", "credit"]
     )
-    async def _credits(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _credits(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         e = discord.Embed(
             title="Contributors",
             color=self.bot.utils.colors.EMBED_BORDER,
         )
 
         e.add_field(
-            name="**Romain#5117** ",
+            name="**aspheric_** ",
             value=(
                 "> • [github](https://github.com/Rom1-J)\n"
-                "> • [gitlab](https://gitlab.gnous.eu/Romain)\n"
+                "> • [gitea](https://git.gnous.eu/Romain)\n"
                 "> • romain@gnous.eu"
             ),
             inline=True,
         )
         e.add_field(
-            name="**Outout#4039** ",
+            name="**outout** ",
             value=(
                 "> • [gitea](https://git.gnous.eu/mael)\n"
                 "> • [@outoutxyz](https://twitter.com/outouxyz)\n"

@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="Black">
+    <option name="sdkUUID" value="fb826c05-6504-4d37-b227-851aa12fdd23" />
+  </component>
+  <component name="ExtraIconsSettingsProject">
+    <option name="ignoredPattern" value="" />
+    <option name="additionalUIScale" value="1.0" />
+    <option name="uiTypeIconsPreference" value="BASED_ON_ACTIVE_UI_TYPE" />
+    <option name="useIDEFilenameIndex" value="false" />
+  </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (tuxbot_bot)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (tuxbot-bot)" project-jdk-type="Python SDK" />
   <component name="PythonCompatibilityInspectionAdvertiser">
     <option name="version" value="3" />
   </component>

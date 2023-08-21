@@ -1,17 +1,15 @@
-"""
-Set of utils functions and classes
-"""
+"""Set of utils functions and classes."""
 
 import typing
 
-from .Colors import Colors
-from .Emotes import Emotes
-from .Generators import gen_key as _gen_key
-from .Generators import shorten as _shorten
+from .colors import Colors
+from .emotes import Emotes
+from .generators import gen_key as _gen_key
+from .generators import shorten as _shorten
 
 
 class Utils:
-    """Set of utils functions and classes"""
+    """Set of utils functions and classes."""
 
     colors: type[Colors] = Colors
     emotes: type[Emotes] = Emotes
@@ -23,7 +21,10 @@ class Utils:
         return await _shorten(text=text, length=length)
 
     @staticmethod
-    def gen_key(*args: typing.Any, **kwargs: typing.Any) -> str:
+    def gen_key(
+        *args: typing.Unpack[object],
+        **kwargs: typing.Unpack[dict[str, typing.Any]],
+    ) -> str:
         return _gen_key(*args, **kwargs)
 
 

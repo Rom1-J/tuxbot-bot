@@ -1,6 +1,6 @@
 """
 tuxbot.core
-~~~~~~~~~~~~
+~~~~~~~~~~~~.
 
 A module who contains all tuxbot core components.
 """

@@ -1,17 +1,12 @@
-from . import FiveXX, FourXX, OneXX, ThreeXX, TwoXX
-from .FiveXX import *  # noqa: F401, F403
-from .FourXX import *  # noqa: F401, F403
-from .HttpCode import HttpCode
-from .OneXX import *  # noqa: F401, F403
-from .ThreeXX import *  # noqa: F401, F403
-from .TwoXX import *  # noqa: F401, F403
+from . import five_xx, four_xx, one_xx, three_xx, two_xx
+from .http_code import HttpCode
 
 
-__all__ = (
+__all__: tuple[str] = (  # noqa: PLE0604
     "HttpCode",
-    *OneXX.__all__,  # noqa: F405
-    *TwoXX.__all__,  # noqa: F405
-    *ThreeXX.__all__,  # noqa: F405
-    *FourXX.__all__,  # noqa: F405
-    *FiveXX.__all__,  # noqa: F405
+    *one_xx.__all__,
+    *two_xx.__all__,
+    *three_xx.__all__,
+    *four_xx.__all__,
+    *five_xx.__all__,
 )

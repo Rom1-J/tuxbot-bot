@@ -1,9 +1,10 @@
 """
-Tuxbot core module: logger
+Tuxbot core module: logger.
 
 Logger to format discord and tuxbot logs
 """
 import logging
+import typing
 
 import sentry_sdk
 from pythonjsonlogger import jsonlogger
@@ -14,9 +15,9 @@ from tuxbot.core.config import config
 
 
 class Logger(logging.Logger):
-    """Tuxbot logger"""
+    """Tuxbot logger."""
 
-    keys = [
+    keys: tuple[str] = (
         "asctime",
         "created",
         "filename",
@@ -34,21 +35,15 @@ class Logger(logging.Logger):
         "relativeCreated",
         "thread",
         "threadName",
-        "dd.env",
-        "dd.service",
-        "dd.version",
-        "dd.trace_id",
-        "dd.span_id",
-    ]
+    )
 
-    def __init__(self) -> None:
+    def __init__(self: typing.Self) -> None:
         log_level = config.LOG_LEVEL
         log_path = "logs"
 
         super().__init__("tuxbot", level=log_level)
 
         discord_logger = logging.getLogger("discord")
-        # discord_logger.setLevel(log_level)
 
         custom_format = " ".join([f"%({i:s})s" for i in self.keys])
         formatter = jsonlogger.JsonFormatter(custom_format)

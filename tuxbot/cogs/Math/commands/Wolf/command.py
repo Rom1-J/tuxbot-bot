@@ -1,28 +1,29 @@
 """
 tuxbot.cogs.Math.commands.Wolf.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows result of WolframAlpha request for given query
 """
 
 import base64
 import io
+import typing
 
 import discord
 import yaml
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
 from tuxbot.core.config import config
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
-from .WolframAlpha import WolframAlpha
+from .wolframalpha import WolframAlpha
 
 
 class WolfCommand(commands.Cog):
-    """Shows WolframAlpha result"""
+    """Shows WolframAlpha result."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         self.WA = WolframAlpha(config.WOLFRAMALPHA_KEY)
@@ -33,12 +34,12 @@ class WolfCommand(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="wolf", aliases=["wolfram"])
     async def _wolf(
-        self, ctx: commands.Context[TuxbotABC], *, query: str
+        self: typing.Self, ctx: commands.Context[TuxbotABC], *, query: str
     ) -> None:
         await self.WA.set_client()
 
         if cache := await self.bot.redis.get(self.bot.utils.gen_key(query)):
-            res = yaml.load(cache, Loader=yaml.Loader)
+            res = yaml.safe_load(cache)
 
             q = res["q"]
             image = io.BytesIO(base64.b64decode(res["image"]))

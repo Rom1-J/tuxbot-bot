@@ -1,3 +1,1 @@
-"""
-Set of global models for tuxbot
-"""
+"""Set of global models for tuxbot."""

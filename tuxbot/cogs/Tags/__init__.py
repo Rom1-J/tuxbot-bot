@@ -1,14 +1,14 @@
 """
 tuxbot.cogs.Tags
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~.
 
 Set of useful commands for tags.
 """
-from collections import namedtuple
+import typing
 
-from tuxbot.abc.ModuleABC import ModuleABC
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.module_abc import ModuleABC
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 from .commands.exceptions import TagsException
 from .commands.Tag.command import TagCommand
@@ -21,7 +21,14 @@ from discord.ext import commands  # isort: skip
 
 STANDARD_COMMANDS = (TagCommand,)
 
-VersionInfo = namedtuple("VersionInfo", "major minor micro release_level")
+
+class VersionInfo(typing.NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    release_level: str
+
+
 version_info = VersionInfo(major=2, minor=1, micro=1, release_level="stable")
 
 __version__ = "v{}.{}.{}-{}".format(
@@ -33,7 +40,7 @@ __version__ = "v{}.{}.{}-{}".format(
 
 
 class Commands:
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         for command in STANDARD_COMMANDS:
             bot.collection.add_module("Tags", command(bot=bot))
 
@@ -41,7 +48,7 @@ class Commands:
 class Tags(ModuleABC, Commands):
     """Set of useful commands for tags."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
         super().__init__(bot=self.bot)
@@ -50,10 +57,9 @@ class Tags(ModuleABC, Commands):
 
     @commands.Cog.listener()
     async def on_command_error(
-        self, ctx: commands.Context[TuxbotABC], error: Exception
+        self: typing.Self, ctx: commands.Context[TuxbotABC], error: Exception
     ) -> None:
-        """Send errors raised by commands"""
-
+        """Send errors raised by commands."""
         if isinstance(error, TagsException):
             await ctx.send(str(error))
 
@@ -61,7 +67,9 @@ class Tags(ModuleABC, Commands):
     # =========================================================================
 
     @commands.command(name="tag")
-    async def _tag_deprecated(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _tag_deprecated(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         await ctx.send(
             "Deprecated command, use /tag instead "
             "(reinvite the bot if application commands are not enabled)",

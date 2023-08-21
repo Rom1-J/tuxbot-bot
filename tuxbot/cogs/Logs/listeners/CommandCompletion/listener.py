@@ -1,21 +1,22 @@
 """
 tuxbot.cogs.Logs.listeners.CommandCompletion.listener
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Listener whenever command is completed
 """
-from datetime import datetime, timezone
+import typing
+from datetime import UTC, datetime
 
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class CommandCompletion(commands.Cog):
-    """Listener whenever command is completed"""
+    """Listener whenever command is completed."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -23,7 +24,7 @@ class CommandCompletion(commands.Cog):
 
     @commands.Cog.listener(name="on_command_completion")
     async def _on_command_completion(
-        self, ctx: commands.Context[TuxbotABC]
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
     ) -> None:
         if not ctx.command:
             return
@@ -33,7 +34,7 @@ class CommandCompletion(commands.Cog):
         if parent_name := ctx.command.full_parent_name:
             command = f"{parent_name} {ctx.command.name}"
 
-        delta = datetime.now(tz=timezone.utc) - ctx.message.created_at
+        delta = datetime.now(tz=UTC) - ctx.message.created_at
 
         self.bot.logger.info(
             "[CommandCompletion] Command '%s' completed in %d ms.",

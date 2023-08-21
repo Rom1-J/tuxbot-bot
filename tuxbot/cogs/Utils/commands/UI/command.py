@@ -1,24 +1,26 @@
 """
 tuxbot.cogs.Utils.commands.UI.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Gives information about a user
 """
+import typing
 
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
-
-from ...converters.MemberOrUserConverter import MemberOrUserConverter
-from ..exceptions import UserNotFound
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Utils.commands.exceptions import UserNotFound
+from tuxbot.cogs.Utils.converters.member_or_user_converter import (
+    MemberOrUserConverter,
+)
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class UICommand(commands.Cog):
-    """Shows user information"""
+    """Shows user information."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -26,7 +28,7 @@ class UICommand(commands.Cog):
 
     @commands.command(name="ui", aliases=["user_info"])
     async def _ui(
-        self,
+        self: typing.Self,
         ctx: commands.Context[TuxbotABC],
         *,
         argument: str | None = None,
@@ -34,13 +36,14 @@ class UICommand(commands.Cog):
         if not argument:
             user = ctx.author
         elif not (_u := await MemberOrUserConverter().convert(ctx, argument)):
-            raise UserNotFound("Unable to find this user")
+            msg = "Unable to find this user"
+            raise UserNotFound(msg)
         else:
             user = _u
 
         e = discord.Embed(color=self.bot.utils.colors.EMBED_BORDER)
 
-        if isinstance(user, (discord.User, discord.Member)):
+        if isinstance(user, discord.User | discord.Member):
             e.set_author(name=user, icon_url=user.display_avatar.url)
             e.set_thumbnail(url=user.display_avatar.url)
             e.set_footer(text=f"ID: {user.id}")

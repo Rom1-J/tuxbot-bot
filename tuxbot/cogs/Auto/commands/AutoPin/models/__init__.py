@@ -1,3 +1,1 @@
-"""
-Set of Settings models for AutoPin
-"""
+"""Set of Settings models for AutoPin."""

@@ -1,24 +1,28 @@
 """
 tuxbot.cogs.Math.commands.factor.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Decompose given number in prime factors
 """
 import asyncio
+import typing
 
 from discord.ext import commands
 from sympy import factorint, pretty
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Math.converters.expr_converter import ExprConverter
+from tuxbot.core.tuxbot import Tuxbot
 
-from ...converters.ExprConverter import ExprConverter
+
+def _factors_result(n: int) -> str:
+    return " + ".join([f"{k}**{v}" for k, v in factorint(n).items()])
 
 
 class FactorCommand(commands.Cog):
-    """Decompose in prime factors"""
+    """Decompose in prime factors."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -28,18 +32,7 @@ class FactorCommand(commands.Cog):
     async def __factors_result(
         ctx: commands.Context[TuxbotABC], n: int
     ) -> str:
-        """Generate prime factor decomposition of n"""
-
-        def _factors_result(_n: int) -> str:
-            return " + ".join(
-                [
-                    f"{k}**{v}"
-                    for k, v in factorint(
-                        _n
-                    ).items()  # type: ignore[no-untyped-call]
-                ]
-            )
-
+        """Generate prime factor decomposition of n."""
         try:
             output = await asyncio.wait_for(
                 asyncio.get_running_loop().run_in_executor(
@@ -55,7 +48,9 @@ class FactorCommand(commands.Cog):
     # =========================================================================
 
     @commands.command(name="factor", aliases=["factors"])
-    async def _factor(self, ctx: commands.Context[TuxbotABC], n: int) -> None:
+    async def _factor(
+        self: typing.Self, ctx: commands.Context[TuxbotABC], n: int
+    ) -> None:
         if text := await self.bot.redis.get(self.bot.utils.gen_key(n)):
             text = text.decode()
         else:

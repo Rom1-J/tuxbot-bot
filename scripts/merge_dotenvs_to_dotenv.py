@@ -9,7 +9,6 @@ ENVS_FILES = (".bot", ".cogs", ".postgres")
 def merge(input_file_path: Path, merged_file_paths: Path) -> None:
     with open(merged_file_paths, "w") as output_file:
         for file_name in ENVS_FILES:
-
             with open(str(input_file_path / file_name)) as merged_file:
                 for line in merged_file.readlines():
                     if line.startswith("#") or not line.strip():

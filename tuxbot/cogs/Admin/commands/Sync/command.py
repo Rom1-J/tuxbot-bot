@@ -1,6 +1,6 @@
 """
 tuxbot.cogs.Admin.commands.Sync.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Command to sync Tuxbot
 """
@@ -9,14 +9,14 @@ import typing
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class SyncCommand(commands.Cog):
-    """Sync tuxbot"""
+    """Sync tuxbot."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -24,7 +24,7 @@ class SyncCommand(commands.Cog):
 
     @commands.command("sync")
     async def _sync(
-        self,
+        self: typing.Self,
         ctx: commands.Context[TuxbotABC],
         guilds: commands.Greedy[discord.Object],
         spec: typing.Literal["~"] | None = None,

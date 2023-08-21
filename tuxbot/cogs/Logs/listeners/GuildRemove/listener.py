@@ -1,19 +1,21 @@
 """
 tuxbot.cogs.Logs.listeners.GuildRemove.listener
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Listener whenever a guild is leaved
 """
+import typing
+
 import discord
 from discord.ext import commands
 
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class GuildRemove(commands.Cog):
-    """Listener whenever a guild is leaved"""
+    """Listener whenever a guild is leaved."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -21,8 +23,8 @@ class GuildRemove(commands.Cog):
 
     @commands.Cog.listener(name="on_guild_remove")
     async def _on_guild_remove(
-        self, guild: discord.Guild
-    ) -> None:  # pylint: disable=unused-argument
+        self: typing.Self, guild: discord.Guild
+    ) -> None:
         self.bot.statsd.gauge(
             "guilds",
             value=len(self.bot.guilds),

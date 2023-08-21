@@ -1,25 +1,28 @@
 """
 tuxbot.cogs.Utils.commands.Avatar.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows avatar of user
 """
+import typing
 
 import discord
 from discord.ext import commands
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.cogs.Utils.commands.exceptions import UserNotFound
+from tuxbot.cogs.Utils.converters.member_or_user_converter import (
+    MemberOrUserConverter,
+)
+from tuxbot.core.tuxbot import Tuxbot
 
-from ...converters.MemberOrUserConverter import MemberOrUserConverter
-from ..exceptions import UserNotFound
-from .ui.ViewController import ViewController
+from .ui.view_controller import ViewController
 
 
 class AvatarCommand(commands.Cog):
-    """Shows user's avatar"""
+    """Shows user's avatar."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
@@ -27,7 +30,7 @@ class AvatarCommand(commands.Cog):
 
     @commands.command(name="avatar")
     async def _avatar(
-        self,
+        self: typing.Self,
         ctx: commands.Context[TuxbotABC],
         *,
         argument: str | None = None,
@@ -35,7 +38,8 @@ class AvatarCommand(commands.Cog):
         if not argument:
             user = ctx.author
         elif not (_u := await MemberOrUserConverter().convert(ctx, argument)):
-            raise UserNotFound("Unable to find this user")
+            msg = "Unable to find this user"
+            raise UserNotFound(msg)
         else:
             user = _u
 

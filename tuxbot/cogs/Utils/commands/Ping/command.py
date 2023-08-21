@@ -1,34 +1,37 @@
 """
 tuxbot.cogs.Utils.commands.Ping.command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
 
 Shows all pings about tuxbot
 """
 import time
+import typing
 
 import discord
 from discord.ext import commands
 from tortoise import Tortoise
 
-from tuxbot.abc.TuxbotABC import TuxbotABC
-from tuxbot.core.Tuxbot import Tuxbot
+from tuxbot.abc.tuxbot_abc import TuxbotABC
+from tuxbot.core.tuxbot import Tuxbot
 
 
 class PingCommand(commands.Cog):
-    """Shows tuxbot's ping"""
+    """Shows tuxbot's ping."""
 
-    def __init__(self, bot: Tuxbot) -> None:
+    def __init__(self: typing.Self, bot: Tuxbot) -> None:
         self.bot = bot
 
     # =========================================================================
     # =========================================================================
 
     @commands.command(name="ping")
-    async def _ping(self, ctx: commands.Context[TuxbotABC]) -> None:
+    async def _ping(
+        self: typing.Self, ctx: commands.Context[TuxbotABC]
+    ) -> None:
         start = time.perf_counter()
         await ctx.typing()
         end = time.perf_counter()
-        typing = round((end - start) * 1000, 2)
+        _typing = round((end - start) * 1000, 2)
 
         start = time.perf_counter()
         await self.bot.redis.ping()
@@ -46,7 +49,7 @@ class PingCommand(commands.Cog):
         e = discord.Embed(title="Ping", color=discord.Color.teal())
 
         e.add_field(name="Websocket", value=f"{latency}ms")
-        e.add_field(name="Typing", value=f"{typing}ms")
+        e.add_field(name="Typing", value=f"{_typing}ms")
         e.add_field(name="Redis", value=f"{redis}ms")
         e.add_field(name="Postgres", value=f"{postgres}ms")
 
