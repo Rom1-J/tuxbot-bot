@@ -9,7 +9,7 @@ from .buttons import (
 
 
 class ViewPanel:
-    buttons: tuple[tuple[ButtonType]] = (
+    buttons: tuple[tuple[ButtonType, ...], ...] = (
         (GIFButton, JPGButton, PNGButton, WEBPButton),
         (DeleteButton,),
     )

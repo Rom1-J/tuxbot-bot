@@ -34,20 +34,19 @@ class WolframAlpha:
 
             self.client = await self.loop.run_in_executor(None, _get_client)
 
+    def _query(self: typing.Self, query: str) -> wolframalpha.Result:
+        if not self.client:
+            msg = "WA Client not set"
+            raise ValueError(msg)
+
+        return self.client.query(query)
+
     async def query(
         self: typing.Self, query: str
     ) -> tuple[str, wolframalpha.Result | None]:
         """Get query result from WolframAlpha."""
-
-        def _query() -> wolframalpha.Result | None:
-            if not self.client:
-                msg = "WA Client not set"
-                raise ValueError(msg)
-
-            return self.client.query(query)
-
         result: wolframalpha.Result = await self.loop.run_in_executor(
-            None, _query
+            None, self._query, (query,)
         )
 
         if result.success:
@@ -116,10 +115,11 @@ class WolframAlpha:
                 h += FONT.getsize(k)[1] + 10
 
                 for image in v:
-                    im = Image.open(image)
-                    background.paste(im, (w, h))
+                    if image:
+                        im = Image.open(image)
+                        background.paste(im, (w, h))
 
-                    h += im.size[1]
+                        h += im.size[1]
 
                 h += 15
 
@@ -163,7 +163,7 @@ class WolframAlpha:
 
             for image in v:
                 if image:
-                    img: Image = Image.open(image)
+                    img = Image.open(image)
                     _, h = img.size
 
                     height += h

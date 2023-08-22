@@ -43,10 +43,9 @@ class AppCommandError(commands.Cog):
         if not (command := interaction.command):
             return
 
-        self.bot.statsd.increment(
-            "command_error",
-            value=1,
-            tags=[f"command:{command.qualified_name}"],
+        self.bot.statsd.incr(
+            f"command_error.{command.qualified_name}",
+            1,
         )
 
         self.bot.logger.exception(

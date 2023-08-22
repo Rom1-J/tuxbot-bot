@@ -24,8 +24,8 @@ class Message(commands.Cog):
     @commands.Cog.listener(name="on_message")
     async def _on_message(self: typing.Self, message: discord.Message) -> None:
         if message.guild:
-            tags = [f"guild:{message.guild.id}"]
+            tags = f"guild:{message.guild.id}"
         else:
-            tags = [f"private:{message.channel.id}"]
+            tags = f"private:{message.channel.id}"
 
-        self.bot.statsd.increment("messages", value=1, tags=tags)
+        self.bot.statsd.incr(f"messages.{tags}", 1)

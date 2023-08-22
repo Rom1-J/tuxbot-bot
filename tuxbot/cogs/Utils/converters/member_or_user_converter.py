@@ -12,15 +12,15 @@ from discord.ext import commands
 from tuxbot.abc.tuxbot_abc import TuxbotABC
 
 
-ConvertType = discord.Member | discord.User | None
+_MemberOrUserConverter_T = discord.Member | discord.User | None
 
 
-class MemberOrUserConverter(commands.Converter[ConvertType]):
+class MemberOrUserConverter(commands.Converter[_MemberOrUserConverter_T]):
     """Gives either discord member or user format."""
 
     async def convert(
         self: typing.Self, ctx: commands.Context[TuxbotABC], argument: str
-    ) -> ConvertType:
+    ) -> _MemberOrUserConverter_T:
         if argument:
             try:
                 return await commands.MemberConverter().convert(ctx, argument)

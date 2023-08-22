@@ -3,7 +3,7 @@ Tuxbot core module: redis.
 
 Manage redis instances
 """
-from aioredis.client import Redis
+from redis.client import Redis
 
 from tuxbot.core.config import config
 

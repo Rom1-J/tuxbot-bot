@@ -24,6 +24,4 @@ class SocketRawReceive(commands.Cog):
     @commands.Cog.listener(name="on_socket_event_type")
     async def _on_socket_event_type(self: typing.Self, msg: str) -> None:
         if msg not in config.CLIENT["disabled_events"]:
-            self.bot.statsd.increment(
-                "socket_event_type", value=1, tags=[f"event_type:{msg}"]
-            )
+            self.bot.statsd.incr(f"event.{msg}", 1)

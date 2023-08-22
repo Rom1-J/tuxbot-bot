@@ -8,8 +8,7 @@ import aiohttp
 
 
 def gen_key(
-    *args: typing.Unpack[object],
-    **kwargs: typing.Unpack[dict[str, typing.Any]],
+    *args: typing.Unpack[tuple[typing.Any, ...]],
 ) -> str:
     frame = inspect.stack()[1]
     file = "/tuxbot/" + frame.filename.split("/tuxbot/")[-1]
@@ -19,9 +18,6 @@ def gen_key(
 
     if args:
         params = ",".join([repr(arg) for arg in args])
-
-    if kwargs:
-        params += ",".join([f"{k}={v!r}" for k, v in kwargs.items()])
 
     return f"{base_key}({params})"
 

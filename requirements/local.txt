@@ -4,6 +4,7 @@ black
 mypy
 pre-commit
 ruff
+types-Pillow
 types-PyYAML
 types-aiofiles
 types-beautifulsoup4

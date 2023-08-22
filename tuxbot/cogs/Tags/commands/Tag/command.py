@@ -20,7 +20,7 @@ from .ui.paginator import TagPages
 
 
 @app_commands.guild_only()
-class TagCommand(commands.GroupCog, name="tag"):
+class TagCommand(commands.GroupCog, name="tag"):  # type: ignore[call-arg]
     """Manage tags."""
 
     def __init__(self: typing.Self, bot: Tuxbot) -> None:

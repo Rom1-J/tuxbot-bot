@@ -12,6 +12,13 @@ from pathlib import Path
 
 import aiohttp
 import discord
+from discord import (
+    CategoryChannel,
+    ForumChannel,
+    StageChannel,
+    TextChannel,
+    VoiceChannel,
+)
 from discord.ext import commands
 from discord.http import Route
 
@@ -25,22 +32,18 @@ from tuxbot.core.models.tuxbot import TuxbotModel
 from tuxbot.core.utils.context_plus import ContextPlus
 
 
-VocalGuildChannel = discord.VoiceChannel | discord.StageChannel
-GuildChannel = (
-    VocalGuildChannel
-    | discord.ForumChannel
-    | discord.TextChannel
-    | discord.CategoryChannel
-)
-
-DiscordChannel = GuildChannel | discord.abc.PrivateChannel | discord.Thread
+if typing.TYPE_CHECKING:
+    VocalGuildChannel = VoiceChannel | StageChannel
+    GuildChannel = (
+        VocalGuildChannel | ForumChannel | TextChannel | CategoryChannel
+    )
 
 
 class Tuxbot(TuxbotABC):
     """Tuxbot client class."""
 
     def __init__(self: typing.Self) -> None:
-        self.client_options = self.configure()
+        self.client_options.update(self.configure())
         super().__init__(**self.client_options)
 
         self._internal_request = self.http.request
@@ -187,7 +190,7 @@ class Tuxbot(TuxbotABC):
 
     async def fetch_channel_or_none(
         self: typing.Self, channel_id: int
-    ) -> DiscordChannel | None:
+    ) -> GuildChannel | discord.abc.PrivateChannel | discord.Thread | None:
         """Fetch channel and return None instead of raising NotFound."""
         try:
             return await self.fetch_channel(channel_id)
@@ -225,13 +228,9 @@ class Tuxbot(TuxbotABC):
         **kwargs: typing.Any,
     ) -> typing.Any:
         """Proxy function for internal request manager of dpy."""
-        self.statsd.increment(
-            "request_event_type",
-            value=1,
-            tags=[
-                f"request_method:{route.method}",
-                f"request_endpoint:{route.path}",
-            ],
+        self.statsd.incr(
+            f"{route.method}.{route.path}",
+            1,
         )
 
         return await self._internal_request(
@@ -279,7 +278,7 @@ class Tuxbot(TuxbotABC):
             if not prefixes or not isinstance(prefixes, list):
                 prefixes = commands.when_mentioned(bot, message)
 
-            return prefixes
+            return prefixes or ["--no-prefix--"]  # prevent any no prefixes
 
         client_config: dict[str, typing.Any] = {
             "disable_events": {"TYPING_START": True},

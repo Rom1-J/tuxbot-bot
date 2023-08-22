@@ -19,26 +19,29 @@ class QuoteMessage(typing.NamedTuple):
     author: str
 
 
-ConvertType = QuoteMessage | discord.Message
+_QuoteConverter_T = QuoteMessage | discord.Message
 
 
 async def _convert(
     ctx: commands.Context[TuxbotABC], argument: str
-) -> ConvertType:
+) -> _QuoteConverter_T:
+    if isinstance((user_member := ctx.author), discord.User):
+        raise commands.BadArgument
+
     if (
         message := await commands.MessageConverter().convert(ctx, argument)
-    ) and message.channel.permissions_for(ctx.author).read_message_history:
+    ) and message.channel.permissions_for(user_member).read_message_history:
         return message
 
     raise commands.BadArgument
 
 
-class QuoteConverter(commands.Converter[ConvertType]):
+class QuoteConverter(commands.Converter[_QuoteConverter_T]):
     """Gives either discord message link format, or text."""
 
     async def convert(
         self: typing.Self, ctx: commands.Context[TuxbotABC], argument: str
-    ) -> ConvertType:
+    ) -> _QuoteConverter_T:
         try:
             return await _convert(ctx, argument)
         except commands.BadArgument:

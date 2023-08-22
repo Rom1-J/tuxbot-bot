@@ -20,7 +20,7 @@ from tuxbot.abc.tuxbot_abc import TuxbotABC
 abc_dict: dict[str, typing.Any] = {}
 functions_dict: dict[str, typing.Any] = {}
 core_dict: dict[str, typing.Any] = {}
-ConvertType = tuple[str, typing.Any]
+_ExprConverter_T = tuple[str, typing.Any]
 
 exec("from sympy.abc import *", abc_dict)  # noqa: S102
 exec("from sympy.functions import *", functions_dict)  # noqa: S102
@@ -36,10 +36,8 @@ def _parse_expr(argument: str) -> typing.Any | None:
         return parse_expr(
             argument,
             transformations=(
-                (
-                    *standard_transformations,
-                    implicit_multiplication_application,
-                )
+                *standard_transformations,
+                implicit_multiplication_application,
             ),
             evaluate=False,
             global_dict=global_dict,
@@ -48,24 +46,24 @@ def _parse_expr(argument: str) -> typing.Any | None:
         return None
 
 
-class ExprConverter(commands.Converter[ConvertType]):
+class ExprConverter(commands.Converter[_ExprConverter_T]):
     """Ensure passed data proper math expression."""
 
     async def convert(
         self: typing.Self,
         ctx: commands.Context[TuxbotABC],  # noqa: ARG002
         argument: str,
-    ) -> ConvertType:
+    ) -> _ExprConverter_T:
         argument = argument.rstrip("`").lstrip("`")
 
         if "_" in argument:
-            return argument, None
+            return _ExprConverter_T((argument, None))
 
         parsed_arg = await asyncio.get_running_loop().run_in_executor(
             None, _parse_expr, (argument,)
         )
 
         if isinstance(parsed_arg, bool):
-            return argument, None
+            return _ExprConverter_T((argument, None))
 
-        return argument, parsed_arg
+        return _ExprConverter_T((argument, parsed_arg))

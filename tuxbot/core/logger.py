@@ -17,7 +17,7 @@ from tuxbot.core.config import config
 class Logger(logging.Logger):
     """Tuxbot logger."""
 
-    keys: tuple[str] = (
+    keys: tuple[str, ...] = (
         "asctime",
         "created",
         "filename",

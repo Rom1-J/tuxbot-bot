@@ -12,7 +12,7 @@ from .buttons import (
 
 
 class ViewPanel:
-    buttons: tuple[tuple[ButtonType]] = (
+    buttons: tuple[tuple[ButtonType, ...], ...] = (
         (GlobalButton, GeoButton, RawButton, IPInfoButton, BGPButton),
         (WhoisButton, ASNButton, DeleteButton),
     )

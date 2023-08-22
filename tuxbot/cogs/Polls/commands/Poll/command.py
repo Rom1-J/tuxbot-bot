@@ -20,7 +20,7 @@ from .models.polls import PollsModel
 
 
 @app_commands.guild_only()
-class PollCommand(commands.GroupCog, name="poll"):
+class PollCommand(commands.GroupCog, name="poll"):  # type: ignore[call-arg]
     """Manage polls."""
 
     def __init__(self: typing.Self, bot: Tuxbot) -> None:
@@ -64,8 +64,14 @@ class PollCommand(commands.GroupCog, name="poll"):
     async def update_poll(
         bot: Tuxbot, poll: PollsModel, message: discord.Message | None = None
     ) -> discord.Message | None:
-        if not message:
-            channel = await bot.fetch_channel(poll.channel_id)
+        if not message and not isinstance(
+            (channel := await bot.fetch_channel(poll.channel_id)),
+            (
+                discord.ForumChannel
+                | discord.abc.PrivateChannel
+                | discord.CategoryChannel
+            ),
+        ):
             message = await channel.fetch_message(poll.message_id)
 
         if not message:
@@ -138,7 +144,10 @@ class PollCommand(commands.GroupCog, name="poll"):
         choice9: str | None = None,
         choice10: str | None = None,
     ) -> None:
-        if not interaction.channel:
+        if not isinstance(
+            interaction.channel,
+            discord.TextChannel | discord.DMChannel | discord.GroupChannel,
+        ):
             return
 
         choices = dict(

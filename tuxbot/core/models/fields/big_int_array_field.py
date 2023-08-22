@@ -10,6 +10,10 @@ from tortoise.fields import Field
 from tortoise.models import Model
 
 
+class _KwargsT(typing.TypedDict):
+    _: typing.Any
+
+
 class BigIntArrayField(Field[list[int]]):
     """
     Big Int Array field specifically for PostgreSQL.
@@ -19,9 +23,7 @@ class BigIntArrayField(Field[list[int]]):
 
     SQL_TYPE = "bigint[]"
 
-    def __init__(
-        self: typing.Self, **kwargs: typing.Unpack[dict[str, typing.Any]]
-    ) -> None:
+    def __init__(self: typing.Self, **kwargs: typing.Unpack[_KwargsT]) -> None:
         super().__init__(**kwargs)
 
     def to_db_value(

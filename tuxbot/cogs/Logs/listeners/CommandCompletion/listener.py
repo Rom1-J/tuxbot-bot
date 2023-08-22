@@ -42,6 +42,4 @@ class CommandCompletion(commands.Cog):
             delta.total_seconds() * 1000,
         )
 
-        self.bot.statsd.increment(
-            "command_success", value=1, tags=[f"command:{command}"]
-        )
+        self.bot.statsd.incr(f"command_success.{command}", 1)

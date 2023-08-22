@@ -13,19 +13,22 @@ from tuxbot.cogs.Dev.commands.HTTP.exceptions import UnknownHttpCode
 from tuxbot.cogs.Dev.commands.HTTP.http import HttpCode, http_if_exists
 
 
-ConvertType = HttpCode
+_HttpCodeConverter_T = HttpCode
 
 
-class HttpCodeConverter(commands.Converter[ConvertType]):
+class HttpCodeConverter(commands.Converter[_HttpCodeConverter_T]):
     """Ensure passed data is HTTP code."""
 
     async def convert(
         self: typing.Self,
         ctx: commands.Context[TuxbotABC],  # noqa: ARG002
         argument: str,
-    ) -> ConvertType:
-        if argument.isdigit() and (http := http_if_exists(int(argument))):
-            return http()
+    ) -> _HttpCodeConverter_T:
+        if argument.isdigit():
+            http = http_if_exists(int(argument))
+
+            if http is not None:
+                return http
 
         msg = "Unknown HTTP code"
         raise UnknownHttpCode(msg)

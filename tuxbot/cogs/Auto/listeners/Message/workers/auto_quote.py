@@ -42,7 +42,7 @@ class AutoQuote:
 
         if self.bot.cached_config[message.guild.id]["AutoQuote"][
             "activated"
-        ] and not (ctx := await self.bot.get_context(message)):
+        ] or not (ctx := await self.bot.get_context(message)):
             return
 
         if ctx.command is not None:

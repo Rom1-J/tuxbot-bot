@@ -78,5 +78,22 @@ line-length = 79
 target-version = ['py310']
 include = '\.pyi?$'
 
-[tool.mypy]
-python_version = "3.12"
+[tool.pyright]
+include = ["tuxbot"]
+exclude = ["**/node_modules",
+    "**/__pycache__",
+    "scripts"
+]
+ignore = [
+    "tuxbot/core/database.py",
+    "tuxbot/cogs/Utils/commands/Quote/quote.py",
+    "tuxbot/cogs/Math/commands/Wolf/wolframalpha.py",
+]
+#typeCheckingMode = "strict"
+venvPath = "./"
+venv = "venv"
+reportMissingImports = false
+reportMissingTypeStubs = false
+useLibraryCodeForTypes = true
+pythonVersion = "3.12"
+pythonPlatform = "Linux"

@@ -11,17 +11,17 @@ from discord.ext import commands
 from tuxbot.abc.tuxbot_abc import TuxbotABC
 
 
-ConvertType = int | None
+_InetConverter_T = int | None
 
 
-class InetConverter(commands.Converter[ConvertType]):
+class InetConverter(commands.Converter[_InetConverter_T]):
     """Clean and return inet."""
 
     async def convert(
         self: typing.Self,
         ctx: commands.Context[TuxbotABC],  # noqa: ARG002
         argument: str | None,
-    ) -> ConvertType:
+    ) -> _InetConverter_T:
         res = None
 
         if not argument:

@@ -8,6 +8,7 @@ import datetime
 import os
 import textwrap
 import traceback
+import typing
 
 import discord
 import sentry_sdk
@@ -56,9 +57,7 @@ class CommandError(commands.Cog):
         if parent_name := ctx.command.full_parent_name:
             command = f"{parent_name} {ctx.command.name}"
 
-        self.bot.statsd.increment(
-            "command_error", value=1, tags=[f"command:{command}"]
-        )
+        self.bot.statsd.incr(f"command_error.{command}", 1)
 
         self.bot.logger.exception(
             "[CommandError] '%s' raises unknown error.", ctx.command.name

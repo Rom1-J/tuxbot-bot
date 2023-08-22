@@ -33,8 +33,7 @@ class AppCommandCompletion(commands.Cog):
             command.qualified_name,
         )
 
-        self.bot.statsd.increment(
-            "command_success",
-            value=1,
-            tags=[f"command:{command.qualified_name}"],
+        self.bot.statsd.incr(
+            f"command_success.{command.qualified_name}",
+            1,
         )

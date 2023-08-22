@@ -49,7 +49,7 @@ class ModuleCollection:
         for module_path in modules:
             module_name = module_path.split(".")[-1].title()
 
-            module: type[commands.Cog | "ModuleABC"] = getattr(
+            module: type[commands.Cog | ModuleABC] = getattr(
                 importlib.import_module(module_path),
                 module_name,
             )

@@ -59,7 +59,7 @@ class GraphCommand(commands.Cog):
         graph_bytes = await self.__get_graph_bytes(parsed_expr)
         file = discord.File(graph_bytes, "output.png")
 
-        text = pretty(parsed_expr, use_unicode=True)
+        text: str = pretty(parsed_expr, use_unicode=True)
 
         e = discord.Embed(
             title=shorten(discord.utils.escape_markdown(str(expr)), 255)

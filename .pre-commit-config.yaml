@@ -6,31 +6,36 @@ repos:
     hooks:
       - id: black
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.323
     hooks:
-      - id: mypy
-        args: [
-#          "--strict",
-          "--namespace-packages",
-          "--ignore-missing-imports",
-          "--show-error-codes"
-        ]
-        additional_dependencies:
-          - types-PyYAML
-          - types-aiofiles
-          - types-beautifulsoup4
-          - types-boto
-          - types-protobuf
-          - types-pytz
-          - types-requests
-          - types-setuptools
-          - types-six
-          - types-tabulate
-#          - git+https://github.com/Rapptz/discord.py
-#          - discord-ext-menus
-#          - tortoise-orm
-          - sympy
+    - id: pyright
+
+#  - repo: https://github.com/pre-commit/mirrors-mypy
+#    rev: v1.5.1
+#    hooks:
+#      - id: mypy
+#        args: [
+##          "--strict",
+#          "--namespace-packages",
+#          "--ignore-missing-imports",
+#          "--show-error-codes"
+#        ]
+#        additional_dependencies:
+#          - types-PyYAML
+#          - types-aiofiles
+#          - types-beautifulsoup4
+#          - types-boto
+#          - types-protobuf
+#          - types-pytz
+#          - types-requests
+#          - types-setuptools
+#          - types-six
+#          - types-tabulate
+##          - git+https://github.com/Rapptz/discord.py
+##          - discord-ext-menus
+#          - tortoise-orm[asyncpg]
+#          - sympy
 
 
   - repo: https://github.com/astral-sh/ruff-pre-commit

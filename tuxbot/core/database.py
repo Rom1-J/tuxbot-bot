@@ -8,27 +8,29 @@ import typing
 from pathlib import Path
 
 from tortoise import Tortoise
-from tortoise.models import ModelMeta
+from tortoise.models import Model, ModelMeta
 
 from tuxbot.core.config import config
 from tuxbot.core.logger import logger
 
 
-M = typing.TypeVar("M")
+_M_T = typing.TypeVar("_M_T", bound=Model)
 
 
 class Models:
     """Tuxbot models."""
 
     def __init__(self: typing.Self) -> None:
-        self.__models: dict[str, tuple[str, M]] = {}
+        self.__models: dict[str, tuple[str, _M_T]] = {}
 
-    def __setitem__(self: typing.Self, key: str, value: tuple[str, M]) -> None:
+    def __setitem__(
+        self: typing.Self, key: str, value: tuple[str, _M_T]
+    ) -> None:
         if self.check(value):
             logger.info("[Models] Adding model '%s'.", key)
             self.__models[key] = value
 
-    def __getitem__(self: typing.Self, key: str) -> M:
+    def __getitem__(self: typing.Self, key: str) -> _M_T:
         if model := self.__models.get(key):
             return model[1]
 
@@ -55,7 +57,7 @@ class Models:
 
     # =========================================================================
 
-    def to_list(self: typing.Self) -> list[M]:
+    def to_list(self: typing.Self) -> list[_M_T]:
         """Return list of loaded models."""
         return [m[1] for m in self.__models.values()]
 

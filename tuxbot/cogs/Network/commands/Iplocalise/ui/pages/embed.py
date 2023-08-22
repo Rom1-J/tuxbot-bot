@@ -1,4 +1,5 @@
 """Base embed page."""
+import abc
 import typing
 
 import discord
@@ -10,7 +11,7 @@ if typing.TYPE_CHECKING:
     )
 
 
-class Embed:
+class Embed(abc.ABC):
     """Base embed page."""
 
     def __init__(self: typing.Self, controller: "ViewController") -> None:
@@ -29,5 +30,6 @@ class Embed:
 
     # =========================================================================
 
+    @abc.abstractmethod
     def rebuild(self: typing.Self) -> discord.Embed:
         """(Re)build embed."""

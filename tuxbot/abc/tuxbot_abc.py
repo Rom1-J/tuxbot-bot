@@ -6,9 +6,9 @@ Contains all Tuxbot properties
 import typing
 from datetime import datetime
 
-import aioredis
 import discord
-from datadog.dogstatsd.base import DogStatsd, statsd
+import redis as aioredis
+import statsd
 from discord.ext import commands
 
 from tuxbot.core import utils
@@ -46,12 +46,6 @@ class TuxbotABC(commands.AutoShardedBot):
         """
         return self._cached_config
 
-    @cached_config.setter
-    def cached_config(
-        self: typing.Self, value: dict[str | int, typing.Any]
-    ) -> None:
-        self._cached_config = value
-
     # =========================================================================
 
     @property
@@ -64,12 +58,6 @@ class TuxbotABC(commands.AutoShardedBot):
         dict[str, typing.Any]
         """
         return self._client_options
-
-    @client_options.setter
-    def client_options(
-        self: typing.Self, value: dict[str, typing.Any]
-    ) -> None:
-        self._client_options = value
 
     # =========================================================================
 
@@ -182,15 +170,15 @@ class TuxbotABC(commands.AutoShardedBot):
     # =========================================================================
 
     @property
-    def statsd(self: typing.Self) -> DogStatsd:
+    def statsd(self: typing.Self) -> statsd.StatsClient:
         """
         DogStatsd instance.
 
         Returns
         -------
-        DogStatsd
+        statsd.StatsClient
         """
-        return statsd
+        return statsd.StatsClient()
 
     # =========================================================================
 

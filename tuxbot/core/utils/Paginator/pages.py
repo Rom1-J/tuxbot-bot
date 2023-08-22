@@ -11,6 +11,9 @@ from tuxbot.abc.tuxbot_abc import TuxbotABC
 class Pages(discord.ui.View):
     """Main paginator constructor."""
 
+    current_page: int
+    embed: discord.Embed
+
     def __init__(
         self: typing.Self,
         source: menus.PageSource,
@@ -245,7 +248,9 @@ class Pages(discord.ui.View):
         button: discord.ui.Button["Pages"],  # noqa: ARG002
     ) -> None:
         """Go to the last page."""
-        await self.show_page(interaction, self.source.get_max_pages() - 1)
+        await self.show_page(
+            interaction, (self.source.get_max_pages() or 0) - 1
+        )
 
     # =========================================================================
 

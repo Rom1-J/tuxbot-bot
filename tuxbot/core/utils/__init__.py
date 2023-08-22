@@ -22,10 +22,9 @@ class Utils:
 
     @staticmethod
     def gen_key(
-        *args: typing.Unpack[object],
-        **kwargs: typing.Unpack[dict[str, typing.Any]],
+        *args: typing.Unpack[tuple[typing.Any, ...]],
     ) -> str:
-        return _gen_key(*args, **kwargs)
+        return _gen_key(*args)
 
 
 utils = Utils()

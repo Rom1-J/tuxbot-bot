@@ -17,7 +17,9 @@ class SimplePages(Pages):
 
         # pylint: disable=arguments-renamed
         async def format_page(
-            self: typing.Self, menu: Pages, entries: typing.Iterable[object]
+            self: typing.Self,
+            menu: Pages,
+            entries: typing.Iterable[typing.Any],
         ) -> discord.Embed:
             """Format page before rendering."""
             pages = []
@@ -41,7 +43,7 @@ class SimplePages(Pages):
 
     def __init__(
         self: typing.Self,
-        entries: typing.Iterable[object],
+        entries: typing.Iterable[typing.Any],
         *,
         ctx: commands.Context[TuxbotABC] | discord.Interaction,
         per_page: int = 12,
