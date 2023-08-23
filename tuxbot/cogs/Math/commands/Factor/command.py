@@ -31,7 +31,7 @@ class FactorCommand(commands.Cog):
         """Generate prime factor decomposition of n"""
 
         def _factors_result(_n: int) -> str:
-            return " + ".join(
+            return " × ".join(
                 [
                     f"{k}**{v}"
                     for k, v in factorint(
