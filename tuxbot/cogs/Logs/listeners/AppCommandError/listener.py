@@ -4,7 +4,7 @@ tuxbot.cogs.Logs.listeners.AppCommandError.listener
 
 Listener whenever an app command raises an unknown error
 """
-import datetime
+import datetime as dt
 import os
 import textwrap
 import traceback
@@ -86,7 +86,7 @@ class AppCommandError(commands.Cog):
             )
         )
         e.description = f"```py\n{textwrap.shorten(exc, width=2035)}\n```"
-        e.timestamp = datetime.datetime.utcnow()
+        e.timestamp = dt.datetime.now(dt.UTC)
 
         full_e = e.copy()
 

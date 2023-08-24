@@ -3,15 +3,25 @@ Big Int Array field specifically for PostgreSQL.
 
 This field can store list of bigint values.
 """
-import json
 import typing
+from enum import Enum
 
 from tortoise.fields import Field
 from tortoise.models import Model
+from tortoise.validators import Validator
 
 
 class _KwargsT(typing.TypedDict):
-    _: typing.Any
+    source_field: str | None
+    generated: bool
+    pk: bool
+    null: bool
+    default: typing.Any
+    unique: bool
+    index: bool
+    description: str | None
+    model: Model | None
+    validators: list[Validator | typing.Callable] | None
 
 
 class BigIntArrayField(Field[list[int]]):
@@ -36,10 +46,6 @@ class BigIntArrayField(Field[list[int]]):
 
     def to_python_value(
         self: typing.Self, value: typing.Any
-    ) -> list[int] | None:
+    ) -> list[int | Enum]:
         """Convert db value to python."""
-        if isinstance(value, str):
-            array = json.loads(value.replace("'", '"'))
-            return [int(x) for x in array]
-
-        return None
+        return value

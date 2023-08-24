@@ -148,12 +148,6 @@ Create a systemd services.
     WorkingDirectory=/opt/tuxbot-bot
     ExecStart=<poetry_venv>/bin/ddtrace-run <poetry_venv>/bin/python tuxbot/start.py
 
-    Environment=DD_ACTIVE=true
-    Environment=DD_SERVICE="Tuxbot-bot"
-    Environment=DD_ENV="Tuxbot-prod"
-    Environment=DD_LOGS_INJECTION=true
-    Environment=DD_PROFILING_ENABLED=true
-
     Environment=PYTHON_ENV=production
 
     Environment=CLUSTER_ID=1
@@ -177,4 +171,3 @@ Create a systemd services.
 
     ExecStart=<poetry_venv>/bin/python tuxbot/start.py
 
-    Environment=DD_ACTIVE=false

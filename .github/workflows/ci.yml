@@ -1,4 +1,4 @@
-name: Flake8
+name: Pre-commit
 
 on: [push]
 
@@ -13,17 +13,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
+          allow-prereleases: true
+          cache: 'pip'
 
-      - uses: syphar/restore-virtualenv@v1
-        id: cache-virtualenv
-        with:
-          requirement_files: requirements/local.txt
-
-      - uses: syphar/restore-pip-download-cache@v1
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
-
-      - run: pip install -r requirements.txt
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
-
+      - run: python -m virtualenv venv
+      - run: ./venv/bin/pip install -r requirements/local.txt
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.0

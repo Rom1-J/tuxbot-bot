@@ -31,7 +31,7 @@ class VersionInfo(typing.NamedTuple):
 
 
 version_info = VersionInfo(
-    major=4, minor=3, micro=0, release_level="beta", build=build, info=info
+    major=5, minor=0, micro=0, release_level="beta", build=build, info=info
 )
 
 __version__ = "v{}.{}.{}-{}+{}".format(

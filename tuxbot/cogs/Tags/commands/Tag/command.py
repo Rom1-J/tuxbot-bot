@@ -94,7 +94,7 @@ class TagCommand(commands.GroupCog, name="tag"):  # type: ignore[call-arg]
     # =========================================================================
 
     @staticmethod
-    async def interaction_check(interaction: discord.Interaction) -> bool:
+    async def interaction_check(interaction: discord.Interaction, /) -> bool:
         """Run checks before processing command."""
         if interaction.guild is None:
             await interaction.response.send_message(

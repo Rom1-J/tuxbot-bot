@@ -21,6 +21,7 @@ class AppCommandCompletion(commands.Cog):
     # =========================================================================
     # =========================================================================
 
+    # noinspection PyUnusedLocal
     @commands.Cog.listener(name="on_app_command_completion")
     async def _on_app_command_completion(
         self: typing.Self,

@@ -1,0 +1,20 @@
+aiofiles
+Pillow
+beautifulsoup4
+# discord.py
+# discord-ext-menus
+graphviz
+humanize
+# ipinfo
+ipwhois
+# jishaku
+psutil
+python-json-logger
+redis
+rich
+sentry-sdk
+statsd
+sympy
+tortoise-orm[asyncpg]
+wolframalpha
+yarl

@@ -196,6 +196,7 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
+    # noinspection PyUnusedLocal
     @discord.ui.button(label="≪", style=discord.ButtonStyle.grey)
     async def go_to_first_page(
         self: typing.Self,
@@ -207,6 +208,7 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
+    # noinspection PyUnusedLocal
     @discord.ui.button(label="Back", style=discord.ButtonStyle.blurple)
     async def go_to_previous_page(
         self: typing.Self,
@@ -230,6 +232,7 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
+    # noinspection PyUnusedLocal
     @discord.ui.button(label="Next", style=discord.ButtonStyle.blurple)
     async def go_to_next_page(
         self: typing.Self,
@@ -241,6 +244,7 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
+    # noinspection PyUnusedLocal
     @discord.ui.button(label="≫", style=discord.ButtonStyle.grey)
     async def go_to_last_page(
         self: typing.Self,
@@ -254,6 +258,7 @@ class Pages(discord.ui.View):
 
     # =========================================================================
 
+    # noinspection PyUnusedLocal
     @discord.ui.button(label="Quit", style=discord.ButtonStyle.red, row=1)
     async def stop_pages(
         self: typing.Self,

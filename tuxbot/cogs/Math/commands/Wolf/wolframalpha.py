@@ -16,6 +16,14 @@ from PIL import Image, ImageDraw, ImageFont
 FONT = ImageFont.truetype("DejaVuSans.ttf", size=16)
 
 
+def _width_pod(pod: wolframalpha.Pod) -> int:
+    """Get width of actual pod."""
+    if isinstance(width := pod.img.width, int):
+        return width
+
+    return 0
+
+
 class WolframAlpha:
     """WolframAlpha api."""
 
@@ -133,21 +141,15 @@ class WolframAlpha:
     @staticmethod
     def width(result: wolframalpha.Result) -> int:
         """Get the highest image width."""
-
-        def width_pod(pod: wolframalpha.Pod) -> int:
-            """Get width of actual pod."""
-            if isinstance(width := pod.img.width, int):
-                return width
-
-            return 0
-
-        width = width_pod(
+        width = _width_pod(
             max(
                 max(
                     result.pods,
-                    key=lambda pod: width_pod(max(pod.subpods, key=width_pod)),
+                    key=lambda pod: _width_pod(
+                        max(pod.subpods, key=_width_pod)
+                    ),
                 ).subpods,
-                key=width_pod,
+                key=_width_pod,
             )
         )
 

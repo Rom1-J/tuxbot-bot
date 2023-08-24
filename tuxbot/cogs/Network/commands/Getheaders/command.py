@@ -95,6 +95,7 @@ class GetheadersCommand(commands.Cog):
         user_agent: str = "",
     ) -> None:
         if not ip.startswith("http"):
+            # noinspection HttpUrlsUsage
             ip = f"http://{ip}"
 
         await self.__check_for_rfc_reserved_or_raise(ip)

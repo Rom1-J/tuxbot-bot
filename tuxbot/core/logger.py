@@ -45,7 +45,7 @@ class Logger(logging.Logger):
 
         discord_logger = logging.getLogger("discord")
 
-        custom_format = " ".join([f"%({i:s})s" for i in self.keys])
+        custom_format = " ".join([f"%({i})s" for i in self.keys])
         formatter = jsonlogger.JsonFormatter(custom_format)
 
         bot_handler = logging.FileHandler(filename=f"{log_path}/logs.json")

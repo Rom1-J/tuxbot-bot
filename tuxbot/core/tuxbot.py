@@ -3,11 +3,11 @@ Tuxbot core module: Tuxbot.
 
 Client class instance for Tuxbot
 """
+import datetime as dt
 import json
 import sys
 import traceback
 import typing
-from datetime import datetime
 from pathlib import Path
 
 import aiohttp
@@ -77,10 +77,10 @@ class Tuxbot(TuxbotABC):
             return
 
         if self.uptime is not None and self.uptime.timestamp() > 0:
-            self.last_on_ready = datetime.now()
+            self.last_on_ready = dt.datetime.now()
             return
 
-        self.uptime = datetime.now()
+        self.uptime = dt.datetime.now()
         self.last_on_ready = self.uptime
 
         if game := config.CLIENT["game"]:
@@ -134,8 +134,7 @@ class Tuxbot(TuxbotABC):
     async def invoke(self: typing.Self, ctx: ContextPlus) -> None:
         """Bind custom command invoker."""
         if ctx.command is not None and await ctx.command.can_run(ctx):
-            async with ctx.typing():
-                await super().invoke(ctx)
+            await super().invoke(ctx)
 
     # =========================================================================
 
@@ -325,7 +324,7 @@ class Tuxbot(TuxbotABC):
         typing.NoReturn
         """
         cluster_id = f"C{config.CLUSTER_ID}"
-        time = datetime.utcnow().isoformat()
+        time = dt.datetime.now(dt.UTC).isoformat()
 
         crash_name = f"crashreport_{cluster_id}_{time}.txt"
         crash_path = f"logs/{crash_name}"
@@ -341,7 +340,7 @@ class Tuxbot(TuxbotABC):
             default=lambda o: f"<<non-serializable: {o!r}>>",
         )
 
-        report = f"Crash Report [{cluster_id}] {time}:\n\n"
+        report = f"Crash Report [{cluster_id}] {time}: \n\n"
         report += trace
 
         report += "\n\nClient Options:"

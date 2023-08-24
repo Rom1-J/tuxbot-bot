@@ -25,7 +25,8 @@ class DogCommand(commands.Cog):
     # =========================================================================
     # =========================================================================
 
-    async def __get_dog(self: typing.Self) -> dict[str, typing.Any]:
+    @staticmethod
+    async def __get_dog() -> dict[str, typing.Any]:
         try:
             async with aiohttp.ClientSession() as cs, cs.get(
                 "https://dog.ceo/api/breeds/image/random"

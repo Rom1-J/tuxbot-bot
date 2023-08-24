@@ -1,0 +1,16 @@
+-r base.in
+
+black
+pre-commit
+ruff
+types-Pillow
+types-PyYAML
+types-aiofiles
+types-beautifulsoup4
+types-boto
+types-protobuf
+types-pytz
+types-requests
+types-setuptools
+types-six
+types-tabulate

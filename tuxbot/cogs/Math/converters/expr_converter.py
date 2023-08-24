@@ -32,6 +32,7 @@ del global_dict["__builtins__"]
 
 
 def _parse_expr(argument: str) -> typing.Any | None:
+    # noinspection PyBroadException
     try:
         return parse_expr(
             argument,

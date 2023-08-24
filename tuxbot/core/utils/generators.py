@@ -35,9 +35,9 @@ async def shorten(text: str, length: int) -> dict[str, str]:
                 data=text.encode(),
                 timeout=aiohttp.ClientTimeout(total=0.300),
             ) as r:
-                output[
-                    "link"
-                ] = f"https://paste.ramle.be/{(await r.json())['key']}"
+                output["link"] = (
+                    "https://haste.gnous.eu/" + (await r.json())["key"]
+                )
         except (aiohttp.ClientError, asyncio.exceptions.TimeoutError):
             pass
 

@@ -21,6 +21,22 @@ from .exceptions import VersionNotFound
 from .ui.view_controller import ViewController
 
 
+def _get_ip(ip: str, inet: int | None) -> str:
+    try:
+        key = -1
+        kwargs = {}
+
+        if inet == 4:
+            key = 1
+        elif inet == 6:
+            kwargs["family"] = socket.AF_INET6
+
+        return socket.getaddrinfo(ip, None, **kwargs)[key][4][0]
+    except (socket.gaierror, UnicodeError) as e:
+        msg = "Unable to collect information on this in the given version"
+        raise VersionNotFound(msg) from e
+
+
 class IplocaliseCommand(commands.Cog):
     """Shows information about given ip/domain."""
 
@@ -33,33 +49,16 @@ class IplocaliseCommand(commands.Cog):
     @staticmethod
     async def __get_ip(ip: str, inet: int | None) -> str:
         """Get ip from domain."""
-        throwable = VersionNotFound(
-            "Unable to collect information on this in the given version"
-        )
-
-        def _get_ip(_ip: str) -> str:
-            try:
-                key = -1
-                kwargs = {}
-
-                if inet == 4:
-                    key = 1
-                elif inet == 6:
-                    kwargs["family"] = socket.AF_INET6
-
-                return socket.getaddrinfo(_ip, None, **kwargs)[key][4][0]
-            except (socket.gaierror, UnicodeError) as e:
-                raise throwable from e
-
         try:
             return await asyncio.wait_for(
                 asyncio.get_running_loop().run_in_executor(
-                    None, _get_ip, str(ip)
+                    None, _get_ip, (str(ip), inet)
                 ),
                 timeout=2,
             )
         except asyncio.exceptions.TimeoutError as e:
-            raise throwable from e
+            msg = "Unable to collect information on this in the given version"
+            raise VersionNotFound(msg) from e
 
     # =========================================================================
     # =========================================================================
